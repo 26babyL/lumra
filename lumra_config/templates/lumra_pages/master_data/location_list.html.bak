@@ -1,0 +1,798 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}Locations — CoffeeShop{% endblock %}
+
+{% block head %}
+{% if GOOGLE_MAPS_API_KEY %}
+<script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places&callback=initMap" async defer></script>
+{% else %}
+<script>console.warn('Set GOOGLE_MAPS_API_KEY in context.');</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places,visualization&callback=initMap" async defer></script>
+{% endif %}
+<style>
+  /* Google Places autocomplete dropdown — above everything */
+  .pac-container { z-index: 9999 !important; }
+</style>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+
+  @keyframes drift {
+    from { transform:translate(0,0) scale(1); }
+    to   { transform:translate(20px,28px) scale(1.06); }
+  }
+
+  @keyframes pulse-outer {
+    0%   { transform:scale(1); opacity:.7; }
+    70%  { transform:scale(2.2); opacity:0; }
+    100% { transform:scale(2.2); opacity:0; }
+  }
+
+  .live-dot {
+    position:relative; display:inline-block;
+    width:8px; height:8px;
+  }
+
+  .live-dot::before {
+    content:''; position:absolute; inset:0;
+    border-radius:50%; background:currentColor;
+    animation: pulse-outer 2s ease-out infinite;
+  }
+
+  .live-dot::after {
+    content:''; position:absolute; inset:0;
+    border-radius:50%; background:currentColor;
+  }
+
+  .live-dot-emerald { color:#008B61; }
+
+  .card-img-wrap {
+    position: relative; height: 120px; overflow: hidden;
+  }
+
+  .card-img-wrap img {
+    width:100%; height:100%; object-fit:cover;
+    transition: transform .4s ease;
+  }
+
+  .card-img-overlay {
+    position:absolute; inset:0;
+    background: linear-gradient(to top, var(--color-black-a05-2) 0%, transparent 60%);
+  }
+
+  #map {
+    width:100%; height:560px;
+    border-radius: 0 0 18px 18px;
+  }
+
+  .map-legend {
+    position    : absolute; top:12px; right:12px; z-index:5;
+    background  : rgba(255, 255, 255, 0.95);
+    backdrop-filter: var(--glass-blur);
+    border-radius: 12px; padding: 8px 14px;
+    box-shadow  : 0 2px 12px var(--color-black-a010);
+    border      : 1px solid rgba(255, 255, 255, 0.85);
+  }
+
+  .heatmap-toggle {
+    position    : absolute; top:12px; left:12px; z-index:5;
+    background  : rgba(255, 255, 255, 0.95);
+    backdrop-filter: var(--glass-blur);
+    border-radius: 10px; padding: 8px 12px;
+    box-shadow  : 0 2px 10px var(--color-black-a008);
+    border      : 1px solid rgba(255, 255, 255, 0.85);
+    font-size   : 11px; font-weight:600;
+    cursor      : pointer; display:flex; align-items:center; gap:8px;
+    color       : #666666; transition: background .12s;
+  }
+
+  .heatmap-toggle:hover { background: var(--color-white-a1); }
+
+  .heatmap-toggle.active { color:var(--color-primary); }
+
+  .empty-breathe { animation: breathe 3s ease-in-out infinite; }
+
+  @keyframes breathe { 0%,100%{opacity:.35;transform:scale(1);} 50%{opacity:.6;transform:scale(1.04);} }
+
+  @keyframes mIn { from{opacity:0;transform:scale(.93) translateY(10px);} to{opacity:1;transform: none;} }
+
+  @keyframes tIn  { from{opacity:0;transform:translateX(16px);} to{opacity:1;transform: none;} }
+
+  @keyframes tOut { from{opacity:1;} to{opacity:0;pointer-events: none;} }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-3" aria-hidden="true"></div>
+
+<div class="w-full flex-1 space-y-5 relative z-10 px-1"
+     x-data="locationsApp()"
+     x-init="init()"
+     x-cloak>
+
+  <!--{# ── HEADER ── #}-->
+  <div class="reveal flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+    <div>
+      <nav class="flex items-center gap-2 text-xs" style="color: var(--em);" mb-1" aria-label="Breadcrumb">
+        <a href="{% url 'dashboard' %}" class="hover:style="color: var(--navy);" transition-colors">Dashboard</a>
+        <span class="text-slate-300">/</span>
+        <span class="text-slate-600 font-medium">{% trans "Locations" %}</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800">{% trans "Locations" %}</h1>
+      <p class="text-sm text-slate-400 mt-0.5">{% trans "Manage all outlets and branches" %}</p>
+    </div>
+    <button @click="openAdd()" class="btn-add self-start sm:self-auto">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+      </svg>
+      {% trans "Add Location" %}
+    </button>
+  </div>
+
+  <!--{# ── KPI CARDS ── #}-->
+  <div class="reveal grid grid-cols-2 xl:grid-cols-4 gap-3">
+    <!--{# Total #}-->
+    <div class="kpi-glass accent-blue p-4">
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{% trans "Total" %}</p>
+          <p class="text-2xl font-bold text-slate-800" x-text="locations.length"></p>
+          <p class="text-[11px] text-slate-400 mt-0.5">{% trans "All outlets" %}</p>
+        </div>
+        <div class="kpi-icon bg-blue-50 text-blue-500 kpi-glass"><i class="fas fa-store text-sm"></i></div>
+      </div>
+    </div>
+    <!--{# Active — pulsing dot #}-->
+    <div class="kpi-glass accent-emerald p-4">
+      <div class="flex items-start justify-between">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{% trans "Active" %}</p>
+            <span class="live-dot live-dot-emerald" title="Live sync"></span>
+          </div>
+          <p class="text-2xl font-bold text-slate-800" x-text="activeCount"></p>
+          <p class="text-[11px]" style="color: var(--em);" mt-0.5">{% trans "Currently operating" %}</p>
+        </div>
+        <div class="kpi-icon" style="background-color: var(--em-08);" style="color: var(--em);" kpi-glass"><i class="fas fa-check-circle text-sm"></i></div>
+      </div>
+    </div>
+    <!--{# Cities #}-->
+    <div class="kpi-glass accent-violet p-4">
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{% trans "Cities" %}</p>
+          <p class="text-2xl font-bold text-slate-800" x-text="cityCount"></p>
+          <p class="text-[11px] text-slate-400 mt-0.5">{% trans "Geographic spread" %}</p>
+        </div>
+        <div class="kpi-icon bg-violet-50 text-violet-500 kpi-glass"><i class="fas fa-city text-sm"></i></div>
+      </div>
+    </div>
+    <!--{# Inactive #}-->
+    <div class="kpi-glass accent-rose p-4">
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{% trans "Inactive" %}</p>
+          <p class="text-2xl font-bold text-slate-800" x-text="inactiveCount"></p>
+          <p class="text-[11px] text-slate-400 mt-0.5">{% trans "Temporarily closed" %}</p>
+        </div>
+        <div class="kpi-icon bg-rose-50 text-rose-500 kpi-glass"><i class="fas fa-times-circle text-sm"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <!--{# ── TOOLBAR: view toggle + search ── #}-->
+  <div class="reveal glass px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+    <div class="view-toggle">
+      <button @click="currentView='list'" class="view-btn" :class="currentView==='list' ? 'active' : ''">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+        {% trans "List" %}
+      </button>
+      <button @click="switchMap()" class="view-btn" :class="currentView==='map' ? 'active' : ''">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+        {% trans "Map" %}
+      </button>
+    </div>
+    <div class="flex items-center gap-2 w-full sm:w-auto">
+      <div class="relative flex-1 sm:flex-none">
+        <input type="text" x-model.debounce.200ms="searchQuery" @input="currentPage=1"
+               placeholder="{% trans 'Search locations...' %}"
+               class="loc-search w-full sm:w-56 pl-8 pr-3 py-1.5 text-sm text-slate-700 placeholder-slate-400">
+        <i class="fas fa-search absolute left-2.5 top-2.5 text-slate-300 text-[11px]"></i>
+      </div>
+      <span class="text-xs text-slate-400 whitespace-nowrap flex-shrink-0" aria-live="polite">
+        <span x-text="filtered.length"></span> lokasi
+      </span>
+    </div>
+  </div>
+
+  <!--{# ══════════════════════════
+     LIST VIEW
+  ══════════════════════════ #}-->
+  <div x-show="currentView==='list'"
+       x-transition:enter="transition duration-200"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100">
+
+    <div class="reveal grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+      <template x-for="loc in paginated" :key="loc.id">
+        <div class="loc-card">
+
+          <!--{# Card image with status overlay #}-->
+          <div class="card-img-wrap">
+            <img :src="`https://picsum.photos/seed/${loc.id}coffee`"
+                 :alt="loc.name"
+                 loading="lazy">
+            <div class="card-img-overlay"></div>
+            <!--{# Status badge — floated on image #}-->
+            <div class="absolute top-3 left-3">
+              <span class="status-badge"
+                    :class="loc.status === 'active' ? 'badge-active' : 'badge-inactive'">
+                <!--{# Live dot for active #}-->
+                <span x-show="loc.status === 'active'" class="live-dot live-dot-emerald w-1.5 h-1.5"></span>
+                <span x-show="loc.status !== 'active'" class="w-1.5 h-1.5 rounded-full bg-rose-400 inline-block"></span>
+                <span x-text="loc.status === 'active' ? 'Live' : 'Inactive'"></span>
+              </span>
+            </div>
+            <!--{# Action buttons floated top-right #}-->
+            <div class="absolute top-3 right-3 flex gap-1">
+              <button @click.stop="editLoc(loc)" class="icon-btn edit w-7 h-7 backdrop-blur rounded-lg" style="background:rgba(255, 255, 255, 0.92)" title="Edit">
+                <i class="fas fa-pencil-alt text-[10px]"></i>
+              </button>
+              <button @click.stop="confirmDelete(loc)" class="icon-btn trash w-7 h-7 backdrop-blur rounded-lg" style="background:rgba(255, 255, 255, 0.92)" title="Hapus">
+                <i class="fas fa-trash text-[10px]"></i>
+              </button>
+            </div>
+          </div>
+
+          <!--{# Card body #}-->
+          <div class="p-4">
+            <h3 class="text-[14px] font-bold text-slate-800 mb-1 truncate" x-text="loc.name"></h3>
+            <p class="text-[12px] text-slate-400 flex items-start gap-1.5 mb-1">
+              <i class="fas fa-map-marker-alt" style="color: var(--jade);" mt-0.5 flex-shrink-0 text-[10px]"></i>
+              <span class="line-clamp-1" x-text="loc.address"></span>
+            </p>
+            <div class="flex items-center gap-3 mt-2 text-[11px] text-slate-400">
+              <span x-show="loc.phone" class="flex items-center gap-1">
+                <i class="fas fa-phone text-[9px]"></i>
+                <span x-text="loc.phone"></span>
+              </span>
+              <span x-show="loc.manager" class="flex items-center gap-1 truncate">
+                <i class="fas fa-user-tie text-[9px]"></i>
+                <span x-text="loc.manager"></span>
+              </span>
+            </div>
+            <div class="mt-3 pt-3 border-t border-slate-100 flex justify-between items-center">
+              <button @click="viewOnMap(loc)"
+                      class="text-[11px] font-semibold" style="color: var(--em);" hover:style="color: var(--navy);" flex items-center gap-1.5 transition-colors">
+                <i class="fas fa-map-marked-alt text-[10px]"></i>
+                {% trans "View on Map" %}
+              </button>
+              <span class="text-[10px] text-slate-300" x-text="loc.city"></span>
+            </div>
+          </div>
+
+        </div>
+      </template>
+    </div>
+
+    <!--{# Empty state #}-->
+    <div x-show="filtered.length === 0"
+         class="glass p-12 text-center mt-4">
+      <div class="empty-breathe w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3" style="background:var(--color-bg)">
+        <i class="fas fa-store-slash text-slate-200 text-xl"></i>
+      </div>
+      <p class="text-sm font-semibold text-slate-500">{% trans "No locations found" %}</p>
+      <p class="text-xs text-slate-400 mt-0.5">{% trans "Try adjusting your search or add a new location." %}</p>
+    </div>
+
+    <!--{# Pagination #}-->
+    <nav x-show="totalPages > 1" class="flex justify-center mt-5" aria-label="Halaman">
+      <div class="flex items-center gap-1.5">
+        <button class="page-btn" @click="currentPage > 1 && currentPage--" :disabled="currentPage===1">
+          <i class="fas fa-chevron-left text-[10px]"></i>
+        </button>
+        <template x-for="p in visiblePages" :key="p">
+          <button class="page-btn" @click="currentPage=p" :class="p===currentPage?'active':''" x-text="p"></button>
+        </template>
+        <button class="page-btn" @click="currentPage < totalPages && currentPage++" :disabled="currentPage===totalPages">
+          <i class="fas fa-chevron-right text-[10px]"></i>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <!--{# ══════════════════════════
+     MAP VIEW
+  ══════════════════════════ #}-->
+  <div x-show="currentView==='map'"
+       x-transition:enter="transition duration-200"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100">
+    <div class="glass overflow-hidden relative">
+
+      <!--{# Heat map toggle button #}-->
+      <button
+        @click="toggleHeatMap()"
+        class="heatmap-toggle"
+        :class="heatMapOn ? 'active' : ''">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"/>
+        </svg>
+        <span x-text="heatMapOn ? 'Heat Map: ON' : 'Heat Map'"></span>
+      </button>
+
+      <!--{# Legend #}-->
+      <div class="map-legend">
+        <div class="flex items-center gap-2 mb-1.5">
+          <span class="live-dot live-dot-emerald w-2 h-2"></span>
+          <span class="text-xs font-semibold text-slate-600">{% trans "Active" %}</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-rose-400 inline-block flex-shrink-0"></span>
+          <span class="text-xs font-semibold text-slate-500">{% trans "Inactive" %}</span>
+        </div>
+      </div>
+
+      <!--{# Map div #}-->
+      <div id="map"></div>
+    </div>
+  </div>
+
+</div>
+
+<!--{# ══════════════════════════
+   ADD / EDIT MODAL
+══════════════════════════ #}-->
+<div
+  x-data
+  x-show="$store.locModal.open"
+  x-cloak
+  class="fixed inset-0 flex items-center justify-center p-4 z-50"
+  style="background:var(--color-overlay-md); backdrop-filter: var(--glass-blur);"
+  @click.self="$store.locModal.close()"
+  role="dialog" aria-modal="true" aria-labelledby="modal-title">
+
+  <div class="modal-glass modal-in w-full max-w-lg max-h-[90vh] overflow-y-auto" @click.stop>
+    <div class="px-6 pt-5 pb-4 border-b border-slate-100 flex items-center justify-between">
+      <h2 id="modal-title" class="text-[14px] font-bold text-slate-800"
+          x-text="$store.locModal.isEditing ? '{% trans "Edit Location" %}' : '{% trans "Add New Location" %}'">
+      </h2>
+      <button @click="$store.locModal.close()"
+              class="w-7 h-7 rounded-full text-slate-400 hover:bg-slate-200 flex items-center justify-center transition-all" style="background:var(--color-bg)">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form @submit.prevent="$store.locModal.save()" class="px-6 py-5 space-y-4">
+
+      <div>
+        <label class="form-label">{% trans "Location Name" %} *</label>
+        <input type="text" x-model="$store.locModal.form.name" required class="form-input" placeholder="Kopi Nusantara — Sudirman">
+      </div>
+      <div>
+        <label class="form-label">{% trans "Address" %} *</label>
+        <input type="text" id="address-autocomplete" x-model="$store.locModal.form.address" required class="form-input" placeholder="Jl. Sudirman No. 1, Jakarta">
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="form-label">{% trans "City" %} *</label>
+          <input type="text" x-model="$store.locModal.form.city" required class="form-input" placeholder="Jakarta">
+        </div>
+        <div>
+          <label class="form-label">{% trans "Postal Code" %}</label>
+          <input type="text" x-model="$store.locModal.form.postalCode" class="form-input" placeholder="10220">
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="form-label">{% trans "Phone" %} *</label>
+          <input type="tel" x-model="$store.locModal.form.phone" required class="form-input" placeholder="+62 21 ...">
+        </div>
+        <div>
+          <label class="form-label">{% trans "Email" %}</label>
+          <input type="email" x-model="$store.locModal.form.email" class="form-input" placeholder="outlet@kopi.id">
+        </div>
+      </div>
+      <div>
+        <label class="form-label">{% trans "Manager" %} *</label>
+        <input type="text" x-model="$store.locModal.form.manager" required class="form-input" placeholder="Nama manajer">
+      </div>
+      <div>
+        <label class="form-label">{% trans "Status" %}</label>
+        <select x-model="$store.locModal.form.status" class="form-input">
+          <option value="active">{% trans "Active" %}</option>
+          <option value="inactive">{% trans "Inactive" %}</option>
+        </select>
+      </div>
+      <input type="hidden" x-model="$store.locModal.form.latitude">
+      <input type="hidden" x-model="$store.locModal.form.longitude">
+
+      <div class="flex gap-3 pt-2">
+        <button type="button" @click="$store.locModal.close()"
+                class="flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-500 hover:bg-slate-50 transition-all">
+          {% trans "Cancel" %}
+        </button>
+        <button type="submit"
+                class="flex-1 py-2.5 rounded-xl" style="background-color: var(--em-08);" hover:style="background-color: var(--jade);" text-white text-sm font-bold transition-all shadow-sm hover:shadow-emerald-200 hover:shadow-md">
+          {% trans "Save" %}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!--{# ══════════════════════════
+   DELETE CONFIRMATION
+══════════════════════════ #}-->
+<div
+  x-data
+  x-show="$store.locDelete.open"
+  x-cloak
+  class="fixed inset-0 flex items-center justify-center p-4 z-50"
+  style="background:var(--color-overlay-md); backdrop-filter: var(--glass-blur);"
+  @click.self="$store.locDelete.close()"
+  role="dialog" aria-modal="true">
+  <div class="modal-glass modal-in w-full max-w-sm p-6" @click.stop>
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center flex-shrink-0">
+        <i class="fas fa-trash text-rose-400"></i>
+      </div>
+      <div>
+        <p class="text-[14px] font-bold text-slate-800">{% trans "Delete Location" %}</p>
+        <p class="text-xs text-slate-400" x-text="$store.locDelete.target?.name"></p>
+      </div>
+    </div>
+    <p class="text-xs text-slate-500 mb-5 leading-relaxed">
+      {% trans "This will permanently remove the location. This action cannot be undone." %}
+    </p>
+    <div class="flex gap-3">
+      <button @click="$store.locDelete.close()"
+              class="flex-1 py-2 rounded-xl border border-slate-200 text-sm font-semibold text-slate-500 hover:bg-slate-50 transition-all">
+        {% trans "Cancel" %}
+      </button>
+      <button @click="$store.locDelete.confirm()"
+              class="flex-1 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white text-sm font-bold transition-all">
+        {% trans "Delete" %}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!--{# ── Toast ── #}-->
+<div class="fixed bottom-4 right-4 z-50 space-y-2" x-data aria-live="polite">
+  <template x-for="t in $store.toast.list" :key="t.id">
+    <div class="toast flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl text-white text-sm min-w-52 max-w-xs"
+         style="background:var(--color-overlay-heavy); backdrop-filter: var(--glass-blur);"
+         :class="{
+           'border-l-4" style="border-color: var(--jade);"': t.type==='success',
+           'border-l-4 border-rose-400'   : t.type==='danger',
+           'border-l-4 border-blue-400'   : t.type==='info',
+         }">
+      <i :class="t.icon" class="text-xs flex-shrink-0"></i>
+      <span x-text="t.message"></span>
+    </div>
+  </template>
+</div>
+
+{{ locations|json_script:"locations-data" }}
+{% endblock %}
+
+{% block dashboard_scripts %}
+<script>
+/* ═══════════════════════
+   Google Maps globals
+═══════════════════════ */
+let _map, _markers = [], _infoWindow, _geocoder, _autocomplete, _heatLayer;
+
+function initMap() {
+  _map = new google.maps.Map(document.getElementById('map'), {
+    zoom        : 11,
+    center      : { lat:-6.2088, lng:106.8456 },
+    mapTypeControl: false,
+    streetViewControl: true,
+    fullscreenControl: true,
+    styles: [
+      { featureType:'poi', stylers:[{visibility:'off'}] },
+      { featureType:'transit', stylers:[{visibility:'off'}] },
+      { elementType:'geometry', stylers:[{color:'rgba(255, 255, 255, 0.85)'}] },
+      { featureType:'water', elementType:'geometry', stylers:[{color:'var(--color-info-faint)'}] },
+      { featureType:'road', elementType:'geometry', stylers:[{color:'#ffffff'}] },
+      { featureType:'road.arterial', elementType:'geometry', stylers:[{color:'var(--color-border-light)'}] },
+    ]
+  });
+  _infoWindow = new google.maps.InfoWindow();
+  _geocoder   = new google.maps.Geocoder();
+
+  /* Wait for Alpine then sync markers */
+  const trySync = () => {
+    const el = document.querySelector('[x-data]');
+    if (el && el._x_dataStack?.[0]?.syncMapMarkers) {
+      el._x_dataStack[0].syncMapMarkers();
+    } else {
+      setTimeout(trySync, 150);
+    }
+  };
+  trySync();
+}
+
+document.addEventListener('alpine:init', () => {
+
+  /* ── Toast store ── */
+  Alpine.store('toast', {
+    list: [], _id: 0,
+    show(message, type='success', icon='fas fa-check-circle') {
+      const id = ++this._id;
+      this.list.push({ id, message, type, icon });
+      setTimeout(() => { this.list = this.list.filter(t=>t.id!==id); }, 2900);
+    }
+  });
+
+  /* ── Location modal store ── */
+  Alpine.store('locModal', {
+    open    : false,
+    isEditing: false,
+    _cb     : null,
+    form    : {},
+    blank() {
+      return { id:null, name:'', address:'', city:'', postalCode:'',
+               phone:'', email:'', manager:'', status:'active',
+               latitude:null, longitude:null };
+    },
+    openAdd(cb)  { this.form=this.blank(); this.isEditing=false; this._cb=cb; this.open=true; this._initAC(); },
+    openEdit(loc,cb) { this.form={...loc}; this.isEditing=true; this._cb=cb; this.open=true; this._initAC(); },
+    close() { this.open=false; _autocomplete=null; },
+    _initAC() {
+      if (typeof google==='undefined') return;
+      setTimeout(() => {
+        if (_autocomplete) return;
+        const inp = document.getElementById('address-autocomplete');
+        if (!inp) return;
+        _autocomplete = new google.maps.places.Autocomplete(inp);
+        _autocomplete.addListener('place_changed', () => {
+          const p = _autocomplete.getPlace();
+          if (!p.geometry) return;
+          this.form.address   = p.formatted_address;
+          this.form.latitude  = p.geometry.location.lat();
+          this.form.longitude = p.geometry.location.lng();
+          for (const c of p.address_components) {
+            if (c.types[0]==='locality')   this.form.city       = c.long_name;
+            if (c.types[0]==='postal_code') this.form.postalCode = c.long_name;
+          }
+        });
+      }, 80);
+    },
+    save() { if (this._cb) this._cb({...this.form}); this.close(); }
+  });
+
+  /* ── Delete store ── */
+  Alpine.store('locDelete', {
+    open  : false,
+    target: null,
+    _cb   : null,
+    ask(loc, cb) { this.target=loc; this._cb=cb; this.open=true; },
+    close()      { this.open=false; this.target=null; },
+    confirm()    { if(this._cb) this._cb(this.target.id); this.close(); }
+  });
+
+});
+</script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function locationsApp() {
+  return {
+    locations  : [],
+    currentView: 'list',
+    searchQuery: '',
+    currentPage: 1,
+    itemsPerPage: 9,
+    heatMapOn  : false,
+
+    /* ── Computed ── */
+    get filtered() {
+      const q = this.searchQuery.trim().toLowerCase();
+      if (!q) return this.locations;
+      return this.locations.filter(l =>
+        l.name?.toLowerCase().includes(q) ||
+        l.address?.toLowerCase().includes(q) ||
+        l.city?.toLowerCase().includes(q)
+      );
+    },
+    get paginated() {
+      const s = (this.currentPage-1)*this.itemsPerPage;
+      return this.filtered.slice(s, s+this.itemsPerPage);
+    },
+    get totalPages() { return Math.max(1, Math.ceil(this.filtered.length/this.itemsPerPage)); },
+    get visiblePages() {
+      const max=5, half=Math.floor(max);
+      let s=Math.max(1,this.currentPage-half);
+      let e=Math.min(this.totalPages, s+max-1);
+      if(e-s+1<max) s=Math.max(1,e-max+1);
+      const pp=[]; for(let i=s;i<=e;i++) pp.push(i); return pp;
+    },
+    get activeCount()   { return this.locations.filter(l=>l.status==='active').length; },
+    get inactiveCount() { return this.locations.filter(l=>l.status!=='active').length; },
+    get cityCount()     { return new Set(this.locations.map(l=>l.city).filter(Boolean)).size; },
+
+    /* ── Init ── */
+    init() {
+      const raw = document.getElementById('locations-data');
+      if (raw?.textContent) {
+        try { this.locations = JSON.parse(raw.textContent) || []; } catch(e) { this.locations = []; }
+      }
+
+      /* Scroll reveal */
+      const io = new IntersectionObserver(entries => {
+        entries.forEach((e,i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i*60);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold:.06 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    },
+
+    /* ── Add/Edit ── */
+    openAdd() {
+      Alpine.store('locModal').openAdd((formData) => {
+        this._geocodeThenSave(formData, false);
+      });
+    },
+    editLoc(loc) {
+      Alpine.store('locModal').openEdit(loc, (formData) => {
+        this._geocodeThenSave(formData, true);
+      });
+    },
+    _geocodeThenSave(formData, isEditing) {
+      const finish = (data) => {
+        if (isEditing) {
+          const idx = this.locations.findIndex(l=>l.id===data.id);
+          if (idx !== -1) {
+            this.locations[idx] = data;
+            this.syncMapMarkers();
+          }
+          Alpine.store('toast').show('Lokasi diperbarui', 'success', 'fas fa-check-circle');
+        } else {
+          const newId = Math.max(0, ...this.locations.map(l=>l.id||0)) + 1;
+          this.locations.push({ ...data, id: newId });
+          if (_map && data.latitude && data.longitude) this._addMarker({...data, id: newId});
+          Alpine.store('toast').show('Lokasi ditambahkan', 'success', 'fas fa-map-marker-alt');
+        }
+      };
+
+      if (!formData.latitude && typeof _geocoder !== 'undefined') {
+        _geocoder.geocode({ address: formData.address }, (results, status) => {
+          if (status === 'OK') {
+            formData.latitude  = results[0].geometry.location.lat();
+            formData.longitude = results[0].geometry.location.lng();
+          }
+          finish(formData);
+        });
+      } else {
+        finish(formData);
+      }
+    },
+
+    /* ── Delete ── */
+    confirmDelete(loc) {
+      Alpine.store('locDelete').ask(loc, (id) => {
+        this.locations = this.locations.filter(l=>l.id!==id);
+        this._removeMarker(id);
+        Alpine.store('toast').show('Lokasi dihapus', 'danger', 'fas fa-trash');
+      });
+    },
+
+    /* ── Map ── */
+    switchMap() {
+      this.currentView = 'map';
+      this.$nextTick(() => {
+        if (_map) {
+          google.maps.event.trigger(_map, 'resize');
+          this.syncMapMarkers();
+        }
+      });
+    },
+    viewOnMap(loc) {
+      this.currentView = 'map';
+      this.$nextTick(() => {
+        if (!_map || !loc.latitude) return;
+        google.maps.event.trigger(_map, 'resize');
+        _map.setCenter({ lat: loc.latitude, lng: loc.longitude });
+        _map.setZoom(16);
+        const m = _markers.find(x => x._locId === loc.id);
+        if (m) this._showInfoWindow(m, loc);
+      });
+    },
+    syncMapMarkers() {
+      this._clearMarkers();
+      this.locations.forEach(l => this._addMarker(l));
+    },
+    _addMarker(loc) {
+      if (!_map || !loc.latitude || !loc.longitude) return;
+      const marker = new google.maps.Marker({
+        position : { lat: loc.latitude, lng: loc.longitude },
+        map      : _map,
+        title    : loc.name,
+        icon     : {
+          path        : google.maps.SymbolPath.CIRCLE,
+          scale       : 9,
+          fillColor   : loc.status === 'active' ? 'var(--color-success)' : 'var(--color-danger)',
+          fillOpacity : 1,
+          strokeWeight: 2.5,
+          strokeColor : '#ffffff',
+        },
+      });
+      marker._locId = loc.id;
+      marker.addListener('click', () => this._showInfoWindow(marker, loc));
+      _markers.push(marker);
+
+      /* Fit bounds */
+      const b = new google.maps.LatLngBounds();
+      _markers.forEach(m => b.extend(m.getPosition()));
+      if (_markers.length > 1) _map.fitBounds(b);
+    },
+    _removeMarker(id) {
+      const idx = _markers.findIndex(m => m._locId === id);
+      if (idx !== -1) { _markers[idx].setMap(null); _markers.splice(idx,1); }
+    },
+    _clearMarkers() {
+      _markers.forEach(m => m.setMap(null)); _markers = [];
+    },
+    _showInfoWindow(marker, loc) {
+      const badge = loc.status === 'active'
+        ? '<span style="background:var(--color-primary-a10);color:var(--color-primary);padding:2px 8px;border-radius:99px;font-size:10px;font-weight:700;">● Live</span>'
+        : '<span style="background:rgba(244,63,94,.1);color:var(--color-pink-700);padding:2px 8px;border-radius:99px;font-size:10px;font-weight:700;">Inactive</span>';
+      _infoWindow.setContent(`
+        <div style="font-family:system-ui,sans-serif;padding:4px 2px;max-width:220px">
+          <p style="font-weight:700;font-size:13px;color:#1A1A1A;margin:0 0 4px">${loc.name}</p>
+          <p style="font-size:11px;color:#888888;margin:0 0 2px">📍 ${loc.address}</p>
+          ${loc.phone ? `<p style="font-size:11px;color:#888888;margin:0 0 2px">📞 ${loc.phone}</p>` : ''}
+          ${loc.manager ? `<p style="font-size:11px;color:#888888;margin:0 0 8px">👤 ${loc.manager}</p>` : ''}
+          ${badge}
+        </div>`);
+      _infoWindow.open(_map, marker);
+    },
+
+    /* ── Heat Map ── */
+    toggleHeatMap() {
+      if (typeof google === 'undefined' || !google.maps.visualization) return;
+
+      this.heatMapOn = !this.heatMapOn;
+
+      if (this.heatMapOn) {
+        const pts = this.locations
+          .filter(l => l.latitude && l.longitude)
+          .map(l => ({
+            location: new google.maps.LatLng(l.latitude, l.longitude),
+            /* Simulate "weight" based on active status for demo */
+            weight  : l.status === 'active' ? (l.salesWeight || 80) : 15,
+          }));
+        _heatLayer = new google.maps.visualization.HeatmapLayer({
+          data  : pts,
+          map   : _map,
+          radius: 40,
+          gradient: [
+            'rgba(0,0,0,0)',
+            'rgba(5,150,105,0.3)',
+            'rgba(5,150,105,0.6)',
+            'var(--color-success)',
+            'var(--color-primary-dark)',
+            'var(--color-warning)',
+            'var(--color-danger)',
+          ]
+        });
+      } else {
+        if (_heatLayer) { _heatLayer.setMap(null); _heatLayer = null; }
+      }
+    },
+  };
+}
+</script>
+{% endblock %}

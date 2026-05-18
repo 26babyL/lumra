@@ -1,0 +1,43 @@
+
+<style>
+/* Auth Page Glass — lumra_glass_fix.py fase 2 */
+.auth-page-bg {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--color-slate-900) 0%, var(--color-slate-800) 45%, var(--color-emerald-950) 100%);
+  position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center; padding: 2rem 1rem;
+}
+.auth-blob {
+  position: absolute; border-radius: 50%; filter: blur(80px);
+  opacity: 0.18; pointer-events: none;
+  animation: drift 16s ease-in-out infinite alternate;
+}
+.auth-blob-1 { width:420px; height:420px; background:var(--color-emerald-700); top:-80px; left:-100px; }
+.auth-blob-2 { width:300px; height:300px; background:var(--color-6366f1); bottom:-60px; right:-80px; animation-delay:-6s; }
+.auth-blob-3 { width:200px; height:200px; background:var(--color-emerald-600); top:50%; left:60%; animation-delay:-3s; }
+.auth-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px var(--color-black-a040), 0 0 0 0.5px rgba(255, 255, 255, 0.05);
+  padding: 40px; width: 100%; max-width: 420px;
+  position: relative; z-index: 10;
+}
+.auth-input {
+  background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px; color: white; padding: 12px 16px; width: 100%;
+  outline: var(--shadow-sm-16); transition: border-color 0.2s, box-shadow 0.2s;
+}
+.auth-input::placeholder { color: rgba(255, 255, 255, 0.35); }
+.auth-input:focus { border-color: var(--color-emerald-600-a060); box-shadow: 0 0 0 3px var(--color-emerald-600-a012); }
+.auth-btn {
+  background: linear-gradient(135deg, var(--color-emerald-700), var(--color-emerald-600)); border: var(--shadow-sm-16);
+  border-radius: 12px; color: white; font-weight: 700; padding: 13px;
+  width: 100%; cursor: pointer; transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 15px var(--color-emerald-700-a040);
+}
+.auth-btn:hover { opacity: 0.92; transform: translateY(-1px); box-shadow: 0 8px 25px var(--color-emerald-700-a050); }
+
+</style>

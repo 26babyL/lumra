@@ -1,0 +1,373 @@
+{% extends "base/base_hybrid.html" %}
+
+{% block title %}Daftar Campaign — LUMRA{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="campaignList()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-base-content">Daftar Campaign</h1>
+      <p class="text-base-content/60 text-sm">Manajemen campaign marketing dan promosi.</p>
+    </div>
+    <a href="{% url 'marketing:add_campaign' %}" class="btn btn-primary">
+      <i class="fas fa-plus mr-2"></i> Tambah Campaign
+    </a>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-primary">
+      <div class="card-body p-5">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-xs font-bold text-base-content/60 uppercase">Total Campaign</p>
+            <p class="text-2xl font-bold text-base-content" x-text="stats.total_campaigns"></p>
+          </div>
+          <i class="fas fa-bullhorn text-primary/60 text-2xl"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-success">
+      <div class="card-body p-5">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-xs font-bold text-base-content/60 uppercase">Aktif</p>
+            <p class="text-2xl font-bold text-success" x-text="stats.active_campaigns"></p>
+          </div>
+          <i class="fas fa-play-circle text-success/60 text-2xl"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-warning">
+      <div class="card-body p-5">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-xs font-bold text-base-content/60 uppercase">Selesai</p>
+            <p class="text-2xl font-bold text-warning" x-text="stats.completed_campaigns"></p>
+          </div>
+          <i class="fas fa-check-circle text-warning/60 text-2xl"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-info">
+      <div class="card-body p-5">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-xs font-bold text-base-content/60 uppercase">Total Penggunaan</p>
+            <p class="text-2xl font-bold text-info" x-text="stats.total_usage"></p>
+          </div>
+          <i class="fas fa-users text-info/60 text-2xl"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card bg-base-100 shadow-lg border border-base-300">
+    <div class="card-body p-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Tipe Campaign</span>
+          </label>
+          <select x-model="filters.type" class="select select-bordered select-sm">
+            <option value="">Semua Tipe</option>
+            <option value="discount">Diskon</option>
+            <option value="voucher">Voucher</option>
+            <option value="promotion">Promosi</option>
+            <option value="loyalty">Loyalty</option>
+          </select>
+        </div>
+        
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Status</span>
+          </label>
+          <select x-model="filters.status" class="select select-bordered select-sm">
+            <option value="">Semua Status</option>
+            <option value="active">Aktif</option>
+            <option value="completed">Selesai</option>
+            <option value="scheduled">Terjadwal</option>
+            <option value="paused">Dijeda</option>
+          </select>
+        </div>
+        
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Tanggal Mulai</span>
+          </label>
+          <input 
+            type="date" 
+            x-model="filters.start_date" 
+            class="input input-bordered input-sm"
+          >
+        </div>
+        
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Tanggal Selesai</span>
+          </label>
+          <input 
+            type="date" 
+            x-model="filters.end_date" 
+            class="input input-bordered input-sm"
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Campaign List -->
+  <div class="card bg-base-100 shadow-lg border border-base-300">
+    <div class="card-body p-0">
+      <div class="overflow-x-auto">
+        <table class="table table-compact w-full">
+          <thead>
+            <tr class="bg-base-200">
+              <th class="text-left">Nama Campaign</th>
+              <th class="text-left">Tipe</th>
+              <th class="text-left">Periode</th>
+              <th class="text-right">Budget</th>
+              <th class="text-right">Penggunaan</th>
+              <th class="text-left">Status</th>
+              <th class="text-center">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="campaign in filteredCampaigns" :key="campaign.id">
+              <tr class="hover:bg-base-200">
+                <td>
+                  <div>
+                    <p class="font-semibold" x-text="campaign.name"></p>
+                    <p class="text-xs text-base-content/60" x-text="campaign.description"></p>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge badge-sm" :class="getCampaignTypeClass(campaign.type)" x-text="getCampaignTypeText(campaign.type)"></span>
+                </td>
+                <td>
+                  <div>
+                    <p class="text-sm" x-text="formatDate(campaign.start_date)"></p>
+                    <p class="text-xs text-base-content/60" x-text="formatDate(campaign.end_date)"></p>
+                  </div>
+                </td>
+                <td class="text-right font-mono" x-text="formatCurrency(campaign.budget)"></td>
+                <td class="text-right">
+                  <span x-text="campaign.usage_count"></span>
+                  <span class="text-xs text-base-content/60" x-show="campaign.usage_limit">/ <span x-text="campaign.usage_limit"></span></span>
+                </td>
+                <td>
+                  <span class="badge badge-sm" :class="getStatusClass(campaign.status)" x-text="getStatusText(campaign.status)"></span>
+                </td>
+                <td class="text-center">
+                  <div class="flex gap-2 justify-center">
+                    <button class="btn btn-ghost btn-xs" @click="viewCampaign(campaign.id)">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn btn-ghost btn-xs" @click="editCampaign(campaign.id)">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-ghost btn-xs" @click="duplicateCampaign(campaign.id)">
+                      <i class="fas fa-copy"></i>
+                    </button>
+                    <button class="btn btn-ghost btn-xs text-error" @click="deleteCampaign(campaign.id)">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function campaignList() {
+  return {
+    campaigns: [],
+    filters: {
+      type: '',
+      status: '',
+      start_date: '',
+      end_date: ''
+    },
+    filteredCampaigns: [],
+    stats: {
+      total_campaigns: 0,
+      active_campaigns: 0,
+      completed_campaigns: 0,
+      total_usage: 0
+    },
+    
+    init() {
+      this.loadCampaigns();
+    },
+    
+    loadCampaigns() {
+      // Mock data - replace with actual API call
+      this.campaigns = [
+        {
+          id: 1,
+          name: 'Diskon Akhir Tahun',
+          type: 'discount',
+          description: 'Diskon 20% untuk semua produk',
+          start_date: '2024-01-01',
+          end_date: '2024-01-31',
+          budget: 10000000,
+          usage_count: 150,
+          usage_limit: 1000,
+          status: 'active'
+        },
+        {
+          id: 2,
+          name: 'Voucher Belanja',
+          type: 'voucher',
+          description: 'Voucher Rp 50.000 minimum pembelian 200.000',
+          start_date: '2023-12-15',
+          end_date: '2024-01-15',
+          budget: 5000000,
+          usage_count: 80,
+          usage_limit: 500,
+          status: 'completed'
+        },
+        {
+          id: 3,
+          name: 'Promosi Hari Raya',
+          type: 'promotion',
+          description: 'Promosi khusus hari raya',
+          start_date: '2024-03-01',
+          end_date: '2024-03-31',
+          budget: 15000000,
+          usage_count: 200,
+          usage_limit: 2000,
+          status: 'scheduled'
+        }
+      ];
+      
+      this.calculateStats();
+      this.applyFilters();
+    },
+    
+    calculateStats() {
+      this.stats.total_campaigns = this.campaigns.length;
+      this.stats.active_campaigns = this.campaigns.filter(c => c.status === 'active').length;
+      this.stats.completed_campaigns = this.campaigns.filter(c => c.status === 'completed').length;
+      this.stats.total_usage = this.campaigns.reduce((sum, c) => sum + c.usage_count, 0);
+    },
+    
+    applyFilters() {
+      this.filteredCampaigns = this.campaigns.filter(campaign => {
+        let matches = true;
+        
+        if (this.filters.type && campaign.type !== this.filters.type) {
+          matches = false;
+        }
+        
+        if (this.filters.status && campaign.status !== this.filters.status) {
+          matches = false;
+        }
+        
+        if (this.filters.start_date && campaign.start_date < this.filters.start_date) {
+          matches = false;
+        }
+        
+        if (this.filters.end_date && campaign.end_date > this.filters.end_date) {
+          matches = false;
+        }
+        
+        return matches;
+      });
+    },
+    
+    getCampaignTypeClass(type) {
+      switch(type) {
+        case 'discount': return 'badge-success';
+        case 'voucher': return 'badge-info';
+        case 'promotion': return 'badge-warning';
+        case 'loyalty': return 'badge-error';
+        default: return 'badge-neutral';
+      }
+    },
+    
+    getCampaignTypeText(type) {
+      switch(type) {
+        case 'discount': return 'Diskon';
+        case 'voucher': return 'Voucher';
+        case 'promotion': return 'Promosi';
+        case 'loyalty': return 'Loyalty';
+        default: return 'Tidak Diketahui';
+      }
+    },
+    
+    getStatusClass(status) {
+      switch(status) {
+        case 'active': return 'badge-success';
+        case 'completed': return 'badge-neutral';
+        case 'scheduled': return 'badge-info';
+        case 'paused': return 'badge-warning';
+        default: return 'badge-neutral';
+      }
+    },
+    
+    getStatusText(status) {
+      switch(status) {
+        case 'active': return 'Aktif';
+        case 'completed': return 'Selesai';
+        case 'scheduled': return 'Terjadwal';
+        case 'paused': return 'Dijeda';
+        default: return 'Tidak Diketahui';
+      }
+    },
+    
+    formatCurrency(amount) {
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0
+      }).format(amount);
+    },
+    
+    formatDate(dateStr) {
+      return new Date(dateStr).toLocaleDateString('id-ID');
+    },
+    
+    viewCampaign(id) {
+      console.log('View campaign:', id);
+      // Navigate to campaign detail
+    },
+    
+    editCampaign(id) {
+      console.log('Edit campaign:', id);
+      // Navigate to campaign edit
+    },
+    
+    duplicateCampaign(id) {
+      console.log('Duplicate campaign:', id);
+      // Duplicate campaign
+    },
+    
+    deleteCampaign(id) {
+      if (confirm('Apakah Anda yakin ingin menghapus campaign ini?')) {
+        this.campaigns = this.campaigns.filter(c => c.id !== id);
+        this.calculateStats();
+        this.applyFilters();
+      }
+    }
+  }
+}
+</script>
+{% endblock %}

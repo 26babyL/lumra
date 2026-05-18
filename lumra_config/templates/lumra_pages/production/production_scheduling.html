@@ -1,0 +1,139 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}Production Scheduling - Lumra ERP{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-card { background: rgba(255,255,255,0.88); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.95); border-radius: 18px; box-shadow: 0 10px 30px rgba(15,23,42,0.08); }
+  .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 12px; }
+  .day-cell { min-height: 150px; border-radius: 16px; border: 1px solid #e2e8f0; background: rgba(248,250,252,0.92); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+  .day-cell.empty { background: transparent; border-color: transparent; }
+  .task-pill { border-radius: 999px; padding: 6px 10px; font-size: 11px; font-weight: 600; }
+</style>
+{% endblock %}
+
+{% block content %}
+{{ orders_data|json_script:"orders-data" }}
+
+<div class="max-w-7xl mx-auto space-y-6 relative z-10" x-data="scheduleApp()" x-init="init()" x-cloak>
+  <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+        <a href="{% url 'production_order_list' %}" class="hover:text-slate-800">Production</a>
+        <span>/</span>
+        <span class="text-slate-800 font-medium">Scheduling</span>
+      </nav>
+      <h1 class="text-3xl font-bold text-slate-800">Production Scheduling</h1>
+      <p class="text-sm text-slate-500 mt-1">Kalender order produksi berdasarkan tanggal jadwal dari database.</p>
+    </div>
+    <div class="flex items-center gap-3 glass-card px-4 py-3">
+      <button @click="changeMonth(-1)" class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50">Prev</button>
+      <div class="min-w-40 text-center text-sm font-semibold text-slate-800" x-text="currentMonthYear"></div>
+      <button @click="changeMonth(1)" class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50">Next</button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="glass-card px-4 py-3"><p class="text-xs uppercase tracking-wide text-slate-400">Scheduled Orders</p><p class="text-2xl font-bold text-slate-800 mt-1" x-text="currentMonthOrders.length"></p></div>
+    <div class="glass-card px-4 py-3"><p class="text-xs uppercase tracking-wide text-slate-400">This Month</p><p class="text-2xl font-bold text-slate-800 mt-1" x-text="currentMonthOrders.length"></p></div>
+    <div class="glass-card px-4 py-3"><p class="text-xs uppercase tracking-wide text-slate-400">In Progress</p><p class="text-2xl font-bold text-slate-800 mt-1" x-text="currentMonthOrders.filter((item) => item.status === 'in_progress').length"></p></div>
+    <div class="glass-card px-4 py-3"><p class="text-xs uppercase tracking-wide text-slate-400">Completed</p><p class="text-2xl font-bold text-slate-800 mt-1" x-text="currentMonthOrders.filter((item) => item.status === 'completed').length"></p></div>
+  </div>
+
+  <section class="glass-card p-6">
+    <div class="calendar-grid mb-3 text-center text-xs font-semibold uppercase tracking-wide text-slate-400">
+      <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+    </div>
+    <div class="calendar-grid">
+      <template x-for="day in calendarDays" :key="day.id">
+        <div class="day-cell" :class="{ 'empty': day.type === 'padding', 'ring-2 ring-slate-800 bg-white': day.dateStr === todayStr }">
+          <template x-if="day.type === 'day'">
+            <div class="flex h-full flex-col gap-3">
+              <div class="flex items-center justify-between">
+                <span class="text-sm font-bold text-slate-800" x-text="day.label"></span>
+                <span class="rounded-full bg-slate-100 px-2 py-1 text-[10px] font-semibold text-slate-500" x-text="getTasksForDay(day.dateStr).length + ' task'"></span>
+              </div>
+              <div class="space-y-2">
+                <template x-for="task in getTasksForDay(day.dateStr)" :key="task.id">
+                  <a :href="detailUrl(task.id)" class="task-pill block" :class="statusPillClass(task.status)">
+                    <div class="font-semibold" x-text="task.code"></div>
+                    <div class="truncate text-[10px]" x-text="task.product"></div>
+                    <div class="text-[9px] opacity-70" x-text="(task.target_qty || 0) + ' ' + (task.uom || 'pcs')"></div>
+                  </a>
+                </template>
+                <p x-show="getTasksForDay(day.dateStr).length === 0" class="text-xs text-slate-400">Tidak ada jadwal.</p>
+              </div>
+            </div>
+          </template>
+        </div>
+      </template>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function scheduleApp() {
+  return {
+    currentDate: new Date(),
+    scheduledOrders: [],
+    get todayStr() {
+      return this.dateToLocalISO(new Date());
+    },
+    get currentMonthYear() {
+      return this.currentDate.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+    },
+    get currentMonthOrders() {
+      const prefix = `${this.currentDate.getFullYear()}-${String(this.currentDate.getMonth() + 1).padStart(2, '0')}`;
+      return this.scheduledOrders.filter((item) => (item.scheduled_date || '').startsWith(prefix));
+    },
+    get calendarDays() {
+      const year = this.currentDate.getFullYear();
+      const month = this.currentDate.getMonth();
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const days = [];
+      for (let i = 0; i < firstDay.getDay(); i += 1) days.push({ id: `pad-${i}`, type: 'padding' });
+      for (let day = 1; day <= lastDay.getDate(); day += 1) {
+        const date = new Date(year, month, day);
+        days.push({ id: this.dateToLocalISO(date), type: 'day', dateStr: this.dateToLocalISO(date), label: day });
+      }
+      return days;
+    },
+    init() {
+      const el = document.getElementById('orders-data');
+      if (!el?.textContent) return;
+      try {
+        this.scheduledOrders = (JSON.parse(el.textContent) || []).filter((item) => item.scheduled_date).map((item) => ({
+          ...item,
+          scheduled_date: String(item.scheduled_date).substring(0, 10),
+        }));
+      } catch (error) {
+        this.scheduledOrders = [];
+      }
+    },
+    changeMonth(delta) {
+      const next = new Date(this.currentDate);
+      next.setMonth(next.getMonth() + delta);
+      this.currentDate = next;
+    },
+    getTasksForDay(dateStr) {
+      return this.scheduledOrders.filter((item) => item.scheduled_date === dateStr);
+    },
+    statusPillClass(status) {
+      return { pending: 'bg-slate-100 text-slate-700', in_progress: 'bg-blue-50 text-blue-700', completed: 'bg-emerald-50 text-emerald-700', on_hold: 'bg-rose-50 text-rose-700' }[status] || 'bg-slate-100 text-slate-700';
+    },
+    detailUrl(id) {
+      return `{% url 'production_order_detail' 0 %}`.replace('/0/', `/${id}/`);
+    },
+    dateToLocalISO(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    },
+  }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,1340 @@
+# 🔄 Skenario Lengkap LUMRA ERP — Dari Setup Sampai Terjual
+
+---
+
+## FASE 0: SETUP AWAL
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     FIRST TIME LOGIN                            │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+                 ┌────────────────────────┐
+                 │    welcome.html        │
+                 │  "Selamat datang di    │
+                 │    LUMRA ERP"          │
+                 │  [Mulai Setup]         │
+                 └────────────────────────┘
+                              │
+                              ▼
+```
+
+### Step 1: Nama Bisnis
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  step_business.html                                             │
+│                                                                 │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │ Nama Bisnis  : [____________________________]             │ │
+│  │ Logo         : [Upload Logo]                               │ │
+│  │ Industri     : [▼ F&B / Retail / Jasa / Lainnya]          │ │
+│  │ Alamat       : [____________________________]             │ │
+│  │ Telepon      : [____________________________]             │ │
+│  │ Email        : [____________________________]             │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                                                     [Lanjut →] │
+└─────────────────────────────────────────────────────────────────┘
+         │
+         │ SIMPAN KE: lumra_config_businessprofile (tabel)
+         │ - business_name
+         │ - logo
+         │ - industry
+         │ - address, phone, email
+         ▼
+```
+
+### Step 2: Nama Toko / Cabang
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  step_location.html                                             │
+│                                                                 │
+│  Tambahkan lokasi bisnis pertama:                               │
+│                                                                 │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │ Nama Toko/Cabang  : [____________________________]       │ │
+│  │ Kode Lokasi       : [TKO-001] (auto)                     │ │
+│  │ Tipe              : [▼ Toko / Gudang / Dapur Produksi]   │ │
+│  │ Alamat            : [____________________________]       │ │
+│  │ Kota              : [____________________________]       │ │
+│  │ Telepon           : [____________________________]       │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│  [+ Tambah Lokasi Lagi]                                         │
+│                                                     [Lanjut →] │
+└─────────────────────────────────────────────────────────────────┘
+         │
+         │ SIMPAN KE: lumra_config_locations
+         │ - id, name, code, type, address, city, phone
+         ▼
+```
+
+**Contoh hasil:**
+```
+┌────┬──────────────────────┬──────────┬─────────────────┐
+│ ID │ Nama Toko            │ Kode     │ Tipe            │
+├────┼──────────────────────┼──────────┼─────────────────┤
+│  1 │ LUMRA Cafe Pusat     │ TKO-001  │ Toko            │
+│  2 │ Gudang Utama         │ GUD-001  │ Gudang          │
+│  3 │ Dapur Produksi       │ DPR-001  │ Dapur Produksi  │
+│  4 │ LUMRA Cafe Cabang 2  │ TKO-002  │ Toko            │
+└────┴──────────────────────┴──────────┴─────────────────┘
+```
+
+### Step 3: Kategori Produk Pertama
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  step_category.html                                             │
+│                                                                 │
+│  Buat kategori untuk mengelompokkan produk:                     │
+│                                                                 │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │ Nama Kategori    : [Bahan Baku]                           │ │
+│  │ Kategori Induk   : [▼ Tidak Ada (Root)]                  │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │ Nama Kategori    : [Produk Jadi]                         │ │
+│  │ Kategori Induk   : [▼ Tidak Ada (Root)]                  │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │ Nama Kategori    : [Minuman]                              │ │
+│  │ Kategori Induk   : [▼ Produk Jadi]                       │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│  [+ Tambah Kategori]                                            │
+│                                                     [Lanjut →] │
+└─────────────────────────────────────────────────────────────────┘
+         │
+         │ SIMPAN KE: _categories
+         │ - id, name, parent_id
+         ▼
+```
+
+### Step 4: Setup Selesai
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  step_complete.html                                             │
+│                                                                 │
+│         ✅ Setup Selesai!                                       │
+│                                                                 │
+│    Bisnis     : LUMRA Cafe                                     │
+│    Lokasi     : 4 lokasi terdaftar                             │
+│    Kategori   : 3 kategori                                     │
+│                                                                 │
+│    Apa selanjutnya?                                             │
+│    ├─ Tambah Produk & Supplier                                 │
+│    ├─ Buat Resep                                               │
+│    ├─ Undang Tim                                               │
+│    └─ Lihat Dashboard                                          │
+│                                                                 │
+│                                   [Masuk ke Dashboard →]       │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## FASE 1: SIAPKAN MASTER DATA
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    MASTER DATA SETUP                            │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        │                     │                     │
+        ▼                     ▼                     ▼
+   ┌─────────┐         ┌──────────┐          ┌──────────┐
+   │ Satuan  │         │ Supplier │          │ Produk   │
+   │         │         │          │          │          │
+   └─────────┘         └──────────┘          └──────────┘
+```
+
+### 1A: Daftarkan Satuan
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  units_list.html  →  [+ Tambah Satuan]  →  unit_form.html      │
+│                                                                 │
+│  ┌────┬──────────────┬──────────────────────────────────────┐  │
+│  │ ID │ Nama         │ Simbol                                │  │
+│  ├────┼──────────────┼──────────────────────────────────────┤  │
+│  │  1 │ Kilogram     │ kg                                    │  │
+│  │  2 │ Gram         │ g                                     │  │
+│  │  3 │ Liter        │ L                                     │  │
+│  │  4 │ Mililiter    │ ml                                    │  │
+│  │  5 │ Pcs          │ pcs                                   │  │
+│  │  6 │ Butir        │ btr                                   │  │
+│  │  7 │ Sendok Makan │ sdm                                   │  │
+│  └────┴──────────────┴──────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+         │
+         │ SIMPAN KE: _units
+         ▼
+```
+
+### 1B: Daftarkan Supplier
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  vendors_list.html  →  [+ Tambah Supplier]  →  vendor_form.html│
+│                                                                 │
+│  ┌────┬───────────────────┬───────────────┬───────────────────┐ │
+│  │ ID │ Nama Supplier     │ Kontak        │ Telepon           │ │
+│  ├────┼───────────────────┼───────────────┼───────────────────┤ │
+│  │  1 │ PT Bogasari       │ Budi Santoso  │ 021-1234567       │ │
+│  │  2 │ CV Segar Jaya     │ Siti Aminah   │ 081-23456789      │ │
+│  │  3 │ UD Susu Makmur    │ Pak Hadi      │ 081-98765432      │ │
+│  └────┴───────────────────┴───────────────┴───────────────────┘ │
+└─────────────────────────────────────────────────────────────────┘
+         │
+         │ SIMPAN KE: _vendors
+         ▼
+```
+
+### 1C: Daftarkan Produk Bahan Baku
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  products.html  →  [+ Tambah Produk]  →  product_details.html  │
+│                                                                 │
+│  ┌────┬───────────────────┬──────────┬──────────┬────────────┐ │
+│  │ SKU │ Nama Produk      │ Kategori │ Satuan   │ Harga Beli │ │
+│  ├────┼───────────────────┼──────────┼──────────┼────────────┤ │
+│  │ BB01│ Tepung Terigu    │ Bahan Baku│ kg       │ 12.000     │ │
+│  │ BB02│ Gula Pasir       │ Bahan Baku│ kg       │ 15.000     │ │
+│  │ BB03│ Telur Ayam       │ Bahan Baku│ btr      │ 2.500      │ │
+│  │ BB04│ Margarin         │ Bahan Baku│ kg       │ 25.000     │ │
+│  │ BB05│ Susu UHT         │ Bahan Baku│ L        │ 18.000     │ │
+│  │ BB06│ Ragi Instan      │ Bahan Baku│ sdm      │ 500        │ │
+│  │ BB07│ Garam            │ Bahan Baku│ kg       │ 10.000     │ │
+│  │ BB08│ Coklat Bubuk     │ Bahan Baku│ kg       │ 45.000     │ │
+│  └────┴───────────────────┴──────────┴──────────┴────────────┘ │
+└─────────────────────────────────────────────────────────────────┘
+         │
+         │ SIMPAN KE: lumra_config_products
+         │ - sku_code, name, category_id, unit_id, cost_price
+         │ - product_type: 'raw_material'
+         ▼
+```
+
+### 1D: Atur Harga Supplier per Produk
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  supplier_price_list.html  →  supplier_price_form.html          │
+│                                                                 │
+│  Filter Supplier: [▼ PT Bogasari        ]                       │
+│                                                                 │
+│  ┌────┬───────────────────┬──────────┬────────────┬───────────┐ │
+│  │ ID │ Produk            │ Satuan   │ Harga Beli │ Min Order │ │
+│  ├────┼───────────────────┼──────────┼────────────┼───────────┤ │
+│  │  1 │ Tepung Terigu     │ kg       │ 12.000     │ 25 kg     │ │
+│  │  2 │ Gula Pasir        │ kg       │ 15.000     │ 10 kg     │ │
+│  └────┴───────────────────┴──────────┴────────────┴───────────┘ │
+└─────────────────────────────────────────────────────────────────┘
+         │
+         │ SIMPAN KE: lumra_config_supplier_prices
+         │ - vendor_id, product_id, price, min_order_qty
+         ▼
+```
+
+---
+
+## FASE 2: SIAPKAN RESEP/PRODUKSI
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                   RECIPE & BOM SETUP                            │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+```
+
+### 2A: Buat Resep Roti Coklat
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  recipe_list.html  →  [+ Buat Resep]  →  recipe_form.html      │
+│                                                                 │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │ Nama Resep      : [Roti Coklat]                           │ │
+│  │ Kategori        : [▼ Roti]                                │ │
+│  │ Deskripsi       : [Roti isi coklat lembut]                │ │
+│  │ Yield           : [10] pcs                                │ │
+│  │ Waktu Produksi  : [120] menit                             │ │
+│  │ Harga Jual      : [15.000] / pcs                          │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│  ═════════════ BAHAN BAKU YANG DIBUTUHKAN ════════════════════ │
+│                                                                 │
+│  ┌────┬───────────────────┬────────┬──────────┬───────────────┐ │
+│  │ #  │ Bahan             │ Qty     │ Satuan   │ Harga Satuan  │ │
+│  ├────┼───────────────────┼────────┼──────────┼───────────────┤ │
+│  │ 1  │ Tepung Terigu     │ 1.0    │ kg       │ 12.000        │ │
+│  │ 2  │ Gula Pasir        │ 0.2    │ kg       │ 15.000        │ │
+│  │ 3  │ Telur Ayam        │ 4      │ btr      │ 2.500         │ │
+│  │ 4  │ Margarin          │ 0.15   │ kg       │ 25.000        │ │
+│  │ 5  │ Susu UHT          │ 0.3    │ L        │ 18.000        │ │
+│  │ 6  │ Ragi Instan       │ 2      │ sdm      │ 500           │ │
+│  │ 7  │ Garam             │ 0.01   │ kg       │ 10.000        │ │
+│  │ 8  │ Coklat Bubuk      │ 0.1    │ kg       │ 45.000        │ │
+│  └────┴───────────────────┴────────┴──────────┴───────────────┘ │
+│                                                                 │
+│  Total Biaya Bahan  : Rp 23.800                                 │
+│  Biaya per Produk   : Rp 2.380 / pcs                           │
+│  Harga Jual         : Rp 15.000 / pcs                           │
+│  Margin             : 84%                                       │
+│                                                                 │
+│  [+ Tambah Bahan]                          [Simpan Resep]      │
+└─────────────────────────────────────────────────────────────────┘
+         │
+         │ SIMPAN KE: production_recipes
+         │ - id, name, category_id, description, yield_qty, yield_unit_id,
+         │   production_time_minutes, sell_price
+         │
+         │ SIMPAN KE: production_recipe_ingredients
+         │ - id, recipe_id, product_id, quantity, unit_id
+         ▼
+```
+
+### 2B: Lihat Detail Resep
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  recipe_detail.html                                             │
+│                                                                 │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │ 📋 Roti Coklat                                        │   │
+│  │ Kategori: Roti │ Yield: 10 pcs │ Waktu: 120 menit     │   │
+│  │ Harga Jual: Rp 15.000                                 │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  [Info] [Bahan Baku] [Biaya] [Versi]     ← tabs.html           │
+│  ════════════════                                                   │
+│                                                                 │
+│  BAHAN BAKU:                                                     │
+│  ┌───────────────────┬────────┬──────────┬──────────────┐       │
+│  │ Bahan             │ Qty     │ Satuan   │ Subtotal     │       │
+│  ├───────────────────┼────────┼──────────┼──────────────┤       │
+│  │ Tepung Terigu     │ 1.0 kg  │          │ Rp 12.000    │       │
+│  │ Gula Pasir        │ 0.2 kg  │          │ Rp 3.000     │       │
+│  │ Telur Ayam        │ 4 btr   │          │ Rp 10.000    │       │
+│  │ Margarin          │ 0.15 kg │          │ Rp 3.750     │       │
+│  │ Susu UHT          │ 0.3 L   │          │ Rp 5.400     │       │
+│  │ Ragi Instan       │ 2 sdm   │          │ Rp 1.000     │       │
+│  │ Garam             │ 0.01 kg │          │ Rp 100       │       │
+│  │ Coklat Bubuk      │ 0.1 kg  │          │ Rp 4.500     │       │
+│  ├───────────────────┼────────┼──────────┼──────────────┤       │
+│  │ TOTAL             │         │          │ Rp 23.800    │       │
+│  │ per PCS (10 pcs)  │         │          │ Rp 2.380     │       │
+│  └───────────────────┴────────┴──────────┴──────────────┘       │
+│                                                                 │
+│  [Edit Resep]  [Hapus]  [Cetak]                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## FASE 3: DAFTARKAN USER/PENGGUNA
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     USER MANAGEMENT                             │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+```
+
+### 3A: Buat Akun Pengguna
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  users.html  →  [+ Tambah User]  →  (form inline/modal)        │
+│                                                                 │
+│  ┌────┬──────────────┬──────────────────┬────────────────────┐ │
+│  │ ID │ Nama         │ Email            │ Role               │ │
+│  ├────┼──────────────┼──────────────────┼────────────────────┤ │
+│  │  1 │ Admin Utama  │ admin@lumra.com  │ Super Admin        │ │
+│  │  2 │ Siti Rahayu  │ siti@lumra.com   │ Manager Gudang     │ │
+│  │  3 │ Budi Prasetya│ budi@lumra.com   │ Kepala Produksi   │ │
+│  │  4 │ Dewi Lestari │ dewi@lumra.com   │ Kasir Pusat        │ │
+│  │  5 │ Rina Wati    │ rina@lumra.com   │ Kasir Cabang 2     │ │
+│  │  6 │ Agus Setiawan│ agus@lumra.com   │ Staff Gudang       │ │
+│  └────┴──────────────┴──────────────────┴────────────────────┘ │
+└─────────────────────────────────────────────────────────────────┘
+         │
+         │ SIMPAN KE: auth_user (username, email, password)
+         │ SIMPAN KE: lumra_config_userprofile
+         │ - user_id, role, default_location_id, phone, dll
+         ▼
+```
+
+### 3B: Assign User ke Lokasi
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  profile.html (edit per user)                                   │
+│                                                                 │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │ Nama          : Dewi Lestari                              │ │
+│  │ Role          : Kasir                                     │ │
+│  │ Lokasi Default: [▼ LUMRA Cafe Pusat]                     │ │
+│  │               │                                            │ │
+│  │ Akses Lokasi  : ☑ LUMRA Cafe Pusat                       │ │
+│  │               │ ☐ LUMRA Cafe Cabang 2                    │ │
+│  │               │ ☐ Gudang Utama                            │ │
+│  │               │ ☐ Dapur Produksi                          │ │
+│  └───────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## FASE 4: BARANG MENTAH DATANG (PROCUREMENT)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                  BARANG MENTAH MASUK                            │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+```
+
+### 4A: Input Pembelian Barang Mentah
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  stock_purchasing.html                                          │
+│                                                                 │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │ No. Pembelian : [PO-2024-0001] (auto)                    │ │
+│  │ Tanggal       : [15/01/2024]                              │ │
+│  │ Supplier      : [▼ PT Bogasari]                           │ │
+│  │ Lokasi Tujuan : [▼ Gudang Utama]                          │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│  ═════════════ DETAIL BARANG ══════════════════════════════════ │
+│                                                                 │
+│  ┌────┬───────────────────┬────────┬──────────┬───────────────┐ │
+│  │ #  │ Produk            │ Qty     │ Satuan   │ Harga Beli    │ │
+│  ├────┼───────────────────┼────────┼──────────┼───────────────┤ │
+│  │ 1  │ Tepung Terigu     │ 50     │ kg       │ 12.000        │ │
+│  │ 2  │ Gula Pasir        │ 20     │ kg       │ 15.000        │ │
+│  │ 3  │ Margarin          │ 10     │ kg       │ 25.000        │ │
+│  │ 4  │ [+ Tambah Baris]  │        │          │               │ │
+│  └────┴───────────────────┴────────┴──────────┴───────────────┘ │
+│                                                                 │
+│  Subtotal  : Rp 1.150.000                                      │
+│  PPN 11%   : Rp 126.500                                        │
+│  Total     : Rp 1.276.500                                      │
+│                                                                 │
+│  Catatan   : [____________________________________]            │
+│                                                                 │
+│  [Batal]                              [Simpan & Terima Barang] │
+└─────────────────────────────────────────────────────────────────┘
+         │
+         │ KLIK "Simpan & Terima Barang"
+         ▼
+```
+
+### 4B: Sistem Proses di Belakang Layar
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              APA YANG TERJADI SAAT KLIK SAVE?                   │
+└─────────────────────────────────────────────────────────────────┘
+
+  ┌──────────────────────────────────────────────────────────┐
+  │ 1. SIMPAN KE lumra_config_orders                         │
+  │    - order_code: "PO-2024-0001"                          │
+  │    - order_type: "purchase"                               │
+  │    - vendor_id: 1 (PT Bogasari)                          │
+  │    - location_id: 2 (Gudang Utama)                       │
+  │    - status: "completed"                                  │
+  │    - total_amount: 1.276.500                              │
+  ├──────────────────────────────────────────────────────────┤
+  │ 2. SIMPAN KE lumra_config_orderitems                      │
+  │    - order_id: 1                                         │
+  │    - product_id: 1 (Tepung), qty: 50, price: 12.000      │
+  │    - product_id: 2 (Gula),  qty: 20, price: 15.000       │
+  │    - product_id: 4 (Margarin), qty: 10, price: 25.000    │
+  ├──────────────────────────────────────────────────────────┤
+  │ 3. UPDATE lumra_config_stock                              │
+  │    - Tepung Terigu di Gudang: 0 → 50 kg                  │
+  │    - Gula Pasir di Gudang: 0 → 20 kg                     │
+  │    - Margarin di Gudang: 0 → 10 kg                       │
+  ├──────────────────────────────────────────────────────────┤
+  │ 4. SIMPAN KE lumra_config_stockmovement  ⚠️ TABEL BARU!  │
+  │    - product: Tepung, qty: +50, type: "purchase"         │
+  │    - product: Gula,   qty: +20, type: "purchase"         │
+  │    - product: Margarin, qty: +10, type: "purchase"       │
+  │    - reference: PO-2024-0001                              │
+  │    - location: Gudang Utama                               │
+  └──────────────────────────────────────────────────────────┘
+```
+
+### 4C: Lihat Stok Hasil Pembelian
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  stock_overview.html                                            │
+│                                                                 │
+│  Filter Lokasi: [▼ Gudang Utama]                               │
+│                                                                 │
+│  ┌────┬───────────────────┬──────────┬──────────┬────────────┐ │
+│  │ SKU │ Produk            │ Satuan   │ Stok     │ Status     │ │
+│  ├────┼───────────────────┼──────────┼──────────┼────────────┤ │
+│  │ BB01│ Tepung Terigu     │ kg       │ 50       │ 🟢 Aman    │ │
+│  │ BB02│ Gula Pasir        │ kg       │ 20       │ 🟢 Aman    │ │
+│  │ BB04│ Margarin          │ kg       │ 10       │ 🟢 Aman    │ │
+│  │ BB03│ Telur Ayam        │ btr      │ 0        │ 🔴 Habis   │ │
+│  │ BB05│ Susu UHT          │ L        │ 0        │ 🔴 Habis   │ │
+│  │ BB06│ Ragi Instan       │ sdm      │ 0        │ 🔴 Habis   │ │
+│  │ BB07│ Garam             │ kg       │ 0        │ 🔴 Habis   │ │
+│  │ BB08│ Coklat Bubuk      │ kg       │ 0        │ 🔴 Habis   │ │
+│  └────┴───────────────────┴──────────┴──────────┴────────────┘ │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 4D: Cetak Dokumen Pembelian
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  print_purchase_order.html                                      │
+│                                                                 │
+│  ══════════════════════════════════════════════════════════════ │
+│                    PURCHASE ORDER                               │
+│  No: PO-2024-0001                Tanggal: 15/01/2024           │
+│                                                                 │
+│  Supplier: PT Bogasari                                        │
+│  Alamat : Jl. Industri No. 1, Jakarta                          │
+│                                                                 │
+│  ───────────────────────────────────────────────────────────── │
+│  #   Produk            Qty    Satuan  Harga      Subtotal      │
+│  ───────────────────────────────────────────────────────────── │
+│  1   Tepung Terigu     50     kg      12.000     600.000       │
+│  2   Gula Pasir        20     kg      15.000     300.000       │
+│  3   Margarin          10     kg      25.000     250.000       │
+│  ───────────────────────────────────────────────────────────── │
+│                        Subtotal         : Rp 1.150.000         │
+│                        PPN 11%          : Rp 126.500           │
+│                        TOTAL            : Rp 1.276.500         │
+│  ══════════════════════════════════════════════════════════════ │
+│                                                                 │
+│  Dibuat oleh: Admin Utama                                      │
+│  Disetujui  : _______________                                  │
+│                                                                 │
+│  [🖨️ Cetak]                                        │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## FASE 5: TRANSFER BARANG KE DAPUR PRODUKSI
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│           TRANSFER GUDANG → DAPUR PRODUKSI                      │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+```
+
+### 5A: Kepala Produksi Minta Bahan
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  Dapur butuh bahan untuk produksi hari ini                       │
+│                                                                 │
+│  requisition_list.html  →  [+ Buat Permintaan]                  │
+│                        →  requisition_form.html                │
+│                                                                 │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │ No. Permintaan : [REQ-2024-0001] (auto)                  │ │
+│  │ Tanggal        : [16/01/2024]                              │ │
+│  │ Diminta oleh   : Budi Prasetya (Kepala Produksi)          │ │
+│  │ Lokasi Asal    : [▼ Gudang Utama]                         │ │
+│  │ Lokasi Tujuan  : [▼ Dapur Produksi]                       │ │
+│  │ Keterangan     : [Produksi Roti Coklat 50 pcs]            │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│  ═════════════ BARANG YANG DIMINTA ════════════════════════════ │
+│                                                                 │
+│  ┌────┬───────────────────┬──────────┬──────────┬────────────┐ │
+│  │ #  │ Bahan             │ Diminta   │ Satuan   │ Tersedia  │ │
+│  ├────┼───────────────────┼──────────┼──────────┼────────────┤ │
+│  │ 1  │ Tepung Terigu     │ 5.0      │ kg       │ 50 ✅     │ │
+│  │ 2  │ Gula Pasir        │ 1.0      │ kg       │ 20 ✅     │ │
+│  │ 3  │ Telur Ayam        │ 20       │ btr      │ 0  ❌     │ │
+│  │ 4  │ Margarin          │ 0.75     │ kg       │ 10 ✅     │ │
+│  │ 5  │ Susu UHT          │ 1.5      │ L        │ 0  ❌     │ │
+│  │ 6  │ Ragi Instan       │ 10       │ sdm      │ 0  ❌     │ │
+│  │ 7  │ Garam             │ 0.05     │ kg       │ 0  ❌     │ │
+│  │ 8  │ Coklat Bubuk      │ 0.5      │ kg       │ 0  ❌     │ │
+│  └────┴───────────────────┴──────────┴──────────┴────────────┘ │
+│                                                                 │
+│  ⚠️ Perhatian: 5 bahan tidak tersedia!                          │
+│                                                                 │
+│  [Batal]                              [Kirim Permintaan]        │
+└─────────────────────────────────────────────────────────────────┘
+         │
+         │ SIMPAN KE: lumra_config_requisitions (status: "pending")
+         │ SIMPAN KE: lumra_config_requisitionitem
+         ▼
+```
+
+### 5B: Manager Gudang Approve & Fulfil
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  requisition_detail.html                                         │
+│                                                                 │
+│  REQ-2024-0001 │ Status: ⏳ MENUNGGU APPROVAL                   │
+│                                                                 │
+│  Diminta: Budi Prasetya │ Dari: Gudang Utama │ Ke: Dapur      │
+│                                                                 │
+│  ═══════════════ DETAIL BARANG ════════════════════════════════ │
+│  ┌────┬───────────────────┬──────────┬──────────┬────────────┐ │
+│  │ #  │ Bahan             │ Diminta   │ Satuan   │ Stok Gudang│ │
+│  ├────┼───────────────────┼──────────┼──────────┼────────────┤ │
+│  │ 1  │ Tepung Terigu     │ 5.0      │ kg       │ 50 kg     │ │
+│  │ 2  │ Gula Pasir        │ 1.0      │ kg       │ 20 kg     │ │
+│  │ 3  │ Telur Ayam        │ 20       │ btr      │ 0 btr ❌  │ │
+│  │ 4  │ Margarin          │ 0.75     │ kg       │ 10 kg     │ │
+│  │ 5  │ Susu UHT          │ 1.5      │ L        │ 0 L ❌    │ │
+│  │ 6  │ Ragi Instan       │ 10       │ sdm      │ 0 sdm ❌  │ │
+│  │ 7  │ Garam             │ 0.05     │ kg       │ 0 kg ❌   │ │
+│  │ 8  │ Coklat Bubuk      │ 0.5      │ kg       │ 0 kg ❌   │ │
+│  └────┴───────────────────┴──────────┴──────────┴────────────┘ │
+│                                                                 │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │ Catatan Approval:                                         │ │
+│  │ [Hanya 2 item yang bisa dipenuhi, sisanya beli dulu]     │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│  [❌ Tolak]   [✅ Approve Sebagian]   [✅ Approve Semua]       │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 5C: Proses Transfer Sebenarnya
+```
+Siti (Manager Gudang) approve sebagian, lalu buat transfer:
+
+┌─────────────────────────────────────────────────────────────────┐
+│  transfer_form.html                                             │
+│                                                                 │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │ No. Transfer   : [TRF-2024-0001] (auto)                  │ │
+│  │ Referensi      : [REQ-2024-0001]                         │ │
+│  │ Tanggal        : [16/01/2024]                              │ │
+│  │ Dari Lokasi    : [Gudang Utama]                           │ │
+│  │ Ke Lokasi      : [Dapur Produksi]                         │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│  ═════════════ BARANG DITRANSFER ══════════════════════════════ │
+│  ┌────┬───────────────────┬──────────┬──────────┬────────────┐ │
+│  │ #  │ Bahan             │ Qty       │ Satuan   │ Kondisi    │ │
+│  ├────┼───────────────────┼──────────┼──────────┼────────────┤ │
+│  │ 1  │ Tepung Terigu     │ 5.0      │ kg       │ Baik       │ │
+│  │ 2  │ Gula Pasir        │ 1.0      │ kg       │ Baik       │ │
+│  │ 3  │ Margarin          │ 0.75     │ kg       │ Baik       │ │
+│  └────┴───────────────────┴──────────┴──────────┴────────────┘ │
+│                                                                 │
+│  Catatan: [Sisanya akan dipenuhi setelah barang datang]        │
+│                                                                 │
+│  [Batal]                              [Konfirmasi Transfer]    │
+└─────────────────────────────────────────────────────────────────┘
+         │
+         │ KLIK "Konfirmasi Transfer"
+         ▼
+
+┌─────────────────────────────────────────────────────────────────┐
+│              APA YANG TERJADI DI DATABASE?                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1. SIMPAN lumra_config_transfers                              │
+│     - transfer_code: "TRF-2024-0001"                           │
+│     - from_location: Gudang Utama                              │
+│     - to_location: Dapur Produksi                              │
+│     - status: "completed"                                      │
+│                                                                 │
+│  2. SIMPAN lumra_config_transferitem                           │
+│     - Tepung 5kg, Gula 1kg, Margarin 0.75kg                    │
+│                                                                 │
+│  3. UPDATE lumra_config_stock                                  │
+│     ┌───────────────────┬────────────────┬──────────────────┐  │
+│     │ Produk            │ Gudang Utama   │ Dapur Produksi   │  │
+│     ├───────────────────┼────────────────┼──────────────────┤  │
+│     │ Tepung Terigu     │ 50 → 45 kg     │ 0 → 5 kg         │  │
+│     │ Gula Pasir        │ 20 → 19 kg     │ 0 → 1 kg         │  │
+│     │ Margarin          │ 10 → 9.25 kg   │ 0 → 0.75 kg      │  │
+│     └───────────────────┴────────────────┴──────────────────┘  │
+│                                                                 │
+│  4. SIMPAN lumra_config_stockmovement                          │
+│     - Tepung:  qty -5,  type: "transfer_out", loc: Gudang     │
+│     - Tepung:  qty +5,  type: "transfer_in",  loc: Dapur      │
+│     - Gula:    qty -1,  type: "transfer_out", loc: Gudang     │
+│     - Gula:    qty +1,  type: "transfer_in",  loc: Dapur      │
+│     - (dst...)                                                    │
+│                                                                 │
+│  5. UPDATE lumra_config_requisitions                           │
+│     - status: "partially_fulfilled"                             │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## FASE 6: PROSES PRODUKSI
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    PRODUKSI BERJALAN                            │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+```
+
+### 6A: Stok di Dapur Sebelum Produksi
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  stock_overview.html (filter: Dapur Produksi)                   │
+│                                                                 │
+│  ┌────┬───────────────────┬──────────┬──────────┬────────────┐ │
+│  │ SKU │ Produk            │ Satuan   │ Stok     │ Status     │ │
+│  ├────┼───────────────────┼──────────┼──────────┼────────────┤ │
+│  │ BB01│ Tepung Terigu     │ kg       │ 5.0      │ 🟡 Cukup  │ │
+│  │ BB02│ Gula Pasir        │ kg       │ 1.0      │ 🟡 Cukup  │ │
+│  │ BB03│ Telur Ayam        │ btr      │ 0        │ 🔴 Habis  │ │
+│  │ BB04│ Margarin          │ kg       │ 0.75     │ 🟡 Cukup  │ │
+│  │ BB05│ Susu UHT          │ L        │ 0        │ 🔴 Habis  │ │
+│  │ BB06│ Ragi Instan       │ sdm      │ 0        │ 🔴 Habis  │ │
+│  │ BB07│ Garam             │ kg       │ 0        │ 🔴 Habis  │ │
+│  │ BB08│ Coklat Bubuk      │ kg       │ 0        │ 🔴 Habis  │ │
+│  └────┴───────────────────┴──────────┴──────────┴────────────┘ │
+│                                                                 │
+│  ⚠️ Tidak bisa produksi Roti Coklat — bahan tidak lengkap!      │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 6B: Beli Sisa Bahan & Transfer Lagi
+```
+*(Skenario singkat: beli sisa bahan, terima di gudang, transfer ke dapur)*
+
+Setelah semua bahan lengkap di Dapur Produksi:
+┌─────────────────────────────────────────────────────────────────┐
+│  stock_overview.html (filter: Dapur Produksi)                   │
+│                                                                 │
+│  ┌────┬───────────────────┬──────────┬──────────────┬─────────┐ │
+│  │ SKU │ Produk            │ Satuan   │ Stok        │ vs Resep│ │
+│  ├────┼───────────────────┼──────────┼──────────────┼─────────┤ │
+│  │ BB01│ Tepung Terigu     │ kg       │ 5.0         │ ✅      │ │
+│  │ BB02│ Gula Pasir        │ kg       │ 1.0         │ ✅      │ │
+│  │ BB03│ Telur Ayam        │ btr      │ 20          │ ✅      │ │
+│  │ BB04│ Margarin          │ kg       │ 0.75        │ ✅      │ │
+│  │ BB05│ Susu UHT          │ L        │ 1.5         │ ✅      │ │
+│  │ BB06│ Ragi Instan       │ sdm      │ 10          │ ✅      │ │
+│  │ BB07│ Garam             │ kg       │ 0.05        │ ✅      │ │
+│  │ BB08│ Coklat Bubuk      │ kg       │ 0.5         │ ✅      │ │
+│  └────┴───────────────────┴──────────┴──────────────┴─────────┘ │
+│                                                                 │
+│  ✅ Semua bahan untuk Roti Coklat tersedia!                     │
+│                                                                 │
+│  [🚀 Mulai Produksi]                                           │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 6C: Mulai Produksi (Catat Pemakaian Bahan)
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  production_order_form.html                                     │
+│                                                                 │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │ No. Produksi    : [PRD-2024-0001] (auto)                 │ │
+│  │ Tanggal         : [17/01/2024]                            │ │
+│  │ Resep           : [▼ Roti Coklat]                         │ │
+│  │ Lokasi Produksi : [▼ Dapur Produksi]                      │ │
+│  │ Ditugaskan      : [▼ Budi Prasetya]                       │ │
+│  │ Target Output   : [10] pcs                                │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│  ═════════ BAHAN BAKU YANG AKAN DIPAKAI ══════════════════════ │
+│  (Otomatis dari resep × target qty)                            │
+│                                                                 │
+│  ┌────┬───────────────────┬──────────┬──────────┬────────────┐ │
+│  │ #  │ Bahan             │ Dipakai   │ Satuan   │ Tersedia   │ │
+│  ├────┼───────────────────┼──────────┼──────────┼────────────┤ │
+│  │ 1  │ Tepung Terigu     │ 1.0      │ kg       │ 5.0 ✅     │ │
+│  │ 2  │ Gula Pasir        │ 0.2      │ kg       │ 1.0 ✅     │ │
+│  │ 3  │ Telur Ayam        │ 4        │ btr      │ 20 ✅      │ │
+│  │ 4  │ Margarin          │ 0.15     │ kg       │ 0.75 ✅    │ │
+│  │ 5  │ Susu UHT          │ 0.3      │ L        │ 1.5 ✅     │ │
+│  │ 6  │ Ragi Instan       │ 2        │ sdm      │ 10 ✅      │ │
+│  │ 7  │ Garam             │ 0.01     │ kg       │ 0.05 ✅    │ │
+│  │ 8  │ Coklat Bubuk      │ 0.1      │ kg       │ 0.5 ✅     │ │
+│  └────┴───────────────────┴──────────┴──────────┴────────────┘ │
+│                                                                 │
+│  Estimasi Biaya  : Rp 23.800                                   │
+│  Estimasi Output : 10 pcs × Rp 15.000 = Rp 150.000             │
+│                                                                 │
+│  [Batal]                    [▶️ Mulai Produksi]                 │
+└─────────────────────────────────────────────────────────────────┘
+         │
+         │ KLIK "Mulai Produksi"
+         ▼
+
+┌─────────────────────────────────────────────────────────────────┐
+│              DATABASE SAAT "MULAI PRODUKSI"                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1. SIMPAN lumra_config_production_orders  ⚠️ TABEL BARU!      │
+│     - po_code: "PRD-2024-0001"                                 │
+│     - recipe_id: 1 (Roti Coklat)                               │
+│     - location_id: Dapur Produksi                              │
+│     - target_qty: 10                                           │
+│     - status: "in_progress"                                    │
+│                                                                 │
+│  2. KURANGI STOK BAHAN BAKU (lumra_config_stock)               │
+│     - Tepung:  5.0 → 4.0 kg                                   │
+│     - Gula:    1.0 → 0.8 kg                                   │
+│     - Telur:   20 → 16 btr                                    │
+│     - Margarin: 0.75 → 0.60 kg                                │
+│     - Susu:    1.5 → 1.2 L                                    │
+│     - Ragi:    10 → 8 sdm                                     │
+│     - Garam:   0.05 → 0.04 kg                                 │
+│     - Coklat:  0.5 → 0.4 kg                                   │
+│                                                                 │
+│  3. SIMPAN lumra_config_stockmovement                          │
+│     - Semua bahan: qty negatif, type: "production_out"         │
+│     - reference: PRD-2024-0001                                 │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 6D: Produksi Selesai — Terima Hasil
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  production_order_detail.html                                   │
+│                                                                 │
+│  PRD-2024-0001 │ Status: 🔵 SEDANG BERJALAN                    │
+│                                                                 │
+│  Resep: Roti Coklat │ Target: 10 pcs │ Petugas: Budi Prasetya  │
+│                                                                 │
+│  ═════════════ BAHAN TERPAKAI ════════════════════════════════ │
+│  ┌────┬───────────────────┬──────────┬──────────┬────────────┐ │
+│  │ #  │ Bahan             │ Dipakai   │ Satuan   │ Biaya      │ │
+│  ├────┼───────────────────┼──────────┼──────────┼────────────┤ │
+│  │ 1  │ Tepung Terigu     │ 1.0      │ kg       │ 12.000     │ │
+│  │ 2  │ Gula Pasir        │ 0.2      │ kg       │ 3.000      │ │
+│  │ 3  │ Telur Ayam        │ 4        │ btr      │ 10.000     │ │
+│  │ 4  │ Margarin          │ 0.15     │ kg       │ 3.750      │ │
+│  │ 5  │ Susu UHT          │ 0.3      │ L        │ 5.400      │ │
+│  │ 6  │ Ragi Instan       │ 2        │ sdm      │ 1.000      │ │
+│  │ 7  │ Garam             │ 0.01     │ kg       │ 100        │ │
+│  │ 8  │ Coklat Bubuk      │ 0.1      │ kg       │ 4.500      │ │
+│  ├────┼───────────────────┼──────────┼──────────┼────────────┤ │
+│  │    │ TOTAL BIAYA       │          │          │ 23.800     │ │
+│  └────┴───────────────────┴──────────┴──────────┴────────────┘ │
+│                                                                 │
+│  ═════════════ HASIL PRODUKSI ════════════════════════════════ │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │ Produk Jadi    : Roti Coklat                              │ │
+│  │ Target         : 10 pcs                                   │ │
+│  │ Aktual Hasil   : [9] pcs  ← input kasir                   │ │
+│  │ Selisih        : -1 pcs (waste/bakar rusak)               │ │
+│  │ Keterangan     : [1 pcs gosong, tidak bisa dijual]        │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│  Biaya per Aktual  : Rp 23.800 ÷ 9 = Rp 2.644 / pcs          │
+│  (lebih mahal dari estimasi Rp 2.380 karena waste)            │
+│                                                                 │
+│  Lokasi Tujuan    : [▼ LUMRA Cafe Pusat]                      │
+│                                                                 │
+│  [Batal]                    [✅ Selesai & Terima Hasil]        │
+└─────────────────────────────────────────────────────────────────┘
+         │
+         │ KLIK "Selesai & Terima Hasil"
+         ▼
+
+┌─────────────────────────────────────────────────────────────────┐
+│              DATABASE SAAT "SELESAI PRODUKSI"                   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1. UPDATE lumra_config_production_orders                      │
+│     - status: "completed"                                      │
+│     - actual_qty: 9                                            │
+│     - waste_qty: 1                                             │
+│     - actual_cost: 23.800                                      │
+│                                                                 │
+│  2. TAMBAH STOK PRODUK JADI (lumra_config_stock)               │
+│     - Roti Coklat di LUMRA Cafe Pusat: 0 → 9 pcs              │
+│                                                                 │
+│  3. SIMPAN lumra_config_stockmovement                          │
+│     - Roti Coklat: qty +9, type: "production_in"               │
+│     - location: LUMRA Cafe Pusat                               │
+│                                                                 │
+│  4. SIMPAN WASTE RECORD (jika ada tabel)                       │
+│     - product: Roti Coklat, qty: 1, reason: "gosong"          │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 6E: Stok Setelah Produksi
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  stock_overview.html (filter: LUMRA Cafe Pusat)                 │
+│                                                                 │
+│  ┌────┬───────────────────┬──────────┬──────────┬────────────┐ │
+│  │ SKU │ Produk            │ Satuan   │ Stok     │ Status     │ │
+│  ├────┼───────────────────┼──────────┼──────────┼────────────┤ │
+│  │ PJ01│ Roti Coklat      │ pcs      │ 9        │ 🟢 Tersedia│ │
+│  └────┴───────────────────┴──────────┴──────────┴────────────┘ │
+│                                                                 │
+│  *(Produk jadi muncul di stok toko setelah produksi selesai)*   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## FASE 7: TERJUAL DI POS
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     PENJUALAN DI POS                            │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+```
+
+### 7A: Kasir Buka POS
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  pos.html                                                       │
+│  ══════════════════════════════════════════════════════════════ │
+│                                                                 │
+│  Lokasi: LUMRA Cafe Pusat │ Kasir: Dewi Lestari │ 17/01/2024  │
+│                                                                 │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │ 🔍 Cari produk...                                      │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  KATEGORI: [Semua] [Roti] [Kue] [Minuman] [Lainnya]            │
+│                                                                 │
+│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐              │
+│  │  🍞          │ │  🥐          │ │  🍰          │              │
+│  │  Roti       │ │  Croissant  │ │  Brownies   │              │
+│  │  Coklat     │ │  Original   │ │              │              │
+│  │  Rp 15.000  │ │  Rp 18.000  │ │  Rp 20.000  │              │
+│  │  Stok: 9    │ │  Stok: 15   │ │  Stok: 8    │              │
+│  └─────────────┘ └─────────────┘ └─────────────┘              │
+│                                                                 │
+│  ══════════════════════════════════════════════════════════════ │
+│  │                    KERANJANG                                │
+│  ══════════════════════════════════════════════════════════════ │
+│                                                                 │
+│  (Kasir klik "Roti Coklat" → masuk keranjang)                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 7B: Tambah Ke Keranjang
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  pos.html — Keranjang terisi                                    │
+│                                                                 │
+│  ══════════════════════════════════════════════════════════════ │
+│  │  KERANJANG                                   1 item        │
+│  ══════════════════════════════════════════════════════════════ │
+│                                                                 │
+│  ┌────┬───────────────────┬────────┬──────────┬───────────────┐ │
+│  │ #  │ Produk            │ Qty     │ Harga    │ Subtotal      │ │
+│  ├────┼───────────────────┼────────┼──────────┼───────────────┤ │
+│  │ 1  │ Roti Coklat       │ [-] 2 [+]│ 15.000  │ 30.000        │ │
+│  └────┴───────────────────┴────────┴──────────┴───────────────┘ │
+│                                                                 │
+│  Pelanggan: [▼ Walk-in / Ani Susanti / Budi / ...]             │
+│                                                                 │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │ Subtotal    : Rp 30.000                                   │ │
+│  │ Diskon      : Rp 0                                        │ │
+│  │ PPN 11%     : Rp 3.300                                    │ │
+│  │ TOTAL       : Rp 33.300                                   │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│  Metode Bayar: [💰 Tunai] [💳 Kartu] [📱 QRIS]                 │
+│                                                                 │
+│  ┌───────────────────────────────────────────────────────────┐ │
+│  │ Bayar    : [50.000]                                       │ │
+│  │ Kembalian: Rp 16.700                                      │ │
+│  └───────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│  [Batal]                              [✅ BAYAR Rp 33.300]      │
+└─────────────────────────────────────────────────────────────────┘
+         │
+         │ KLIK "BAYAR"
+         ▼
+```
+
+### 7C: Database Saat Pembayaran
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              DATABASE SAAT "BAYAR DI POS"                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1. SIMPAN lumra_config_orders                                 │
+│     - order_code: "SO-2024-0001"                               │
+│     - order_type: "sales"                                      │
+│     - location_id: LUMRA Cafe Pusat                            │
+│     - customer_id: Walk-in (atau specific customer)             │
+│     - subtotal: 30.000                                         │
+│     - tax_amount: 3.300                                        │
+│     - total_amount: 33.300                                     │
+│     - payment_method: "cash"                                   │
+│     - paid_amount: 50.000                                      │
+│     - change_amount: 16.700                                    │
+│     - status: "completed"                                      │
+│     - created_by: Dewi Lestari                                 │
+│                                                                 │
+│  2. SIMPAN lumra_config_orderitems                             │
+│     - order_id: SO-2024-0001                                   │
+│     - product_id: Roti Coklat                                  │
+│     - quantity: 2                                              │
+│     - unit_price: 15.000                                       │
+│     - subtotal: 30.000                                         │
+│                                                                 │
+│  3. KURANGI STOK (lumra_config_stock)                          │
+│     - Roti Coklat di LUMRA Cafe Pusat: 9 → 7 pcs              │
+│                                                                 │
+│  4. SIMPAN lumra_config_stockmovement                          │
+│     - Roti Coklat: qty -2, type: "sale"                        │
+│     - location: LUMRA Cafe Pusat                               │
+│     - reference: SO-2024-0001                                  │
+│                                                                 │
+│  5. SIMPAN lumra_config_payments  ⚠️ TABEL BARU!               │
+│     - payment_code: "PAY-2024-0001"                            │
+│     - order_id: SO-2024-0001                                   │
+│     - payment_method: "cash"                                   │
+│     - amount: 33.300                                           │
+│     - paid_at: 17/01/2024 10:30:00                             │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 7D: Cetak Struk
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  print_receipt.html (58mm thermal)                              │
+│                                                                 │
+│  ╔══════════════════════════════════════╗                       │
+│  ║        LUMRA CAFE PUSAT              ║                       │
+│  ║    Jl. Merdeka No. 1, Jakarta       ║                       │
+│  ║    Telp: 021-1234567                ║                       │
+│  ╠══════════════════════════════════════╣                       │
+│  ║ 17/01/2024 10:30                    ║                       │
+│  ║ Kasir: Dewi Lestari                 ║                       │
+│  ║ No: SO-2024-0001                    ║                       │
+│  ╠══════════════════════════════════════╣                       │
+│  ║ Roti Coklat    2x  15.000   30.000  ║                       │
+│  ║ ─────────────────────────────────── ║                       │
+│  ║ Subtotal              Rp 30.000     ║                       │
+│  ║ PPN 11%               Rp 3.300      ║                       │
+│  ║ ─────────────────────────────────── ║                       │
+│  ║ TOTAL                 Rp 33.300     ║                       │
+│  ║ Tunai                 Rp 50.000     ║                       │
+│  ║ Kembalian             Rp 16.700     ║                       │
+│  ╠══════════════════════════════════════╣                       │
+│  ║     Terima kasih atas kunjungan     ║                       │
+│  ║         Anda! 😊                    ║                       │
+│  ╚══════════════════════════════════════╝                       │
+│                                                                 │
+│  [🖨️ Cetak Struk]                                               │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## RINGKASAN ALUR LENGKAP
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         FLOW CHART LENGKAP                              │
+└─────────────────────────────────────────────────────────────────────────┘
+
+  ┌─────────────┐
+  │ SETUP AWAL  │
+  └──────┬──────┘
+         │
+    ┌────┴────┬─────────────┬──────────────┐
+    ▼         ▼             ▼              ▼
+┌───────┐ ┌───────┐   ┌──────────┐   ┌──────────┐
+│Nama   │ │Nama   │   │Kategori  │   │✅ Setup  │
+│Bisnis │ │Toko/  │   │Produk    │   │Selesai   │
+│       │ │Cabang │   │Pertama   │   │          │
+└───┬───┘ └───┬───┘   └──────────┘   └────┬─────┘
+    │         │                            │
+    ▼         ▼                            ▼
+┌──────────────────────────────────────────────────┐
+│              MASTER DATA                          │
+│  Satuan → Supplier → Produk Bahan Baku            │
+│  → Harga Supplier → User/Pengguna                 │
+└──────────────────────┬───────────────────────────┘
+                       │
+                       ▼
+┌──────────────────────────────────────────────────┐
+│              RESEP/RECIPE                         │
+│  Buat Resep Roti Coklat                           │
+│  → Input bahan baku + qty                         │
+│  → Hitung biaya & margin                          │
+└──────────────────────┬───────────────────────────┘
+                       │
+                       ▼
+┌──────────────────────────────────────────────────┐
+│         BARANG MENTAH DATANG                      │
+│  Input Pembelian (PO)                             │
+│  → Terima ke Gudang                               │
+│  → Stok bertambah                                 │
+│  → Cetak PO                                       │
+└──────────────────────┬───────────────────────────┘
+                       │
+                       ▼
+┌──────────────────────────────────────────────────┐
+│       TRANSFER GUDANG → DAPUR                     │
+│  Requisition (permintaan bahan)                   │
+│  → Approval oleh Manager Gudang                   │
+│  → Transfer aktual                               │
+│  → Stok Gudang berkurang, Dapur bertambah         │
+└──────────────────────┬───────────────────────────┘
+                       │
+                       ▼
+┌──────────────────────────────────────────────────┐
+│           PROSES PRODUKSI                         │
+│  Mulai Produksi (PRD)                             │
+│  → Stok bahan baku BERKURANG otomatis             │
+│  → Catat hasil produksi (aktual vs target)        │
+│  → Catat waste jika ada                           │
+│  → Stok produk jadi BERTAMBAH di toko             │
+└──────────────────────┬───────────────────────────┘
+                       │
+                       ▼
+┌──────────────────────────────────────────────────┐
+│           TERJUAL DI POS                          │
+│  Kasir pilih produk → masuk keranjang             │
+│  → Pilih pelanggan                               │
+│  → Hitung total + PPN                            │
+│  → Pilih metode bayar                             │
+│  → Proses pembayaran                              │
+│  → Stok produk jadi BERKURANG                     │
+│  → Cetak struk                                    │
+└──────────────────────┬───────────────────────────┘
+                       │
+                       ▼
+┌──────────────────────────────────────────────────┐
+│              LAPORAN & ANALITIK                   │
+│  → Laporan Penjualan                              │
+│  → Laporan Stok                                   │
+│  → Laporan Produksi                               │
+│  → Dashboard & KPI                                │
+└──────────────────────────────────────────────────┘
+```
+
+---
+
+## MAPPING: TABEL YANG DIBUTUHKAN PER FASE
+
+```
+FASE            TABEL YANG DIBUTUHKAN                    STATUS
+──────────────  ──────────────────────────────────────  ───────────
+Setup Awal      lumra_config_locations                   ✅ Ada
+                _categories                              ✅ Ada
+
+Master Data     _units                                   ✅ Ada
+                _vendors                                 ✅ Ada
+                lumra_config_products                    ✅ Ada
+                lumra_config_supplier_prices             ✅ Ada
+                auth_user + lumra_config_userprofile     ✅ Ada
+
+Resep           production_recipe_categories             ✅ Ada
+                production_recipes                       ✅ Ada
+                production_recipe_ingredients            ✅ Ada
+
+Barang Datang   lumra_config_orders                     ✅ Ada
+                lumra_config_orderitems                  ✅ Ada
+                lumra_config_stock                       ✅ Ada
+                lumra_config_stockmovement               ❌ HARUS BUAT
+
+Transfer        lumra_config_requisitions                ✅ Ada
+                lumra_config_requisitionitem             ✅ Ada
+                lumra_config_transfers                   ✅ Ada
+                lumra_config_transferitem                ✅ Ada
+
+Produksi        lumra_config_production_orders           ❌ HARUS BUAT
+                (tabel waste - opsional)                 ❌ HARUS BUAT
+
+POS Jual        lumra_config_orders                     ✅ Ada
+                lumra_config_orderitems                  ✅ Ada
+                lumra_config_stock                       ✅ Ada
+                lumra_config_stockmovement               ❌ HARUS BUAT
+                lumra_config_payments                    ❌ HARUS BUAT
+
+Laporan         (semua view/aggregasi dari tabel atas)   ✅ Bisa dibuat
+```
+
+---
+
+## TABEL YANG HARUS DIBUAT SEGERA
+
+```sql
+-- ============================================
+-- TABEL 1: STOCK MOVEMENT LOG (Paling Kritis!)
+-- ============================================
+CREATE TABLE lumra_config_stockmovement (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    product_id BIGINT NOT NULL,          -- FK → products
+    location_id BIGINT NOT NULL,         -- FK → locations
+    quantity DECIMAL(15,4) NOT NULL,     -- + = masuk, - = keluar
+    movement_type VARCHAR(30) NOT NULL,  -- purchase, sale, adjustment,
+                                         -- transfer_in, transfer_out,
+                                         -- production_in, production_out,
+                                         -- opname
+    reference_code VARCHAR(50) NULL,     -- PO-xxx, SO-xxx, PRD-xxx, dll
+    reference_type VARCHAR(30) NULL,     -- order, transfer, production_order
+    notes TEXT NULL,
+    created_by BIGINT NOT NULL,          -- FK → auth_user
+    created_at DATETIME NOT NULL DEFAULT NOW(),
+    
+    INDEX idx_product_location (product_id, location_id),
+    INDEX idx_movement_type (movement_type),
+    INDEX idx_reference (reference_code),
+    INDEX idx_created_at (created_at)
+);
+
+
+-- ============================================
+-- TABEL 2: PAYMENTS
+-- ============================================
+CREATE TABLE lumra_config_payments (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    payment_code VARCHAR(50) NOT NULL UNIQUE,
+    order_id BIGINT NOT NULL,            -- FK → orders
+    payment_method VARCHAR(30) NOT NULL, -- cash, card, qris, transfer
+    amount DECIMAL(15,2) NOT NULL,
+    reference_no VARCHAR(100) NULL,      -- nomor referensi kartu/QR
+    paid_at DATETIME NOT NULL,
+    created_by BIGINT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT NOW(),
+    
+    INDEX idx_order (order_id),
+    INDEX idx_payment_method (payment_method),
+    INDEX idx_paid_at (paid_at)
+);
+
+
+-- ============================================
+-- TABEL 3: PRODUCTION ORDERS
+-- ============================================
+CREATE TABLE lumra_config_production_orders (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    po_code VARCHAR(50) NOT NULL UNIQUE,
+    recipe_id BIGINT NOT NULL,           -- FK → production_recipes
+    location_id BIGINT NOT NULL,         -- FK → locations (dapur)
+    assigned_to BIGINT NULL,             -- FK → auth_user (petugas)
+    target_qty DECIMAL(15,4) NOT NULL,   -- target jumlah hasil
+    actual_qty DECIMAL(15,4) NULL,       -- aktual jumlah hasil
+    waste_qty DECIMAL(15,4) NULL DEFAULT 0,
+    waste_reason TEXT NULL,
+    total_material_cost DECIMAL(15,2) NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'draft',
+        -- draft, in_progress, completed, cancelled
+    started_at DATETIME NULL,
+    completed_at DATETIME NULL,
+    output_location_id BIGINT NULL,      -- FK → locations (toko tujuan)
+    notes TEXT NULL,
+    created_by BIGINT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT NOW(),
+    updated_at DATETIME NOT NULL DEFAULT NOW(),
+    
+    INDEX idx_recipe (recipe_id),
+    INDEX idx_location (location_id),
+    INDEX idx_status (status),
+    INDEX idx_created_at (created_at)
+);
+
+
+-- ============================================
+-- TABEL 4: PRODUCTION ORDER MATERIALS (Detail bahan per PO)
+-- ============================================
+CREATE TABLE lumra_config_production_order_materials (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    production_order_id BIGINT NOT NULL, -- FK → production_orders
+    product_id BIGINT NOT NULL,          -- FK → products (bahan baku)
+    quantity_required DECIMAL(15,4) NOT NULL,  -- qty dari resep
+    quantity_used DECIMAL(15,4) NULL,          -- qty aktual dipakai
+    unit_id BIGINT NOT NULL,             -- FK → units
+    cost_price DECIMAL(15,2) NULL,       -- harga saat dipakai
+    notes TEXT NULL,
+    
+    INDEX idx_po (production_order_id),
+    INDEX idx_product (product_id)
+);
+
+
+-- ============================================
+-- TABEL 5: RETURNS (Opsional tapi penting)
+-- ============================================
+CREATE TABLE lumra_config_returns (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    return_code VARCHAR(50) NOT NULL UNIQUE,
+    order_id BIGINT NOT NULL,            -- FK → orders
+    customer_id BIGINT NULL,             -- FK → customers
+    return_date DATETIME NOT NULL,
+    subtotal DECIMAL(15,2) NOT NULL DEFAULT 0,
+    tax_amount DECIMAL(15,2) NOT NULL DEFAULT 0,
+    total_amount DECIMAL(15,2) NOT NULL DEFAULT 0,
+    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+        -- pending, approved, completed, cancelled
+    reason TEXT NULL,
+    notes TEXT NULL,
+    created_by BIGINT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT NOW(),
+    
+    INDEX idx_order (order_id),
+    INDEX idx_status (status)
+);
+
+CREATE TABLE lumra_config_returnitems (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    return_id BIGINT NOT NULL,           -- FK → returns
+    product_id BIGINT NOT NULL,          -- FK → products
+    quantity DECIMAL(15,4) NOT NULL,
+    unit_price DECIMAL(15,2) NOT NULL,
+    subtotal DECIMAL(15,2) NOT NULL,
+    reason VARCHAR(255) NULL,
+    
+    INDEX idx_return (return_id),
+    INDEX idx_product (product_id)
+);
+```
+
+---
+
+## URUTAN TEMPLATE YANG HARUS DIBUAT
+
+```
+PRIORITAS   TEMPLATE                          TABEL DIBUTUHKAN
+──────────  ─────────────────────────────────  ──────────────────────────
+  1️⃣        onboarding/welcome.html           (baru user)
+  1️⃣        onboarding/step_business.html     (baru user)
+  1️⃣        onboarding/step_location.html     locations
+  1️⃣        onboarding/step_category.html     categories
+  1️⃣        onboarding/step_complete.html     -
+
+  2️⃣        inventory/transfer_list.html      transfers
+  2️⃣        inventory/transfer_form.html      transfers + transferitem
+  2️⃣        inventory/transfer_detail.html    transfers + transferitem
+
+  3️⃣        production/production_order_form.html   recipes + stock
+  3️⃣        production/production_order_detail.html production_orders
+  3️⃣        production/material_consumption.html   production_order_materials
+
+  4️⃣        sales/order_list.html             orders
+  4️⃣        sales/order_detail.html           orders + orderitems
+
+  5️⃣        print/print_receipt.html          orders + orderitems
+  5️⃣        print/print_purchase_order.html   orders + orderitems
+  5️⃣        print/print_production_order.html production_orders
+
+  6️⃣        partials/print_base.html          -
+
+  7️⃣        sales/retur_list.html             returns
+  7️⃣        sales/retur_form.html             returns + returnitems
+  7️⃣        sales/retur_detail.html           returns + returnitems
+```
+
+---
+
+Ini adalah skenario end-to-end lengkap dari setup sampai penjualan. Apakah ingin saya detailkan salah satu fase tertentu, atau mulai buat template yang pertama?

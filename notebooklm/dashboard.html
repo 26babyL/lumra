@@ -1,0 +1,772 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}Dashboard — CoffeeShop{% endblock %}
+
+{% block content %}
+<!-- FIX #4 — LAYERED BACKGROUND: blob pakai color-primary token, pointer-events: none -->
+<div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-3" aria-hidden="true"></div>
+
+<div class="w-full flex-1 space-y-6 relative z-10"
+     x-data="dashboardApp()"
+     x-init="init()"
+     x-cloak>
+
+  {# ══ HEADER ══ #}
+  <div class="reveal flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
+  <div>
+    <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-[0.2em] mb-1">Overview</p>
+    <h1 class="text-2xl md:text-3xl font-bold text-slate-800">DASHBOARD</h1>
+    <p class="text-xs text-slate-500 font-medium">{% trans "Real-time insights for your operations" %}</p>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-3">
+    <!-- Store Switcher -->
+    <div class="relative group">
+      <div x-data="{ 
+        open: false, 
+        search: '',
+        activeStore: { name: 'Toko Utama', city: 'Jakarta', status: 'online' },
+        stores: [
+            { name: 'Toko Utama', city: 'Jakarta', status: 'online' },
+            { name: 'Gudang Pusat', city: 'Bandung', status: 'online' },
+            { name: 'Cabang Sudirman', city: 'Jakarta', status: 'offline' },
+            { name: 'Cabang Dago', city: 'Bandung', status: 'online' }
+        ],
+        get filteredStores() {
+            return this.stores.filter(s => s.name.toLowerCase().includes(this.search.toLowerCase()))
+        }
+      }" class="relative">
+        
+        <button @click="open = !open" 
+                class="store-switcher">
+          <div class="relative flex items-center justify-center">
+            <span class="w-2 h-2 rounded-full" :class="activeStore.status === 'online' ? 'bg-emerald-500' : 'bg-slate-300'"></span>
+            <span x-show="activeStore.status === 'online'" class="absolute w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          </div>
+
+          <div class="flex flex-col items-start leading-none">
+            <span class="text-[11px] font-black text-slate-800 uppercase tracking-tight" x-text="activeStore.name">Toko Utama</span>
+            <span class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5" x-text="activeStore.city">Jakarta</span>
+          </div>
+
+          <svg class="w-3 h-3 text-emerald-400 ml-1 transition-transform duration-300" :class="open ? 'rotate-180' : ''" 
+               fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+
+        <!-- Store dropdown -->
+        <div x-show="open" 
+             @click.away="open = false"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+             class="store-dropdown">
+          <div class="relative mb-2">
+            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 text-[10px]"></i>
+            <input x-model="search" type="text" placeholder="Cari Lokasi/Cabang..." 
+                   class="w-full border-none rounded-2xl py-3 pl-10 pr-4 text-[11px] font-bold text-slate-700 focus:ring-2 focus:ring-emerald-400/20 outline-none placeholder:text-slate-300 placeholder:font-medium">
+          </div>
+
+          <div class="max-h-60 overflow-y-auto custom-scrollbar space-y-1">
+            <template x-for="store in filteredStores" :key="store.name">
+              <button @click="activeStore = store; open = false; search = ''; $dispatch('store-change', store)" 
+                      class="w-full flex items-center justify-between p-3 rounded-[20px] hover:bg-emerald-50 transition-all group">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-xl shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <i class="fas fa-store text-[10px]" :class="store.status === 'online' ? 'text-emerald-500' : 'text-slate-300'"></i>
+                  </div>
+                  <div class="flex flex-col items-start leading-tight">
+                    <span class="text-[11px] font-bold text-slate-700" x-text="store.name"></span>
+                    <span class="text-[9px] text-slate-400 font-bold uppercase" x-text="store.city"></span>
+                  </div>
+                </div>
+                <i x-show="activeStore.name === store.name" class="fas fa-check-circle text-emerald-500 text-xs"></i>
+              </button>
+            </template>
+            
+            <div x-show="filteredStores.length === 0" class="py-8 text-center">
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Cabang tidak ditemukan</p>
+            </div>
+          </div>
+
+          <div class="mt-2 p-2" style="border-top:1px solid var(--glass-border, rgba(255,255,255,0.18);">
+            <button class="w-full py-2.5 text-[10px] font-black text-emerald-600 hover:bg-emerald-50 rounded-xl transition-colors uppercase tracking-[0.15em]">
+                Kelola Lokasi <i class="fas fa-arrow-right ml-1 text-[8px]"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Date Period Selector -->
+    <div class="relative group">
+      <div x-data="{ 
+        open: false, 
+        isCustom: false,
+        period: 'Hari Ini',
+        startDate: '',
+        endDate: '',
+        options: [
+            { label: 'Hari Ini', val: 'today', icon: 'fa-calendar-day', color: 'bg-blue-500' },
+            { label: 'Kemarin', val: 'yesterday', icon: 'fa-history', color: 'bg-slate-400' },
+            { label: '7 Hari Terakhir', val: '7d', icon: 'fa-calendar-week', color: 'bg-emerald-500' },
+            { label: '30 Hari Terakhir', val: '30d', icon: 'fa-calendar-alt', color: 'bg-purple-500' }
+        ]
+      }" class="relative">
+        
+        <button @click="open = !open; if(!open) isCustom = false" 
+                class="date-period-selector"
+                :aria-expanded="open.toString()">
+          
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0"></span>
+          
+          <span class="text-[11px] font-bold text-slate-700 truncate tracking-tight" 
+                x-text="startDate && endDate && isCustom ? startDate + ' - ' + endDate : period">
+            Hari Ini
+          </span>
+
+          <svg class="w-3 h-3 text-emerald-400 flex-shrink-0 transition-transform duration-300"
+               :class="open ? 'rotate-180' : ''"
+               fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+
+        <!-- Date dropdown -->
+        <div x-show="open" 
+             @click.away="open = false; isCustom = false"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+             class="date-dropdown">
+          
+          <div x-show="!isCustom" x-transition:enter="transition duration-300" class="p-2 flex flex-col gap-1">
+            <template x-for="opt in options" :key="opt.val">
+              <button @click="period = opt.label; open = false; $dispatch('filter-date', opt.val)" 
+                      class="flex items-center gap-3 px-3 py-2.5 rounded-2xl hover:bg-emerald-500/10 group transition-all">
+                <div class="w-7 h-7 rounded-xl shadow-sm flex items-center justify-center">
+                  <i class="fas" :class="[opt.icon, opt.color.replace('bg-', 'text-'), 'text-[10px]']"></i>
+                </div>
+                <span class="text-[11px] font-bold text-slate-600 group-hover:text-emerald-700 uppercase tracking-wider" x-text="opt.label"></span>
+              </button>
+            </template>
+            
+            <div class="h-px my-1 mx-2" style="background:var(--glass-border, rgba(255,255,255,0.18);"></div>
+            
+            <button @click="isCustom = true" 
+                    class="flex items-center justify-between px-3 py-2.5 rounded-2xl hover:bg-amber-50 group transition-all">
+                <div class="flex items-center gap-3">
+                  <div class="w-7 h-7 rounded-xl shadow-sm flex items-center justify-center text-amber-500">
+                    <i class="fas fa-edit text-[10px]"></i>
+                  </div>
+                  <span class="text-[11px] font-black text-slate-600 uppercase tracking-widest">KUSTOM RANGE</span>
+                </div>
+                <i class="fas fa-chevron-right text-[8px] text-slate-300 group-hover:translate-x-1 transition-transform"></i>
+            </button>
+          </div>
+
+          <div x-show="isCustom" x-transition:enter="transition duration-300" class="p-4 flex flex-col gap-4">
+            <div class="flex items-center gap-3">
+              <button @click="isCustom = false" class="w-6 h-6 rounded-lg hover:bg-slate-100 flex items-center justify-center transition-colors">
+                <i class="fas fa-arrow-left text-[10px] text-slate-400"></i>
+              </button>
+              <span class="text-[10px] font-black text-slate-800 uppercase tracking-[0.2em]">Pilih Rentang</span>
+            </div>
+            
+            <div class="grid grid-cols-1 gap-3">
+              <div class="relative group">
+                <label class="absolute -top-2 left-3 px-1 text-[9px] font-black text-emerald-600 z-10" style="background:var(--glass-bg, rgba(255,255,255,0.95)">DARI</label>
+                <input type="date" x-model="startDate" class="w-full border border-slate-100 rounded-xl px-3 py-2.5 text-[11px] font-bold text-slate-700 focus:ring-2 focus:ring-emerald-400/20 transition-all outline-none">
+              </div>
+              <div class="relative group">
+                <label class="absolute -top-2 left-3 px-1 text-[9px] font-black text-emerald-600 z-10" style="background:var(--glass-bg, rgba(255,255,255,0.95)">SAMPAI</label>
+                <input type="date" x-model="endDate" class="w-full border border-slate-100 rounded-xl px-3 py-2.5 text-[11px] font-bold text-slate-700 focus:ring-2 focus:ring-emerald-400/20 transition-all outline-none">
+              </div>
+            </div>
+
+            <button @click="open = false; $dispatch('filter-date-range', {start: startDate, end: endDate})" 
+                    class="w-full text-white text-[10px] font-black py-3 rounded-xl shadow-lg transition-all uppercase tracking-widest active:scale-95">
+                Apply Range
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Indicator -->
+    <div class="live-indicator">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+      </span>
+      <span class="uppercase tracking-widest">Live</span>
+      <span class="opacity-30">|</span>
+      <time id="js-report-time" x-text="currentTime">{% now "H:i" %}</time>
+    </div>
+  </div>
+</div>
+
+  {# ══ KPI CARDS — 4 kolom, Gradient ══ #}
+  <div class="reveal grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+
+    {# ── Today's Sales ── emerald gradient #}
+    <article class="kpi-card today-sales" aria-label="Today's Sales: {{ kpis.today_sales|default:'Rp 0' }}">
+      <div class="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none"></div>
+      <div class="absolute -right-5 -top-5 w-24 h-24 rounded-full bg-white/8 pointer-events-none"></div>
+      <div class="flex items-start justify-between gap-3 relative z-10">
+        <div class="flex-1 min-w-0">
+          <p class="text-white/65 text-[10px] font-semibold uppercase tracking-[0.10em] mb-1.5">Today's Sales</p>
+          <p class="text-2xl font-bold text-white leading-none truncate"
+             id="kpi-today-sales" title="{{ kpis.today_sales|default:'Rp 0' }}">
+            {{ kpis.today_sales|default:"Rp 0" }}
+          </p>
+        </div>
+        <div class="bg-white/15 p-2 rounded-xl flex-shrink-0 mt-0.5" aria-hidden="true">
+          <i class="fas fa-money-bill-wave text-sm text-white/85"></i>
+        </div>
+      </div>
+      <div class="relative z-10 flex items-center gap-2">
+        {% if kpis.sales_growth %}
+          {% if kpis.sales_trend_up %}
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-400/20 border border-green-400/25 text-[11px] font-semibold text-green-100">
+              <i class="fas fa-arrow-up text-[9px]"></i> {{ kpis.sales_growth }}
+            </span>
+          {% else %}
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-400/20 border border-red-400/25 text-[11px] font-semibold text-red-100">
+              <i class="fas fa-arrow-down text-[9px]"></i> {{ kpis.sales_growth }}
+            </span>
+          {% endif %}
+        {% endif %}
+        <span class="text-[11px] text-white/55 font-medium">dari kemarin</span>
+      </div>
+    </article>
+
+    {# ── Total Transactions ── blue gradient #}
+    <article class="kpi-card transactions" aria-label="Transactions: {{ kpis.total_transactions|default:'—' }}">
+      <div class="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none"></div>
+      <div class="absolute -right-5 -top-5 w-24 h-24 rounded-full bg-white/8 pointer-events-none"></div>
+      <div class="flex items-start justify-between gap-3 relative z-10">
+        <div class="flex-1 min-w-0">
+          <p class="text-white/65 text-[10px] font-semibold uppercase tracking-[0.10em] mb-1.5">Transactions</p>
+          <p class="text-2xl font-bold text-white leading-none truncate" id="kpi-total-transactions">
+            {{ kpis.total_transactions|default:"—" }}
+          </p>
+        </div>
+        <div class="bg-white/15 p-2 rounded-xl flex-shrink-0 mt-0.5" aria-hidden="true">
+          <i class="fas fa-receipt text-sm text-white/85"></i>
+        </div>
+      </div>
+      <div class="relative z-10 flex items-center gap-2">
+        {% if kpis.transaction_growth %}
+          {% if kpis.transaction_trend_up %}
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-400/20 border border-green-400/25 text-[11px] font-semibold text-green-100">
+              <i class="fas fa-arrow-up text-[9px]"></i> {{ kpis.transaction_growth }}
+            </span>
+          {% else %}
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-400/20 border border-red-400/25 text-[11px] font-semibold text-red-100">
+              <i class="fas fa-arrow-down text-[9px]"></i> {{ kpis.transaction_growth }}
+            </span>
+          {% endif %}
+        {% endif %}
+        <span class="text-[11px] text-white/55 font-medium">dari kemarin</span>
+      </div>
+    </article>
+
+    {# ── Best Seller ── violet gradient #}
+    <article class="kpi-card best-seller" aria-label="Best Seller: {{ kpis.best_seller_name|default:'N/A' }}">
+      <div class="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none"></div>
+      <div class="absolute -right-5 -top-5 w-24 h-24 rounded-full bg-white/8 pointer-events-none"></div>
+      <div class="flex items-start justify-between gap-3 relative z-10">
+        <div class="flex-1 min-w-0">
+          <p class="text-white/65 text-[10px] font-semibold uppercase tracking-[0.10em] mb-1.5">Best Seller</p>
+          <p class="text-xl font-bold text-white leading-snug truncate"
+             id="kpi-best-seller" title="{{ kpis.best_seller_name|default:'N/A' }}">
+            {{ kpis.best_seller_name|default:"N/A" }}
+          </p>
+        </div>
+        <div class="bg-white/15 p-2 rounded-xl flex-shrink-0 mt-0.5" aria-hidden="true">
+          <i class="fas fa-fire text-sm text-white/85"></i>
+        </div>
+      </div>
+      <div class="relative z-10 flex items-center gap-2">
+        {% if kpis.best_seller_count %}
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/15 border border-white/20 text-[11px] font-semibold text-white/85">
+            {{ kpis.best_seller_count }} terjual
+          </span>
+        {% endif %}
+        <span class="text-[11px] text-white/55 font-medium">produk terlaris hari ini</span>
+      </div>
+    </article>
+
+    {# ┐ Low Stock Alert ┐ rose/amber gradient #}
+    <article class="kpi-card low-stock" aria-label="Low Stock Alert: {{ kpis.low_stock_count|default:'0' }}">
+      <div class="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none"></div>
+      <div class="absolute -right-5 -top-5 w-24 h-24 rounded-full bg-white/8 pointer-events-none"></div>
+      <div class="flex items-start justify-between gap-3 relative z-10">
+        <div class="flex-1 min-w-0">
+          <p class="text-white/65 text-[10px] font-semibold uppercase tracking-[0.10em] mb-1.5">Low Stock Alert</p>
+          <p class="text-2xl font-bold text-white leading-none" id="kpi-low-stock">
+            {{ kpis.low_stock_count|default:"0" }}
+          </p>
+        </div>
+        <div class="bg-white/15 p-2 rounded-xl flex-shrink-0 mt-0.5" aria-hidden="true">
+          <i class="fas fa-exclamation-triangle text-sm text-white/85"></i>
+        </div>
+      </div>
+      <div class="relative z-10 flex items-center gap-2">
+        {% if kpis.low_stock_count and kpis.low_stock_count != '0' %}
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-400/20 border border-red-400/25 text-[11px] font-semibold text-red-100 animate-pulse">
+            <i class="fas fa-circle text-[6px]"></i> Perhatian
+          </span>
+        {% endif %}
+        <span class="text-[11px] text-white/55 font-medium">produk perlu perhatian</span>
+      </div>
+    </article>
+
+  </div>
+
+  {# ══ MAIN AREA: 2/3 Chart + 1/3 Sidebar ══ #}
+  <div class="reveal grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+    {# ── Chart (2/3) ── #}
+    <div class="lg:col-span-2 chart-container p-6 transition-all duration-500">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <p class="text-[9px] font-bold text-emerald-500 uppercase tracking-[0.2em] mb-1">Performance Overview</p>
+          <h2 class="text-sm font-black text-slate-800 tracking-tight italic uppercase">Sales Analytics</h2>
+        </div>
+        
+        <div class="flex items-center gap-2 px-3 py-1 bg-emerald-50/50 rounded-full border border-emerald-100/50">
+          <span class="relative flex h-1.5 w-1.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+          </span>
+          <span class="text-[9px] font-black text-emerald-700 uppercase tracking-widest">Synced</span>
+        </div>
+      </div>
+
+      <div class="relative" style="height:300px">
+        <div x-show="chartLoading" class="absolute inset-0 backdrop-blur-sm rounded-2xl flex items-center justify-center z-10">
+            <div class="w-6 h-6 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin"></div>
+        </div>
+        <canvas id="salesChart"></canvas>
+      </div>
+
+      <div class="flex items-center justify-between mt-6 pt-6" style="border-top:1px solid var(--glass-border, rgba(255,255,255,0.18);">
+        <div class="flex items-center gap-6">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(5,150,105,0.4)]"></span>
+            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Aktual Penjualan</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-4 h-0.5 border-t-2 border-dashed border-emerald-200"></span>
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Target Revenue</span>
+          </div>
+        </div>
+        
+        <div class="flex flex-col items-end">
+            <span class="text-[18px] font-black text-slate-800 tracking-tighter">12.5%</span>
+            <span class="text-[9px] font-bold text-emerald-500 uppercase">Growth vs Prev</span>
+        </div>
+      </div>
+    </div>
+
+    {# ── 1/3 Sidebar: Activity Pulse ── #}
+    <div class="side-container overflow-hidden flex flex-col" style="max-height: 520px;">
+      {% include 'base/sidebar_right.html' %}
+    </div>
+  </div>
+
+  {# ══ PERFORMANCE STRIP ══ #}
+  <section class="perf-strip px-6 py-5" aria-labelledby="perf-heading">
+    <p id="perf-heading" class="text-[10px] font-bold text-white/50 uppercase tracking-widest mb-4">Performance Metrics</p>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-5">
+      <div>
+        <p class="text-2xl font-bold text-white" id="perf-monthly-growth">{{ kpis.monthly_growth|default:"—" }}</p>
+        <p class="text-[11px] text-white/60 mt-0.5">Monthly Growth</p>
+      </div>
+      <div>
+        <p class="text-2xl font-bold text-white" id="perf-retention">{{ kpis.customer_retention|default:"—" }}</p>
+        <p class="text-[11px] text-white/60 mt-0.5">Customer Retention</p>
+      </div>
+      <div>
+        <p class="text-2xl font-bold text-white" id="perf-avg-order">{{ kpis.avg_order_value|default:"—" }}</p>
+        <p class="text-[11px] text-white/60 mt-0.5">Avg Order Value</p>
+      </div>
+      <div>
+        <p class="text-2xl font-bold text-white" id="perf-inv-turnover">{{ kpis.inventory_turnover|default:"—" }}</p>
+        <p class="text-[11px] text-white/60 mt-0.5">Inventory Turnover</p>
+      </div>
+    </div>
+  </section>
+
+  {# ══ BOTTOM METRICS ══ #}
+  <section class="metric-strip px-5 py-4" aria-labelledby="metrics-heading">
+    <p id="metrics-heading" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">
+      Financial Overview — 30 Hari Terakhir
+    </p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      {% with metrics=kpis %}
+      <div class="flex flex-col gap-1.5">
+        <div class="metric-icon"><i class="fas fa-dollar-sign"></i></div>
+        <p class="text-[10px] text-slate-400 font-medium mt-1">Total Revenue</p>
+        <p class="text-sm font-bold text-slate-800" id="kpi-total-revenue">{{ metrics.total_revenue|default_if_none:"—" }}</p>
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <div class="metric-icon"><i class="fas fa-chart-line"></i></div>
+        <p class="text-[10px] text-slate-400 font-medium mt-1">Profit Margin</p>
+        <p class="text-sm font-bold text-slate-800" id="kpi-profit-margin">{{ metrics.profit_margin|default_if_none:"—" }}</p>
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <div class="metric-icon"><i class="fas fa-undo"></i></div>
+        <p class="text-[10px] text-slate-400 font-medium mt-1">Return Rate</p>
+        <p class="text-sm font-bold text-slate-800" id="kpi-return-rate">{{ metrics.return_rate|default_if_none:"—" }}</p>
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <div class="metric-icon"><i class="fas fa-warehouse"></i></div>
+        <p class="text-[10px] text-slate-400 font-medium mt-1">Inventory Value</p>
+        <p class="text-sm font-bold text-slate-800" id="kpi-inventory-value">{{ metrics.inventory_value|default_if_none:"—" }}</p>
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <div class="metric-icon"><i class="fas fa-calendar-alt"></i></div>
+        <p class="text-[10px] text-slate-400 font-medium mt-1">Order Frequency</p>
+        <p class="text-sm font-bold text-slate-800" id="kpi-order-frequency">{{ metrics.order_frequency|default_if_none:"—" }}</p>
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <div class="metric-icon"><i class="fas fa-check-circle"></i></div>
+        <p class="text-[10px] text-slate-400 font-medium mt-1">Conversion Rate</p>
+        <p class="text-sm font-bold text-slate-800" id="kpi-conversion-rate">{{ metrics.conversion_rate|default_if_none:"—" }}</p>
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <div class="metric-icon"><i class="fas fa-redo"></i></div>
+        <p class="text-[10px] text-slate-400 font-medium mt-1">Repeat Purchase</p>
+        <p class="text-sm font-bold text-slate-800" id="kpi-repeat-purchase">{{ metrics.repeat_purchase_rate|default_if_none:"—" }}</p>
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <div class="metric-icon"><i class="fas fa-clock"></i></div>
+        <p class="text-[10px] text-slate-400 font-medium mt-1">Pending Orders</p>
+        <p class="text-sm font-bold text-slate-800" id="kpi-pending-orders">{{ metrics.pending_orders|default_if_none:"0" }}</p>
+      </div>
+      {% endwith %}
+    </div>
+  </section>
+
+  {# ══ QUICK STATS FOOTER ══ #}
+  <div class="quick-stats-bar px-5 py-3">
+    <div class="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
+      <div class="flex flex-wrap items-center gap-4">
+        <span class="font-bold text-slate-600">Quick Stats</span>
+        <span>Produk aktif:
+          <strong class="text-slate-800" id="qs-active-products">{{ quick_stats.active_products|default:"—" }}</strong>
+        </span>
+        <span>Order pending:
+          <strong class="text-slate-800" id="qs-pending-orders">{{ quick_stats.pending_orders|default:"—" }}</strong>
+        </span>
+        <span>Total lokasi:
+          <strong class="text-slate-800" id="qs-total-locations">{{ quick_stats.total_locations|default:"—" }}</strong>
+        </span>
+      </div>
+      <div class="flex items-center gap-1.5 text-slate-400">
+        <i class="fas fa-sync-alt text-[10px]"></i>
+        <span>Diperbarui: <span x-text="lastUpdated">baru saja</span></span>
+      </div>
+    </div>
+  </div>
+
+</div>{# end x-data wrapper #}
+
+{# ══ TOAST ══ #}
+<div class="fixed bottom-4 right-4 z-50 space-y-2"
+     x-data aria-live="polite" aria-atomic="true">
+  <template x-for="t in $store.toasts.list" :key="t.id">
+    <div class="toast text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 min-w-60 max-w-xs"
+         :class="{
+           'border-l-4 border-emerald-400': t.type === 'success',
+           'border-l-4 border-blue-400'   : t.type === 'info',
+           'border-l-4 border-amber-400'  : t.type === 'warning',
+           'border-l-4 border-red-400'    : t.type === 'error'
+         }">
+      <i :class="t.icon" aria-hidden="true"></i>
+      <span class="text-sm" x-text="t.message"></span>
+    </div>
+  </template>
+</div>
+{% endblock %}
+
+{% block dashboard_scripts %}
+<script>
+document.addEventListener('alpine:init', () => {
+  Alpine.store('toasts', {
+    list: [],
+    _id : 0,
+    show(message, type = 'success', icon = 'fas fa-check-circle') {
+      const id = ++this._id;
+      this.list.push({ id, message, type, icon });
+      setTimeout(() => { this.list = this.list.filter(t => t.id !== id); }, 4800);
+    }
+  });
+});
+</script>
+{% endblock %}
+
+{% block scripts %}
+{{ dashboard_data|json_script:"dashboard-data" }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+function dashboardApp() {
+  return {
+    chartPeriod  : '7d',
+    chartType    : 'area',
+    chartLoading : false,
+    lastUpdated  : 'baru saja',
+    currentTime  : '',
+    _chart       : null,
+    _refreshTimer: null,
+    _clockTimer  : null,
+
+    init() {
+      const raw = JSON.parse(document.getElementById('dashboard-data').textContent);
+
+      this.$nextTick(() => {
+        this._initChart();
+        this._applyChartData(raw.chart_data);
+      });
+
+      if (raw.last_updated) this.lastUpdated = raw.last_updated;
+
+      /* Scroll reveal */
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i * 80);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.06 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+      /* Clock */
+      this._updateClock();
+      this._clockTimer = setInterval(() => this._updateClock(), 60000);
+
+      /* Auto-refresh 5 menit */
+      this._refreshTimer = setInterval(() => this._fetchDashboard(), 5 * 60 * 1000);
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          clearInterval(this._refreshTimer);
+        } else {
+          this._refreshTimer = setInterval(() => this._fetchDashboard(), 5 * 60 * 1000);
+        }
+      });
+    },
+
+    _initChart() {
+      const ctx = document.getElementById('salesChart');
+      if (!ctx) return;
+
+      // Destroy previous chart instance if it exists
+      if (this._chart) {
+        this._chart.destroy();
+        this._chart = null;
+      }
+
+      const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 260);
+      gradient.addColorStop(0,   'rgba(5,150,105,0.12)');
+      gradient.addColorStop(1,   'rgba(5,150,105,0.00)');
+
+      this._chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels  : [],
+          datasets: [
+            {
+              label          : 'Aktual',
+              data           : [],
+              borderColor    : '#059669',
+              borderWidth    : 1.5,
+              backgroundColor: gradient,
+              tension        : 0.4,
+              fill           : true,
+              pointRadius    : 3,
+              pointHoverRadius: 5,
+              pointBackgroundColor: '#059669',
+              pointBorderColor    : '#fff',
+              pointBorderWidth    : 1.5,
+            },
+            {
+              label          : 'Target',
+              data           : [],
+              borderColor    : 'rgba(5,150,105,0.35)',
+              borderWidth    : 1,
+              borderDash     : [4, 4],
+              tension        : 0.4,
+              fill           : false,
+              pointRadius    : 0,
+            },
+          ],
+        },
+        options: {
+          responsive           : true,
+          maintainAspectRatio  : false,
+          interaction          : { mode:'index', intersect:false },
+          scales: {
+            y: {
+              ticks: {
+                callback: v => this._fmtShort(v),
+                font    : { size:11 },
+                color   : '#94a3b8',
+              },
+              grid: {
+                color    : 'rgba(226,232,240,0.5)',
+                lineWidth: 0.5,
+              },
+              border: { dash:[4,4], color:'rgba(0,0,0,0)' },
+            },
+            x: {
+              ticks: { font:{ size:11 }, color:'#94a3b8' },
+              grid : { display:false },
+              border: { color:'rgba(0,0,0,0)' },
+            },
+          },
+          plugins: {
+            legend: { display:false },
+            tooltip: {
+              backgroundColor: 'rgba(15,23,42,0.85)',
+              titleFont      : { size:11, weight:'600' },
+              bodyFont       : { size:11 },
+              padding        : 10,
+              cornerRadius   : 10,
+              callbacks: {
+                label: ctx => `${ctx.dataset.label}: ${this._fmtCurrency(ctx.raw)}`,
+              },
+            },
+          },
+        },
+      });
+    },
+
+    _applyChartData(data) {
+      if (!this._chart || !data) return;
+      this._chart.data.labels           = data.labels  ?? [];
+      this._chart.data.datasets[0].data = data.actual  ?? [];
+      this._chart.data.datasets[1].data = data.target  ?? [];
+      this._chart.update('active');
+    },
+
+    setChartType(type) {
+      if (!this._chart) return;
+      const isArea = type === 'area';
+      const isBar  = type === 'bar';
+      if (isBar) {
+        this._chart.config.type = 'bar';
+        this._chart.data.datasets[0].backgroundColor = 'rgba(5,150,105,0.55)';
+        this._chart.data.datasets[0].borderRadius    = 6;
+      } else {
+        this._chart.config.type = 'line';
+        const gradient = this._chart.ctx.createLinearGradient(0, 0, 0, 260);
+        gradient.addColorStop(0, 'rgba(5,150,105,0.12)');
+        gradient.addColorStop(1, 'rgba(5,150,105,0.00)');
+        this._chart.data.datasets[0].backgroundColor = gradient;
+        this._chart.data.datasets[0].fill = isArea;
+      }
+      this._chart.update();
+    },
+
+    fetchChartData(period) {
+      this.chartLoading = true;
+      fetch(`/api/dashboard/chart-data/?period=${encodeURIComponent(period)}`, {
+        headers: { 'X-Requested-With':'XMLHttpRequest' },
+      })
+        .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+        .then(data => {
+          this._applyChartData(data);
+          Alpine.store('toasts').show('Data chart diperbarui', 'success', 'fas fa-chart-line');
+        })
+        .catch(() => Alpine.store('toasts').show('Gagal memuat chart', 'error', 'fas fa-times-circle'))
+        .finally(() => { this.chartLoading = false; });
+    },
+
+    _fetchDashboard() {
+      fetch(`/api/dashboard/data/?period=${encodeURIComponent(this.chartPeriod)}`, {
+        headers: { 'X-Requested-With':'XMLHttpRequest' },
+      })
+        .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+        .then(data => {
+          this._applyChartData(data.chart_data);
+          if (data.last_updated) this.lastUpdated = data.last_updated;
+          this._updateKpis(data.kpis);
+          this._updateQuickStats(data.quick_stats);
+        })
+        .catch(err => console.error('fetchDashboard:', err));
+    },
+
+    _updateKpis(kpis) {
+      if (!kpis) return;
+      [
+        ['kpi-today-sales',        kpis.today_sales],
+        ['kpi-total-transactions', kpis.total_transactions],
+        ['kpi-best-seller',        kpis.best_seller_name],
+        ['kpi-low-stock',          kpis.low_stock_count],
+        ['kpi-total-revenue',      kpis.total_revenue],
+        ['kpi-profit-margin',      kpis.profit_margin],
+        ['kpi-return-rate',        kpis.return_rate],
+        ['kpi-inventory-value',    kpis.inventory_value],
+        ['kpi-order-frequency',    kpis.order_frequency],
+        ['kpi-conversion-rate',    kpis.conversion_rate],
+        ['kpi-repeat-purchase',    kpis.repeat_purchase_rate],
+        ['kpi-pending-orders',     kpis.pending_orders],
+        ['perf-monthly-growth',    kpis.monthly_growth],
+        ['perf-retention',         kpis.customer_retention],
+        ['perf-avg-order',         kpis.avg_order_value],
+        ['perf-inv-turnover',      kpis.inventory_turnover],
+      ].forEach(([id, val]) => {
+        if (val == null) return;
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+      });
+    },
+
+    _updateQuickStats(qs) {
+      if (!qs) return;
+      [
+        ['qs-active-products', qs.active_products],
+        ['qs-pending-orders',  qs.pending_orders],
+        ['qs-total-locations', qs.total_locations],
+      ].forEach(([id, val]) => {
+        if (val == null) return;
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+      });
+    },
+
+    _updateClock() {
+      const now = new Date();
+      this.currentTime = now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+      const el = document.getElementById('js-report-time');
+      if (el) el.setAttribute('datetime', now.toISOString());
+    },
+
+    _fmtCurrency(value) {
+      const num = typeof value === 'string'
+        ? parseFloat(value.replace(/[^\d.-]/g, ''))
+        : Number(value);
+      return new Intl.NumberFormat('id-ID', {
+        style              : 'currency',
+        currency           : 'IDR',
+        minimumFractionDigits: 0,
+      }).format(isNaN(num) ? 0 : num);
+    },
+
+    _fmtShort(value) {
+      if (value >= 1_000_000) return 'Rp ' + (value / 1_000_000).toFixed(1) + 'Jt';
+      if (value >= 1_000)     return 'Rp ' + (value / 1_000).toFixed(0) + 'K';
+      return 'Rp ' + value;
+    },
+  };
+}
+</script>
+{% endblock %}

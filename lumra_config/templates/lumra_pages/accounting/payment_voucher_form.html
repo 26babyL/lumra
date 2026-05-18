@@ -1,0 +1,228 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}Bukti Kas Keluar - CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-panel { background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid white; padding: 32px; max-width: 900px; margin: 0 auto; }
+  .form-input { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; background: rgba(255,255,255,0.5); transition: 0.2s; }
+  .form-input:focus { background: white; border-color: #0f172a; outline: none; }
+  .invoice-list { max-height: 250px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 12px; }
+  .inv-item { padding: 12px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+  .inv-item:hover { background: #f8fafc; }
+  .inv-item:last-child { border-bottom: none; }
+  .checkbox-wrapper input:checked + div { background: #dcfce7; border-color: #16a34a; color: #166534; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full relative z-10 space-y-6" x-data="paymentVoucherApp()" x-init="init()" x-cloak>
+  <div class="max-w-5xl mx-auto">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-800">Payment Voucher (PV)</h1>
+        <p class="text-sm text-slate-500">Dokumen bukti pengeluaran kas / bank.</p>
+      </div>
+      <a href="{% url 'accounts_payable' %}" class="text-slate-500 hover:text-slate-800 font-bold text-sm">Batal</a>
+    </div>
+
+    <form method="post" @submit="prepareSubmit" class="glass-panel grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {% csrf_token %}
+      <input type="hidden" name="number" :value="generatedNo">
+      <input type="hidden" name="selected_invoice_ids" x-ref="selectedInvoicesInput">
+
+      <div class="space-y-5">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">No. Bukti</label>
+            <input aria-label="Input" type="text" :value="generatedNo" disabled class="form-input bg-slate-100 text-slate-500 font-mono">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Tanggal Bayar</label>
+            <input aria-label="Tanggal" type="date" name="date" x-model="form.date" class="form-input">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Dibayar Kepada (Supplier)</label>
+          <select aria-label="Supplier ID" name="supplier_id" x-model="form.supplier_id" @change="loadInvoices" class="form-input">
+            <option value="">-- Pilih Supplier --</option>
+            {% for vendor in vendors %}
+            <option value="{{ vendor.id }}">{{ vendor.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Dari Rekening (Bank/Kas)</label>
+          <select aria-label="Bank ID" name="bank_id" x-model="form.bank_id" class="form-input">
+            {% for account in cash_accounts %}
+            <option value="{{ account.id }}">{{ account.code }} {{ account.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Metode Pembayaran</label>
+          <div class="flex gap-4 mt-1">
+            <label class="flex items-center gap-2 text-sm font-bold text-slate-600 cursor-pointer">
+              <input aria-label="Metode" type="radio" x-model="form.method" name="method" value="transfer" class="accent-slate-800"> Transfer
+            </label>
+            <label class="flex items-center gap-2 text-sm font-bold text-slate-600 cursor-pointer">
+              <input aria-label="Metode" type="radio" x-model="form.method" name="method" value="check" class="accent-slate-800"> Cek/Giro
+            </label>
+            <label class="flex items-center gap-2 text-sm font-bold text-slate-600 cursor-pointer">
+              <input aria-label="Metode" type="radio" x-model="form.method" name="method" value="cash" class="accent-slate-800"> Tunai
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Memo / Keterangan</label>
+          <textarea name="memo" x-model="form.memo" rows="2" class="form-input" placeholder="Cth: Pelunasan invoice supplier"></textarea>
+        </div>
+      </div>
+
+      <div class="space-y-5">
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Pilih Faktur yang Dibayar</label>
+          <div class="invoice-list bg-white">
+            <template x-if="!form.supplier_id">
+              <div class="p-8 text-center text-slate-400 text-sm">
+                <i class="fas fa-hand-holding-usd text-2xl mb-2 opacity-30"></i>
+                <p>Pilih supplier untuk memuat faktur jatuh tempo.</p>
+              </div>
+            </template>
+
+            <template x-if="form.supplier_id && invoices.length === 0">
+              <div class="p-4 text-center text-emerald-600 text-sm font-bold">
+                Tidak ada hutang berjalan untuk supplier ini.
+              </div>
+            </template>
+
+            <template x-for="inv in invoices" :key="inv.id">
+              <label class="inv-item cursor-pointer">
+                <div class="checkbox-wrapper w-full">
+                  <input aria-label="Pilih" type="checkbox" :value="inv.id" x-model="selectedInvoiceIds" class="hidden">
+                  <div class="flex-1">
+                    <div class="flex justify-between items-center">
+                      <span class="font-bold text-slate-800" x-text="inv.number"></span>
+                      <span class="text-xs font-bold text-slate-500" x-text="formatDate(inv.due_date)"></span>
+                    </div>
+                    <div class="flex justify-between items-center mt-1">
+                      <span class="text-xs text-slate-500">Total: <span x-text="formatCurrency(inv.total)"></span></span>
+                      <span class="text-xs font-bold text-rose-500">Sisa: <span x-text="formatCurrency(inv.balance)"></span></span>
+                    </div>
+                  </div>
+                </div>
+              </label>
+            </template>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-bold text-slate-500 uppercase">Total Tagihan Terpilih</span>
+            <span class="text-lg font-bold text-slate-800" x-text="formatCurrency(totalSelected)"></span>
+          </div>
+          <div class="flex justify-between items-center mb-4">
+            <span class="text-xs font-bold text-slate-500 uppercase">Jumlah Dibayar (Payment)</span>
+            <input aria-label="Jumlah Paid" type="number" name="amount_paid" x-model.number="form.amount_paid" class="w-32 text-right font-bold bg-white border border-slate-300 rounded px-2 py-1 outline-none focus:border-emerald-500">
+          </div>
+          <div class="flex justify-between items-center pt-2 border-t border-slate-200">
+            <span class="text-xs font-bold text-slate-500 uppercase">Selisih</span>
+            <span class="font-bold" :class="difference === 0 ? 'text-emerald-600' : 'text-rose-600'" x-text="formatCurrency(Math.abs(difference)) + (difference === 0 ? ' (Pas)' : ' (Belum Sama)')"></span>
+          </div>
+        </div>
+
+        <button type="submit" :disabled="totalSelected === 0" class="w-full py-3 bg-slate-800 text-white rounded-xl font-bold shadow hover:bg-slate-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
+          Proses Pembayaran
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script id="payables-data" type="application/json">
+{{ payables_json|safe }}
+</script>
+
+<script id="payables-data" type="application/json">
+{{ payables_json|safe }}
+</script>
+
+<script>
+function paymentVoucherApp() {
+  return {
+    generatedNo: '{{ generated_number|escapejs }}',
+    payablesByVendor: [],
+    form: {
+      supplier_id: '{{ selected_vendor_id|default:""|escapejs }}',
+      bank_id: '{% if cash_accounts %}{{ cash_accounts.0.id }}{% endif %}',
+      method: 'transfer',
+      date: new Date().toISOString().split('T')[0],
+      memo: '',
+      amount_paid: 0
+    },
+    invoices: [],
+    selectedInvoiceIds: [],
+
+    init() {
+      const _payablesRaw = document.getElementById('payables-data');
+      if (_payablesRaw) {
+        try { this.payables = JSON.parse(_payablesRaw.textContent); }
+        catch(e) { console.error('payables-data parse error:', e); }
+      }
+      if (this.form.supplier_id) {
+        this.loadInvoices();
+      }
+    },
+
+    loadInvoices() {
+      this.invoices = this.payablesByVendor[this.form.supplier_id] || [];
+      this.selectedInvoiceIds = [];
+      this.form.amount_paid = 0;
+    },
+
+    get totalSelected() {
+      return this.invoices
+        .filter(i => this.selectedInvoiceIds.includes(String(i.id)))
+        .reduce((sum, i) => sum + i.balance, 0);
+    },
+
+    get difference() {
+      return (Number(this.form.amount_paid) || 0) - this.totalSelected;
+    },
+
+    formatCurrency(num) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num || 0);
+    },
+
+    formatDate(str) {
+      return new Date(str).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+    },
+
+    prepareSubmit(event) {
+      if (!this.form.supplier_id) {
+        event.preventDefault();
+        alert('Pilih supplier');
+        return;
+      }
+      if (this.totalSelected <= 0) {
+        event.preventDefault();
+        alert('Pilih invoice hutang yang akan dibayar');
+        return;
+      }
+      if (this.difference !== 0) {
+        event.preventDefault();
+        alert('Jumlah bayar harus sama dengan total invoice terpilih');
+        return;
+      }
+      this.$refs.selectedInvoicesInput.value = JSON.stringify(this.selectedInvoiceIds);
+    }
+  }
+}
+</script>
+{% endblock %}

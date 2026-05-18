@@ -1,0 +1,309 @@
+{
+  "filename": "journal_entry_detail.html",
+  "title": "",
+  "components": [
+    {
+      "type": "alpine-root",
+      "tag": "div",
+      "label": "ALPINE COMPONENT [journalDetailApp()]",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "w-full max-w-4xl mx-auto relative z-10 space-y-6",
+      "text_preview": "Tanggal: Deskripsi Akun Debit Kredit Total Dibuat pada {{ en…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 1,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": "journalDetailApp()"
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "glass-card p-6",
+      "text_preview": "Tanggal: Deskripsi Akun Debit Kredit Total Dibuat pada {{ entry.created_at|date:…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 4,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "flex justify-between items-start mb-6",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/div",
+      "classes": "flex items-center gap-3 mb-2",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h1",
+      "label": "HEADING (H1)",
+      "depth": 6,
+      "path": "root/body/div/div/div/div/div/h1",
+      "classes": "text-2xl font-bold text-slate-800",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "hero",
+      "tag": "div",
+      "label": "HERO / BANNER",
+      "depth": 6,
+      "path": "root/body/div/div/div/div/div/div",
+      "classes": "status-banner",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "table",
+      "tag": "table",
+      "label": "[ TABLE ]",
+      "depth": 4,
+      "path": "root/body/div/div/div/table",
+      "classes": "w-full text-sm text-left",
+      "text_preview": "Akun Debit Kredit Total",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "mt-8 pt-6 border-t border-slate-100 flex justify-between items-center",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "classes": "flex gap-3",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "form",
+      "tag": "form",
+      "label": "[ FORM ]",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/form",
+      "classes": "",
+      "text_preview": "{% csrf_token %} Posting Jurnal",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "input",
+      "label": "INPUT [hidden] action",
+      "depth": 6,
+      "path": "root/body/div/div/div/div/form/input",
+      "classes": "",
+      "text_preview": "action",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: Posting Jurnal",
+      "depth": 6,
+      "path": "root/body/div/div/div/div/form/button",
+      "classes": "px-6 py-2 bg-emerald-600 text-white rounded-lg text-sm font-bold shadow hover:bg-emerald-700",
+      "text_preview": "Posting Jurnal",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "alpine-root",
+      "label": "ALPINE COMPONENT [journalDetailApp()]",
+      "text_preview": "Tanggal: Deskripsi Akun Debit Kredit Total Dibuat pada {{ en…"
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "Tanggal: Deskripsi Akun Debit Kredit Total Dibuat pada {{ entry.created_at|date:…"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/div/div/div/h1",
+      "type": "heading",
+      "label": "HEADING (H1)",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/div/div/div/div",
+      "type": "hero",
+      "label": "HERO / BANNER",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/table",
+      "type": "table",
+      "label": "[ TABLE ]",
+      "text_preview": "Akun Debit Kredit Total"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/form",
+      "type": "form",
+      "label": "[ FORM ]",
+      "text_preview": "{% csrf_token %} Posting Jurnal"
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/div/div/form/input",
+      "type": "input",
+      "label": "INPUT [hidden] action",
+      "text_preview": "action"
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/div/div/form/button",
+      "type": "button",
+      "label": "BUTTON: Posting Jurnal",
+      "text_preview": "Posting Jurnal"
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 12,
+    "by_type": {
+      "alpine-root": 1,
+      "card": 1,
+      "layout": 4,
+      "heading": 1,
+      "hero": 1,
+      "table": 1,
+      "form": 1,
+      "input": 1,
+      "button": 1
+    },
+    "interactive": 3,
+    "with_scroll": 0,
+    "with_form_fields": 6,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

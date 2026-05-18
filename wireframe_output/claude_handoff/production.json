@@ -1,0 +1,1580 @@
+{
+  "module_name": "production",
+  "template_total": 17,
+  "templates": [
+    {
+      "template_name": "lumra_pages/production/rnd_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/production/rnd_list.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 0,
+      "structure_stats": {
+        "component_total": 28,
+        "interactive_total": 3,
+        "issue_total": 3,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Produksi / Lab RnD"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Lab Riset & Pengembangan"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "filter",
+            "label": "FILTER / TAB",
+            "text_preview": "Semua"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='px-3 py-1.5 bg-white text-slate-700 rounded-lg tex'"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='px-3 py-1.5 bg-slate-800 text-white rounded-lg tex'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/production/bom_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/production/bom_list.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 26,
+        "interactive_total": 4,
+        "issue_total": 3,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Produksi / Resep & BOM"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Daftar Resep (Bill of Materials)"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "filter",
+            "label": "FILTER / TAB",
+            "text_preview": "Semua BOM"
+          },
+          {
+            "type": "filter",
+            "label": "FILTER / TAB",
+            "text_preview": "Aktif"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='px-3 py-1.5 bg-white text-slate-700 rounded-lg tex'"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='px-3 py-1.5 bg-slate-800 text-white rounded-lg tex'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/production/finished_goods_receipt.html",
+      "template_file": "lumra_config/templates/lumra_pages/production/finished_goods_receipt.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 30,
+        "interactive_total": 10,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [receiptApp()]",
+            "text_preview": "Production / Finished Goods Finished Goods Receipt Verifikas…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Production / Finished Goods"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Finished Goods Receipt"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: + Catat Receipt",
+            "text_preview": "+ Catat Receipt"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Receipts"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Qty Diterima"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/production/material_consumption.html",
+      "template_file": "lumra_config/templates/lumra_pages/production/material_consumption.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 30,
+        "interactive_total": 10,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [consumptionApp()]",
+            "text_preview": "Production / Material Consumption Material Consumption Bandi…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Production / Material Consumption"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Material Consumption"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: + Catat Konsumsi",
+            "text_preview": "+ Catat Konsumsi"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Records"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "PO Selesai"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/production/production_costing.html",
+      "template_file": "lumra_config/templates/lumra_pages/production/production_costing.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 19,
+        "interactive_total": 4,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [costingApp()]",
+            "text_preview": "Production / Costing Production Costing Ringkasan biaya stan…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Production / Costing"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Production Costing"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Export CSV",
+            "text_preview": "Export CSV"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Orders"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Biaya Standar"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/production/production_order_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/production/production_order_list.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 27,
+        "interactive_total": 6,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Produksi / Surat Perintah Kerja (SPK)"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Production Orders"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Total PO"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Pending"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/production/production_scheduling.html",
+      "template_file": "lumra_config/templates/lumra_pages/production/production_scheduling.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 19,
+        "interactive_total": 3,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [scheduleApp()]",
+            "text_preview": "Production / Scheduling Production Scheduling Kalender order…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Production / Scheduling"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Production Scheduling"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Prev Next"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Prev",
+            "text_preview": "Prev"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Next",
+            "text_preview": "Next"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/production/production_waste.html",
+      "template_file": "lumra_config/templates/lumra_pages/production/production_waste.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 38,
+        "interactive_total": 15,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [wasteApp()]",
+            "text_preview": "Production / Waste Production Waste Catatan scrap, spoilage,…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Production / Waste"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Production Waste"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: + Catat Waste",
+            "text_preview": "+ Catat Waste"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Records"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Jenis Waste"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/production/recipe_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/production/recipe_list.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 31,
+        "interactive_total": 10,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [recipesListApp()]",
+            "text_preview": "Dashboard / Recipe Daftar Recipe Kelola recipe produksi bese…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Recipe"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Daftar Recipe"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Total Recipe"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Tampil"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='text-rose-600 hover:text-rose-800'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/production/rnd_detail.html",
+      "template_file": "lumra_config/templates/lumra_pages/production/rnd_detail.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 27,
+        "interactive_total": 9,
+        "issue_total": 3,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [rndDetailApp()]",
+            "text_preview": "Lab RnD / Dibuat oleh • Trial dari Edit Formula Tambah Trial…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Lab RnD /"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "badge",
+            "label": "BADGE / STATUS",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Tambah Trial",
+            "text_preview": "Tambah Trial"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='trial-tab'"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='w-full rounded-xl bg-emerald-600 px-4 py-3 text-sm'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/production/bom_detail.html",
+      "template_file": "lumra_config/templates/lumra_pages/production/bom_detail.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 24,
+        "interactive_total": 4,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [bomDetailApp()]",
+            "text_preview": "Dari R&D SKU • Versi Edit Resep Duplikat Struktur Biaya Baha…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Duplikat",
+            "text_preview": "Duplikat"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Struktur Biaya Bahan Lima komponen terbesar ditampilkan terpisah, sisanya digabu…"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/production/bom_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/production/bom_form.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 5,
+      "structure_stats": {
+        "component_total": 30,
+        "interactive_total": 13,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [bomFormApp()]",
+            "text_preview": "BOM / {% if is_edit %}Edit{% else %}Form Baru{% endif %} {%…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "BOM / {% if is_edit %}Edit{% else %}Form Baru{% endif %}"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{% if is_edit %}Edit BOM{% else %}Buat BOM Baru{% endif %}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: [icon]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Nama BOM SKU Produk Jadi * Pilih SKU produk jadi... Mode Revisi Koreksi minor, t…"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='text-rose-600 hover:text-rose-800'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/production/production_order_detail.html",
+      "template_file": "lumra_config/templates/lumra_pages/production/production_order_detail.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 17,
+        "interactive_total": 4,
+        "issue_total": 6,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [poDetailApp()]",
+            "text_preview": "Status Saat Ini Selesai / Waktu Mulai Scheduled Date Catatan…"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Status Saat Ini Selesai / Waktu Mulai Scheduled Date Catatan Operator Bahan yang…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "gauge",
+            "label": "PROGRESS GAUGE",
+            "text_preview": "Selesai /"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='control-btn btn-start col-span-2'"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='h-14 rounded-xl bg-slate-100 text-slate-600 font-b'"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='h-14 rounded-xl bg-slate-100 text-slate-600 font-b'"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='control-btn btn-stop'"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='control-btn btn-complete disabled:opacity-50'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/production/production_order_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/production/production_order_form.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 5,
+      "structure_stats": {
+        "component_total": 26,
+        "interactive_total": 11,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [poFormApp()]",
+            "text_preview": "Production Order / {% if is_edit %}Edit{% else %}Form Baru{%…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Production Order / {% if is_edit %}Edit{% else %}Form Baru{% endif %}"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{% if is_edit %}Edit SPK{% else %}Buat SPK{% endif %}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "BOM Aktif * Pilih BOM... Kode PO Target Kuantitas Line Produksi Rencana Mulai Pr…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT [select] form.bomId",
+            "text_preview": "form.bomId"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/production/recipe_detail.html",
+      "template_file": "lumra_config/templates/lumra_pages/production/recipe_detail.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 26,
+        "interactive_total": 2,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [recipeDetailApp()]",
+            "text_preview": "Production / Recipe Detail • Back to List Edit Recipe Yield…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Production / Recipe Detail"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Yield"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Preparation minutes"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/production/recipe_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/production/recipe_form.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 5,
+      "structure_stats": {
+        "component_total": 27,
+        "interactive_total": 14,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [recipeFormApp()]",
+            "text_preview": "Recipe / {% if is_edit %}Edit{% else %}Form Baru{% endif %}…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Recipe / {% if is_edit %}Edit{% else %}Form Baru{% endif %}"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{% if is_edit %}Edit Recipe{% else %}Buat Recipe Baru{% endif %}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "{% csrf_token %} Nama Recipe * Kategori * Pilih kategori {% for category in cate…"
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "{% csrf_token %} Nama Recipe * Kategori * Pilih kategori {% for category in cate…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='w-full rounded-xl border border-slate-200 px-3 py-'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/production/rnd_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/production/rnd_form.html",
+      "routes": [],
+      "forward_batch": "batch_4_complex",
+      "batch_reason": "Report/print/logic-heavy page, cocok setelah fondasi stabil.",
+      "complexity_score": 6,
+      "structure_stats": {
+        "component_total": 52,
+        "interactive_total": 16,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [rndFormApp()]",
+            "text_preview": "Lab RnD / Mulai Trial Identitas Formula Nama Formula Target…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Lab RnD /"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: [icon]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Mulai Trial",
+            "text_preview": "Mulai Trial"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='text-violet-400 hover:text-violet-700 leading-none'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    }
+  ],
+  "views": [
+    {
+      "view_name": "bom_list",
+      "view_module": "lumra_config.views.production_ops_views",
+      "view_file": "lumra_config/views/production_ops_views.py",
+      "line": 183,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def bom_list(request):\n    query = request.GET.get(\"q\", \"\").strip()\n    qs = (\n        BillOfMaterial.objects\n        .select_related(\"finished_variant\", \"finished_variant__product\")\n        .prefetch_related(\"items__component\")\n        .all()\n    )\n    if query:\n        qs = qs.filter(\n            Q(code__icontains=query)\n            | Q(finished_variant__sku__icontains=query)\n            | Q(finished_variant__product__name__icontains=query)\n        )\n    qs = qs.order_by(\"-updated_at\")\n\n    rows = []\n    for b in qs[:500]:\n        items = list(b.items.all())\n        rows.append({\n            \"id\": b.id,\n            \"code\": b.code,\n            \"name\": b.name or (b.finished_variant.product.name if b.finished_variant.product else b.finished_variant.sku),\n            \"sku\": b.finished_variant.sku,\n            \"version\": b.version,\n            \"is_active\": b.is_active,\n            \"ingredients_count\": len(items),\n            \"estimated_cost\": float(sum((it.quantity or 0) * (it.component.price_buy or 0) for it in items)),\n            \"updated_at\": localtime(b.updated_at).strftime(\"%Y-%m-%d\"),\n        })\n    context = {\"boms_data\": rows, \"report_title\": \"BOM List\"}\n    return render(request, \"lumra_pages/production/bom_list.html\", context)"
+    },
+    {
+      "view_name": "bom_form",
+      "view_module": "lumra_config.views.production_ops_views",
+      "view_file": "lumra_config/views/production_ops_views.py",
+      "line": 274,
+      "decorators": [
+        "login_required",
+        "require_http_methods"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def bom_form(request, pk=None):\n    bom = get_object_or_404(BillOfMaterial, pk=pk) if pk else None\n\n    if request.method == \"POST\":\n        payload, err = _parse_json_body(request)\n        if err:\n            return err\n\n        required = [\"finished_variant_id\", \"code\", \"version\", \"items\"]\n        missing = [k for k in required if k not in payload]\n        if missing:\n            return JsonResponse({\"success\": False, \"error\": f\"Missing fields: {', '.join(missing)}.\"}, status=400)\n\n        finished_variant = get_object_or_404(ProductVariant, pk=payload[\"finished_variant_id\"])\n        items = payload.get(\"items\") or []\n        if not isinstance(items, list) or len(items) == 0:\n            return JsonResponse({\"success\": False, \"error\": \"Items must be a non-empty list.\"}, status=400)\n\n        with transaction.atomic():\n            obj = bom or BillOfMaterial(created_by=request.user)\n            obj.finished_variant = finished_variant\n            obj.code = str(payload[\"code\"]).strip()\n            obj.version = int(payload.get(\"version\") or 1)\n            obj.name = str(payload.get(\"name\", \"\")).strip()\n            obj.notes = str(payload.get(\"notes\", \"\")).strip()\n            obj.is_active = bool(payload.get(\"is_active\", True))\n            obj.save()\n\n            BillOfMaterialItem.objects.filter(bom=obj).delete()\n            item_objs = []\n            for it in items:\n                comp_id = it.get(\"component_variant_id\")\n                qty = it.get(\"quantity\")\n                if not comp_id or qty is None:\n                    continue\n                component = get_object_or_404(ProductVariant, pk=comp_id)\n                unit = None\n                if it.get(\"unit_id\"):\n                    unit = get_object_or_404(Unit, pk=it[\"unit_id\"])\n                item_objs.append(BillOfMaterialItem(\n                    bom=obj,\n                    component=component,\n                    quantity=qty,\n                    unit=unit,\n                    notes=str(it.get(\"notes\", \"\")).strip(),\n                ))\n            if not item_objs:\n                return JsonResponse({\"success\": False, \"error\": \"No valid BOM items provided.\"}, status=400)\n            BillOfMaterialItem.objects.bulk_create(item_objs)\n\n        return JsonResponse({\"success\": True, \"id\": obj.id})\n\n    variants = ProductVariant.objects.select_related(\"product\").order_by(\"sku\")[:3000]\n    units = Unit.objects.order_by(\"symbol\")\n    context = {\n        \"is_edit\": bool(bom),\n        \"bom_id\": bom.id if bom else None,\n        \"variants_data\": [\n            {\"id\": v.id, \"sku\": v.sku, \"name\": v.product.name if v.product else v.sku, \"price_buy\": float(v.price_buy or 0)}\n            for v in variants\n        ],\n        \"units_data\": [{\"id\": u.id, \"symbol\": u.symbol, \"name\": u.name} for u in units],\n        \"bom_data\": {\n            \"id\": bom.id,\n            \"code\": bom.code,\n            \"version\": bom.version,\n            \"name\": bom.name or \"\",\n            \"finished_sku\": bom.finished_variant.sku,\n            \"notes\": bom.notes or \"\",\n            \"is_active\": bom.is_active,\n            \"items\": [\n                {\n                    \"id\": item.id,\n                    \"sku\": item.component.sku,\n                    \"name\": item.component.product.name if item.component.product else item.component.sku,\n                    \"quantity\": float(item.quantity or 0),\n                    \"unit\": item.unit.symbol if item.unit else \"\",\n                    \"unit_price\": float(item.component.price_buy or 0),\n                }\n                for item in bom.items.select_related(\"component\", \"component__product\", \"unit\").all()\n            ],\n        } if bom else {},\n        \"submit_url\": request.path,\n        \"list_url\": \"/production/bom/\",\n        \"report_title\": \"BOM Form\",\n    }\n    return render(request, \"lumra_pages/production/bom_form.html\", context)"
+    },
+    {
+      "view_name": "bom_detail",
+      "view_module": "lumra_config.views.production_ops_views",
+      "view_file": "lumra_config/views/production_ops_views.py",
+      "line": 322,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def bom_detail(request, pk):\n    bom = get_object_or_404(\n        BillOfMaterial.objects.select_related(\"finished_variant\", \"finished_variant__product\")\n        .prefetch_related(\"items__component\", \"items__component__product\", \"items__component__stock_entries\", \"items__unit\"),\n        pk=pk,\n    )\n    items = []\n    for it in bom.items.all():\n        items.append({\n            \"id\": it.id,\n            \"sku\": it.component.sku,\n            \"name\": it.component.product.name if it.component.product else it.component.sku,\n            \"quantity\": float(it.quantity),\n            \"unit\": it.unit.symbol if it.unit else \"\",\n            \"unit_price\": float(it.component.price_buy or 0),\n            \"total\": float((it.quantity or 0) * (it.component.price_buy or 0)),\n            \"stock\": float(it.component.total_stock or 0),\n        })\n    data = {\n        \"id\": bom.id,\n        \"code\": bom.code,\n        \"name\": bom.name or (bom.finished_variant.product.name if bom.finished_variant.product else bom.finished_variant.sku),\n        \"finished_sku\": bom.finished_variant.sku,\n        \"version\": bom.version,\n        \"is_active\": bom.is_active,\n        \"notes\": bom.notes,\n        \"rnd_id\": getattr(bom, \"rnd_id\", None),\n        \"estimated_cost\": float(sum((it.quantity or 0) * (it.component.price_buy or 0) for it in bom.items.all())),\n        \"items\": items,\n        \"updated_at\": localtime(bom.updated_at).strftime(\"%Y-%m-%d %H:%M\"),\n        \"versions\": [\n            {\n                \"id\": sibling.id,\n                \"version\": sibling.version,\n                \"is_active\": sibling.is_active,\n                \"created_at\": localtime(sibling.created_at).strftime(\"%Y-%m-%d %H:%M\"),\n                \"created_by\": sibling.created_by.get_username() if sibling.created_by else \"System\",\n            }\n            for sibling in BillOfMaterial.objects.select_related(\"created_by\")\n            .filter(finished_variant=bom.finished_variant)\n            .order_by(\"-version\", \"-created_at\")[:10]\n        ],\n    }\n    context = {\"bom_data\": data, \"report_title\": f\"BOM Detail - {bom.code}\"}\n    return render(request, \"lumra_pages/production/bom_detail.html\", context)"
+    },
+    {
+      "view_name": "production_order_list",
+      "view_module": "lumra_config.views.production_ops_views",
+      "view_file": "lumra_config/views/production_ops_views.py",
+      "line": 362,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def production_order_list(request):\n    query = request.GET.get(\"q\", \"\").strip()\n    qs = (\n        ProductionOrder.objects\n        .select_related(\"bom\", \"bom__finished_variant\", \"bom__finished_variant__product\", \"unit\")\n        .order_by(\"-created_at\")\n    )\n    if query:\n        qs = qs.filter(\n            Q(code__icontains=query)\n            | Q(bom__code__icontains=query)\n            | Q(bom__finished_variant__sku__icontains=query)\n            | Q(bom__finished_variant__product__name__icontains=query)\n        )\n\n    rows = []\n    for po in qs[:500]:\n        product_name = po.bom.finished_variant.product.name if po.bom.finished_variant.product else po.bom.finished_variant.sku\n        rows.append({\n            \"id\": po.id,\n            \"code\": po.code,\n            \"product\": product_name,\n            \"target_qty\": float(po.target_quantity),\n            \"produced_qty\": float(po.produced_quantity),\n            \"uom\": po.unit.symbol if po.unit else \"\",\n            \"status\": po.status,\n            \"line\": po.line or \"-\",\n            \"start_date\": po.scheduled_date.strftime(\"%d %b\") if po.scheduled_date else \"\",\n            \"priority\": po.priority or \"Normal\",\n        })\n\n    context = {\"pos_data\": rows, \"report_title\": \"Production Orders\"}\n    return render(request, \"lumra_pages/production/production_order_list.html\", context)"
+    },
+    {
+      "view_name": "production_order_form",
+      "view_module": "lumra_config.views.production_ops_views",
+      "view_file": "lumra_config/views/production_ops_views.py",
+      "line": 457,
+      "decorators": [
+        "login_required",
+        "require_http_methods"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def production_order_form(request, pk=None):\n    po = get_object_or_404(ProductionOrder, pk=pk) if pk else None\n\n    if request.method == \"POST\":\n        payload, err = _parse_json_body(request)\n        if err:\n            return err\n\n        required = [\"code\", \"bom_id\", \"target_quantity\"]\n        missing = [k for k in required if k not in payload]\n        if missing:\n            return JsonResponse({\"success\": False, \"error\": f\"Missing fields: {', '.join(missing)}.\"}, status=400)\n\n        bom = get_object_or_404(BillOfMaterial, pk=payload[\"bom_id\"])\n        unit = None\n        if payload.get(\"unit_id\"):\n            unit = get_object_or_404(Unit, pk=payload[\"unit_id\"])\n\n        obj = po or ProductionOrder(created_by=request.user)\n        obj.code = str(payload[\"code\"]).strip()\n        obj.bom = bom\n        obj.target_quantity = payload.get(\"target_quantity\") or 0\n        obj.unit = unit\n        obj.priority = str(payload.get(\"priority\", \"Normal\")).strip() or \"Normal\"\n        obj.line = str(payload.get(\"line\", \"\")).strip()\n        obj.status = str(payload.get(\"status\", obj.status)).strip() or obj.status\n        obj.notes = str(payload.get(\"notes\", \"\")).strip()\n        obj.scheduled_date = _parse_iso_date(payload.get(\"scheduled_date\"))\n        obj.save()\n\n        return JsonResponse({\"success\": True, \"id\": obj.id})\n\n    boms = (\n        BillOfMaterial.objects\n        .select_related(\"finished_variant\", \"finished_variant__product\")\n        .filter(is_active=True)\n        .prefetch_related(\n            Prefetch(\n                \"items\",\n                queryset=BillOfMaterialItem.objects.select_related(\n                    \"component\",\n                    \"component__product\",\n                    \"unit\",\n                ).prefetch_related(\"component__stock_entries\"),\n            )\n        )\n        .order_by(\"-updated_at\")[:1000]\n    )\n    units = Unit.objects.order_by(\"symbol\")\n    context = {\n        \"is_edit\": bool(po),\n        \"po_id\": po.id if po else None,\n        \"boms_data\": [\n            {\n                \"id\": b.id,\n                \"code\": b.code,\n                \"name\": b.name or (b.finished_variant.product.name if b.finished_variant.product else b.finished_variant.sku),\n                \"sku\": b.finished_variant.sku,\n                \"items\": [\n                    {\n                        \"id\": item.id,\n                        \"sku\": item.component.sku,\n                        \"name\": item.component.product.name if item.component.product else item.component.sku,\n                        \"quantity\": float(item.quantity or 0),\n                        \"unit\": item.unit.symbol if item.unit else \"\",\n                        \"unit_price\": float(item.component.price_buy or 0),\n                        \"stock\": float(item.component.total_stock or 0),\n                    }\n                    for item in b.items.all()\n                ],\n            }\n            for b in boms\n        ],\n        \"units_data\": [{\"id\": u.id, \"symbol\": u.symbol} for u in units],\n        \"po_data\": {\n            \"id\": po.id,\n            \"code\": po.code,\n            \"bom_id\": po.bom_id,\n            \"target_quantity\": float(po.target_quantity or 0),\n            \"line\": po.line or \"\",\n            \"scheduled_date\": po.scheduled_date.isoformat() if po.scheduled_date else \"\",\n            \"priority\": po.priority or \"Normal\",\n            \"notes\": po.notes or \"\",\n            \"unit_id\": po.unit_id,\n        } if po else {},\n        \"suggested_po_code\": po.code if po else _suggest_po_code(),\n        \"submit_url\": request.path,\n        \"list_url\": \"/production/order/\",\n        \"report_title\": \"Production Order Form\",\n    }\n    return render(request, \"lumra_pages/production/production_order_form.html\", context)"
+    },
+    {
+      "view_name": "production_order_detail",
+      "view_module": "lumra_config.views.production_ops_views",
+      "view_file": "lumra_config/views/production_ops_views.py",
+      "line": 486,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def production_order_detail(request, pk):\n    po = get_object_or_404(\n        ProductionOrder.objects\n        .select_related(\"bom\", \"bom__finished_variant\", \"bom__finished_variant__product\", \"unit\"),\n        pk=pk,\n    )\n    product_name = po.bom.finished_variant.product.name if po.bom.finished_variant.product else po.bom.finished_variant.sku\n    data = {\n        \"id\": po.id,\n        \"code\": po.code,\n        \"product\": product_name,\n        \"bom_code\": po.bom.code,\n        \"status\": po.status,\n        \"target_qty\": float(po.target_quantity),\n        \"produced_qty\": float(po.produced_quantity),\n        \"uom\": po.unit.symbol if po.unit else \"\",\n        \"scheduled_date\": po.scheduled_date.isoformat() if po.scheduled_date else \"\",\n        \"started_at\": localtime(po.started_at).strftime(\"%Y-%m-%d %H:%M\") if po.started_at else \"\",\n        \"completed_at\": localtime(po.completed_at).strftime(\"%Y-%m-%d %H:%M\") if po.completed_at else \"\",\n        \"priority\": po.priority,\n        \"line\": po.line,\n        \"notes\": po.notes,\n        \"created_at\": localtime(po.created_at).strftime(\"%Y-%m-%d %H:%M\"),\n    }\n    context = {\"po_data\": data, \"report_title\": f\"Production Order - {po.code}\"}\n    return render(request, \"lumra_pages/production/production_order_detail.html\", context)"
+    },
+    {
+      "view_name": "production_scheduling",
+      "view_module": "lumra_config.views.production_ops_views",
+      "view_file": "lumra_config/views/production_ops_views.py",
+      "line": 507,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def production_scheduling(request):\n    qs = ProductionOrder.objects.select_related(\"bom\", \"bom__finished_variant\", \"bom__finished_variant__product\").order_by(\"scheduled_date\")[:500]\n    rows = []\n    for po in qs:\n        product_name = po.bom.finished_variant.product.name if po.bom.finished_variant.product else po.bom.finished_variant.sku\n        rows.append({\n            \"id\": po.id,\n            \"code\": po.code,\n            \"product\": product_name,\n            \"status\": po.status,\n            \"scheduled_date\": po.scheduled_date.isoformat() if po.scheduled_date else \"\",\n        })\n    context = {\"orders_data\": rows, \"report_title\": \"Production Scheduling\"}\n    return render(request, \"lumra_pages/production/production_scheduling.html\", context)"
+    },
+    {
+      "view_name": "material_consumption",
+      "view_module": "lumra_config.views.production_ops_views",
+      "view_file": "lumra_config/views/production_ops_views.py",
+      "line": 560,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def material_consumption(request):\n    qs = (\n        ProductionMaterialConsumption.objects\n        .select_related(\"production_order\", \"component\", \"component__product\", \"unit\")\n        .order_by(\"-consumed_at\")[:500]\n    )\n    rows = []\n    for c in qs:\n        rows.append({\n            \"id\": c.id,\n            \"po_code\": c.production_order.code,\n            \"sku\": c.component.sku,\n            \"name\": c.component.product.name if c.component.product else c.component.sku,\n            \"quantity\": float(c.quantity),\n            \"unit\": c.unit.symbol if c.unit else \"\",\n            \"consumed_at\": localtime(c.consumed_at).strftime(\"%Y-%m-%d %H:%M\"),\n        })\n    completed_orders = (\n        ProductionOrder.objects\n        .select_related(\"bom\", \"bom__finished_variant\", \"bom__finished_variant__product\", \"unit\")\n        .prefetch_related(\"bom__items__component\", \"bom__items__component__product\", \"bom__items__unit\", \"consumptions\")\n        .filter(status=\"completed\")\n        .order_by(\"-completed_at\", \"-created_at\")[:200]\n    )\n    context = {\n        \"consumptions_data\": rows,\n        \"completed_orders_data\": [\n            {\n                \"id\": po.id,\n                \"code\": po.code,\n                \"product\": po.bom.finished_variant.product.name if po.bom.finished_variant.product else po.bom.finished_variant.sku,\n                \"status\": po.status,\n                \"produced_qty\": float(po.produced_quantity or 0),\n                \"uom\": po.unit.symbol if po.unit else \"\",\n                \"consumption_recorded\": po.consumptions.exists(),\n                \"standard_items\": [\n                    {\n                        \"sku\": item.component.sku,\n                        \"name\": item.component.product.name if item.component.product else item.component.sku,\n                        \"standard_qty\": float(item.quantity or 0) * float(po.produced_quantity or 0),\n                        \"unit\": item.unit.symbol if item.unit else \"\",\n                    }\n                    for item in po.bom.items.all()\n                ],\n            }\n            for po in completed_orders\n        ],\n        \"report_title\": \"Material Consumption\",\n    }\n    return render(request, \"lumra_pages/production/material_consumption.html\", context)"
+    },
+    {
+      "view_name": "finished_goods_receipt",
+      "view_module": "lumra_config.views.production_ops_views",
+      "view_file": "lumra_config/views/production_ops_views.py",
+      "line": 607,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def finished_goods_receipt(request):\n    qs = (\n        FinishedGoodsReceipt.objects\n        .select_related(\"production_order\", \"finished_variant\", \"finished_variant__product\", \"location\")\n        .order_by(\"-received_at\")[:500]\n    )\n    rows = []\n    for r in qs:\n        rows.append({\n            \"id\": r.id,\n            \"po_code\": r.production_order.code,\n            \"sku\": r.finished_variant.sku,\n            \"product\": r.finished_variant.product.name if r.finished_variant.product else r.finished_variant.sku,\n            \"location\": r.location.name,\n            \"quantity\": float(r.quantity_received),\n            \"received_at\": localtime(r.received_at).strftime(\"%Y-%m-%d %H:%M\"),\n        })\n    completed_orders = (\n        ProductionOrder.objects\n        .select_related(\"bom\", \"bom__finished_variant\", \"bom__finished_variant__product\", \"unit\")\n        .prefetch_related(\"receipts\")\n        .filter(status=\"completed\")\n        .order_by(\"-completed_at\", \"-created_at\")[:200]\n    )\n    locations = Location.objects.order_by(\"name\")[:500]\n    context = {\n        \"receipts_data\": rows,\n        \"completed_orders_data\": [\n            {\n                \"id\": po.id,\n                \"code\": po.code,\n                \"product\": po.bom.finished_variant.product.name if po.bom.finished_variant.product else po.bom.finished_variant.sku,\n                \"sku\": po.bom.finished_variant.sku,\n                \"target_qty\": float(po.target_quantity or 0),\n                \"produced_qty\": float(po.produced_quantity or 0),\n                \"uom\": po.unit.symbol if po.unit else \"\",\n                \"receipt_recorded\": po.receipts.exists(),\n            }\n            for po in completed_orders\n        ],\n        \"locations_data\": [{\"id\": location.id, \"name\": location.name} for location in locations],\n        \"report_title\": \"Finished Goods Receipt\",\n    }\n    return render(request, \"lumra_pages/production/finished_goods_receipt.html\", context)"
+    },
+    {
+      "view_name": "production_waste",
+      "view_module": "lumra_config.views.production_ops_views",
+      "view_file": "lumra_config/views/production_ops_views.py",
+      "line": 661,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def production_waste(request):\n    qs = (\n        ProductionWasteRecord.objects\n        .select_related(\"production_order\", \"component\", \"component__product\", \"unit\")\n        .order_by(\"-recorded_at\")[:500]\n    )\n    rows = []\n    for w in qs:\n        rows.append({\n            \"id\": w.id,\n            \"po_code\": w.production_order.code,\n            \"waste_type\": w.waste_type,\n            \"sku\": w.component.sku if w.component else \"\",\n            \"name\": w.component.product.name if (w.component and w.component.product) else (w.component.sku if w.component else \"\"),\n            \"quantity\": float(w.quantity),\n            \"unit\": w.unit.symbol if w.unit else \"\",\n            \"recorded_at\": localtime(w.recorded_at).strftime(\"%Y-%m-%d %H:%M\"),\n        })\n    completed_orders = (\n        ProductionOrder.objects\n        .select_related(\"bom\", \"bom__finished_variant\", \"bom__finished_variant__product\", \"unit\")\n        .filter(status=\"completed\")\n        .order_by(\"-completed_at\", \"-created_at\")[:200]\n    )\n    variants = ProductVariant.objects.select_related(\"product\").order_by(\"sku\")[:3000]\n    units = Unit.objects.order_by(\"symbol\")\n    context = {\n        \"waste_data\": rows,\n        \"completed_orders_data\": [\n            {\n                \"id\": po.id,\n                \"code\": po.code,\n                \"product\": po.bom.finished_variant.product.name if po.bom.finished_variant.product else po.bom.finished_variant.sku,\n                \"produced_qty\": float(po.produced_quantity or 0),\n                \"uom\": po.unit.symbol if po.unit else \"\",\n            }\n            for po in completed_orders\n        ],\n        \"variants_data\": [\n            {\n                \"id\": variant.id,\n                \"sku\": variant.sku,\n                \"name\": variant.product.name if variant.product else variant.sku,\n                \"price_buy\": float(variant.price_buy or 0),\n            }\n            for variant in variants\n        ],\n        \"units_data\": [{\"id\": unit.id, \"symbol\": unit.symbol} for unit in units],\n        \"report_title\": \"Production Waste\",\n    }\n    return render(request, \"lumra_pages/production/production_waste.html\", context)"
+    },
+    {
+      "view_name": "production_costing",
+      "view_module": "lumra_config.views.production_ops_views",
+      "view_file": "lumra_config/views/production_ops_views.py",
+      "line": 698,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def production_costing(request):\n    \"\"\"\n    Placeholder costing page. Real costing should aggregate:\n    - consumption * latest cost\n    - waste\n    - overhead allocations\n    \"\"\"\n    qs = ProductionOrder.objects.select_related(\"bom\", \"bom__finished_variant\", \"bom__finished_variant__product\").order_by(\"-created_at\")[:200]\n    rows = []\n    for po in qs:\n        product_name = po.bom.finished_variant.product.name if po.bom.finished_variant.product else po.bom.finished_variant.sku\n        standard_material_cost = float(sum((item.quantity or 0) * (item.component.price_buy or 0) for item in po.bom.items.all())) * float(po.target_quantity or 0)\n        actual_material_cost = float(sum((consumption.quantity or 0) * (consumption.component.price_buy or 0) for consumption in po.consumptions.select_related(\"component\").all()))\n        waste_value = float(sum((waste.quantity or 0) * (waste.component.price_buy or 0) for waste in po.wastes.select_related(\"component\").all() if waste.component))\n        target_qty = float(po.target_quantity or 0)\n        produced_qty = float(po.produced_quantity or 0)\n        rows.append({\n            \"id\": po.id,\n            \"code\": po.code,\n            \"product\": product_name,\n            \"status\": po.status,\n            \"target_qty\": target_qty,\n            \"produced_qty\": produced_qty,\n            \"standard_material_cost\": standard_material_cost,\n            \"actual_material_cost\": actual_material_cost,\n            \"waste_value\": waste_value,\n            \"variance\": actual_material_cost - standard_material_cost,\n            \"scheduled_date\": po.scheduled_date.isoformat() if po.scheduled_date else \"\",\n            \"completed_at\": localtime(po.completed_at).strftime(\"%Y-%m-%d %H:%M\") if po.completed_at else \"\",\n            \"completion_pct\": min(round((produced_qty / target_qty) * 100), 100) if target_qty > 0 else 0,\n            \"is_overproduced\": produced_qty > target_qty if target_qty > 0 else False,\n        })\n    context = {\"orders_data\": rows, \"report_title\": \"Production Costing\"}\n    return render(request, \"lumra_pages/production/production_costing.html\", context)"
+    },
+    {
+      "view_name": "rnd_list",
+      "view_module": "lumra_config.views.production_ops_views",
+      "view_file": "lumra_config/views/production_ops_views.py",
+      "line": 724,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def rnd_list(request):\n    records = _load_rnd_records(request)\n    rows = []\n    for record in records:\n        items = record.get(\"items\") or []\n        trials = record.get(\"trials\") or []\n        rows.append({\n            \"id\": record[\"id\"],\n            \"name\": record.get(\"name\") or record.get(\"code\") or f\"RND-{record['id']}\",\n            \"code\": record.get(\"code\") or f\"RND-{record['id']}\",\n            \"status\": record.get(\"status\") or \"idea\",\n            \"created_by\": record.get(\"created_by\") or \"-\",\n            \"trial_count\": len(trials),\n            \"ingredient_count\": len(items),\n            \"success_probability\": float(record.get(\"success_probability\") or 0),\n            \"estimated_cost\": float(sum(float(item.get(\"estimated_cost\") or 0) for item in items)),\n        })\n    context = {\"rnds_data\": rows, \"report_title\": \"Lab RnD\"}\n    return render(request, \"lumra_pages/production/rnd_list.html\", context)"
+    },
+    {
+      "view_name": "rnd_form",
+      "view_module": "lumra_config.views.production_ops_views",
+      "view_file": "lumra_config/views/production_ops_views.py",
+      "line": 796,
+      "decorators": [
+        "login_required",
+        "require_http_methods"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def rnd_form(request):\n    records = _load_rnd_records(request)\n    edit_id = request.GET.get(\"edit\")\n    rnd = _find_rnd_record(records, edit_id) if edit_id else None\n\n    if request.method == \"POST\":\n        payload, err = _parse_json_body(request)\n        if err:\n            return err\n\n        items = payload.get(\"items\") or []\n        if not isinstance(items, list):\n            return JsonResponse({\"success\": False, \"error\": \"Items harus berupa list.\"}, status=400)\n\n        next_id = max([int(r[\"id\"]) for r in records] + [0]) + 1\n        obj = rnd or {\"id\": next_id, \"created_at\": localtime().strftime(\"%Y-%m-%d %H:%M\"), \"bom_id\": None, \"trials\": []}\n        obj[\"name\"] = str(payload.get(\"name\", \"\")).strip()\n        obj[\"code\"] = obj.get(\"code\") or f\"RND-{obj['id']:03d}\"\n        obj[\"target_sku\"] = payload.get(\"target_sku\") or \"\"\n        obj[\"category\"] = payload.get(\"category\") or \"other\"\n        obj[\"created_by\"] = str(payload.get(\"created_by\") or request.user.get_username()).strip()\n        obj[\"description\"] = str(payload.get(\"description\") or \"\").strip()\n        obj[\"tags\"] = payload.get(\"tags\") or []\n        obj[\"based_on\"] = payload.get(\"based_on\") or \"\"\n        obj[\"planned_trials\"] = int(payload.get(\"planned_trials\") or 1)\n        obj[\"notes\"] = str(payload.get(\"notes\") or \"\").strip()\n        obj[\"hypothesis_notes\"] = str(payload.get(\"hypothesis_notes\") or \"\").strip()\n        obj[\"hypothesis\"] = payload.get(\"hypothesis\") or {}\n        obj[\"success_probability\"] = float(payload.get(\"success_probability\") or 0)\n        obj[\"probability_reason\"] = str(payload.get(\"probability_reason\") or \"\").strip()\n        obj[\"status\"] = payload.get(\"status\") or obj.get(\"status\") or \"idea\"\n        obj[\"items\"] = [\n            {\n                \"name\": str(item.get(\"name\") or item.get(\"sku\") or \"\").strip(),\n                \"sku\": str(item.get(\"sku\") or item.get(\"name\") or \"\").strip(),\n                \"component_variant_id\": item.get(\"component_variant_id\"),\n                \"quantity\": float(item.get(\"quantity\") or 0),\n                \"unit\": next((u.symbol for u in Unit.objects.filter(pk=item.get(\"unit_id\"))[:1]), \"\") if item.get(\"unit_id\") else \"\",\n                \"estimated_cost\": float(item.get(\"estimated_cost\") or 0),\n            }\n            for item in items\n            if item.get(\"name\") or item.get(\"sku\")\n        ]\n\n        if rnd:\n            for idx, record in enumerate(records):\n                if int(record[\"id\"]) == int(obj[\"id\"]):\n                    records[idx] = obj\n                    break\n        else:\n            records.append(obj)\n\n        _save_rnd_records(request, records)\n        return JsonResponse({\"success\": True, \"id\": obj[\"id\"]})\n\n    variants = ProductVariant.objects.select_related(\"product\").order_by(\"sku\")[:3000]\n    units = Unit.objects.order_by(\"symbol\")\n    context = {\n        \"variants_data\": [\n            {\"id\": v.id, \"sku\": v.sku, \"name\": v.product.name if v.product else v.sku, \"price_buy\": float(v.price_buy or 0)}\n            for v in variants\n        ],\n        \"units_data\": [{\"id\": u.id, \"symbol\": u.symbol, \"name\": u.name} for u in units],\n        \"rnd_data\": rnd or {},\n        \"submit_url\": request.path + (f\"?edit={edit_id}\" if edit_id else \"\"),\n        \"report_title\": \"RnD Form\",\n    }\n    return render(request, \"lumra_pages/production/rnd_form.html\", context)"
+    },
+    {
+      "view_name": "rnd_detail",
+      "view_module": "lumra_config.views.production_ops_views",
+      "view_file": "lumra_config/views/production_ops_views.py",
+      "line": 804,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [
+        "report_title",
+        "rnd_data"
+      ],
+      "context_expression": "{'rnd_data': {}, 'report_title': 'RnD Detail'}",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def rnd_detail(request, pk):\n    records = _load_rnd_records(request)\n    rnd = _find_rnd_record(records, pk)\n    if not rnd:\n        return render(request, \"lumra_pages/production/rnd_detail.html\", {\"rnd_data\": {}, \"report_title\": \"RnD Detail\"})\n    context = {\"rnd_data\": rnd, \"report_title\": f\"RnD Detail - {rnd.get('name') or rnd.get('code')}\"}\n    return render(request, \"lumra_pages/production/rnd_detail.html\", context)"
+    },
+    {
+      "view_name": "rnd_detail",
+      "view_module": "lumra_config.views.production_ops_views",
+      "view_file": "lumra_config/views/production_ops_views.py",
+      "line": 806,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def rnd_detail(request, pk):\n    records = _load_rnd_records(request)\n    rnd = _find_rnd_record(records, pk)\n    if not rnd:\n        return render(request, \"lumra_pages/production/rnd_detail.html\", {\"rnd_data\": {}, \"report_title\": \"RnD Detail\"})\n    context = {\"rnd_data\": rnd, \"report_title\": f\"RnD Detail - {rnd.get('name') or rnd.get('code')}\"}\n    return render(request, \"lumra_pages/production/rnd_detail.html\", context)"
+    },
+    {
+      "view_name": "rnd_trial_new",
+      "view_module": "lumra_config.views.production_ops_views",
+      "view_file": "lumra_config/views/production_ops_views.py",
+      "line": 838,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [
+        "report_title",
+        "rnd_data",
+        "submit_url",
+        "units_data",
+        "variants_data"
+      ],
+      "context_expression": "{'variants_data': [], 'units_data': [], 'rnd_data': {}, 'submit_url': '/rnd/form/', 'report_title': f'Trial Baru RnD {pk}'}",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def rnd_trial_new(request, pk):\n    return render(request, \"lumra_pages/production/rnd_form.html\", {\n        \"variants_data\": [],\n        \"units_data\": [],\n        \"rnd_data\": {},\n        \"submit_url\": \"/rnd/form/\",\n        \"report_title\": f\"Trial Baru RnD {pk}\",\n    })"
+    },
+    {
+      "view_name": "recipe_list",
+      "view_module": "lumra_config.views.production_views",
+      "view_file": "lumra_config/views/production_views.py",
+      "line": 77,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def recipe_list(request):\n    \"\"\"\n    Display all non-archived recipes with search + category filter.\n    \"\"\"\n    query = request.GET.get(\"q\", \"\").strip()\n    category_filter = request.GET.get(\"category\", \"\").strip()\n\n    recipes = Recipe.objects.select_related(\"category\").prefetch_related(\n        \"ingredients\"\n    ).filter(is_archived=False)\n\n    if query:\n        recipes = recipes.filter(name__icontains=query)\n\n    if category_filter:\n        recipes = recipes.filter(category_id=category_filter)\n\n    recipes = recipes.order_by(\"name\")\n\n    # Check if recipes is empty\n    if not recipes.exists():\n        categories = RecipeCategory.objects.all().order_by(\"name\")\n        context = create_empty_context(\"Recipe List\", \"Data resep tidak ditemukan. Silahkan tambah resep terlebih dahulu.\")\n        context.update({\n            \"categories\": categories,\n            \"query\": query,\n            \"category_filter\": category_filter,\n        })\n        return render(request, \"lumra_pages/production/recipe_list.html\", context)\n\n    paginator = Paginator(recipes, 20)\n    page_obj = paginator.get_page(request.GET.get(\"page\", 1))\n\n    categories = RecipeCategory.objects.all().order_by(\"name\")\n\n    # Serialize ALL filtered recipes so the frontend can handle\n    # client-side pagination, search and sorting without DOM scraping.\n    recipes_json = _serialize_recipes(recipes)\n\n    table_columns = [\n        (\"id\",                \"ID\"),\n        (\"name\",              \"Name\"),\n        (\"category\",          \"Category\"),\n        (\"ingredients_count\", \"Ingredients\"),\n        (\"created_at\",        \"Created At\"),\n    ]\n\n    context = {\n        \"recipes\": page_obj,\n        \"recipes_json\": recipes_json,\n        \"table_columns\": table_columns,\n        \"query\": query,\n        \"category_filter\": category_filter,\n        \"categories\": categories,\n        \"total_recipes\": Recipe.objects.filter(is_archived=False).count(),\n        \"page_obj\": page_obj,\n        \"is_paginated\": page_obj.has_other_pages(),\n        \"report_title\": \"Recipe List\",\n        \"is_empty\": False,\n    }\n\n    return render(\n        request,\n        \"lumra_pages/production/recipe_list.html\",\n        context,\n    )"
+    },
+    {
+      "view_name": "recipe_list",
+      "view_module": "lumra_config.views.production_views",
+      "view_file": "lumra_config/views/production_views.py",
+      "line": 110,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def recipe_list(request):\n    \"\"\"\n    Display all non-archived recipes with search + category filter.\n    \"\"\"\n    query = request.GET.get(\"q\", \"\").strip()\n    category_filter = request.GET.get(\"category\", \"\").strip()\n\n    recipes = Recipe.objects.select_related(\"category\").prefetch_related(\n        \"ingredients\"\n    ).filter(is_archived=False)\n\n    if query:\n        recipes = recipes.filter(name__icontains=query)\n\n    if category_filter:\n        recipes = recipes.filter(category_id=category_filter)\n\n    recipes = recipes.order_by(\"name\")\n\n    # Check if recipes is empty\n    if not recipes.exists():\n        categories = RecipeCategory.objects.all().order_by(\"name\")\n        context = create_empty_context(\"Recipe List\", \"Data resep tidak ditemukan. Silahkan tambah resep terlebih dahulu.\")\n        context.update({\n            \"categories\": categories,\n            \"query\": query,\n            \"category_filter\": category_filter,\n        })\n        return render(request, \"lumra_pages/production/recipe_list.html\", context)\n\n    paginator = Paginator(recipes, 20)\n    page_obj = paginator.get_page(request.GET.get(\"page\", 1))\n\n    categories = RecipeCategory.objects.all().order_by(\"name\")\n\n    # Serialize ALL filtered recipes so the frontend can handle\n    # client-side pagination, search and sorting without DOM scraping.\n    recipes_json = _serialize_recipes(recipes)\n\n    table_columns = [\n        (\"id\",                \"ID\"),\n        (\"name\",              \"Name\"),\n        (\"category\",          \"Category\"),\n        (\"ingredients_count\", \"Ingredients\"),\n        (\"created_at\",        \"Created At\"),\n    ]\n\n    context = {\n        \"recipes\": page_obj,\n        \"recipes_json\": recipes_json,\n        \"table_columns\": table_columns,\n        \"query\": query,\n        \"category_filter\": category_filter,\n        \"categories\": categories,\n        \"total_recipes\": Recipe.objects.filter(is_archived=False).count(),\n        \"page_obj\": page_obj,\n        \"is_paginated\": page_obj.has_other_pages(),\n        \"report_title\": \"Recipe List\",\n        \"is_empty\": False,\n    }\n\n    return render(\n        request,\n        \"lumra_pages/production/recipe_list.html\",\n        context,\n    )"
+    },
+    {
+      "view_name": "recipe_form",
+      "view_module": "lumra_config.views.production_views",
+      "view_file": "lumra_config/views/production_views.py",
+      "line": 210,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def recipe_form(request, recipe_id=None):\n    \"\"\"\n    Create or edit a recipe + ingredient formset.\n    Handles both standard POST and AJAX (JSON response).\n    \"\"\"\n    if recipe_id:\n        recipe = get_object_or_404(Recipe, id=recipe_id)\n        is_edit = True\n    else:\n        recipe = None\n        is_edit = False\n\n    is_ajax = request.headers.get(\"X-Requested-With\") == \"XMLHttpRequest\" or \\\n              request.content_type == \"application/x-www-form-urlencoded\" and \\\n              request.GET.get(\"ajax\") == \"1\"\n\n    # Detect AJAX by checking Accept header or custom flag\n    wants_json = (\n        request.headers.get(\"Accept\") == \"application/json\"\n        or request.POST.get(\"_ajax\") == \"1\"\n    )\n\n    if request.method == \"POST\":\n        form = RecipeForm(request.POST, instance=recipe)\n        formset = RecipeIngredientFormSet(request.POST, instance=recipe)\n\n        if form.is_valid() and formset.is_valid():\n            recipe_obj = form.save()\n            formset.instance = recipe_obj\n            formset.save()\n\n            if wants_json:\n                return JsonResponse({\n                    \"success\": True,\n                    \"message\": f\"Recipe '{recipe_obj.name}' saved successfully!\",\n                    \"recipe_id\": recipe_obj.id,\n                })\n\n            messages.success(\n                request,\n                f\"Recipe '{recipe_obj.name}' saved successfully!\",\n            )\n            return redirect(\"recipe_list\")\n\n        # Form has errors\n        if wants_json:\n            errors = {}\n            for field, errs in form.errors.items():\n                errors[field] = [str(e) for e in errs]\n            for i, fs_form in enumerate(formset.forms):\n                for field, errs in fs_form.errors.items():\n                    errors[f\"ingredient_{i}_{field}\"] = [str(e) for e in errs]\n            return JsonResponse({\n                \"success\": False,\n                \"errors\": errors,\n                \"message\": \"Please fix the errors below.\",\n            }, status=400)\n\n    else:\n        form = RecipeForm(instance=recipe)\n        formset = RecipeIngredientFormSet(instance=recipe)\n\n    categories = RecipeCategory.objects.all().order_by(\"name\")\n    units = Unit.objects.all().order_by(\"symbol\")\n    variants = ProductVariant.objects.select_related(\"product\").order_by(\"sku\")[:3000]\n\n    context = {\n        \"form\": form,\n        \"formset\": formset,\n        \"is_edit\": is_edit,\n        \"recipe\": recipe,\n        \"categories\": categories,\n        \"units\": units,\n        \"variants_data\": [\n            {\n                \"id\": variant.id,\n                \"sku\": variant.sku,\n                \"name\": variant.product.name if variant.product else variant.sku,\n                \"price_buy\": float(variant.price_buy or 0),\n            }\n            for variant in variants\n        ],\n        \"report_title\": \"Edit Recipe\" if is_edit else \"Add Recipe\",\n    }\n\n    return render(\n        request,\n        \"lumra_pages/production/recipe_form.html\",\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        context,\n    )"
+    },
+    {
+      "view_name": "recipe_detail",
+      "view_module": "lumra_config.views.production_views",
+      "view_file": "lumra_config/views/production_views.py",
+      "line": 269,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def recipe_detail(request, recipe_id):\n    \"\"\"\n    Show recipe detail + ingredients list.\n    \"\"\"\n    recipe = get_object_or_404(\n        Recipe.objects.select_related(\"category\", \"yield_unit\"),\n        id=recipe_id,\n    )\n    ingredients = recipe.ingredients.select_related(\"variant\", \"variant__product\", \"unit\")\n    recipe_data = {\n        \"id\": recipe.id,\n        \"name\": recipe.name,\n        \"description\": recipe.description,\n        \"instructions\": recipe.instructions,\n        \"category\": recipe.category.name if recipe.category else \"\",\n        \"yield_quantity\": float(recipe.yield_quantity or 0),\n        \"yield_unit\": recipe.yield_unit.symbol if recipe.yield_unit else \"\",\n        \"preparation_time\": recipe.preparation_time,\n        \"total_cost\": float(recipe.total_cost or 0),\n        \"cost_per_unit\": float(recipe.cost_per_unit or 0),\n        \"created_at\": localtime(recipe.created_at).strftime(\"%Y-%m-%d %H:%M\"),\n        \"updated_at\": localtime(recipe.updated_at).strftime(\"%Y-%m-%d %H:%M\"),\n        \"ingredients\": [\n            {\n                \"id\": ingredient.id,\n                \"sku\": ingredient.variant.sku,\n                \"name\": ingredient.variant.product.name if ingredient.variant.product else ingredient.variant.sku,\n                \"quantity\": float(ingredient.quantity or 0),\n                \"unit\": ingredient.unit.symbol if ingredient.unit else \"\",\n                \"unit_cost\": float(ingredient.unit_cost or 0),\n                \"subtotal_cost\": float(ingredient.subtotal_cost or 0),\n                \"notes\": ingredient.notes,\n            }\n            for ingredient in ingredients\n        ],\n    }\n\n    context = {\n        \"recipe\": recipe,\n        \"ingredients\": ingredients,\n        \"recipe_data\": recipe_data,\n        \"report_title\": f\"Recipe Detail - {recipe.name}\",\n    }\n\n    return render(\n        request,\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        \"lumra_pages/production/recipe_detail.html\",\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        context,\n    )"
+    }
+  ]
+}

@@ -1,0 +1,225 @@
+{% extends 'base/base.html' %}
+{% block title %}Neraca — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-card { background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border: 1px solid white; border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+  
+  .bs-table { width: 100%; border-collapse: collapse; }
+  .bs-table td { padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; color: #334155; vertical-align: top; }
+  .bs-table th { padding: 12px 0; border-bottom: 2px solid #e2e8f0; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; vertical-align: bottom; }
+  
+  .col-label { padding-right: 20px; }
+  .col-value { text-align: right; font-family: monospace; font-weight: 600; }
+  .row-sub { padding-left: 20px; font-size: 12px; }
+  .row-total { font-weight: 800; color: #0f172a; border-top: 1px solid #cbd5e1; margin-top: 4px; padding-top: 8px; }
+  .row-grand { font-weight: 900; font-size: 15px; color: #0f172a; border-top: 2px solid #94a3b8; margin-top: 8px; padding-top: 12px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="bsApp()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex items-end justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">Neraca (Balance Sheet)</h1>
+      <p class="text-sm text-slate-400 mt-0.5">Laporan posisi keuangan perusahaan.</p>
+    </div>
+    <div class="flex items-center gap-3 glass-card px-4 py-2">
+      <label class="text-xs font-bold text-slate-500 uppercase mr-2">Per</label>
+      <input type="date" x-model="asOfDate" @change="window.location.href=`?as_of_date=${asOfDate}`" class="bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-sm font-bold text-slate-700 outline-none focus:border-slate-400">
+      <button class="text-slate-400 hover:text-slate-600"><i class="fas fa-download"></i></button>
+    </div>
+  </div>
+
+  <!-- Visual Balance Check -->
+  <div class="grid grid-cols-2 gap-4 mb-6">
+    <!-- Assets Bar -->
+    <div class="glass-card p-4 flex items-center gap-4">
+      <div class="text-right flex-1">
+        <p class="text-xs font-bold text-slate-400 uppercase">Total Aset</p>
+        <p class="text-lg font-black font-mono" x-text="formatCurrency(totalAssets)"></p>
+      </div>
+      <div class="w-full bg-slate-100 rounded-full h-4 overflow-hidden">
+        <div class="h-full bg-blue-500" :style="`width: 100%`"></div>
+      </div>
+    </div>
+    <!-- Liab+Equity Bar -->
+    <div class="glass-card p-4 flex items-center gap-4">
+      <div class="text-right flex-1">
+        <p class="text-xs font-bold text-slate-400 uppercase">Total Liab + Equity</p>
+        <p class="text-lg font-black font-mono" x-text="formatCurrency(totalLiabEquity)"></p>
+      </div>
+      <div class="w-full bg-slate-100 rounded-full h-4 overflow-hidden">
+        <!-- Visual comparison: if bar is full, it matches assets -->
+        <div class="h-full bg-emerald-500" :style="`width: ${totalAssets ? (totalLiabEquity / totalAssets) * 100 : 0}%`"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Statement -->
+  <div class="glass-card p-8 grid grid-cols-1 md:grid-cols-2 gap-12">
+    
+    <!-- Left: Assets -->
+    <div>
+      <h2 class="text-xl font-bold text-slate-800 mb-6 pb-2 border-b-2 border-slate-800">ASSETS</h2>
+      
+      <table class="bs-table">
+        <tbody>
+          <tr>
+            <td colspan="2" class="font-bold text-slate-600 py-2">Aset Lancar</td>
+          </tr>
+          <template x-for="item in assets.current" :key="item.name">
+            <tr>
+              <td class="col-label" x-text="item.name"></td>
+              <td class="col-value" x-text="formatCurrency(item.amount)"></td>
+            </tr>
+          </template>
+          <tr>
+            <td class="col-label row-sub">Total Aset Lancar</td>
+            <td class="col-value" x-text="formatCurrency(assets.currentTotal)"></td>
+          </tr>
+
+          <tr>
+            <td colspan="2" class="font-bold text-slate-600 py-2 mt-2">Aset Tetap</td>
+          </tr>
+          <template x-for="item in assets.fixed" :key="item.name">
+            <tr>
+              <td class="col-label row-sub" x-text="item.name"></td>
+              <td class="col-value" x-text="formatCurrency(item.amount)"></td>
+            </tr>
+          </template>
+          
+          <tr>
+            <td class="col-label row-total">TOTAL ASET</td>
+            <td class="col-value row-total" x-text="formatCurrency(totalAssets)"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Right: Liabilities & Equity -->
+    <div>
+      <h2 class="text-xl font-bold text-slate-800 mb-6 pb-2 border-b-2 border-slate-800">LIABILITIES & EQUITY</h2>
+      
+      <table class="bs-table">
+        <tbody>
+          <tr>
+            <td colspan="2" class="font-bold text-slate-600 py-2">Kewajiban</td>
+          </tr>
+          <template x-for="item in liabilities" :key="item.name">
+            <tr>
+              <td class="col-label" x-text="item.name"></td>
+              <td class="col-value" x-text="formatCurrency(item.amount)"></td>
+            </tr>
+          </template>
+          
+          <tr>
+            <td class="col-label row-total">Total Kewajiban</td>
+            <td class="col-value row-total" x-text="formatCurrency(totalLiabilities)"></td>
+          </tr>
+
+          <tr>
+            <td colspan="2" class="font-bold text-slate-600 py-2 mt-4">Ekuitas</td>
+          </tr>
+          <template x-for="item in equity" :key="item.name">
+            <tr>
+              <td class="col-label row-sub" x-text="item.name"></td>
+              <td class="col-value" x-text="formatCurrency(item.amount)"></td>
+            </tr>
+          </template>
+          
+          <tr>
+            <td class="col-label row-total">Total Ekuitas</td>
+            <td class="col-value row-total" x-text="formatCurrency(totalEquity)"></td>
+          </tr>
+          
+          <tr>
+            <td class="col-label row-grand">TOTAL LIAB & EQUITY</td>
+            <td class="col-value row-grand" x-text="formatCurrency(totalLiabEquity)"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script id="assets-current-data" type="application/json">
+{{ assets_current_json|safe }}
+</script>
+
+<script id="assets-fixed-data" type="application/json">
+{{ assets_fixed_json|safe }}
+</script>
+
+<script id="liabilities-data" type="application/json">
+{{ liabilities_json|safe }}
+</script>
+
+<script id="equity-data" type="application/json">
+{{ equity_json|safe }}
+</script>
+
+<script>
+function bsApp() {
+  return {
+    asOfDate: '{{ as_of_date|escapejs }}',
+    assets: {
+      current: [],
+      fixed: [],
+      get currentTotal() { return this.current.reduce((s,i)=>s+i.amount,0); }
+    },
+    liabilities: [],
+    equity: [],
+
+    get totalAssets() {
+      return this.assets.currentTotal + this.assets.fixed.reduce((s,i)=>s+i.amount,0);
+    },
+
+    get totalLiabilities() {
+      return this.liabilities.reduce((s,i)=>s+i.amount,0);
+    },
+
+    get totalEquity() {
+      return this.equity.reduce((s,i)=>s+i.amount,0);
+    },
+
+    get totalLiabEquity() {
+      return this.totalLiabilities + this.totalEquity;
+    },
+
+    formatCurrency(num) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+    },
+
+    init(){
+      const _assets_currentRaw = document.getElementById('assets-current-data');
+      if (_assets_currentRaw) {
+        try { this.assets_current = JSON.parse(_assets_currentRaw.textContent); }
+        catch(e) { console.error('assets-current-data parse error:', e); }
+      }
+      const _assets_fixedRaw = document.getElementById('assets-fixed-data');
+      if (_assets_fixedRaw) {
+        try { this.assets_fixed = JSON.parse(_assets_fixedRaw.textContent); }
+        catch(e) { console.error('assets-fixed-data parse error:', e); }
+      }
+      const _liabilitiesRaw = document.getElementById('liabilities-data');
+      if (_liabilitiesRaw) {
+        try { this.liabilities = JSON.parse(_liabilitiesRaw.textContent); }
+        catch(e) { console.error('liabilities-data parse error:', e); }
+      }
+      const _equityRaw = document.getElementById('equity-data');
+      if (_equityRaw) {
+        try { this.equity = JSON.parse(_equityRaw.textContent); }
+        catch(e) { console.error('equity-data parse error:', e); }
+      }}
+  }
+}
+</script>
+{% endblock %}

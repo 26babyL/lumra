@@ -1,0 +1,220 @@
+{% extends "base/base_hybrid.html" %}
+
+{% block title %}Arus Kas — LUMRA{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="cfApp()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-base-content">Laporan Arus Kas (Cash Flow)</h1>
+      <p class="text-sm text-base-content/60 mt-0.5">Analisis pergerakan kas masuk dan keluar.</p>
+    </div>
+    <div class="card bg-base-100 shadow-lg border border-base-300 px-4 py-2">
+      <div class="flex items-center gap-3">
+        <label class="label">
+          <span class="label-text">Periode</span>
+        </label>
+        <input 
+          aria-label="Periode" 
+          type="month" 
+          x-model="period" 
+          @change="window.location.href=`?period=${period}`" 
+          class="input input-bordered input-primary"
+        >
+        <button aria-label="Unduh" class="btn btn-ghost btn-sm">
+          <i class="fas fa-download"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cash Flow Summary -->
+  <div class="card bg-base-100 shadow-lg border border-base-300">
+    <div class="card-body p-6">
+      <div class="mb-6">
+        <h2 class="text-lg font-bold text-base-content mb-1">Cash Flow untuk Periode Berakhir</h2>
+        <p class="text-sm text-base-content/60 font-mono" x-text="periodText"></p>
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="table table-compact w-full">
+          <tbody>
+            <!-- OPERATING ACTIVITIES -->
+            <thead>
+              <tr class="bg-base-200">
+                <th colspan="2" class="text-left pt-4 pb-2">
+                  <span class="text-xs font-bold tracking-widest uppercase">Aktivitas Operasional</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="item in operatingActivities" :key="item.id">
+                <tr class="hover:bg-base-200">
+                  <td class="text-left py-3" x-text="item.name"></td>
+                  <td class="text-right font-mono py-3">
+                    <span :class="getValueClass(item.value)" x-text="formatCurrency(item.value)"></span>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+            
+            <!-- INVESTING ACTIVITIES -->
+            <thead>
+              <tr class="bg-base-200">
+                <th colspan="2" class="text-left pt-4 pb-2">
+                  <span class="text-xs font-bold tracking-widest uppercase">Aktivitas Investasi</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="item in investingActivities" :key="item.id">
+                <tr class="hover:bg-base-200">
+                  <td class="text-left py-3" x-text="item.name"></td>
+                  <td class="text-right font-mono py-3">
+                    <span :class="getValueClass(item.value)" x-text="formatCurrency(item.value)"></span>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+            
+            <!-- FINANCING ACTIVITIES -->
+            <thead>
+              <tr class="bg-base-200">
+                <th colspan="2" class="text-left pt-4 pb-2">
+                  <span class="text-xs font-bold tracking-widest uppercase">Aktivitas Pendanaan</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <template x-for="item in financingActivities" :key="item.id">
+                <tr class="hover:bg-base-200">
+                  <td class="text-left py-3" x-text="item.name"></td>
+                  <td class="text-right font-mono py-3">
+                    <span :class="getValueClass(item.value)" x-text="formatCurrency(item.value)"></span>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+            
+            <!-- NET CASH FLOW -->
+            <thead>
+              <tr class="bg-base-200">
+                <th colspan="2" class="text-left pt-4 pb-2">
+                  <span class="text-xs font-bold tracking-widest uppercase">Net Cash Flow</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="bg-base-100">
+                <td class="text-left py-3 font-bold">Net Cash dari Aktivitas Operasional</td>
+                <td class="text-right font-mono py-3">
+                  <span :class="getValueClass(netOperatingCash)" x-text="formatCurrency(netOperatingCash)"></span>
+                </td>
+              </tr>
+              <tr class="bg-base-100">
+                <td class="text-left py-3 font-bold">Net Cash dari Aktivitas Investasi</td>
+                <td class="text-right font-mono py-3">
+                  <span :class="getValueClass(netInvestingCash)" x-text="formatCurrency(netInvestingCash)"></span>
+                </td>
+              </tr>
+              <tr class="bg-base-100">
+                <td class="text-left py-3 font-bold">Net Cash dari Aktivitas Pendanaan</td>
+                <td class="text-right font-mono py-3">
+                  <span :class="getValueClass(netFinancingCash)" x-text="formatCurrency(netFinancingCash)"></span>
+                </td>
+              </tr>
+              <tr class="bg-primary/10 font-bold text-lg">
+                <td class="text-left py-4">Net Cash Flow Total</td>
+                <td class="text-right font-mono py-4">
+                  <span :class="getValueClass(netCashFlow)" x-text="formatCurrency(netCashFlow)"></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function cfApp() {
+  return {
+    period: '2024-01',
+    periodText: '',
+    operatingActivities: [],
+    investingActivities: [],
+    financingActivities: [],
+    netOperatingCash: 0,
+    netInvestingCash: 0,
+    netFinancingCash: 0,
+    netCashFlow: 0,
+    
+    init() {
+      this.loadCashFlowData();
+      this.updatePeriodText();
+    },
+    
+    loadCashFlowData() {
+      // Mock data - replace with actual API call
+      this.operatingActivities = [
+        { id: 1, name: 'Penjualan Produk', value: 50000000 },
+        { id: 2, name: 'Penjualan Jasa', value: 10000000 },
+        { id: 3, name: 'Biaya Operasional', value: -25000000 },
+        { id: 4, name: 'Biaya Marketing', value: -5000000 },
+        { id: 5, name: 'Biaya Administrasi', value: -3000000 }
+      ];
+      
+      this.investingActivities = [
+        { id: 6, name: 'Pembelian Peralatan', value: -15000000 },
+        { id: 7, name: 'Penjualan Aset Tetap', value: 8000000 }
+      ];
+      
+      this.financingActivities = [
+        { id: 8, name: 'Pinjaman Bank', value: 20000000 },
+        { id: 9, name: 'Pembayaran Utang', value: -5000000 },
+        { id: 10, name: 'Modal Saham', value: 10000000 }
+      ];
+      
+      this.calculateNetCashFlow();
+    },
+    
+    calculateNetCashFlow() {
+      this.netOperatingCash = this.operatingActivities.reduce((sum, item) => sum + item.value, 0);
+      this.netInvestingCash = this.investingActivities.reduce((sum, item) => sum + item.value, 0);
+      this.netFinancingCash = this.financingActivities.reduce((sum, item) => sum + item.value, 0);
+      
+      this.netCashFlow = this.netOperatingCash + this.netInvestingCash + this.netFinancingCash;
+    },
+    
+    updatePeriodText() {
+      const date = new Date(this.period + '-01');
+      const options = { year: 'numeric', month: 'long' };
+      this.periodText = date.toLocaleDateString('id-ID', options);
+    },
+    
+    getValueClass(value) {
+      if (value > 0) return 'text-success';
+      if (value < 0) return 'text-error';
+      return 'text-neutral';
+    },
+    
+    formatCurrency(amount) {
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0
+      }).format(amount);
+    }
+  }
+}
+</script>
+{% endblock %}

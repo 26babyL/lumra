@@ -1,0 +1,571 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}Dashboard — CoffeeShop{% endblock %}
+
+{% block content %}
+<div class="py-6 px-3 sm:px-4 lg:px-6">
+<div class="max-w-7xl mx-auto space-y-6">
+
+    {# ── HEADER ─────────────────────────────────────────────── #}
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+        <div>
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Dashboard</h1>
+            <p class="text-sm text-emerald-600 mt-0.5">Real-time insights for your CoffeeShop operations</p>
+        </div>
+        <div class="flex items-center gap-2 text-xs text-emerald-600 bg-emerald-50 border border-emerald-100 rounded-full px-3 py-1.5 w-fit">
+            <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" aria-hidden="true"></span>
+            <span>Live •</span>
+            <time id="js-report-time" datetime="">{% now "H:i" %}</time>
+        </div>
+    </div>
+
+    {# ── TOP 4 KPI CARDS ─────────────────────────────────────── #}
+    {#
+      Values rendered server-side from Django context ({{ kpis.x }}).
+      JS updates via data-kpi-value attributes on auto-refresh.
+      kpis keys must match _build_kpis() in dashboard_views.py.
+    #}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {% include "components/kpi_card.html" with
+            title="Today's Sales"
+            value=kpis.today_sales|default:"—"
+            icon="fa-money-bill-wave"
+            trend_value=kpis.sales_growth|default:""
+            trend_text="dari kemarin"
+            trend_up=kpis.sales_trend_up
+            color="emerald"
+            card_id="kpi-today-sales"
+        %}
+        {% include "components/kpi_card.html" with
+            title="Total Transactions"
+            value=kpis.total_transactions|default:"—"
+            icon="fa-receipt"
+            trend_value=kpis.transaction_growth|default:""
+            trend_text="dari kemarin"
+            trend_up=kpis.transaction_trend_up
+            color="blue"
+            card_id="kpi-total-transactions"
+        %}
+        {% include "components/kpi_card.html" with
+            title="Best Seller"
+            value=kpis.best_seller_name|default:"—"
+            icon="fa-fire"
+            trend_value=kpis.best_seller_count|default:""
+            trend_text="terjual"
+            trend_up=None
+            color="violet"
+            card_id="kpi-best-seller"
+        %}
+        {% include "components/kpi_card.html" with
+            title="Low Stock Alert"
+            value=kpis.low_stock_count|default:"0"
+            icon="fa-exclamation-triangle"
+            trend_value=""
+            trend_text="produk perlu perhatian"
+            trend_up=None
+            color="rose"
+            card_id="kpi-low-stock"
+        %}
+    </div>
+
+    {# ── CHART PENJUALAN ─────────────────────────────────────── #}
+    <section class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"
+             aria-labelledby="chart-heading">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+            <h2 id="chart-heading" class="text-base font-semibold text-gray-800">
+                Sales Analytics
+            </h2>
+            <div class="flex gap-2">
+                <label for="chartPeriod" class="sr-only">Periode chart</label>
+                <select id="chartPeriod"
+                        class="border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-600">
+                    <option value="7d">7 Hari</option>
+                    <option value="30d">30 Hari</option>
+                    <option value="1y">1 Tahun</option>
+                </select>
+                <label for="chartType" class="sr-only">Tipe chart</label>
+                <select id="chartType"
+                        class="border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-600">
+                    <option value="line">Line</option>
+                    <option value="bar">Bar</option>
+                    <option value="area">Area</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="relative" style="height: 300px;">
+            {# Loading overlay #}
+            <div id="chart-loading"
+                 class="hidden absolute inset-0 bg-white/70 rounded-2xl flex items-center justify-center z-10"
+                 aria-live="polite" aria-label="Memuat data chart">
+                <i class="fas fa-circle-notch fa-spin text-emerald-500 text-2xl" aria-hidden="true"></i>
+            </div>
+            <canvas id="salesChart" role="img" aria-label="Grafik penjualan"></canvas>
+        </div>
+
+        <div class="flex items-center gap-4 mt-3 text-xs text-gray-500">
+            <span class="flex items-center gap-1.5">
+                <span class="w-6 h-0.5 bg-emerald-500 inline-block rounded"></span> Aktual
+            </span>
+            <span class="flex items-center gap-1.5">
+                <span class="w-6 h-0 border-t-2 border-dashed border-emerald-400 inline-block"></span> Target
+            </span>
+        </div>
+    </section>
+
+    {# ── PERFORMANCE METRICS STRIP ───────────────────────────── #}
+    {#
+      Keys: monthly_growth, customer_retention, avg_order_value, inventory_turnover
+      All match _build_kpis() — no fake metrics (CAC, rating, supplier score removed)
+    #}
+    <section class="bg-gradient-to-br from-emerald-500 to-green-600 p-5 rounded-2xl shadow-sm text-white"
+             aria-labelledby="perf-heading">
+        <h2 id="perf-heading" class="text-sm font-semibold text-white/80 uppercase tracking-wider mb-4">
+            Performance Metrics
+        </h2>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div>
+                <p class="text-2xl font-bold" id="perf-monthly-growth">
+                    {{ kpis.monthly_growth|default:"—" }}
+                </p>
+                <p class="text-xs text-white/70 mt-0.5">Monthly Growth</p>
+            </div>
+            <div>
+                <p class="text-2xl font-bold" id="perf-retention">
+                    {{ kpis.customer_retention|default:"—" }}
+                </p>
+                <p class="text-xs text-white/70 mt-0.5">Customer Retention</p>
+            </div>
+            <div>
+                <p class="text-2xl font-bold" id="perf-avg-order">
+                    {{ kpis.avg_order_value|default:"—" }}
+                </p>
+                <p class="text-xs text-white/70 mt-0.5">Avg Order Value</p>
+            </div>
+            <div>
+                <p class="text-2xl font-bold" id="perf-inv-turnover">
+                    {{ kpis.inventory_turnover|default:"—" }}
+                </p>
+                <p class="text-xs text-white/70 mt-0.5">Inventory Turnover</p>
+            </div>
+        </div>
+    </section>
+
+    {# ── ADDITIONAL KPI CARDS ────────────────────────────────── #}
+    {#
+      Only real, computable metrics. Removed:
+        - CAC           (needed real marketing spend — was revenue × 0.05)
+        - Customer Rating (was fabricated from completion rate)
+        - Employee Productivity (hardcoded employee count)
+        - Supplier Score (was % stocked variants, not quality)
+    #}
+    <section aria-labelledby="additional-kpi-heading">
+        <h2 id="additional-kpi-heading" class="sr-only">KPI Tambahan</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+            {% include "components/kpi_card_white.html" with
+                title="Total Revenue"
+                value=kpis.total_revenue|default:"—"
+                subtitle="30 hari terakhir"
+                icon="fa-dollar-sign"
+                icon_color="text-emerald-600"
+                icon_bg="bg-emerald-100"
+                card_id="kpi-total-revenue"
+            %}
+            {% include "components/kpi_card_white.html" with
+                title="Profit Margin"
+                value=kpis.profit_margin|default:"—"
+                subtitle="90 hari terakhir"
+                icon="fa-chart-line"
+                icon_color="text-green-600"
+                icon_bg="bg-green-100"
+                card_id="kpi-profit-margin"
+            %}
+            {% include "components/kpi_card_white.html" with
+                title="Return Rate"
+                value=kpis.return_rate|default:"—"
+                subtitle="Tingkat pembatalan"
+                icon="fa-undo"
+                icon_color="text-red-600"
+                icon_bg="bg-red-100"
+                card_id="kpi-return-rate"
+            %}
+            {% include "components/kpi_card_white.html" with
+                title="Inventory Value"
+                value=kpis.inventory_value|default:"—"
+                subtitle="Nilai stok bersih"
+                icon="fa-warehouse"
+                icon_color="text-indigo-600"
+                icon_bg="bg-indigo-100"
+                card_id="kpi-inventory-value"
+            %}
+            {% include "components/kpi_card_white.html" with
+                title="Order Frequency"
+                value=kpis.order_frequency|default:"—"
+                subtitle="Order/pelanggan"
+                icon="fa-calendar-alt"
+                icon_color="text-teal-600"
+                icon_bg="bg-teal-100"
+                card_id="kpi-order-frequency"
+            %}
+            {% include "components/kpi_card_white.html" with
+                title="Conversion Rate"
+                value=kpis.conversion_rate|default:"—"
+                subtitle="Order selesai / total"
+                icon="fa-check-circle"
+                icon_color="text-blue-600"
+                icon_bg="bg-blue-100"
+                card_id="kpi-conversion-rate"
+            %}
+            {% include "components/kpi_card_white.html" with
+                title="Repeat Purchase"
+                value=kpis.repeat_purchase_rate|default:"—"
+                subtitle="Pelanggan loyal"
+                icon="fa-redo"
+                icon_color="text-purple-600"
+                icon_bg="bg-purple-100"
+                card_id="kpi-repeat-purchase"
+            %}
+            {% include "components/kpi_card_white.html" with
+                title="Pending Orders"
+                value=kpis.pending_orders|default:"0"
+                subtitle="Menunggu proses"
+                icon="fa-clock"
+                icon_color="text-orange-600"
+                icon_bg="bg-orange-100"
+                card_id="kpi-pending-orders"
+            %}
+        </div>
+    </section>
+
+    {# ── QUICK STATS FOOTER ──────────────────────────────────── #}
+    {# quick_stats keys: active_products, pending_orders, total_locations #}
+    <div class="bg-white border border-gray-100 rounded-xl px-4 py-3 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-3 text-sm text-gray-600">
+            <div class="flex flex-wrap items-center gap-1 sm:gap-4">
+                <span class="font-medium text-gray-700">Quick Stats:</span>
+                <span>Produk aktif:
+                    <strong class="text-gray-900" id="qs-active-products">
+                        {{ quick_stats.active_products|default:"—" }}
+                    </strong>
+                </span>
+                <span>Order pending:
+                    <strong class="text-gray-900" id="qs-pending-orders">
+                        {{ quick_stats.pending_orders|default:"—" }}
+                    </strong>
+                </span>
+                <span>Total lokasi:
+                    <strong class="text-gray-900" id="qs-total-locations">
+                        {{ quick_stats.total_locations|default:"—" }}
+                    </strong>
+                </span>
+            </div>
+            <div class="flex items-center gap-1.5 text-xs text-gray-400">
+                <i class="fas fa-clock" aria-hidden="true"></i>
+                <span>Diperbarui: <span id="js-last-updated">baru saja</span></span>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+{# Toast container #}
+<div id="toast-container"
+     class="fixed top-4 right-4 z-50 space-y-2 pointer-events-none"
+     aria-live="polite"
+     aria-label="Notifikasi sistem"></div>
+
+{% endblock %}
+
+
+{% block scripts %}
+{# Safe JSON injection — prevents XSS via json_script #}
+{{ dashboard_data|json_script:"dashboard-data" }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+(function () {
+    'use strict';
+
+    // ── Bootstrap data from server (safe — no |safe filter) ─────────
+    const dashboardData = JSON.parse(
+        document.getElementById('dashboard-data').textContent
+    );
+
+    // ── State ────────────────────────────────────────────────────────
+    let salesChart   = null;
+    let refreshTimer = null;
+    const REFRESH_MS = 5 * 60 * 1000; // 5 minutes
+
+    // ── Init ─────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+        initChart();
+        applyChartData(dashboardData.chart_data);
+        updateLastUpdated(dashboardData.last_updated);
+        setupEventListeners();
+        startAutoRefresh();
+    });
+
+    // ── Chart ────────────────────────────────────────────────────────
+    function initChart() {
+        const ctx = document.getElementById('salesChart');
+        if (!ctx) return;
+
+        salesChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels:   [],
+                datasets: [
+                    {
+                        label:           'Aktual',
+                        data:            [],
+                        borderColor:     '#10b981',
+                        backgroundColor: 'rgba(16,185,129,0.12)',
+                        tension:         0.4,
+                        fill:            true,
+                        pointRadius:     4,
+                        pointHoverRadius: 6,
+                    },
+                    {
+                        label:       'Target',
+                        data:        [],
+                        borderColor: '#6ee7b7',
+                        borderDash:  [5, 5],
+                        tension:     0.4,
+                        fill:        false,
+                        pointRadius: 3,
+                    },
+                ],
+            },
+            options: {
+                responsive:          true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                scales: {
+                    y: {
+                        ticks: { callback: v => formatCurrencyShort(v) },
+                        grid:  { color: 'rgba(0,0,0,0.04)' },
+                    },
+                    x: { grid: { display: false } },
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => `${ctx.dataset.label}: ${formatCurrency(ctx.raw)}`,
+                        },
+                    },
+                },
+            },
+        });
+    }
+
+    function applyChartData(data) {
+        if (!salesChart || !data) return;
+        salesChart.data.labels            = data.labels ?? [];
+        salesChart.data.datasets[0].data  = data.actual ?? [];
+        salesChart.data.datasets[1].data  = data.target ?? [];
+        salesChart.update('active');
+    }
+
+    function setChartType(type) {
+        if (!salesChart) return;
+        const isArea = type === 'area';
+        salesChart.config.type                    = isArea ? 'line' : type;
+        salesChart.data.datasets[0].fill          = isArea;
+        salesChart.update();
+    }
+
+    // ── Event Listeners ──────────────────────────────────────────────
+    function setupEventListeners() {
+        document.getElementById('chartType')
+            ?.addEventListener('change', e => setChartType(e.target.value));
+
+        document.getElementById('chartPeriod')
+            ?.addEventListener('change', e => fetchChartData(e.target.value));
+    }
+
+    // ── Fetch: chart only (period change) ───────────────────────────
+    function fetchChartData(period) {
+        setChartLoading(true);
+        fetch(`/api/dashboard/chart-data/?period=${encodeURIComponent(period)}`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        })
+            .then(res => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
+            .then(data => { applyChartData(data); showToast('Data chart diperbarui', 'success'); })
+            .catch(err => { console.error('fetchChartData:', err); showToast('Gagal memuat chart', 'error'); })
+            .finally(() => setChartLoading(false));
+    }
+
+    // ── Fetch: full dashboard refresh ───────────────────────────────
+    function fetchDashboardData() {
+        const period = document.getElementById('chartPeriod')?.value ?? '7d';
+        fetch(`/api/dashboard/data/?period=${encodeURIComponent(period)}`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        })
+            .then(res => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
+            .then(data => {
+                applyChartData(data.chart_data);
+                updateLastUpdated(data.last_updated);
+                updateKpis(data.kpis);
+                updateQuickStats(data.quick_stats);
+            })
+            .catch(err => console.error('fetchDashboardData:', err));
+    }
+
+    // ── KPI / Quick Stats update helpers ────────────────────────────
+    //
+    // KEY CONTRACT: data.kpis uses snake_case, matching _build_kpis()
+    // and the Django context. No camelCase in JS — one source of truth.
+    //
+    function updateKpis(kpis) {
+        if (!kpis) return;
+        // Top 4 cards
+        updateCardValue('kpi-today-sales',         kpis.today_sales);
+        updateCardValue('kpi-total-transactions',   kpis.total_transactions);
+        updateCardValue('kpi-best-seller',          kpis.best_seller_name);
+        updateCardValue('kpi-low-stock',            kpis.low_stock_count);
+        // Performance strip
+        setText('perf-monthly-growth', kpis.monthly_growth);
+        setText('perf-retention',       kpis.customer_retention);
+        setText('perf-avg-order',       kpis.avg_order_value);
+        setText('perf-inv-turnover',    kpis.inventory_turnover);
+        // Additional white cards
+        updateCardValue('kpi-total-revenue',   kpis.total_revenue);
+        updateCardValue('kpi-profit-margin',   kpis.profit_margin);
+        updateCardValue('kpi-return-rate',     kpis.return_rate);
+        updateCardValue('kpi-inventory-value', kpis.inventory_value);
+        updateCardValue('kpi-order-frequency', kpis.order_frequency);
+        updateCardValue('kpi-conversion-rate', kpis.conversion_rate);
+        updateCardValue('kpi-repeat-purchase', kpis.repeat_purchase_rate);
+        updateCardValue('kpi-pending-orders',  kpis.pending_orders);
+    }
+
+    function updateQuickStats(qs) {
+        if (!qs) return;
+        setText('qs-active-products', qs.active_products);
+        setText('qs-pending-orders',  qs.pending_orders);
+        setText('qs-total-locations', qs.total_locations);
+    }
+
+    // kpi_card component exposes [data-kpi-value]; plain elements use textContent
+    function updateCardValue(id, value) {
+        if (value == null) return;
+        const el = document.getElementById(id);
+        if (!el) return;
+        const inner = el.querySelector('[data-kpi-value]');
+        if (inner) inner.textContent = value;
+        else el.textContent = value;
+    }
+
+    function setText(id, value) {
+        if (value == null) return;
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+    }
+
+    // ── Auto Refresh ─────────────────────────────────────────────────
+    function startAutoRefresh() {
+        stopAutoRefresh();
+        refreshTimer = setInterval(fetchDashboardData, REFRESH_MS);
+    }
+    function stopAutoRefresh() {
+        if (refreshTimer) clearInterval(refreshTimer);
+    }
+
+    // Pause on hidden tab — resume when visible
+    document.addEventListener('visibilitychange', () => {
+        document.hidden ? stopAutoRefresh() : startAutoRefresh();
+    });
+
+    // ── UI Helpers ───────────────────────────────────────────────────
+    function setChartLoading(on) {
+        document.getElementById('chart-loading')?.classList.toggle('hidden', !on);
+    }
+
+    function updateLastUpdated(text) {
+        const el = document.getElementById('js-last-updated');
+        if (el && text) el.textContent = text;
+    }
+
+    // Clock: update every minute
+    setInterval(() => {
+        const el = document.getElementById('js-report-time');
+        if (!el) return;
+        const now  = new Date();
+        const time = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        el.textContent = time;
+        el.setAttribute('datetime', now.toISOString());
+    }, 60_000);
+
+    // ── Currency Formatters ──────────────────────────────────────────
+    function formatCurrency(value) {
+        const num = typeof value === 'string'
+            ? parseFloat(value.replace(/[^\d.-]/g, ''))
+            : Number(value);
+        return new Intl.NumberFormat('id-ID', {
+            style:                 'currency',
+            currency:              'IDR',
+            minimumFractionDigits: 0,
+        }).format(isNaN(num) ? 0 : num);
+    }
+
+    function formatCurrencyShort(value) {
+        if (value >= 1_000_000) return 'Rp ' + (value / 1_000_000).toFixed(1) + 'Jt';
+        if (value >= 1_000)     return 'Rp ' + (value / 1_000).toFixed(0) + 'K';
+        return 'Rp ' + value;
+    }
+
+    // ── Toast ────────────────────────────────────────────────────────
+    // Uses textContent (never innerHTML) — safe from XSS
+    function showToast(message, type = 'info') {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+
+        const colors = {
+            success: 'bg-green-500',
+            error:   'bg-red-500',
+            warning: 'bg-amber-500',
+            info:    'bg-blue-500',
+        };
+
+        const toast = document.createElement('div');
+        toast.className = [
+            colors[type] ?? colors.info,
+            'text-white px-4 py-3 rounded-xl shadow-lg',
+            'flex items-center gap-3 pointer-events-auto',
+            'translate-x-full transition-transform duration-300 max-w-xs text-sm',
+        ].join(' ');
+        toast.setAttribute('role', 'status');
+
+        const msg = document.createElement('span');
+        msg.className   = 'flex-1';
+        msg.textContent = message; // textContent — never innerHTML
+
+        const btn = document.createElement('button');
+        btn.setAttribute('aria-label', 'Tutup notifikasi');
+        btn.className = 'text-white/80 hover:text-white flex-shrink-0';
+        btn.innerHTML  = '<i class="fas fa-times text-xs" aria-hidden="true"></i>';
+
+        toast.appendChild(msg);
+        toast.appendChild(btn);
+        container.appendChild(toast);
+
+        requestAnimationFrame(() =>
+            requestAnimationFrame(() => toast.classList.remove('translate-x-full'))
+        );
+
+        const timer = setTimeout(() => removeToast(toast), 5000);
+        btn.addEventListener('click', () => { clearTimeout(timer); removeToast(toast); });
+    }
+
+    function removeToast(toast) {
+        toast.classList.add('translate-x-full');
+        toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+    }
+
+})();
+</script>
+{% endblock %}

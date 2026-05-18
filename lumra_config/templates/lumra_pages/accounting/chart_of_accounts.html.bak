@@ -1,0 +1,146 @@
+{% extends 'base/base.html' %}
+{% block title %}Chart of Accounts — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-card { background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.95); border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+  
+  .type-badge { font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.05em; width: fit-content; }
+  .type-asset { background: #dbeafe; color: #1e40af; }
+  .type-liability { background: #f3e8ff; color: #6b21a8; }
+  .type-equity { background: #fce7f3; color: #9d174d; }
+  .type-revenue { background: #d1fae5; color: #065f46; }
+  .type-expense { background: #fee2e2; color: #991b1b; }
+
+  .coa-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+  .coa-table th { text-align: left; padding: 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; border-bottom: 2px solid #f1f5f9; }
+  .coa-table td { padding: 14px 16px; border-bottom: 1px solid #f8fafc; color: #334155; transition: background 0.1s; }
+  .coa-table tr:hover td { background: #f8fafc; }
+  .acc-code { font-family: monospace; color: #64748b; font-weight: 600; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="coaApp()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex items-end justify-between">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+        <a href="#" class="hover:text-slate-800">Keuangan</a>
+        <span>/</span>
+        <span class="text-slate-800 font-medium">Chart of Accounts</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800">Buku Besar Pembantu (COA)</h1>
+      <p class="text-sm text-slate-400 mt-0.5">Struktur akun untuk pencatatan keuangan.</p>
+    </div>
+    <a href="{% url 'chart_of_accounts_form' %}" class="bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:bg-slate-700 transition flex items-center gap-2">
+      <i class="fas fa-plus"></i> Buat Akun Baru
+    </a>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="glass-card p-4 flex flex-col sm:flex-row justify-between gap-4">
+    <div class="flex gap-2 overflow-x-auto pb-1 sm:pb-0">
+      <button @click="filterType='all'" class="px-3 py-1.5 rounded-lg text-xs font-bold border transition" 
+              :class="filterType==='all' ? 'bg-slate-800 text-white border-slate-800' : 'text-slate-600 border-slate-200 hover:bg-slate-50'">Semua</button>
+      <button @click="filterType='asset'" class="px-3 py-1.5 rounded-lg text-xs font-bold border transition" 
+              :class="filterType==='asset' ? 'bg-blue-100 text-blue-800 border-blue-200' : 'text-slate-600 border-slate-200 hover:bg-slate-50'">Asset</button>
+      <button @click="filterType='liability'" class="px-3 py-1.5 rounded-lg text-xs font-bold border transition" 
+              :class="filterType==='liability' ? 'bg-purple-100 text-purple-800 border-purple-200' : 'text-slate-600 border-slate-200 hover:bg-slate-50'">Liability</button>
+      <button @click="filterType='equity'" class="px-3 py-1.5 rounded-lg text-xs font-bold border transition" 
+              :class="filterType==='equity' ? 'bg-pink-100 text-pink-800 border-pink-200' : 'text-slate-600 border-slate-200 hover:bg-slate-50'">Equity</button>
+      <button @click="filterType='revenue'" class="px-3 py-1.5 rounded-lg text-xs font-bold border transition" 
+              :class="filterType==='revenue' ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : 'text-slate-600 border-slate-200 hover:bg-slate-50'">Pendapatan</button>
+      <button @click="filterType='expense'" class="px-3 py-1.5 rounded-lg text-xs font-bold border transition" 
+              :class="filterType==='expense' ? 'bg-rose-100 text-rose-800 border-rose-200' : 'text-slate-600 border-slate-200 hover:bg-slate-50'">Beban</button>
+    </div>
+    <div class="relative w-64">
+      <input type="text" x-model="search" placeholder="Cari Kode / Nama Akun..." class="w-full bg-white/80 border border-slate-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-slate-400">
+      <i class="fas fa-search absolute right-3 top-2.5 text-slate-300 text-xs"></i>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="glass-card overflow-hidden">
+    <table class="coa-table">
+      <thead>
+        <tr>
+          <th style="width: 15%">Kode Akun</th>
+          <th style="width: 40%">Nama Akun</th>
+          <th style="width: 20%">Tipe</th>
+          <th style="width: 15%">Level</th>
+          <th style="width: 10%">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="acc in filteredCOA" :key="acc.id">
+          <tr>
+            <td class="acc-code" x-text="acc.code"></td>
+            <td>
+              <div class="font-bold text-slate-800" x-text="acc.name"></div>
+              <!-- Indentation for hierarchy visualization -->
+              <div class="h-1 w-4 bg-slate-200 mt-1 rounded" x-show="acc.level > 1"></div>
+            </td>
+            <td>
+              <span class="type-badge" :class="'type-' + acc.type" x-text="acc.type"></span>
+            </td>
+            <td class="text-xs text-slate-500">
+              <span x-text="acc.level === 1 ? 'Header' : 'Detail'"></span>
+            </td>
+            <td class="text-right">
+              <a :href="`${editBaseUrl}${acc.id}/edit/`" class="text-slate-400 hover:text-slate-700 transition"><i class="fas fa-pen"></i></a>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script id="accounts-data" type="application/json">
+{{ accounts_json|safe }}
+</script>
+
+<!-- JSON injection for Chart of Accounts data -->
+<script id="accounts-data" type="application/json">
+{{ accounts_json|safe }}
+</script>
+
+<script>
+function coaApp() {
+  return {
+    coa: [],  // Populated by init()
+    editBaseUrl: '/accounting/coa/',
+    filterType: 'all',
+    search: '',
+
+    get filteredCOA() {
+      return this.coa.filter(c => {
+        const typeMatch = this.filterType === 'all' || c.type === this.filterType;
+        const searchMatch = c.name.toLowerCase().includes(this.search.toLowerCase()) || 
+                           c.code.toLowerCase().includes(this.search.toLowerCase());
+        return typeMatch && searchMatch;
+      });
+    },
+
+    init() {
+      // Load JSON data from script tag
+      const raw = document.getElementById('accounts-data');
+      if (raw) {
+        try {
+          this.coa = JSON.parse(raw.textContent);
+        } catch(e) {
+          console.error('Failed to parse accounts JSON:', e);
+          this.coa = [];
+        }
+      }
+    }
+  }
+}
+</script>
+{% endblock %}

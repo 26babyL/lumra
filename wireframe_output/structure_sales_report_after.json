@@ -1,0 +1,168 @@
+{
+  "filename": "sales_report_after.html",
+  "title": "sales_report_after",
+  "components": [
+    {
+      "type": "metric",
+      "tag": "div",
+      "label": "METRIC CARD",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "kpi-row kpi-glass",
+      "text_preview": "{% include \"base/kpi_card.html\" with title=\"Total Transaksi\" value=total_transac…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "glass-card reveal",
+      "text_preview": "Rincian Penjualan Export CSV Tanggal Outlet Produk Qty Total Status {% for item…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h2",
+      "label": "HEADING (H2)",
+      "depth": 3,
+      "path": "root/body/div/div/h2",
+      "classes": "glass-card__title",
+      "text_preview": "Rincian Penjualan",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: Export CSV",
+      "depth": 4,
+      "path": "root/body/div/div/div/button",
+      "classes": "btn btn-outline",
+      "text_preview": "Export CSV",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "exportBtn",
+      "x_data": ""
+    },
+    {
+      "type": "table",
+      "tag": "table",
+      "label": "[ TABLE ]",
+      "depth": 3,
+      "path": "root/body/div/div/table",
+      "classes": "data-table tbl-odyssey",
+      "text_preview": "Tanggal Outlet Produk Qty Total Status {% for item in sales_data %} {{ item.date…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "salesTable",
+      "x_data": ""
+    },
+    {
+      "type": "badge",
+      "tag": "span",
+      "label": "BADGE / STATUS",
+      "depth": 7,
+      "path": "root/body/div/div/table/tbody/tr/td/span",
+      "classes": "status-chip chip-{{ item.status }}",
+      "text_preview": "{{ item.status }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "metric",
+      "label": "METRIC CARD",
+      "text_preview": "{% include \"base/kpi_card.html\" with title=\"Total Transaksi\" value=total_transac…"
+    },
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "Rincian Penjualan Export CSV Tanggal Outlet Produk Qty Total Status {% for item…"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/h2",
+      "type": "heading",
+      "label": "HEADING (H2)",
+      "text_preview": "Rincian Penjualan"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/button",
+      "type": "button",
+      "label": "BUTTON: Export CSV",
+      "text_preview": "Export CSV"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/table",
+      "type": "table",
+      "label": "[ TABLE ]",
+      "text_preview": "Tanggal Outlet Produk Qty Total Status {% for item in sales_data %} {{ item.date…"
+    },
+    {
+      "depth": 7,
+      "path": "root/body/div/div/table/tbody/tr/td/span",
+      "type": "badge",
+      "label": "BADGE / STATUS",
+      "text_preview": "{{ item.status }}"
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 6,
+    "by_type": {
+      "metric": 1,
+      "card": 1,
+      "heading": 1,
+      "button": 1,
+      "table": 1,
+      "badge": 1
+    },
+    "interactive": 1,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

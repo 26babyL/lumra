@@ -1,0 +1,156 @@
+{% extends 'base/base.html' %}
+{% block title %}Zona Gudang — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Reuse styles */
+  .stat-card { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.95); border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); padding: 16px 20px; }
+  .filter-tab { padding: 4px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; color: #666; border: 1px solid transparent; background: transparent; cursor: pointer; transition: all 0.12s; }
+  .filter-tab:hover { background: rgba(0,0,0,0.05); }
+  .filter-tab.active { background: rgba(0, 184, 163, 0.1); color: #00B8A3; border-color: rgba(0, 184, 163, 0.2); }
+  
+  .zone-card { background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.95); border-radius: 16px; padding: 20px; transition: all 0.2s; position: relative; overflow: hidden; }
+  .zone-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+  
+  /* Progress Bar */
+  .progress-track { background: #f1f5f9; border-radius: 999px; height: 8px; overflow: hidden; margin-top: 8px; }
+  .progress-fill { height: 100%; border-radius: 999px; transition: width 0.5s ease; }
+  
+  .type-badge { position: absolute; top: 16px; right: 16px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; text-transform: uppercase; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-5 relative z-10" x-data="zoneApp()" x-init="init()" x-cloak>
+  <!-- Header -->
+  <div class="flex items-end justify-between gap-3">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+        <a href="#" class="hover:text-slate-800">Logistik</a>
+        <span>/</span>
+        <span class="text-slate-800 font-medium">Manajemen Zona</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800">Zona Gudang</h1>
+      <p class="text-sm text-slate-400 mt-0.5">Pemetaan area penyimpanan stok</p>
+    </div>
+    <a href="{% url 'warehouse_zone_form' %}" class="bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-lg hover:bg-slate-700 transition flex items-center gap-2">
+      <i class="fas fa-plus"></i> Tambah Zona
+    </a>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div class="stat-card flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600"><i class="fas fa-th"></i></div>
+      <div><p class="text-[10px] font-semibold text-slate-400 uppercase">Total Zona</p><p class="text-xl font-bold text-slate-800" x-text="zones.length"></p></div>
+    </div>
+    <div class="stat-card flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500"><i class="fas fa-snowflake"></i></div>
+      <div><p class="text-[10px] font-semibold text-slate-400 uppercase">Cold Storage</p><p class="text-xl font-bold text-slate-800" x-text="zones.filter(z=>z.type==='cold').length"></p></div>
+    </div>
+    <div class="stat-card flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-500"><i class="fas fa-leaf"></i></div>
+      <div><p class="text-[10px] font-semibold text-slate-400 uppercase">Dry Storage</p><p class="text-xl font-bold text-slate-800" x-text="zones.filter(z=>z.type==='rack' || z.type==='bulk' || z.type==='staging' || z.type==='other').length"></p></div>
+    </div>
+    <div class="stat-card flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center text-rose-500"><i class="fas fa-skull-crossbones"></i></div>
+      <div><p class="text-[10px] font-semibold text-slate-400 uppercase">Inactive</p><p class="text-xl font-bold text-slate-800" x-text="zones.filter(z=>!z.is_active).length"></p></div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="bg-white/70 backdrop-blur-md px-4 py-3 rounded-2xl border border-white/80 shadow-sm flex justify-between items-center">
+    <div class="flex gap-1">
+      <button @click="filter='all'" class="filter-tab" :class="filter==='all' ? 'active' : ''">Semua</button>
+      <button @click="filter='rack'" class="filter-tab" :class="filter==='rack' ? 'active' : ''">Rack</button>
+      <button @click="filter='cold'" class="filter-tab" :class="filter==='cold' ? 'active' : ''">Cold</button>
+      <button @click="filter='frozen'" class="filter-tab" :class="filter==='frozen' ? 'active' : ''">Frozen</button>
+    </div>
+    <div class="relative">
+      <input type="text" x-model="search" placeholder="Cari zona..." class="bg-white/80 border border-slate-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-emerald-500">
+    </div>
+  </div>
+
+  <!-- Grid Zones -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <template x-for="zone in filteredZones" :key="zone.id">
+      <div class="zone-card group cursor-pointer">
+        <!-- Type Badge -->
+        <span class="type-badge" :class="{
+          'bg-blue-100 text-blue-600': zone.type === 'cold',
+          'bg-indigo-100 text-indigo-600': zone.type === 'frozen',
+          'bg-emerald-100 text-emerald-600': zone.type !== 'cold' && zone.type !== 'frozen'
+        }" x-text="zone.type"></span>
+
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <h3 class="font-bold text-lg text-slate-800" x-text="zone.code"></h3>
+            <p class="text-xs text-slate-500" x-text="zone.name"></p>
+          </div>
+          <div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition">
+            <i class="fas fa-warehouse"></i>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="text-slate-500">Kapasitas</span>
+              <span class="font-bold text-slate-700" x-text="zone.capacity"></span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" 
+                   class="bg-emerald-500"
+                   style="width: 100%"></div>
+            </div>
+          </div>
+          
+          <div class="flex justify-between text-xs pt-2 border-t border-slate-100">
+            <span class="text-slate-400">Lokasi</span>
+            <span class="font-medium text-slate-700" x-text="zone.location"></span>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ zones_data|json_script:"zones-data" }}
+<script>
+function zoneApp() {
+  return {
+    zones: [],
+    filter: 'all',
+    search: '',
+    get filteredZones() {
+      return this.zones.filter(z => {
+        const f = this.filter === 'all' || z.type === this.filter;
+        const s = z.code.toLowerCase().includes(this.search.toLowerCase()) || z.name.toLowerCase().includes(this.search.toLowerCase());
+        return f && s;
+      });
+    },
+    init(){
+      const el = document.getElementById('zones-data');
+      if (el && el.textContent) {
+        try {
+          const raw = JSON.parse(el.textContent) || [];
+          this.zones = raw.map(z => ({
+            id: z.id,
+            code: z.code,
+            name: z.name,
+            type: z.zone_type,
+            capacity: z.capacity,
+            location: z.location,
+            is_active: z.is_active,
+          }));
+        } catch(e) {
+          this.zones = [];
+        }
+      }
+    }
+  }
+}
+</script>
+{% endblock %}

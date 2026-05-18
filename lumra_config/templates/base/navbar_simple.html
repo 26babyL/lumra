@@ -1,0 +1,64 @@
+<!-- Top Navigation Bar -->
+<header class="bg-base-100 border-b border-base-300 shadow-sm">
+    <div class="flex items-center justify-between px-6 py-4">
+        
+        <!-- Left Side - Menu Toggle & Page Title -->
+        <div class="flex items-center gap-4">
+            <button @click="toggle()" 
+                    class="p-2 rounded-lg hover:bg-base-200 transition-colors">
+                <i class="fas fa-bars text-base-content"></i>
+            </button>
+            <div>
+                <h1 class="text-xl font-semibold text-base-content">
+                    {% block page_title %}Dashboard{% endblock %}
+                </h1>
+                <p class="text-sm text-base-content/60">
+                    {% block page_subtitle %}Welcome back{% endblock %}
+                </p>
+            </div>
+        </div>
+
+        <!-- Right Side - User Menu & Actions -->
+        <div class="flex items-center gap-4">
+            
+            <!-- Notifications -->
+            <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-ghost btn-circle">
+                    <div class="indicator">
+                        <i class="fas fa-bell text-base-content"></i>
+                        <span class="badge badge-xs badge-primary indicator-item">3</span>
+                    </div>
+                </label>
+                <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-80">
+                    <li class="menu-title">
+                        <span>Notifications</span>
+                    </li>
+                    <li><a href="#">New order received</a></li>
+                    <li><a href="#">Low stock alert</a></li>
+                    <li><a href="#">System update available</a></li>
+                    <li><a href="#" class="text-primary">View all notifications</a></li>
+                </ul>
+            </div>
+
+            <!-- User Menu -->
+            <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                    <div class="w-10 rounded-full">
+                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" alt="User Avatar" />
+                    </div>
+                </label>
+                <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-56">
+                    <li class="menu-title">
+                        <span>{{ user.get_full_name|default:user.username }}</span>
+                    </li>
+                    <li><a href="{% url 'profile' %}">Profile</a></li>
+                    <li><a href="{% url 'settings' %}">Settings</a></li>
+                    <li><a href="#">Help</a></li>
+                    <li><div class="divider"></div></li>
+                    <li><a href="{% url 'logout' %}" class="text-error">Logout</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</header>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireframe: {% if campaign %}EditCampaign{% else %}CampaignBaru{% endif %}</title>
+  <style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Courier New', monospace;
+    background: #F5F5F5;
+    color: #333;
+    padding: 16px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* ── Komponen utama ── */
+.wf-page        { max-width: 1100px; margin: 0 auto; }
+.wf-header      { background: #2C2C2C; color: #fff; padding: 12px 16px; border-radius: 4px; margin-bottom: 12px; font-weight: bold; font-size: 14px; }
+.wf-nav         { background: #444; color: #fff; padding: 10px 16px; border-radius: 4px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; }
+.wf-nav-item    { background: #666; color: #ddd; padding: 4px 10px; border-radius: 3px; font-size: 11px; }
+.wf-breadcrumb  { color: #888; font-size: 11px; margin-bottom: 8px; }
+.wf-breadcrumb span { margin: 0 4px; }
+
+/* ── Sections & Cards ── */
+.wf-section     { border: 1.5px solid #CCC; border-radius: 6px; padding: 12px; margin-bottom: 12px; background: #FFF; }
+.wf-card        { border: 1px solid #CCC; border-radius: 4px; padding: 10px; background: #FAFAFA; margin-bottom: 8px; }
+.wf-card-dark   { border: 1px solid #888; border-radius: 4px; padding: 10px; background: #2C2C2C; color: #EEE; margin-bottom: 8px; }
+.wf-metric      { border: 1px solid #CCC; border-radius: 4px; padding: 10px; background: #F0F0F0; text-align: center; }
+.wf-metric .val { font-size: 22px; font-weight: bold; margin: 4px 0; }
+.wf-metric .lbl { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+.wf-sidebar     { border: 1.5px dashed #AAA; border-radius: 4px; padding: 10px; background: #F8F8F8; }
+
+/* ── Layout ── */
+.wf-grid        { display: grid; gap: 10px; margin-bottom: 10px; }
+.wf-grid-2      { grid-template-columns: 1fr 1fr; }
+.wf-grid-3      { grid-template-columns: 1fr 1fr 1fr; }
+.wf-grid-4      { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.wf-grid-23     { grid-template-columns: 2fr 1fr; }
+.wf-grid-32     { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
+.wf-flex        { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+
+/* ── Form Elements ── */
+.wf-input       { border: 1px solid #BBB; background: #FFF; border-radius: 3px; padding: 7px 10px; font-size: 12px; font-family: inherit; display: block; width: 100%; color: #555; }
+.wf-select      { border: 1px solid #BBB; background: #FFF url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6"><path d="M0 0l5 6 5-6z" fill="%23888"/></svg>') no-repeat right 8px center; border-radius: 3px; padding: 7px 28px 7px 10px; font-size: 12px; font-family: inherit; display: block; width: 100%; appearance: none; color: #555; }
+.wf-textarea    { border: 1px solid #BBB; background: #FFF; border-radius: 3px; padding: 7px 10px; font-size: 12px; font-family: inherit; display: block; width: 100%; color: #555; min-height: 60px; resize: vertical; }
+.wf-label       { font-size: 10px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; display: block; }
+.wf-field-group { margin-bottom: 10px; }
+
+/* ── Buttons ── */
+.wf-btn         { border: 1.5px solid #888; background: #E8E8E8; color: #333; padding: 7px 14px; border-radius: 3px; font-size: 12px; font-family: inherit; cursor: default; display: inline-block; font-weight: bold; }
+.wf-btn-primary { border-color: #333; background: #333; color: #FFF; }
+.wf-btn-danger  { border-color: #AA0000; background: #FFEEEE; color: #AA0000; }
+.wf-btn-success { border-color: #006600; background: #EEFFEE; color: #006600; }
+.wf-btn-sm      { padding: 4px 10px; font-size: 11px; }
+
+/* ── Filters & Tabs ── */
+.wf-filter-row  { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; }
+.wf-chip        { border: 1px solid #CCC; background: #F0F0F0; color: #555; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+.wf-chip-active { border-color: #333; background: #333; color: #FFF; }
+.wf-tab-row     { display: flex; gap: 4px; margin-bottom: 10px; border-bottom: 1px solid #CCC; padding-bottom: 6px; }
+.wf-tab         { border: 1px solid #CCC; background: #F5F5F5; color: #888; padding: 5px 14px; border-radius: 3px 3px 0 0; font-size: 11px; font-weight: bold; }
+.wf-tab-active  { border-bottom-color: #FFF; background: #FFF; color: #333; }
+
+/* ── Table ── */
+.wf-table       { width: 100%; border-collapse: collapse; font-size: 12px; }
+.wf-table th    { background: #EAEAEA; color: #555; padding: 7px 10px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1.5px solid #CCC; }
+.wf-table td    { padding: 7px 10px; border-bottom: 1px solid #EEE; color: #333; }
+.wf-table tr:hover td { background: #F8F8F8; }
+
+/* ── Progress & Charts ── */
+.wf-progress-bg  { background: #E8E8E8; border-radius: 99px; height: 8px; overflow: hidden; margin: 4px 0; }
+.wf-progress-fill{ background: #555; height: 100%; border-radius: 99px; }
+.wf-circle       { width: 80px; height: 80px; border-radius: 50%; border: 8px solid #CCC; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: #555; }
+
+/* ── Image Placeholder ── */
+.wf-img         { background: #E0E0E0; border: 1.5px dashed #AAA; border-radius: 4px; display: flex; align-items: center; justify-content: center; min-height: 60px; color: #888; font-size: 11px; text-align: center; padding: 8px; }
+
+/* ── Badge / Status ── */
+.wf-badge       { display: inline-block; border: 1px solid #AAA; background: #EEE; color: #555; padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+
+/* ── Timeline ── */
+.wf-timeline    { padding-left: 20px; border-left: 2px solid #CCC; }
+.wf-tl-item     { position: relative; padding: 6px 0 6px 12px; }
+.wf-tl-item::before { content:''; position: absolute; left: -7px; top: 12px; width: 12px; height: 12px; border-radius: 50%; background: #CCC; border: 2px solid #FFF; box-shadow: 0 0 0 1px #CCC; }
+.wf-tl-title    { font-size: 12px; font-weight: bold; color: #333; }
+.wf-tl-meta     { font-size: 10px; color: #888; }
+
+/* ── Scroll nesting warning ── */
+.wf-scroll-warn { border: 2px dashed #FFC107; background: #FFFDE7; padding: 8px; border-radius: 4px; margin-bottom: 6px; }
+.wf-scroll-label{ font-size: 10px; color: #856404; font-weight: bold; margin-bottom: 4px; }
+
+/* ── Footer ── */
+.wf-footer      { background: #EAEAEA; border: 1px solid #CCC; border-radius: 4px; padding: 10px 16px; margin-top: 12px; color: #888; font-size: 11px; text-align: center; }
+
+/* ── Alpine root marker ── */
+.wf-alpine      { border: 1.5px dotted #AAA; border-radius: 4px; padding: 10px; margin-bottom: 10px; position: relative; }
+.wf-alpine::before { content: 'Alpine Component'; position: absolute; top: -9px; left: 8px; background: #FFF; padding: 0 4px; font-size: 9px; color: #AAA; font-weight: bold; }
+
+/* ── Section label ── */
+.wf-section-label { font-size: 10px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid #EEE; }
+
+/* ── Heading styles ── */
+.wf-h1 { font-size: 20px; font-weight: bold; color: #111; margin-bottom: 6px; }
+.wf-h2 { font-size: 16px; font-weight: bold; color: #222; margin-bottom: 5px; }
+.wf-h3 { font-size: 13px; font-weight: bold; color: #333; margin-bottom: 4px; }
+.wf-h4 { font-size: 12px; font-weight: bold; color: #444; margin-bottom: 3px; }
+
+/* ── Empty state ── */
+.wf-empty { border: 1.5px dashed #CCC; border-radius: 6px; padding: 24px; text-align: center; color: #AAA; font-size: 12px; background: #FAFAFA; }
+
+/* ── Annotations ── */
+.wf-annotation  { font-size: 10px; color: #999; font-style: italic; margin-top: 3px; }
+.wf-components  { margin-top: 20px; border-top: 2px solid #DDD; padding-top: 12px; }
+.wf-comp-item   { font-size: 11px; color: #666; padding: 2px 0; }
+.wf-comp-type   { display: inline-block; background: #EAEAEA; border-radius: 3px; padding: 1px 6px; font-size: 10px; font-weight: bold; color: #555; margin-right: 6px; }
+.wf-issues      { margin-top: 12px; border-top: 1px solid #EEE; padding-top: 10px; }
+.wf-issue       { font-size: 11px; padding: 3px 0 3px 16px; position: relative; color: #666; }
+.wf-issue::before { position: absolute; left: 0; }
+.wf-issue.warning::before { content: '⚠'; color: #CC8800; }
+.wf-issue.info::before    { content: 'ℹ'; color: #0066CC; }
+    
+  </style>
+</head>
+<body>
+<div class="wf-page">
+
+  <!-- ── WIREFRAME HEADER INFO ───────────────────────── -->
+  <div class="wf-header">
+    ▦ WIREFRAME: {% if campaign %}EditCampaign{% else %}CampaignBaru{% endif %}
+    <span style="float:right;font-size:11px;font-weight:normal;color:#AAA">
+      Generated: 27 Apr 2026 09:41 &nbsp;|&nbsp;
+      85 komponen &nbsp;|&nbsp;
+      2 isu terdeteksi
+    </span>
+  </div>
+
+  <!-- ── STAT SUMMARY ───────────────────────────────── -->
+  <div class="wf-grid wf-grid-4" style="margin-bottom:12px">
+    <div class="wf-metric">
+      <div class="wf-metric val">85</div>
+      <div class="wf-metric lbl">Total Komponen</div>
+    </div>
+    <div class="wf-metric">
+      <div class="wf-metric val">40</div>
+      <div class="wf-metric lbl">Interaktif</div>
+    </div>
+    <div class="wf-metric">
+      <div class="wf-metric val">0</div>
+      <div class="wf-metric lbl">Scroll Nesting</div>
+    </div>
+    <div class="wf-metric">
+      <div class="wf-metric val">1</div>
+      <div class="wf-metric lbl">⚠ Warnings</div>
+    </div>
+  </div>
+
+  <!-- ── SCROLL NESTING WARNINGS ────────────────────── -->
+  
+
+  <!-- ══ WIREFRAME CONTENT ══════════════════════════════ -->
+  <div class="wf-section">
+    <div class="wf-section-label">Wireframe Struktur Halaman</div>
+    <p style="font-size:12px;color:#555;margin-bottom:6px;">{% extends 'lumra_pages/reports/base_report.html' %} {% load custom_filters %} {% block extra_head %} {% endblock %} {%…</p><div class="wf-alpine"><span style="font-size:12px;color:#555">HEADER</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><div class="wf-nav">[ NAVIGATION ] <span class="wf-nav-item">Dashboard</span> <span class="wf-nav-item">Campaigns</span></div><div class="wf-h1">{% if campaign %}Edit Campaign {% else %}Campaign Baru {% endif %}</div><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><span style="font-size:12px;color:#555">Promo Engine — 5 tipe promo tersedia</span></div><span style="font-size:12px;color:#555">Live preview pill</span><span class="wf-badge">STATUS</span> </div><div class="wf-grid wf-grid-2" style="margin-bottom:8px"></div><div class="wf-section" style="border-color:#AAA"><div class="wf-section-label">[ FORM ]</div><span style="font-size:12px;color:#555">══ STEP 1: Tipe Promo ══</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><p style="font-size:12px;color:#555;margin-bottom:6px;">Pilih Tipe Promo</p></div><div class="wf-grid wf-grid-1" style="margin-bottom:8px"><span style="font-size:12px;color:#555">Diskon</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><p style="font-size:12px;color:#555;margin-bottom:6px;">Diskon Persen / Flat</p><p style="font-size:12px;color:#555;margin-bottom:6px;">Potongan % atau nominal tetap dari harga</p></div><span style="font-size:12px;color:#555">Buy X Get Y</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><p style="font-size:12px;color:#555;margin-bottom:6px;">Buy X Get Y (BOGO)</p><p style="font-size:12px;color:#555;margin-bottom:6px;">Beli produk A, gratis produk B</p></div><span style="font-size:12px;color:#555">Bundle</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><p style="font-size:12px;color:#555;margin-bottom:6px;">Paket Combo / Bundle</p><p style="font-size:12px;color:#555;margin-bottom:6px;">Beli beberapa produk dengan harga paket</p></div><span style="font-size:12px;color:#555">Tiered</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><p style="font-size:12px;color:#555;margin-bottom:6px;">Grosir / Tiered</p><p style="font-size:12px;color:#555;margin-bottom:6px;">Beli makin banyak, diskon makin besar</p></div><span style="font-size:12px;color:#555">Loyalty</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><p style="font-size:12px;color:#555;margin-bottom:6px;">Loyalty / Poin</p><p style="font-size:12px;color:#555;margin-bottom:6px;">Reward poin atau cashback untuk member</p></div></div><span style="font-size:12px;color:#555">══ STEP 2: Info Dasar ══</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><p style="font-size:12px;color:#555;margin-bottom:6px;">Informasi Campaign</p></div><div class="wf-grid wf-grid-1" style="margin-bottom:8px"><label class="wf-label">Nama Campaign *</label><input class="wf-input" type="text" placeholder="misal: Promo Harbolnas Desember 2025" disabled><label class="wf-label">Deskripsi</label><textarea class="wf-textarea" placeholder="Jelaskan tujuan dan mekanisme campaign ini..." rows="2" disabled></textarea><label class="wf-label">Tanggal Mulai *</label><input class="wf-input" type="text" value="[date]" placeholder="form.start_date" disabled style="width:auto"><label class="wf-label">Tanggal Selesai *</label><input class="wf-input" type="text" value="[date]" placeholder="form.end_date" disabled style="width:auto"><label class="wf-label">Status Awal</label><select class="wf-select" disabled><option>Draft — belum aktif (3 opsi)</option></select><label class="wf-label">Budget (Rp)</label><span style="font-size:12px;color:#555">Rp</span><input class="wf-input" type="text" placeholder="5000000" disabled></div><span style="font-size:12px;color:#555">══ STEP 3: Aturan Promo (dinamis berdasar tipe) ══</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><p style="font-size:12px;color:#555;margin-bottom:6px;">Aturan Promo —</p></div><span style="font-size:12px;color:#555">── Diskon ──</span><div class="wf-grid wf-grid-1" style="margin-bottom:8px"><label class="wf-label">Tipe Diskon</label><select class="wf-select" disabled><option>Persen (%) (2 opsi)</option></select><label class="wf-label"></label><input class="wf-input" type="text" placeholder="form.discount_value" disabled><label class="wf-label">Maks Potongan (Rp) opsional</label><input class="wf-input" type="text" placeholder="50000" disabled><p style="font-size:12px;color:#555;margin-bottom:6px;">Batas atas potongan jika tipe persen</p><label class="wf-label">Min. Pembelian (Rp) opsional</label><input class="wf-input" type="text" placeholder="100000" disabled></div><span style="font-size:12px;color:#555">── Buy X Get Y ──</span><div class="wf-grid wf-grid-1" style="margin-bottom:8px"><label class="wf-label">Produk yang Dibeli (X)</label><select class="wf-select" disabled><option>— Pilih Produk — (2 opsi)</option></select><label class="wf-label">Jumlah Beli (X)</label><input class="wf-input" type="text" placeholder="1" disabled><label class="wf-label">Produk yang Digratisin (Y)</label><select class="wf-select" disabled><option>— Sama dengan X — (2 opsi)</option></select><p style="font-size:12px;color:#555;margin-bottom:6px;">Kosongkan jika produk gratis = produk yang dibeli (BOGOF)</p><label class="wf-label">Jumlah Gratis (Y)</label><input class="wf-input" type="text" placeholder="1" disabled></div><span style="font-size:12px;color:#555">── Bundle ──</span><div class="wf-grid wf-grid-1" style="margin-bottom:8px"><label class="wf-label">Produk dalam Bundle</label><select class="wf-select" disabled><option>{{ product.name }} ({{ product.sku }}) — Rp {{ product.price|floatformat:0 }} (1 opsi)</option></select><p style="font-size:12px;color:#555;margin-bottom:6px;">Tahan Ctrl/Cmd untuk memilih lebih dari satu produk</p><label class="wf-label">Harga Bundle (Rp)</label><input class="wf-input" type="text" placeholder="75000" disabled><label class="wf-label">Nama Bundle</label><input class="wf-input" type="text" placeholder="misal: Paket Sarapan Komplit" disabled></div><span style="font-size:12px;color:#555">── Tiered ──</span><p style="font-size:12px;color:#555;margin-bottom:6px;">Atur Tier Diskon (Beli Makin Banyak, Diskon Makin Besar)</p><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><div class="wf-grid wf-grid-2" style="margin-bottom:8px"></div><div class="wf-grid wf-grid-3" style="margin-bottom:8px"><label class="wf-label"></label><input class="wf-input" type="text" placeholder="5" disabled><label class="wf-label"></label><input class="wf-input" type="text" placeholder="10" disabled><label class="wf-label"></label><input class="wf-input" type="text" placeholder="misal: Tier 1" disabled></div><button class="wf-btn wf-btn-danger" style="margin:2px">[icon]</button></div><button class="wf-btn " style="margin:2px">Tambah Tier</button><span style="font-size:12px;color:#555">── Loyalty ──</span><div class="wf-grid wf-grid-1" style="margin-bottom:8px"><label class="wf-label">Tipe Reward</label><select class="wf-select" disabled><option>Poin Multiplier (3 opsi)</option></select><label class="wf-label"></label><input class="wf-input" type="text" placeholder="form.loyalty_value" disabled><label class="wf-label">Min. Pembelian (Rp)</label><input class="wf-input" type="text" placeholder="50000" disabled></div><span style="font-size:12px;color:#555">══ STEP 4: Target Scope ══</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><p style="font-size:12px;color:#555;margin-bottom:6px;">Target Produk (Scope)</p><span style="font-size:12px;color:#555">Berlaku untuk 118.000 SKU</span></div><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><button class="wf-btn " style="margin:2px">Semua Produk</button><button class="wf-btn " style="margin:2px">Per Kategori</button><button class="wf-btn " style="margin:2px">SKU Spesifik</button></div><span style="font-size:12px;color:#555">All: info only</span><p style="font-size:12px;color:#555;margin-bottom:6px;">Promo ini berlaku untuk seluruh produk aktif di sistem</p><span style="font-size:12px;color:#555">Category</span><label class="wf-label">Pilih Kategori</label><select class="wf-select" disabled><option>— Pilih Kategori — (2 opsi)</option></select><p style="font-size:12px;color:#555;margin-bottom:6px;">Promo hanya berlaku untuk produk dalam kategori ini</p><span style="font-size:12px;color:#555">SKU Spesifik</span><label class="wf-label">SKU atau Nama Produk</label><select class="wf-select" disabled><option>{{ product.sku }} — {{ product.name }} (1 opsi)</option></select><p style="font-size:12px;color:#555;margin-bottom:6px;">Tahan Ctrl/Cmd untuk memilih beberapa produk</p><span style="font-size:12px;color:#555">══ STEP 5: Customer Tier & Limit ══</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><p style="font-size:12px;color:#555;margin-bottom:6px;">Customer Eligibility & Limit</p></div><span style="font-size:12px;color:#555">Tier selection</span><label class="wf-label">Berlaku untuk Member Tier</label><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><button class="wf-btn " style="margin:2px">👥 Semua Member</button><button class="wf-btn " style="margin:2px">🥈 Silver</button><button class="wf-btn " style="margin:2px">⭐ Gold</button><button class="wf-btn " style="margin:2px">💎 Platinum</button><button class="wf-btn " style="margin:2px">👑 VIP</button></div><div class="wf-grid wf-grid-1" style="margin-bottom:8px"><label class="wf-label">Maks Penggunaan Total opsional</label><input class="wf-input" type="text" placeholder="Unlimited" disabled><p style="font-size:12px;color:#555;margin-bottom:6px;">Promo akan otomatis berhenti setelah kuota habis</p><label class="wf-label">Maks per Customer opsional</label><input class="wf-input" type="text" placeholder="Unlimited" disabled><label class="wf-label">Kode Voucher opsional</label><input class="wf-input" type="text" placeholder="HARBOLNAS25" disabled><p style="font-size:12px;color:#555;margin-bottom:6px;">Kosongkan jika promo otomatis (tanpa kode)</p></div><span style="font-size:12px;color:#555">Notes</span><label class="wf-label">Catatan Internal opsional</label><textarea class="wf-textarea" placeholder="Catatan untuk tim internal, tidak tampil ke customer..." rows="2" disabled></textarea><span style="font-size:12px;color:#555">══ SUBMIT ══</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><span style="font-size:12px;color:#555">Batal</span></div><button class="wf-btn " style="margin:2px">[icon]</button></div></div><span style="font-size:12px;color:#555">Toast</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"></div></div>
+  </div>
+
+  <!-- ── COMPONENT INDEX ────────────────────────────── -->
+  <div class="wf-components">
+    <div class="wf-section-label">Indeks Komponen Terdeteksi (85)</div>
+    <div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (column)]</div><div class='wf-comp-item'><span class='wf-comp-type'>nav</span>[ NAVIGATION BAR ]  <em style='color:#AAA;font-size:10px'> — Dashboard / Campaigns / {% if campaign %}Edit{% else %}Buat Baru{% endif %}</em></div><div class='wf-comp-item'><span class='wf-comp-type'>heading</span>HEADING (H1)  <em style='color:#AAA;font-size:10px'> — {% if campaign %}Edit Campaign {% else %}Campaign Baru {% endif %}</em></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>badge</span>BADGE / STATUS  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>form</span>[ FORM ]  <em style='color:#AAA;font-size:10px'> — {% csrf_token %} 1 Pilih Tipe Promo % Diskon Persen / Flat Potongan % atau nomin…</em></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [hidden] promo_type  <em style='color:#AAA;font-size:10px'> — promo_type</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [hidden] target_scope  <em style='color:#AAA;font-size:10px'> — target_scope</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [hidden] customer_tier  <em style='color:#AAA;font-size:10px'> — customer_tier</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [GRID 1 cols]</div><div class='wf-comp-item'><span class='wf-comp-type'>card</span>CARD  <em style='color:#AAA;font-size:10px'> — % Diskon Persen / Flat Potongan % atau nominal tetap dari harga</em></div><div class='wf-comp-item'><span class='wf-comp-type'>card</span>CARD  <em style='color:#AAA;font-size:10px'> — %</em></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>card</span>CARD  <em style='color:#AAA;font-size:10px'> — Buy X Get Y (BOGO) Beli produk A, gratis produk B</em></div><div class='wf-comp-item'><span class='wf-comp-type'>card</span>CARD</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>card</span>CARD  <em style='color:#AAA;font-size:10px'> — Paket Combo / Bundle Beli beberapa produk dengan harga paket</em></div><div class='wf-comp-item'><span class='wf-comp-type'>card</span>CARD</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>card</span>CARD  <em style='color:#AAA;font-size:10px'> — Grosir / Tiered Beli makin banyak, diskon makin besar</em></div><div class='wf-comp-item'><span class='wf-comp-type'>card</span>CARD</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>card</span>CARD  <em style='color:#AAA;font-size:10px'> — Loyalty / Poin Reward poin atau cashback untuk member</em></div><div class='wf-comp-item'><span class='wf-comp-type'>card</span>CARD</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [GRID 1 cols]</div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [text] misal: Promo Harbolnas Desember 2025  <em style='color:#AAA;font-size:10px'> — misal: Promo Harbolnas Desember 2025</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [textarea] Jelaskan tujuan dan mekanisme campaign ini...  <em style='color:#AAA;font-size:10px'> — Jelaskan tujuan dan mekanisme campaign ini...</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [date] form.start_date  <em style='color:#AAA;font-size:10px'> — form.start_date</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [date] form.end_date  <em style='color:#AAA;font-size:10px'> — form.end_date</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [select] form.status  <em style='color:#AAA;font-size:10px'> — form.status</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [number] 5000000  <em style='color:#AAA;font-size:10px'> — 5000000</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [GRID 1 cols]</div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [select] form.discount_type  <em style='color:#AAA;font-size:10px'> — form.discount_type</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [number] form.discount_value  <em style='color:#AAA;font-size:10px'> — form.discount_value</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [number] 50000  <em style='color:#AAA;font-size:10px'> — 50000</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [number] 100000  <em style='color:#AAA;font-size:10px'> — 100000</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [GRID 1 cols]</div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [select] form.buy_product_id  <em style='color:#AAA;font-size:10px'> — form.buy_product_id</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [number] 1  <em style='color:#AAA;font-size:10px'> — 1</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [select] form.get_product_id  <em style='color:#AAA;font-size:10px'> — form.get_product_id</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [number] 1  <em style='color:#AAA;font-size:10px'> — 1</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [GRID 1 cols]</div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [select] bundle_product_ids  <em style='color:#AAA;font-size:10px'> — bundle_product_ids</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [number] 75000  <em style='color:#AAA;font-size:10px'> — 75000</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [text] misal: Paket Sarapan Komplit  <em style='color:#AAA;font-size:10px'> — misal: Paket Sarapan Komplit</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [number] 5  <em style='color:#AAA;font-size:10px'> — 5</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [number] 10  <em style='color:#AAA;font-size:10px'> — 10</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [text] misal: Tier 1  <em style='color:#AAA;font-size:10px'> — misal: Tier 1</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: [icon]  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: Tambah Tier  <em style='color:#AAA;font-size:10px'> — Tambah Tier</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [hidden] tiers_json  <em style='color:#AAA;font-size:10px'> — tiers_json</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [GRID 1 cols]</div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [select] form.loyalty_type  <em style='color:#AAA;font-size:10px'> — form.loyalty_type</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [number] form.loyalty_value  <em style='color:#AAA;font-size:10px'> — form.loyalty_value</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [number] 50000  <em style='color:#AAA;font-size:10px'> — 50000</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: Semua Produk  <em style='color:#AAA;font-size:10px'> — Semua Produk</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: Per Kategori  <em style='color:#AAA;font-size:10px'> — Per Kategori</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: SKU Spesifik  <em style='color:#AAA;font-size:10px'> — SKU Spesifik</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [select] form.target_category_id  <em style='color:#AAA;font-size:10px'> — form.target_category_id</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [select] target_product_ids  <em style='color:#AAA;font-size:10px'> — target_product_ids</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>badge</span>BADGE / STATUS  <em style='color:#AAA;font-size:10px'> — 👥 Semua Member</em></div><div class='wf-comp-item'><span class='wf-comp-type'>badge</span>BADGE / STATUS  <em style='color:#AAA;font-size:10px'> — 🥈 Silver</em></div><div class='wf-comp-item'><span class='wf-comp-type'>badge</span>BADGE / STATUS  <em style='color:#AAA;font-size:10px'> — ⭐ Gold</em></div><div class='wf-comp-item'><span class='wf-comp-type'>badge</span>BADGE / STATUS  <em style='color:#AAA;font-size:10px'> — 💎 Platinum</em></div><div class='wf-comp-item'><span class='wf-comp-type'>badge</span>BADGE / STATUS  <em style='color:#AAA;font-size:10px'> — 👑 VIP</em></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [GRID 1 cols]</div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [number] Unlimited  <em style='color:#AAA;font-size:10px'> — Unlimited</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [number] Unlimited  <em style='color:#AAA;font-size:10px'> — Unlimited</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [text] HARBOLNAS25  <em style='color:#AAA;font-size:10px'> — HARBOLNAS25</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [textarea] Catatan untuk tim internal, tidak tampil ke customer...  <em style='color:#AAA;font-size:10px'> — Catatan untuk tim internal, tidak tampil ke customer...</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (column)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: [icon]  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (column)]</div>
+  </div>
+
+  <!-- ── ISSUES ─────────────────────────────────────── -->
+  <div class="wf-issues"><div class="wf-section-label">Isu Terdeteksi (2)</div><div class="wf-issue warning">Tombol tanpa teks/aria-label: <button> id='' class='w-7 h-7 rounded-lg bg-rose-50 text-rose-400 hover:'</div><div class="wf-issue info">x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template</div></div>
+
+</div>
+</body>
+</html>

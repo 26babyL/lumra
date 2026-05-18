@@ -1,0 +1,490 @@
+{% extends 'lumra_pages/reports/base_report.html' %}
+{% load custom_filters %}
+
+{% block extra_head %}
+<style>
+  [x-cloak] { display:var(--shadow-sm-16) !important; }
+
+  .bg-blob{position:fixed;border-radius:50%;filter:blur(100px);opacity:.08;pointer-events:var(--shadow-sm-16);z-index:0;animation:drift 18s ease-in-out infinite alternate;}
+  .bg-blob-1{width:420px;height:420px;background:var(--color-emerald-600);top:-120px;left:-160px;}
+  .bg-blob-2{width:280px;height:280px;background:var(--color-8b5cf6);bottom:-60px;right:-80px;animation-delay:-7s;}
+  @keyframes drift{from{transform:translate(0,0) scale(1);}to{transform:translate(20px,28px) scale(1.06);}}
+
+  .reveal{opacity:0;transform:translateY(12px);transition:opacity .4s ease,transform .4s ease;}
+  .reveal.visible{opacity:1;transform:var(--shadow-sm-16);}
+
+  /* ════ PROFILE CARD ════ */
+  .profile-card{
+    background:var(--color-white-a080);
+    backdrop-filter: var(--glass-blur-lg);
+    -webkit-backdrop-filter: var(--glass-blur-lg);
+    border:1px solid var(--color-white-a095);
+    border-radius:22px;
+    box-shadow:0 4px 24px var(--color-black-a007);
+    position:relative;overflow:hidden;
+  }
+  .profile-card::after{
+    content:'';position:absolute;top:0;left:0;right:0;height:80px;
+    background:linear-gradient(135deg,var(--color-emerald-600-a008) 0%,var(--color-rgba-139-92-246-a006) 100%);
+    pointer-events:var(--shadow-sm-16);
+  }
+
+  /* ════ KPI CARDS ════ */
+  .kpi-glass{background:var(--color-white-a072);backdrop-filter: var(--glass-blur);-webkit-backdrop-filter: var(--glass-blur);border:1px solid var(--color-white-a09);border-radius:18px;box-shadow:0 2px 12px var(--color-black-a006),0 0 0 0.5px var(--color-black-a004);transition:box-shadow .2s,transform .2s;position:relative;overflow:hidden;}
+  .kpi-glass:hover{box-shadow:0 8px 28px var(--color-black-a010);transform:translateY(-2px);}
+  .kpi-glass::before{content:'';position:absolute;top:0;right:0;width:60px;height:60px;border-radius:0 18px 0 100%;opacity:.07;}
+  .kpi-glass.accent-emerald::before{background:var(--color-emerald-600);}
+  .kpi-glass.accent-amber::before{background:var(--color-f59e0b);}
+  .kpi-glass.accent-blue::before{background:var(--color-3b82f6);}
+  .kpi-glass.accent-violet::before{background:var(--color-8b5cf6);}
+  .kpi-glass.accent-rose::before{background:var(--color-f43f5e);}
+  .kpi-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;}
+
+  /* ════ SECTION TABS ════ */
+  .tab-bar{background:var(--color-white-a075);backdrop-filter: var(--glass-blur-sm);-webkit-backdrop-filter: var(--glass-blur-sm);border:1px solid var(--color-white-a09);border-radius:14px;padding:5px;display:inline-flex;gap:3px;}
+  .tab-btn{padding:7px 16px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;color:var(--color-slate-400);background:transparent;border:var(--shadow-sm-16);white-space:nowrap;}
+  .tab-btn.active{background:var(--color-emerald-600-a010);color:var(--color-emerald-700);box-shadow:0 1px 4px var(--color-emerald-600-a012);}
+  .tab-btn:hover:not(.active){background:var(--color-slate-50-a08);color:var(--color-slate-600);}
+
+  /* ════ SECTION PANELS ════ */
+  .section-card{background:var(--color-white-a088);backdrop-filter: var(--glass-blur);-webkit-backdrop-filter: var(--glass-blur);border:1px solid var(--color-white-a09);border-radius:18px;box-shadow:0 2px 16px var(--color-black-a006);overflow:hidden;}
+
+  /* ════ TABLE ════ */
+  .custom-scrollbar::-webkit-scrollbar{height:4px;}
+  .custom-scrollbar::-webkit-scrollbar-track{background:transparent;}
+  .custom-scrollbar::-webkit-scrollbar-thumb{background:var(--color-slate-200);border-radius:99px;}
+  tr.data-row{transition:background .12s;}
+  tr.data-row:hover td{background:var(--color-rgba-240-253-244-a055) !important;}
+
+  /* ════ TIER BADGE ════ */
+  .tier-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:12px;font-weight:800;letter-spacing:.04em;}
+  .tier-regular  {background:var(--color-slate-500-a008);color:var(--color-slate-500);border:1.5px solid var(--color-slate-500-a015);}
+  .tier-silver   {background:var(--color-slate-400-a012);color:var(--color-slate-600);border:1.5px solid var(--color-slate-400-a03);}
+  .tier-gold     {background:var(--color-rgba-245-158-11-a010);color:var(--color-d97706);border:1.5px solid var(--color-rgba-245-158-11-a025);}
+  .tier-platinum {background:var(--color-rgba-59-130-246-a010);color:var(--color-2563eb);border:1.5px solid var(--color-rgba-59-130-246-a025);}
+  .tier-vip      {background:var(--color-rgba-139-92-246-a010);color:var(--color-7c3aed);border:1.5px solid var(--color-rgba-139-92-246-a025);box-shadow:0 0 16px var(--color-rgba-139-92-246-a015);}
+
+  /* ════ PROGRESS RING ════ */
+  .progress-ring-track{fill:var(--shadow-sm-16);stroke:var(--color-slate-300-a03);stroke-width:6;}
+  .progress-ring-fill{fill:var(--shadow-sm-16);stroke:var(--color-emerald-600);stroke-width:6;stroke-linecap:round;stroke-dashoffset:0;transition:stroke-dashoffset 1s cubic-bezier(.4,0,.2,1);}
+
+  /* ════ POINT LOG TIMELINE ════ */
+  .point-log-row{position:relative;padding-left:20px;}
+  .point-log-row::before{content:'';position:absolute;left:6px;top:0;bottom:0;width:1.5px;background:var(--color-slate-300-a04);}
+  .point-log-dot{position:absolute;left:0;top:50%;transform:translateY(-50%);width:13px;height:13px;border-radius:50%;border:2.5px solid white;flex-shrink:0;}
+  .dot-earn   {background:var(--color-emerald-600);box-shadow:0 0 0 3px var(--color-emerald-600-a015);}
+  .dot-redeem {background:var(--color-f59e0b);box-shadow:0 0 0 3px var(--color-rgba-245-158-11-a015);}
+  .dot-expire {background:var(--color-f43f5e);box-shadow:0 0 0 3px var(--color-rgba-244-63-94-a012);}
+  .dot-adjust {background:var(--color-8b5cf6);box-shadow:0 0 0 3px var(--color-rgba-139-92-246-a015);}
+
+  /* ════ NEXT TIER PROGRESS ════ */
+  .tier-progress-track{height:6px;border-radius:99px;background:var(--color-slate-300-a03);overflow:hidden;}
+  .tier-progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--color-emerald-600) 0%,var(--color-emerald-700) 100%);transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+
+  /* Edit button */
+  .btn-edit{padding:8px 18px;border-radius:11px;background:var(--color-white-a08);border:1.5px solid var(--color-slate-300-a05);color:var(--color-slate-600);font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;text-decoration:var(--shadow-sm-16);}
+  .btn-edit:hover{border-color:var(--color-emerald-300);color:var(--color-emerald-700);background:var(--color-fff);}
+  .btn-wa{padding:8px 18px;border-radius:11px;background:var(--color-rgba-22-163-74-a009);border:1.5px solid var(--color-rgba-22-163-74-a025);color:var(--color-15803d);font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;text-decoration:var(--shadow-sm-16);}
+  .btn-wa:hover{background:var(--color-rgba-22-163-74-a015);border-color:var(--color-rgba-22-163-74-a05);}
+  .btn-redeem{padding:8px 18px;border-radius:11px;background:linear-gradient(135deg,var(--color-f59e0b) 0%,var(--color-d97706) 100%);color:var(--color-fff);font-size:12px;font-weight:700;border:var(--shadow-sm-16);cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 3px 10px var(--color-rgba-245-158-11-a025);transition:all .15s;}
+  .btn-redeem:hover{box-shadow:0 5px 16px var(--color-rgba-245-158-11-a040);transform:translateY(-1px);}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+
+<div class="w-full flex-1 space-y-5 relative z-10"
+     x-data="{ activeTab: 'transactions' }"
+     x-init="
+       const io = new IntersectionObserver(entries => {
+         entries.forEach((e,i) => { if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('visible'),i*70); io.unobserve(e.target); } });
+       }, {threshold:.06});
+       document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+     "
+     x-cloak>
+
+  <!-- BREADCRUMB + BACK -->
+  <div class="reveal flex items-center justify-between">
+    <nav class="flex items-center gap-2 text-xs text-emerald-600">
+      <a href="{% url 'dashboard' %}" class="hover:text-emerald-800 transition-colors">Dashboard</a>
+      <span class="text-slate-300">/</span>
+      <a href="{% url 'customer_list' %}" class="hover:text-emerald-800 transition-colors">Pelanggan</a>
+      <span class="text-slate-300">/</span>
+      <span class="text-slate-600 font-medium">{{ customer.name }}</span>
+    </nav>
+    <a href="{% url 'customer_list' %}" class="text-xs text-slate-400 hover:text-slate-600 flex items-center gap-1.5 transition-colors">
+      <i class="fas fa-arrow-left text-[10px]"></i> Kembali
+    </a>
+  </div>
+
+  <!-- ═══════════════════════════════
+       PROFILE CARD
+  ════════════════════════════════ -->
+  <div class="reveal profile-card p-6">
+    <div class="flex flex-col sm:flex-row gap-5 items-start sm:items-center relative z-10">
+
+      <!-- Big Avatar -->
+      <div class="relative flex-shrink-0">
+        <div class="w-16 h-16 rounded-2xl flex items-center justify-center font-black text-xl text-white select-none
+          {% if customer.tier == 'vip' %}bg-gradient-to-br from-violet-400 to-violet-700
+          {% elif customer.tier == 'gold' %}bg-gradient-to-br from-amber-400 to-amber-600
+          {% elif customer.tier == 'platinum' %}bg-gradient-to-br from-blue-400 to-blue-600
+          {% elif customer.tier == 'silver' %}bg-gradient-to-br from-slate-400 to-slate-500
+          {% else %}bg-gradient-to-br from-emerald-400 to-emerald-600{% endif %}
+          shadow-lg">
+          {{ customer.name|slice:":2"|upper }}
+        </div>
+        <!-- Tier indicator dot -->
+        <div class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white flex items-center justify-center text-[9px]
+          {% if customer.tier == 'vip' %}bg-violet-100
+          {% elif customer.tier == 'gold' %}bg-amber-100
+          {% else %}bg-emerald-100{% endif %}">
+          {% if customer.tier == 'vip' %}👑{% elif customer.tier == 'gold' %}⭐{% elif customer.tier == 'platinum' %}💎{% elif customer.tier == 'silver' %}🥈{% else %}👤{% endif %}
+        </div>
+      </div>
+
+      <!-- Name, tier, info -->
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-3 mb-1">
+          <h1 class="text-xl font-black text-slate-800">{{ customer.name }}</h1>
+          <span class="tier-badge tier-{{ customer.tier|lower|default:'regular' }}">
+            {{ customer.get_tier_display|default:"Regular" }}
+          </span>
+          {% if customer.iseller_id %}
+          <span class="text-[10px] font-bold text-slate-400 px-2 py-1 rounded-lg" style="background:var(--color-bg)">
+            iSeller ID: #{{ customer.iseller_id }}
+          </span>
+          {% endif %}
+        </div>
+        <div class="flex flex-wrap gap-4 text-[11px] text-slate-500">
+          {% if customer.whatsapp %}
+          <a href="https://wa.me/{{ customer.whatsapp|cut:'+' }}" target="_blank" class="flex items-center gap-1.5 hover:text-green-600 transition-colors">
+            <i class="fab fa-whatsapp text-green-500"></i> {{ customer.whatsapp }}
+          </a>
+          {% endif %}
+          {% if customer.email %}
+          <span class="flex items-center gap-1.5"><i class="fas fa-envelope text-[10px]"></i> {{ customer.email }}</span>
+          {% endif %}
+          {% if customer.birth_date %}
+          <span class="flex items-center gap-1.5"><i class="fas fa-birthday-cake text-rose-400 text-[10px]"></i> {{ customer.birth_date|date:"d M Y" }}</span>
+          {% endif %}
+          {% if customer.address %}
+          <span class="flex items-center gap-1.5"><i class="fas fa-map-marker-alt text-[10px]"></i> {{ customer.address }}</span>
+          {% endif %}
+        </div>
+        <p class="text-[10px] text-slate-400 mt-1.5 flex items-center gap-1">
+          <span class="w-1.5 h-1.5 bg-emerald-500/50 rounded-full inline-block"></span>
+          Member sejak {{ customer.created_at|date:"d M Y" }}
+        </p>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="flex flex-wrap gap-2 flex-shrink-0">
+        <button class="btn-redeem" onclick="document.getElementById('redeemModal').showModal()">
+          <i class="fas fa-gift text-[11px]"></i> Redeem Poin
+        </button>
+        {% if customer.whatsapp %}
+        <a href="https://wa.me/{{ customer.whatsapp|cut:'+' }}" target="_blank" class="btn-wa">
+          <i class="fab fa-whatsapp text-[11px]"></i> WhatsApp
+        </a>
+        {% endif %}
+        <a href="{% url 'customer_edit' customer.id %}" class="btn-edit">
+          <i class="fas fa-pencil-alt text-[10px]"></i> Edit
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Next tier progress (if not VIP) -->
+    {% if customer.tier != 'vip' and next_tier_threshold %}
+    <div class="mt-5 pt-4 border-t border-slate-100/60 relative z-10">
+      <div class="flex items-center justify-between mb-1.5">
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Progress ke Tier Berikutnya</span>
+        <span class="text-[11px] font-bold text-emerald-600">
+          Rp {{ customer.lifetime_value|floatformat:0 }} / Rp {{ next_tier_threshold|floatformat:0 }}
+        </span>
+      </div>
+      <div class="tier-progress-track">
+        <div class="tier-progress-fill" style="width:{% widthratio customer.lifetime_value next_tier_threshold 100 %}%;"></div>
+      </div>
+      <p class="text-[10px] text-slate-400 mt-1">
+        Belanja <strong class="text-slate-600">Rp {{ tier_remaining|floatformat:0 }}</strong> lagi untuk naik ke <strong class="text-emerald-600">{{ next_tier_label }}</strong>
+      </p>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- ═══════════════════════════════
+       KPI CARDS
+  ════════════════════════════════ -->
+  <div class="reveal grid grid-cols-2 xl:grid-cols-5 gap-3">
+
+    <div class="kpi-glass accent-emerald p-4">
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Lifetime Value</p>
+          <p class="text-xl font-black text-slate-800">Rp {{ customer.lifetime_value|floatformat:0|default:0 }}</p>
+          <p class="text-[11px] text-slate-400 mt-0.5">Total belanja</p>
+        </div>
+        <div class="kpi-icon bg-emerald-50 text-emerald-600"><i class="fas fa-trophy"></i></div>
+      </div>
+    </div>
+
+    <div class="kpi-glass accent-amber p-4">
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Poin</p>
+          <p class="text-xl font-black text-slate-800">{{ customer.points|default:0|floatformat:0 }} <span class="text-sm font-normal text-amber-400">pts</span></p>
+          {% if customer.points_expiry %}
+          <p class="text-[10px] text-amber-500 mt-0.5 flex items-center gap-1 font-semibold">
+            <i class="fas fa-clock text-[9px]"></i> Exp: {{ customer.points_expiry|date:"d M Y" }}
+          </p>
+          {% else %}
+          <p class="text-[11px] text-slate-400 mt-0.5">Aktif</p>
+          {% endif %}
+        </div>
+        <div class="kpi-icon bg-amber-50 text-amber-500"><i class="fas fa-star"></i></div>
+      </div>
+    </div>
+
+    <div class="kpi-glass accent-blue p-4">
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Avg / Order</p>
+          <p class="text-xl font-black text-slate-800">Rp {{ avg_order_value|floatformat:0|default:0 }}</p>
+          <p class="text-[11px] text-slate-400 mt-0.5">Rata-rata pesanan</p>
+        </div>
+        <div class="kpi-icon bg-blue-50 text-blue-500"><i class="fas fa-calculator"></i></div>
+      </div>
+    </div>
+
+    <div class="kpi-glass accent-violet p-4">
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Kunjungan Terakhir</p>
+          <p class="text-xl font-black text-slate-800">
+            {% if customer.last_visit %}{{ customer.last_visit|date:"d M" }}{% else %}—{% endif %}
+          </p>
+          <p class="text-[11px] text-slate-400 mt-0.5">
+            {% if customer.last_visit %}{{ customer.last_visit|timesince }} lalu{% else %}Belum ada{% endif %}
+          </p>
+        </div>
+        <div class="kpi-icon bg-violet-50 text-violet-600"><i class="fas fa-clock"></i></div>
+      </div>
+    </div>
+
+    <div class="kpi-glass accent-rose p-4">
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Produk Favorit</p>
+          <p class="text-sm font-black text-slate-800 leading-tight">{{ favorite_product|default:"—" }}</p>
+          <p class="text-[11px] text-slate-400 mt-0.5">Paling sering dibeli</p>
+        </div>
+        <div class="kpi-icon bg-rose-50 text-rose-500"><i class="fas fa-heart"></i></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════
+       TABS + CONTENT
+  ════════════════════════════════ -->
+  <div class="reveal">
+    <div class="tab-bar mb-4">
+      <button class="tab-btn" :class="activeTab==='transactions'?'active':''" @click="activeTab='transactions'">
+        <i class="fas fa-receipt mr-1.5 text-[10px]"></i> Riwayat Transaksi
+        <span class="ml-1.5 text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full font-black">{{ transactions|length }}</span>
+      </button>
+      <button class="tab-btn" :class="activeTab==='points'?'active':''" @click="activeTab='points'">
+        <i class="fas fa-coins mr-1.5 text-[10px]"></i> Log Poin
+        <span class="ml-1.5 text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-black">{{ point_logs|length }}</span>
+      </button>
+    </div>
+
+    <!-- TRANSACTION HISTORY -->
+    <div x-show="activeTab==='transactions'" x-transition:enter="transition duration-200" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0">
+      <div class="section-card">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100/60 bg-white/30">
+          <div class="flex items-center gap-3">
+            <div class="w-1.5 h-6 bg-emerald-500 rounded-full"></div>
+            <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">
+              <span class="text-slate-800">{{ transactions|length }}</span> Riwayat Transaksi
+            </p>
+          </div>
+        </div>
+        <div class="overflow-x-auto custom-scrollbar">
+          <table class="min-w-full border-separate border-spacing-0">
+            <thead>
+              <tr class="border-b border-slate-100" style="background:var(--color-bg)">
+                <th class="px-6 py-3 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Order ID</th>
+                <th class="px-6 py-3 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Tanggal</th>
+                <th class="px-6 py-3 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Produk</th>
+                <th class="px-6 py-3 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">Qty</th>
+                <th class="px-6 py-3 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">Total</th>
+                <th class="px-6 py-3 text-center text-[10px] font-black text-slate-400 uppercase tracking-widest">Poin Earned</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for tx in transactions %}
+              <tr class="data-row group {% if forloop.counter|divisibleby:2 %}bg-slate-50/30{% endif %}">
+                <td class="px-6 py-3.5 border-b border-slate-100/60">
+                  <span class="text-[11px] font-black text-slate-400 group-hover:text-emerald-600">#{{ tx.order.id }}</span>
+                </td>
+                <td class="px-6 py-3.5 border-b border-slate-100/60">
+                  <span class="text-[11px] text-slate-500">{{ tx.order.created_at|date:"d M Y" }}</span>
+                  <span class="block text-[10px] text-slate-300">{{ tx.order.created_at|date:"H:i" }}</span>
+                </td>
+                <td class="px-6 py-3.5 border-b border-slate-100/60">
+                  <span class="text-[12px] text-slate-600 group-hover:text-slate-800">{{ tx.variant.product.name }}</span>
+                  <code class="block text-[10px] text-slate-400 mt-0.5">{{ tx.variant.sku }}</code>
+                </td>
+                <td class="px-6 py-3.5 border-b border-slate-100/60 text-right">
+                  <span class="text-[11px] font-bold text-slate-600">{{ tx.quantity }}</span>
+                </td>
+                <td class="px-6 py-3.5 border-b border-slate-100/60 text-right">
+                  <span class="inline-block text-[12px] font-black text-slate-800 group-hover:text-emerald-700 group-hover:bg-emerald-50/80 px-2 py-0.5 rounded-lg transition-all">
+                    Rp {{ tx.quantity|mul:tx.price|floatformat:0 }}
+                  </span>
+                </td>
+                <td class="px-6 py-3.5 border-b border-slate-100/60 text-center">
+                  {% if tx.points_earned %}
+                  <span class="inline-flex items-center gap-1 text-[11px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">
+                    <i class="fas fa-star text-[9px]"></i> +{{ tx.points_earned }}
+                  </span>
+                  {% else %}
+                  <span class="text-[10px] text-slate-300">—</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="6" class="px-6 py-12 text-center">
+                <i class="fas fa-receipt text-slate-200 text-2xl mb-2 block"></i>
+                <p class="text-sm text-slate-400">Belum ada transaksi</p>
+              </td></tr>
+              {% endfor %}
+            </tbody>
+            {% if transactions %}
+            <tfoot>
+              <tr class="bg-gradient-to-r from-emerald-50/60 to-slate-50/60">
+                <td colspan="4" class="px-6 py-3.5 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">Grand Total</td>
+                <td class="px-6 py-3.5 text-right">
+                  <span class="text-[13px] font-black text-emerald-700 bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-xl inline-block">
+                    Rp {{ customer.lifetime_value|floatformat:0 }}
+                  </span>
+                </td>
+                <td class="px-6 py-3.5 text-center">
+                  <span class="text-[11px] font-bold text-amber-600">
+                    <i class="fas fa-star text-[9px]"></i> {{ total_earned_points|default:0 }} pts
+                  </span>
+                </td>
+              </tr>
+            </tfoot>
+            {% endif %}
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- POINT LOG -->
+    <div x-show="activeTab==='points'" x-transition:enter="transition duration-200" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0">
+      <div class="section-card">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100/60 bg-white/30">
+          <div class="flex items-center gap-3">
+            <div class="w-1.5 h-6 bg-amber-400 rounded-full"></div>
+            <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">
+              Log Aktivitas Poin — Saldo: <span class="text-amber-600">{{ customer.points|default:0 }} pts</span>
+            </p>
+          </div>
+        </div>
+        <div class="p-6 space-y-1">
+          {% for log in point_logs %}
+          <div class="point-log-row flex items-center gap-4 py-2.5">
+            <div class="point-log-dot
+              {% if log.log_type == 'earn' %}dot-earn
+              {% elif log.log_type == 'redeem' %}dot-redeem
+              {% elif log.log_type == 'expire' %}dot-expire
+              {% else %}dot-adjust{% endif %}">
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-[12px] font-semibold text-slate-700 truncate">{{ log.description }}</span>
+                <span class="text-[12px] font-black flex-shrink-0
+                  {% if log.points > 0 %}text-emerald-600{% else %}text-amber-600{% endif %}">
+                  {% if log.points > 0 %}+{% endif %}{{ log.points }} pts
+                </span>
+              </div>
+              <div class="flex items-center gap-3 mt-0.5">
+                <span class="text-[10px] text-slate-400">{{ log.created_at|date:"d M Y, H:i" }}</span>
+                <span class="text-[10px] font-bold
+                  {% if log.log_type == 'earn' %}text-emerald-500
+                  {% elif log.log_type == 'redeem' %}text-amber-500
+                  {% elif log.log_type == 'expire' %}text-rose-400
+                  {% else %}text-violet-500{% endif %}">
+                  {{ log.get_log_type_display }}
+                </span>
+                <span class="text-[10px] text-slate-300">Saldo: {{ log.balance_after }} pts</span>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+          <div class="text-center py-12">
+            <i class="fas fa-coins text-slate-200 text-2xl mb-2 block"></i>
+            <p class="text-sm text-slate-400">Belum ada aktivitas poin</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end reveal -->
+</div>
+
+<!-- ═══════════════════════════════
+     REDEEM MODAL
+════════════════════════════════ -->
+<dialog id="redeemModal" class="rounded-2xl p-0 shadow-2xl border border-slate-100 max-w-sm w-full backdrop:bg-slate-900/30 backdrop:backdrop-blur-sm">
+  <div class="p-6">
+    <div class="flex items-center justify-between mb-5">
+      <h3 class="font-black text-slate-800 text-base flex items-center gap-2">
+        <span class="text-amber-500"><i class="fas fa-gift"></i></span>
+        Redeem Poin
+      </h3>
+      <button onclick="document.getElementById('redeemModal').close()"
+              class="w-7 h-7 rounded-full hover:bg-slate-200 flex items-center justify-center text-slate-400 text-xs transition-colors" style="background:var(--color-bg)">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="bg-amber-50 border border-amber-100 rounded-xl p-3 mb-4 flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center text-amber-500 text-sm"><i class="fas fa-star"></i></div>
+      <div>
+        <p class="text-[10px] font-bold text-amber-700 uppercase tracking-wider">Poin Tersedia</p>
+        <p class="text-xl font-black text-amber-600">{{ customer.points|default:0 }} pts</p>
+      </div>
+    </div>
+    <form method="post" action="{% url 'customer_redeem_points' customer.id %}">
+      {% csrf_token %}
+      <div class="space-y-3">
+        <div>
+          <label class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1.5">Jumlah Poin yang Diredeem</label>
+          <input type="number" name="redeem_points" min="1" max="{{ customer.points }}"
+                 class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition-all" style="background:var(--color-surface)"
+                 placeholder="Masukkan jumlah poin...">
+        </div>
+        <div>
+          <label class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1.5">Keterangan</label>
+          <input type="text" name="description"
+                 class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-700 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition-all" style="background:var(--color-surface)"
+                 placeholder="Contoh: Tukar diskon 10%">
+        </div>
+        <button type="submit"
+                class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-600 text-white font-bold text-sm hover:shadow-lg hover:shadow-amber-200 transition-all">
+          <i class="fas fa-check mr-2"></i> Konfirmasi Redeem
+        </button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+{% endblock %}

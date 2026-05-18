@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireframe: Accounts Payable</title>
+  <style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Courier New', monospace;
+    background: #F5F5F5;
+    color: #333;
+    padding: 16px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* ── Komponen utama ── */
+.wf-page        { max-width: 1100px; margin: 0 auto; }
+.wf-header      { background: #2C2C2C; color: #fff; padding: 12px 16px; border-radius: 4px; margin-bottom: 12px; font-weight: bold; font-size: 14px; }
+.wf-nav         { background: #444; color: #fff; padding: 10px 16px; border-radius: 4px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; }
+.wf-nav-item    { background: #666; color: #ddd; padding: 4px 10px; border-radius: 3px; font-size: 11px; }
+.wf-breadcrumb  { color: #888; font-size: 11px; margin-bottom: 8px; }
+.wf-breadcrumb span { margin: 0 4px; }
+
+/* ── Sections & Cards ── */
+.wf-section     { border: 1.5px solid #CCC; border-radius: 6px; padding: 12px; margin-bottom: 12px; background: #FFF; }
+.wf-card        { border: 1px solid #CCC; border-radius: 4px; padding: 10px; background: #FAFAFA; margin-bottom: 8px; }
+.wf-card-dark   { border: 1px solid #888; border-radius: 4px; padding: 10px; background: #2C2C2C; color: #EEE; margin-bottom: 8px; }
+.wf-metric      { border: 1px solid #CCC; border-radius: 4px; padding: 10px; background: #F0F0F0; text-align: center; }
+.wf-metric .val { font-size: 22px; font-weight: bold; margin: 4px 0; }
+.wf-metric .lbl { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+.wf-sidebar     { border: 1.5px dashed #AAA; border-radius: 4px; padding: 10px; background: #F8F8F8; }
+
+/* ── Layout ── */
+.wf-grid        { display: grid; gap: 10px; margin-bottom: 10px; }
+.wf-grid-2      { grid-template-columns: 1fr 1fr; }
+.wf-grid-3      { grid-template-columns: 1fr 1fr 1fr; }
+.wf-grid-4      { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.wf-grid-23     { grid-template-columns: 2fr 1fr; }
+.wf-grid-32     { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
+.wf-flex        { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+
+/* ── Form Elements ── */
+.wf-input       { border: 1px solid #BBB; background: #FFF; border-radius: 3px; padding: 7px 10px; font-size: 12px; font-family: inherit; display: block; width: 100%; color: #555; }
+.wf-select      { border: 1px solid #BBB; background: #FFF url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6"><path d="M0 0l5 6 5-6z" fill="%23888"/></svg>') no-repeat right 8px center; border-radius: 3px; padding: 7px 28px 7px 10px; font-size: 12px; font-family: inherit; display: block; width: 100%; appearance: none; color: #555; }
+.wf-textarea    { border: 1px solid #BBB; background: #FFF; border-radius: 3px; padding: 7px 10px; font-size: 12px; font-family: inherit; display: block; width: 100%; color: #555; min-height: 60px; resize: vertical; }
+.wf-label       { font-size: 10px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; display: block; }
+.wf-field-group { margin-bottom: 10px; }
+
+/* ── Buttons ── */
+.wf-btn         { border: 1.5px solid #888; background: #E8E8E8; color: #333; padding: 7px 14px; border-radius: 3px; font-size: 12px; font-family: inherit; cursor: default; display: inline-block; font-weight: bold; }
+.wf-btn-primary { border-color: #333; background: #333; color: #FFF; }
+.wf-btn-danger  { border-color: #AA0000; background: #FFEEEE; color: #AA0000; }
+.wf-btn-success { border-color: #006600; background: #EEFFEE; color: #006600; }
+.wf-btn-sm      { padding: 4px 10px; font-size: 11px; }
+
+/* ── Filters & Tabs ── */
+.wf-filter-row  { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; }
+.wf-chip        { border: 1px solid #CCC; background: #F0F0F0; color: #555; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+.wf-chip-active { border-color: #333; background: #333; color: #FFF; }
+.wf-tab-row     { display: flex; gap: 4px; margin-bottom: 10px; border-bottom: 1px solid #CCC; padding-bottom: 6px; }
+.wf-tab         { border: 1px solid #CCC; background: #F5F5F5; color: #888; padding: 5px 14px; border-radius: 3px 3px 0 0; font-size: 11px; font-weight: bold; }
+.wf-tab-active  { border-bottom-color: #FFF; background: #FFF; color: #333; }
+
+/* ── Table ── */
+.wf-table       { width: 100%; border-collapse: collapse; font-size: 12px; }
+.wf-table th    { background: #EAEAEA; color: #555; padding: 7px 10px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1.5px solid #CCC; }
+.wf-table td    { padding: 7px 10px; border-bottom: 1px solid #EEE; color: #333; }
+.wf-table tr:hover td { background: #F8F8F8; }
+
+/* ── Progress & Charts ── */
+.wf-progress-bg  { background: #E8E8E8; border-radius: 99px; height: 8px; overflow: hidden; margin: 4px 0; }
+.wf-progress-fill{ background: #555; height: 100%; border-radius: 99px; }
+.wf-circle       { width: 80px; height: 80px; border-radius: 50%; border: 8px solid #CCC; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: #555; }
+
+/* ── Image Placeholder ── */
+.wf-img         { background: #E0E0E0; border: 1.5px dashed #AAA; border-radius: 4px; display: flex; align-items: center; justify-content: center; min-height: 60px; color: #888; font-size: 11px; text-align: center; padding: 8px; }
+
+/* ── Badge / Status ── */
+.wf-badge       { display: inline-block; border: 1px solid #AAA; background: #EEE; color: #555; padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+
+/* ── Timeline ── */
+.wf-timeline    { padding-left: 20px; border-left: 2px solid #CCC; }
+.wf-tl-item     { position: relative; padding: 6px 0 6px 12px; }
+.wf-tl-item::before { content:''; position: absolute; left: -7px; top: 12px; width: 12px; height: 12px; border-radius: 50%; background: #CCC; border: 2px solid #FFF; box-shadow: 0 0 0 1px #CCC; }
+.wf-tl-title    { font-size: 12px; font-weight: bold; color: #333; }
+.wf-tl-meta     { font-size: 10px; color: #888; }
+
+/* ── Scroll nesting warning ── */
+.wf-scroll-warn { border: 2px dashed #FFC107; background: #FFFDE7; padding: 8px; border-radius: 4px; margin-bottom: 6px; }
+.wf-scroll-label{ font-size: 10px; color: #856404; font-weight: bold; margin-bottom: 4px; }
+
+/* ── Footer ── */
+.wf-footer      { background: #EAEAEA; border: 1px solid #CCC; border-radius: 4px; padding: 10px 16px; margin-top: 12px; color: #888; font-size: 11px; text-align: center; }
+
+/* ── Alpine root marker ── */
+.wf-alpine      { border: 1.5px dotted #AAA; border-radius: 4px; padding: 10px; margin-bottom: 10px; position: relative; }
+.wf-alpine::before { content: 'Alpine Component'; position: absolute; top: -9px; left: 8px; background: #FFF; padding: 0 4px; font-size: 9px; color: #AAA; font-weight: bold; }
+
+/* ── Section label ── */
+.wf-section-label { font-size: 10px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid #EEE; }
+
+/* ── Heading styles ── */
+.wf-h1 { font-size: 20px; font-weight: bold; color: #111; margin-bottom: 6px; }
+.wf-h2 { font-size: 16px; font-weight: bold; color: #222; margin-bottom: 5px; }
+.wf-h3 { font-size: 13px; font-weight: bold; color: #333; margin-bottom: 4px; }
+.wf-h4 { font-size: 12px; font-weight: bold; color: #444; margin-bottom: 3px; }
+
+/* ── Empty state ── */
+.wf-empty { border: 1.5px dashed #CCC; border-radius: 6px; padding: 24px; text-align: center; color: #AAA; font-size: 12px; background: #FAFAFA; }
+
+/* ── Annotations ── */
+.wf-annotation  { font-size: 10px; color: #999; font-style: italic; margin-top: 3px; }
+.wf-components  { margin-top: 20px; border-top: 2px solid #DDD; padding-top: 12px; }
+.wf-comp-item   { font-size: 11px; color: #666; padding: 2px 0; }
+.wf-comp-type   { display: inline-block; background: #EAEAEA; border-radius: 3px; padding: 1px 6px; font-size: 10px; font-weight: bold; color: #555; margin-right: 6px; }
+.wf-issues      { margin-top: 12px; border-top: 1px solid #EEE; padding-top: 10px; }
+.wf-issue       { font-size: 11px; padding: 3px 0 3px 16px; position: relative; color: #666; }
+.wf-issue::before { position: absolute; left: 0; }
+.wf-issue.warning::before { content: '⚠'; color: #CC8800; }
+.wf-issue.info::before    { content: 'ℹ'; color: #0066CC; }
+    
+  </style>
+</head>
+<body>
+<div class="wf-page">
+
+  <!-- ── WIREFRAME HEADER INFO ───────────────────────── -->
+  <div class="wf-header">
+    ▦ WIREFRAME: Accounts Payable
+    <span style="float:right;font-size:11px;font-weight:normal;color:#AAA">
+      Generated: 27 Apr 2026 09:41 &nbsp;|&nbsp;
+      17 komponen &nbsp;|&nbsp;
+      2 isu terdeteksi
+    </span>
+  </div>
+
+  <!-- ── STAT SUMMARY ───────────────────────────────── -->
+  <div class="wf-grid wf-grid-4" style="margin-bottom:12px">
+    <div class="wf-metric">
+      <div class="wf-metric val">17</div>
+      <div class="wf-metric lbl">Total Komponen</div>
+    </div>
+    <div class="wf-metric">
+      <div class="wf-metric val">2</div>
+      <div class="wf-metric lbl">Interaktif</div>
+    </div>
+    <div class="wf-metric">
+      <div class="wf-metric val">0</div>
+      <div class="wf-metric lbl">Scroll Nesting</div>
+    </div>
+    <div class="wf-metric">
+      <div class="wf-metric val">1</div>
+      <div class="wf-metric lbl">⚠ Warnings</div>
+    </div>
+  </div>
+
+  <!-- ── SCROLL NESTING WARNINGS ────────────────────── -->
+  
+
+  <!-- ══ WIREFRAME CONTENT ══════════════════════════════ -->
+  <div class="wf-section">
+    <div class="wf-section-label">Wireframe Struktur Halaman</div>
+    <p style="font-size:12px;color:#555;margin-bottom:6px;">{% extends 'base/base.html' %} {% block title %}Hutang Usaha — CoffeeShop{% endblock %} {% block extra_css %} {% endbloc…</p><div class="wf-alpine"><span style="font-size:12px;color:#555">Header</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><div class="wf-nav">[ NAVIGATION ] <span class="wf-nav-item">Keuangan</span></div><div class="wf-h1">Accounts Payable</div><p style="font-size:12px;color:#555;margin-bottom:6px;">Monitoring kewajiban pembayaran kepada supplier.</p><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><span style="font-size:12px;color:#555">Buat Pembayaran</span></div></div><span style="font-size:12px;color:#555">Summary Cards</span><div class="wf-grid wf-grid-1" style="margin-bottom:8px"><div class="wf-card"><p style="font-size:12px;color:#555;margin-bottom:6px;">Total Hutang</p></div><div class="wf-card"><p style="font-size:12px;color:#555;margin-bottom:6px;">Jatuh Tempo (0-30 Hari)</p></div><div class="wf-card"><p style="font-size:12px;color:#555;margin-bottom:6px;">Jatuh Tempo (31-60 Hari)</p></div><div class="wf-card"><p style="font-size:12px;color:#555;margin-bottom:6px;">Telat Bayar (>60 Hari)</p></div></div><span style="font-size:12px;color:#555">Aging Table</span><div class="wf-card"><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><div class="wf-h2">Aging Schedule per Supplier</div><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><button class="wf-btn " style="margin:2px">Export Excel</button></div></div><div class="wf-section"><div class="wf-section-label">[ TABLE ]</div><table class="wf-table"><thead><tr><th>Supplier</th><th>Total Balance</th><th>0 - 30 Hari</th><th>31 - 60 Hari</th><th>61 - 90 Hari</th><th>> 90 Hari</th><th>Aksi</th></tr></thead><tbody><tr><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr></tbody></table></div></div></div><span style="font-size:12px;color:#555">JSON injection for Accounts Payable data</span>
+  </div>
+
+  <!-- ── COMPONENT INDEX ────────────────────────────── -->
+  <div class="wf-components">
+    <div class="wf-section-label">Indeks Komponen Terdeteksi (17)</div>
+    <div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>nav</span>[ NAVIGATION BAR ]  <em style='color:#AAA;font-size:10px'> — Keuangan / Hutang Usaha (AP)</em></div><div class='wf-comp-item'><span class='wf-comp-type'>heading</span>HEADING (H1)  <em style='color:#AAA;font-size:10px'> — Accounts Payable</em></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [GRID 1 cols]</div><div class='wf-comp-item'><span class='wf-comp-type'>card</span>CARD  <em style='color:#AAA;font-size:10px'> — Total Hutang</em></div><div class='wf-comp-item'><span class='wf-comp-type'>card</span>CARD  <em style='color:#AAA;font-size:10px'> — Jatuh Tempo (0-30 Hari)</em></div><div class='wf-comp-item'><span class='wf-comp-type'>card</span>CARD  <em style='color:#AAA;font-size:10px'> — Jatuh Tempo (31-60 Hari)</em></div><div class='wf-comp-item'><span class='wf-comp-type'>card</span>CARD  <em style='color:#AAA;font-size:10px'> — Telat Bayar (>60 Hari)</em></div><div class='wf-comp-item'><span class='wf-comp-type'>card</span>CARD  <em style='color:#AAA;font-size:10px'> — Aging Schedule per Supplier Export Excel Supplier Total Balance 0 - 30 Hari 31 -…</em></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>heading</span>HEADING (H2)  <em style='color:#AAA;font-size:10px'> — Aging Schedule per Supplier</em></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: Export Excel  <em style='color:#AAA;font-size:10px'> — Export Excel</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>table</span>[ TABLE ]  <em style='color:#AAA;font-size:10px'> — Supplier Total Balance 0 - 30 Hari 31 - 60 Hari 61 - 90 Hari > 90 Hari Aksi GRAN…</em></div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: [icon]  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div>
+  </div>
+
+  <!-- ── ISSUES ─────────────────────────────────────── -->
+  <div class="wf-issues"><div class="wf-section-label">Isu Terdeteksi (2)</div><div class="wf-issue warning">Tombol tanpa teks/aria-label: <button> id='' class='text-xs font-bold text-slate-500 hover:text-emeral'</div><div class="wf-issue info">x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template</div></div>
+
+</div>
+</body>
+</html>

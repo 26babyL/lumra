@@ -1,0 +1,58 @@
+<!-- ============================================================
+     KPI CARD WHITE COMPONENT
+
+     Parameter:
+       title       : string — judul KPI (wajib)
+       value       : string — nilai utama, e.g. "Rp 12.500.000" (wajib)
+       subtitle    : string — subtitle, e.g. "30 hari terakhir" (opsional)
+       icon        : string — FontAwesome class, e.g. "fa-coffee" (wajib)
+       icon_color  : string — Tailwind class, e.g. "text-emerald-600" (default: text-gray-600)
+       icon_bg     : string — Tailwind class, e.g. "bg-emerald-100" (default: bg-gray-100)
+       card_id     : string — ID untuk JS update (opsional)
+
+     Cara pakai:
+       {% include "base/kpi_card_white.html" with
+           title="Total Revenue"
+           value="Rp 12.500.000"
+           subtitle="30 hari terakhir"
+           icon="fa-dollar-sign"
+           icon_color="text-emerald-600"
+           icon_bg="bg-emerald-100"
+           card_id="kpi-total-revenue"
+       %}
+
+============================================================ -->
+<article {% if card_id %}id="{{ card_id }}"{% endif %}
+         class="bg-white border border-gray-100 p-5 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200 min-h-[120px] flex flex-col justify-between"
+         aria-label="{{ title|default:'KPI' }}: {{ value|default:'0' }}">
+
+    <!-- Baris atas: Title + Icon -->
+    <div class="flex items-start justify-between gap-3">
+
+        <!-- Title -->
+        <div class="flex-1">
+            <p class="text-gray-900 text-sm font-semibold leading-tight">
+                {{ title|default:"KPI Title" }}
+            </p>
+            {% if subtitle %}
+            <p class="text-gray-500 text-xs mt-0.5">
+                {{ subtitle }}
+            </p>
+            {% endif %}
+        </div>
+
+        <!-- Icon -->
+        <div class="{{ icon_bg|default:'bg-gray-100' }} p-2 rounded-lg flex-shrink-0">
+            <i class="fas {{ icon|default:'fa-chart-line' }} text-sm {{ icon_color|default:'text-gray-600' }}"></i>
+        </div>
+
+    </div>
+
+    <!-- Value -->
+    <div class="mt-3">
+        <p class="text-xl font-bold text-gray-900 leading-none" data-kpi-value>
+            {{ value|default:"0" }}
+        </p>
+    </div>
+
+</article>

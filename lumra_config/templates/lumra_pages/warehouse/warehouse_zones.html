@@ -1,0 +1,194 @@
+{% extends "base/base_hybrid.html" %}
+{% load static %}
+
+{% block title %}Warehouse Zones{% endblock %}
+{% block page_title %}Warehouse Zones{% endblock %}
+{% block page_subtitle %}Manage warehouse zones and storage areas{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Header Actions -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <div class="flex gap-2">
+            <button class="btn btn-primary">
+                <i class="fas fa-plus mr-2"></i>
+                Add Zone
+            </button>
+            <button class="btn btn-outline">
+                <i class="fas fa-download mr-2"></i>
+                Export
+            </button>
+        </div>
+        <div class="flex gap-2">
+            <div class="form-control">
+                <input type="text" placeholder="Search zones..." class="input input-bordered" />
+            </div>
+            <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-outline">
+                    <i class="fas fa-filter mr-2"></i>
+                    Filter
+                </label>
+                <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-52">
+                    <li><a href="#">Active Zones</a></li>
+                    <li><a href="#">Inactive Zones</a></li>
+                    <li><a href="#">High Capacity</a></li>
+                    <li><a href="#">Low Stock</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Warehouse Zones Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for zone in zones %}
+        <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow">
+            <div class="card-body p-6">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center">
+                        <i class="fas fa-warehouse text-primary text-xl"></i>
+                    </div>
+                    <span class="badge badge-{{ zone.status|lower }} badge-sm">{{ zone.status }}</span>
+                </div>
+                <h3 class="text-lg font-semibold text-base-content mb-2">{{ zone.name }}</h3>
+                <p class="text-sm text-base-content/60 mb-4">{{ zone.description }}</p>
+                
+                <div class="space-y-2 mb-4">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-base-content/60">Capacity:</span>
+                        <span class="font-medium">{{ zone.capacity }} pallets</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-base-content/60">Occupied:</span>
+                        <span class="font-medium text-warning">{{ zone.occupied }} pallets</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-base-content/60">Available:</span>
+                        <span class="font-medium text-success">{{ zone.available }} pallets</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-base-content/60">Utilization:</span>
+                        <span class="font-medium">{{ zone.utilization }}%</span>
+                    </div>
+                    {% if zone.temperature %}
+                    <div class="flex justify-between text-sm">
+                        <span class="text-base-content/60">Temperature:</span>
+                        <span class="font-medium text-info">{{ zone.temperature }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="w-full bg-base-200 rounded-full h-2 mb-4">
+                    <div class="bg-warning h-2 rounded-full" style="width: {{ zone.utilization }}%"></div>
+                </div>
+                
+                <div class="flex gap-2">
+                    <button class="btn btn-ghost btn-sm flex-1">
+                        <i class="fas fa-eye mr-1"></i>
+                        View
+                    </button>
+                    <button class="btn btn-ghost btn-sm flex-1">
+                        <i class="fas fa-edit mr-1"></i>
+                        Edit
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full">
+            <div class="text-center py-8">
+                <div class="text-base-content/60">
+                    <i class="fas fa-warehouse text-4xl mb-4"></i>
+                    <p class="text-lg font-medium">No warehouse zones found</p>
+                    <p class="text-sm">Create your first warehouse zone to get started.</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+        <div class="stat bg-base-100 rounded-lg shadow">
+            <div class="stat-figure text-primary">
+                <i class="fas fa-warehouse text-3xl"></i>
+            </div>
+            <div class="stat-title">Total Zones</div>
+            <div class="stat-value text-primary">{{ total_count }}</div>
+            <div class="stat-desc">All warehouse zones</div>
+        </div>
+        
+        <div class="stat bg-base-100 rounded-lg shadow">
+            <div class="stat-figure text-info">
+                <i class="fas fa-boxes text-3xl"></i>
+            </div>
+            <div class="stat-title">Total Capacity</div>
+            <div class="stat-value text-info">2,000</div>
+            <div class="stat-desc">Across all zones</div>
+        </div>
+        
+        <div class="stat bg-base-100 rounded-lg shadow">
+            <div class="stat-figure text-warning">
+                <i class="fas fa-chart-pie text-3xl"></i>
+            </div>
+            <div class="stat-title">Avg Utilization</div>
+            <div class="stat-value text-warning">60.4%</div>
+            <div class="stat-desc">Across all zones</div>
+        </div>
+        
+        <div class="stat bg-base-100 rounded-lg shadow">
+            <div class="stat-figure text-success">
+                <i class="fas fa-check-circle text-3xl"></i>
+            </div>
+            <div class="stat-title">Available</div>
+            <div class="stat-value text-success">665</div>
+            <div class="stat-desc">Pallets available</div>
+        </div>
+    </div>
+
+    <!-- Lazy Loading & Pagination -->
+    <div class="flex justify-between items-center mt-6" x-data="{ 
+        currentPage: {{ current_page }}, 
+        hasMore: {{ has_more }}, 
+        isLoadingMore: false 
+    }">
+        <div class="text-sm text-base-content/60">
+            <span x-show="!isLoadingMore">
+                Menampilkan {{ per_page }} dari {{ total_count }} data
+                <span x-show="hasMore"> (halaman {{ current_page }})</span>
+            </span>
+            <span x-show="isLoadingMore" class="loading loading-dots">
+                <span class="loading-dot"></span>
+                <span class="loading-dot"></span>
+                <span class="loading-dot"></span>
+                <span> memuat data...</span>
+            </span>
+        </div>
+        
+        <div class="join">
+            <button class="join-item btn btn-outline" 
+                    x-show="currentPage > 1" 
+                    @click="window.location.href='?page=' + (currentPage - 1)">«</button>
+            <button class="join-item btn btn-outline" 
+                    x-show="currentPage > 2" 
+                    @click="window.location.href='?page=' + (currentPage - 2)">‹</button>
+            <template x-for="page in [Math.max(1, currentPage - 2), currentPage, currentPage + 1, currentPage + 2].slice(0, 5)">
+                <button class="join-item" 
+                        :class="page === currentPage ? 'btn-primary' : 'btn-outline'"
+                        @click="window.location.href='?page=' + page">{{ page }}</button>
+            </template>
+            <button class="join-item btn btn-outline" 
+                    x-show="hasMore" 
+                    @click="isLoadingMore = true; $nextTick(() => { window.location.href='?page=' + (currentPage + 1) })">
+                <span x-show="isLoadingMore" class="loading loading-dots">
+                    <span class="loading-dot"></span>
+                    <span class="loading-dot"></span>
+                    <span class="loading-dot"></span>
+                </span>
+                <span x-show="!isLoadingMore">»</span>
+            </button>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

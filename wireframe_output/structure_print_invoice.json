@@ -1,0 +1,280 @@
+{
+  "filename": "print_invoice.html",
+  "title": "Invoice — CoffeeShop",
+  "components": [
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "flex justify-between items-center mb-6",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "flex items-center gap-2",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "classes": "w-10 h-10 bg-slate-800 text-white flex items-center justify-center rounded-lg text-sm",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h1",
+      "label": "HEADING (H1)",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/h1",
+      "classes": "text-2xl font-bold leading-none",
+      "text_preview": "CoffeeShop",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h1",
+      "label": "HEADING (H1)",
+      "depth": 4,
+      "path": "root/body/div/div/div/h1",
+      "classes": "text-4xl font-black mb-1",
+      "text_preview": "INVOICE",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [GRID 2 cols]",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "grid grid-cols-2 gap-8 mb-8",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "GRID 2 cols",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "table",
+      "tag": "table",
+      "label": "[ TABLE ]",
+      "depth": 2,
+      "path": "root/body/div/table",
+      "classes": "",
+      "text_preview": "Keterangan Harga Satuan Qty Total {% for item in items %} {{ item.name }} {{ ite…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "flex justify-between text-lg font-bold mb-4",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "flex justify-between text-base text-slate-600 mb-4",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "flex justify-between text-2xl font-bold border-t border-slate-200 pt-4",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "flex justify-between items-end gap-8",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 8,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/h1",
+      "type": "heading",
+      "label": "HEADING (H1)",
+      "text_preview": "CoffeeShop"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/h1",
+      "type": "heading",
+      "label": "HEADING (H1)",
+      "text_preview": "INVOICE"
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [GRID 2 cols]",
+      "text_preview": ""
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/table",
+      "type": "table",
+      "label": "[ TABLE ]",
+      "text_preview": "Keterangan Harga Satuan Qty Total {% for item in items %} {{ item.name }} {{ ite…"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 11,
+    "by_type": {
+      "layout": 8,
+      "heading": 2,
+      "table": 1
+    },
+    "interactive": 0,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

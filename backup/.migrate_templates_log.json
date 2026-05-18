@@ -1,0 +1,342 @@
+[
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\about.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\settings_app\\about.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\activity_drawer.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\base\\activity_drawer.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\add_campaign.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\marketing\\add_campaign.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\add_stock_movement.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\inventory\\add_stock_movement.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\alert.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\base\\alert.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\alert_inner.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\base\\alert_inner.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\approval_modal.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\base\\approval_modal.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\base_report.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\reports\\base_report.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\business_feature_matrix.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\settings_app\\business_feature_matrix.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\business_form_general.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\settings_app\\business_form_general.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\business_settings.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\settings_app\\business_settings.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\campaign_list.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\marketing\\campaign_list.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\categories_list.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\categories_list.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\category_form.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\category_form.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\customer.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\customer.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\customer_detail.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\customer_detail.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\customer_form.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\customer_form.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\customers_list.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\customers_list.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\dashboard backup.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sales\\dashboard backup.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\dashboard.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sales\\dashboard.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\dashboard_include_simple.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sales\\dashboard_include_simple.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\dashboard_include_test.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sales\\dashboard_include_test.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\dashboard_simple.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sales\\dashboard_simple.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\dashboard_test.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sales\\dashboard_test.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\dashboard_testonly.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sales\\dashboard_testonly.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\error_404.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\base\\error_404.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\error_500.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\base\\error_500.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\financial_reports.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\reports\\financial_reports.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\footer.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\base\\footer.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\inventory.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\inventory\\inventory.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\kpi_card.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\base\\kpi_card.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\kpi_card_inner.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\base\\kpi_card_inner.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\kpi_card_white.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\base\\kpi_card_white.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\locations.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\locations.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\login.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\auth_app\\login.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\market_insights.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\reports\\market_insights.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\navbar.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\base\\navbar.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\notification.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sales\\notification.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\notification_broken.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sales\\notification_broken.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\pos.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sales\\pos.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\product_details.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\product_details.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\products.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\products.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\profile.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\settings_app\\profile.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\purchasing.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sales\\purchasing.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\purchasing_report opsi 2.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sales\\purchasing_report opsi 2.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\purchasing_report.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sales\\purchasing_report.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\recipe_form.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\production\\recipe_form.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\recipe_list.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\production\\recipe_list.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\register.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\auth_app\\register.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\report_inventory_log.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\inventory\\report_inventory_log.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\report_inventory_low.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\inventory\\report_inventory_low.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\report_inventory_stock.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\inventory\\report_inventory_stock.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\report_profit_loss_detail.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\reports\\report_profit_loss_detail.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\report_sales_by_outlet.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\reports\\report_sales_by_outlet.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\report_sales_by_payment.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\reports\\report_sales_by_payment.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\report_sales_by_product.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\report_sales_by_product.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\report_sales_summary.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\reports\\report_sales_summary.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\reporting.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\reports\\reporting.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\requisition_report.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\reports\\requisition_report.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sales_history.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sales\\sales_history.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sales_history_product.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sales\\sales_history_product.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sales_performance.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sales\\sales_performance.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sales_report.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\reports\\sales_report.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sidebar.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\base\\sidebar.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sidebar_item.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\base\\sidebar_item.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\sidebar_right.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\base\\sidebar_right.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\stock_movement.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\inventory\\stock_movement.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\stock_opname.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\stock_opname.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\stock_opname_approval_detail.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\stock_opname_approval_detail.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\stock_opname_approvals.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\stock_opname_approvals.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\stock_opname_form.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\stock_opname_form.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\stock_opname_locations.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\stock_opname_locations.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\stock_opname_session_detail.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\stock_opname_session_detail.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\stock_planning.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\inventory\\stock_planning.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\supplier_price_form.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\supplier_price_form.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\supplier_price_list.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\supplier_price_list.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\system_status.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\settings_app\\system_status.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\transaction_summary.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\reports\\transaction_summary.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\transfer_report.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\reports\\transfer_report.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\unit_form.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\unit_form.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\units_list.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\units_list.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\user_roles_permissions.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\settings_app\\user_roles_permissions.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\users.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\settings_app\\users.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\vendor_form.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\vendor_form.html"
+  },
+  {
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\vendors_list.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\master_data\\vendors_list.html"
+  }
+]

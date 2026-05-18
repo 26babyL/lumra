@@ -1,0 +1,286 @@
+[
+  {
+    "file": "lumra_pages\\inventory\\add_stock_movement.html",
+    "fixes": 1
+  },
+  {
+    "file": "lumra_pages\\inventory\\product_details.html",
+    "fixes": 36
+  },
+  {
+    "file": "lumra_pages\\inventory\\product_list.html",
+    "fixes": 7
+  },
+  {
+    "file": "lumra_pages\\inventory\\products.html",
+    "fixes": 7
+  },
+  {
+    "file": "lumra_pages\\inventory\\stock_movement.html",
+    "fixes": 2
+  },
+  {
+    "file": "lumra_pages\\inventory\\stock_movement_form.html",
+    "fixes": 1
+  },
+  {
+    "file": "lumra_pages\\inventory\\stock_opname_approval_detail.html",
+    "fixes": 6
+  },
+  {
+    "file": "lumra_pages\\inventory\\stock_opname_approvals.html",
+    "fixes": 4
+  },
+  {
+    "file": "lumra_pages\\inventory\\stock_opname_form.html",
+    "fixes": 5
+  },
+  {
+    "file": "lumra_pages\\inventory\\stock_opname_locations.html",
+    "fixes": 9
+  },
+  {
+    "file": "lumra_pages\\inventory\\stock_overview.html",
+    "fixes": 70
+  },
+  {
+    "file": "lumra_pages\\inventory\\stock_planning.html",
+    "fixes": 4
+  },
+  {
+    "file": "lumra_pages\\inventory\\supplier_price_confirm_delete.html",
+    "fixes": 3
+  },
+  {
+    "file": "lumra_pages\\inventory\\supplier_price_list.html",
+    "fixes": 3
+  },
+  {
+    "file": "lumra_pages\\marketing\\add_campaign.html",
+    "fixes": 12
+  },
+  {
+    "file": "lumra_pages\\marketing\\campaign.html",
+    "fixes": 11
+  },
+  {
+    "file": "lumra_pages\\marketing\\campaign_list.html",
+    "fixes": 11
+  },
+  {
+    "file": "lumra_pages\\marketing\\discount.html",
+    "fixes": 19
+  },
+  {
+    "file": "lumra_pages\\marketing\\loyalty_members.html",
+    "fixes": 19
+  },
+  {
+    "file": "lumra_pages\\master_data\\categories_list.html",
+    "fixes": 5
+  },
+  {
+    "file": "lumra_pages\\master_data\\category_form.html",
+    "fixes": 1
+  },
+  {
+    "file": "lumra_pages\\master_data\\customer_detail.html",
+    "fixes": 8
+  },
+  {
+    "file": "lumra_pages\\master_data\\customer_form.html",
+    "fixes": 3
+  },
+  {
+    "file": "lumra_pages\\master_data\\customers.html",
+    "fixes": 13
+  },
+  {
+    "file": "lumra_pages\\master_data\\customers_list.html",
+    "fixes": 13
+  },
+  {
+    "file": "lumra_pages\\master_data\\location_list.html",
+    "fixes": 7
+  },
+  {
+    "file": "lumra_pages\\master_data\\locations.html",
+    "fixes": 7
+  },
+  {
+    "file": "lumra_pages\\master_data\\stock_opname.html",
+    "fixes": 10
+  },
+  {
+    "file": "lumra_pages\\master_data\\stock_opname_session_detail.html",
+    "fixes": 2
+  },
+  {
+    "file": "lumra_pages\\master_data\\unit_form.html",
+    "fixes": 5
+  },
+  {
+    "file": "lumra_pages\\master_data\\units_list.html",
+    "fixes": 6
+  },
+  {
+    "file": "lumra_pages\\messages\\notification.html",
+    "fixes": 9
+  },
+  {
+    "file": "lumra_pages\\production\\recipe_detail.html",
+    "fixes": 4
+  },
+  {
+    "file": "lumra_pages\\production\\recipe_form.html",
+    "fixes": 4
+  },
+  {
+    "file": "lumra_pages\\production\\recipe_list.html",
+    "fixes": 4
+  },
+  {
+    "file": "lumra_pages\\reports\\activity_log.html",
+    "fixes": 20
+  },
+  {
+    "file": "lumra_pages\\reports\\base_report.html",
+    "fixes": 12
+  },
+  {
+    "file": "lumra_pages\\reports\\purchasing_report.html",
+    "fixes": 2
+  },
+  {
+    "file": "lumra_pages\\reports\\report_activity_log.html",
+    "fixes": 20
+  },
+  {
+    "file": "lumra_pages\\reports\\report_inventory_log.html",
+    "fixes": 19
+  },
+  {
+    "file": "lumra_pages\\reports\\report_inventory_low.html",
+    "fixes": 19
+  },
+  {
+    "file": "lumra_pages\\reports\\report_inventory_stock.html",
+    "fixes": 19
+  },
+  {
+    "file": "lumra_pages\\reports\\report_profit_loss_detail.html",
+    "fixes": 19
+  },
+  {
+    "file": "lumra_pages\\reports\\report_sales_by_outlet.html",
+    "fixes": 19
+  },
+  {
+    "file": "lumra_pages\\reports\\report_sales_by_payment.html",
+    "fixes": 19
+  },
+  {
+    "file": "lumra_pages\\reports\\report_sales_by_product.html",
+    "fixes": 19
+  },
+  {
+    "file": "lumra_pages\\reports\\report_sales_summary.html",
+    "fixes": 19
+  },
+  {
+    "file": "lumra_pages\\reports\\reporting.html",
+    "fixes": 18
+  },
+  {
+    "file": "lumra_pages\\reports\\requisition_report.html",
+    "fixes": 19
+  },
+  {
+    "file": "lumra_pages\\reports\\sales_history.html",
+    "fixes": 19
+  },
+  {
+    "file": "lumra_pages\\reports\\sales_history_product.html",
+    "fixes": 19
+  },
+  {
+    "file": "lumra_pages\\reports\\sales_report.html",
+    "fixes": 19
+  },
+  {
+    "file": "lumra_pages\\reports\\transaction_summary.html",
+    "fixes": 19
+  },
+  {
+    "file": "lumra_pages\\reports\\transfer_report.html",
+    "fixes": 19
+  },
+  {
+    "file": "lumra_pages\\sales_insight\\dashboard.html",
+    "fixes": 1
+  },
+  {
+    "file": "lumra_pages\\sales_insight\\financial_reports.html",
+    "fixes": 12
+  },
+  {
+    "file": "lumra_pages\\sales_insight\\market_insights.html",
+    "fixes": 5
+  },
+  {
+    "file": "lumra_pages\\sales_insight\\pos.html",
+    "fixes": 12
+  },
+  {
+    "file": "lumra_pages\\sales_insight\\sales_intelligence.html",
+    "fixes": 14
+  },
+  {
+    "file": "lumra_pages\\sales_insight\\sales_performance.html",
+    "fixes": 8
+  },
+  {
+    "file": "lumra_pages\\sales_insight\\trends_analysis.html",
+    "fixes": 28
+  },
+  {
+    "file": "lumra_pages\\settings\\business_form_general.html",
+    "fixes": 3
+  },
+  {
+    "file": "lumra_pages\\settings\\business_settings.html",
+    "fixes": 11
+  },
+  {
+    "file": "lumra_pages\\settings\\contact.html",
+    "fixes": 25
+  },
+  {
+    "file": "lumra_pages\\settings\\profile.html",
+    "fixes": 11
+  },
+  {
+    "file": "lumra_pages\\settings\\search.html",
+    "fixes": 21
+  },
+  {
+    "file": "lumra_pages\\settings\\settings.html",
+    "fixes": 12
+  },
+  {
+    "file": "lumra_pages\\settings\\system_status.html",
+    "fixes": 12
+  },
+  {
+    "file": "lumra_pages\\settings\\user_list.html",
+    "fixes": 12
+  },
+  {
+    "file": "lumra_pages\\settings\\user_roles_permissions.html",
+    "fixes": 1
+  },
+  {
+    "file": "lumra_pages\\settings\\users.html",
+    "fixes": 12
+  }
+]

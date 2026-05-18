@@ -1,0 +1,21 @@
+{
+  "filename": "register.html",
+  "title": "register",
+  "components": [],
+  "scroll_nestings": [],
+  "layout_tree": [],
+  "issues": [],
+  "stats": {
+    "total_components": 0,
+    "by_type": {},
+    "interactive": 0,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

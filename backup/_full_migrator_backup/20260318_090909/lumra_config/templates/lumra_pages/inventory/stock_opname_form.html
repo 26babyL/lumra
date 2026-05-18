@@ -1,0 +1,477 @@
+
+<style>
+/* Glass Minimal — lumra_glass_fix.py fase 5 (konservatif) */
+.modal-overlay {
+  background: var(--glass-dark-bg, var(--color-slate-900-a040));
+  backdrop-filter: var(--backdrop-var-glass-dark-blur-blur-6px);
+  -webkit-backdrop-filter: var(--backdrop-var-glass-dark-blur-blur-6px);
+}
+.panel-glass {
+  background: var(--glass-bg, var(--color-white-a072));
+  backdrop-filter: var(--backdrop-var-glass-blur-blur-14px-saturate-1);
+  -webkit-backdrop-filter: var(--backdrop-var-glass-blur-blur-14px-saturate-1);
+  border: 1px solid var(--glass-border, var(--color-white-a020));
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow, 0 2px 12px var(--color-black-a06));
+}
+
+</style>
+{% extends 'base/base.html' %}
+{% block title %}Stock Opname — {{ selected_location.name }} — CoffeeShop{% endblock %}
+
+{#
+   Data di-pass via json_script — bukan interpolasi Django ke JS.
+   Di view, tambahkan:
+     context['opname_form_init'] = json.dumps({
+         'location_id': selected_location.id,
+         'location_name': selected_location.name,
+         'search_query': query or '',
+     })
+     context['products_init'] = [
+         {
+             'id': item.variant.id,
+             'counted_qty': item.counted_qty or '',
+             'notes': item.notes or '',
+         }
+         for item in products
+     ]
+#}
+{{ opname_form_init|json_script:"opname-form-init" }}
+{{ products_init|json_script:"products-init" }}
+
+{% block content %}
+<div class="py-6 px-3 sm:px-4 lg:px-6"
+     x-data="stockOpnameForm()"
+     x-init="init()">
+<div class="max-w-7xl mx-auto space-y-6">
+
+    {# ── HEADER ──────────────────────────────────────────────── #}
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+        <div>
+            <nav aria-label="Breadcrumb" class="mb-1">
+                <ol class="flex items-center gap-2 text-sm text-emerald-600">
+                    <li><a href="{% url 'dashboard' %}" class="hover:text-emerald-800 transition-colors">Dashboard</a></li>
+                    <li aria-hidden="true"><span class="text-emerald-300">/</span></li>
+                    <li><a href="{% url 'stock_opname_locations' %}" class="hover:text-emerald-800 transition-colors">Opname Locations</a></li>
+                    <li aria-hidden="true"><span class="text-emerald-300">/</span></li>
+                    <li class="text-emerald-800 font-medium truncate max-w-xs" aria-current="page">
+                        {{ selected_location.name }}
+                    </li>
+                </ol>
+            </nav>
+            <h1 class="text-2xl md:text-3xl font-bold text-slate-900">
+                Stock Opname —
+                <span class="text-emerald-600">{{ selected_location.name }}</span>
+            </h1>
+            <p class="text-sm text-slate-500 mt-0.5">Masukkan jumlah yang dihitung atau import dari CSV</p>
+        </div>
+        <div class="flex gap-2 flex-shrink-0">
+            <button @click="openModal('import')"
+                    class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded-xl transition-colors shadow-sm">
+                <i class="fas fa-upload text-xs" aria-hidden="true"></i> Import CSV
+            </button>
+            <a href="{% url 'stock_opname_locations' %}"
+               class="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-medium py-2 px-4 rounded-xl transition-colors">
+                <i class="fas fa-sync-alt text-xs" aria-hidden="true"></i> Ganti Lokasi
+            </a>
+        </div>
+    </div>
+
+    {# ── SEARCH ──────────────────────────────────────────────── #}
+    <div class="p-4 rounded-2xl shadow-sm border border-slate-100" style="background:var(--color-surface)">
+        <form @submit.prevent="performSearch" class="flex flex-col sm:flex-row gap-3">
+            <div class="relative flex-1">
+                <label for="searchQuery" class="sr-only">Cari produk</label>
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none" aria-hidden="true">
+                    <i class="fas fa-search text-slate-400 text-sm"></i>
+                </div>
+                <input type="search" id="searchQuery" x-model="searchQuery"
+                       placeholder="Cari produk berdasarkan SKU atau nama..."
+                       class="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-slate-50 placeholder-slate-400">
+            </div>
+            <button type="submit"
+                    class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white text-sm font-medium py-2 px-4 rounded-xl transition-colors shadow-sm flex-shrink-0">
+                <i class="fas fa-search text-xs" aria-hidden="true"></i> Cari
+            </button>
+        </form>
+    </div>
+
+    {# ── TABEL INPUT + SUBMIT ─────────────────────────────────── #}
+    <section class="rounded-2xl shadow-sm border border-slate-100 overflow-hidden" style="background:var(--color-surface)"
+             aria-labelledby="opname-table-heading">
+
+        <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+            <h2 id="opname-table-heading" class="text-sm font-semibold text-slate-700">Input Penghitungan</h2>
+            <span class="text-xs text-slate-400">{{ products|length }} produk</span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-100" role="table">
+                <thead>
+                    <tr class="bg-slate-50">
+                        <th scope="col" class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">SKU</th>
+                        <th scope="col" class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Produk</th>
+                        <th scope="col" class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Stok Sistem</th>
+                        <th scope="col" class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Hasil Hitung</th>
+                        <th scope="col" class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Catatan</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50" style="background:var(--color-surface)">
+                    {% for item in products %}
+                    <tr class="hover:bg-slate-50 transition-colors duration-150">
+                        <td class="px-5 py-4">
+                            <code class="bg-emerald-50 px-2 py-1 rounded text-xs font-mono text-emerald-700">
+                                {{ item.variant.sku }}
+                            </code>
+                        </td>
+                        <td class="px-5 py-4 text-sm font-medium text-slate-900">
+                            {{ item.variant.product.name }}
+                        </td>
+                        <td class="px-5 py-4 text-sm text-slate-600">
+                            {{ item.current_stock|default:0 }}
+                        </td>
+                        <td class="px-5 py-4">
+                            {#
+                               item.variant.id adalah integer dari server — aman sebagai key.
+                               Nilai awal diinisialisasi dari json_script di init(), bukan
+                               interpolasi langsung ke JS string.
+                            #}
+                            <input type="number"
+                                   x-model.number="productCounts[{{ item.variant.id }}]"
+                                   class="w-24 px-2 py-1.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-slate-50"
+                                   placeholder="0"
+                                   min="0"
+                                   aria-label="Jumlah hitung {{ item.variant.sku }}">
+                        </td>
+                        <td class="px-5 py-4">
+                            <input type="text"
+                                   x-model="productNotes[{{ item.variant.id }}]"
+                                   class="w-36 px-2 py-1.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-slate-50"
+                                   placeholder="e.g. dihitung manual"
+                                   aria-label="Catatan {{ item.variant.sku }}">
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-5 py-10 text-center text-slate-400 text-sm">
+                            <i class="fas fa-box-open text-2xl mb-2 block opacity-40" aria-hidden="true"></i>
+                            Tidak ada produk di lokasi ini.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {# Submit — di dalam section yang sama dengan tabel, tidak perlu form wrapper terpisah #}
+        <div class="px-5 py-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50">
+            <div>
+                <p class="text-sm font-semibold text-slate-800">Submit untuk Persetujuan</p>
+                <p class="text-xs text-slate-500 mt-0.5">Data akan ditinjau sebelum stok diperbarui.</p>
+            </div>
+            <button @click="submitOpname()"
+                    :disabled="isSubmitting"
+                    class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold py-2 px-5 rounded-xl transition-colors shadow-sm flex-shrink-0">
+                <i x-show="isSubmitting" class="fas fa-circle-notch fa-spin text-xs" aria-hidden="true"></i>
+                <i x-show="!isSubmitting" class="fas fa-paper-plane text-xs" aria-hidden="true"></i>
+                <span x-text="isSubmitting ? 'Mengirim...' : 'Submit untuk Persetujuan'"></span>
+            </button>
+        </div>
+    </section>
+
+    {# ── PAGINATION ──────────────────────────────────────────── #}
+    {% if is_paginated %}
+    <nav class="flex justify-center" aria-label="Pagination">
+        <div class="inline-flex items-center gap-1">
+            {% if page_obj.has_previous %}
+            <a href="?page=1{% if query %}&q={{ query }}{% endif %}"
+               class="px-3 py-2 text-sm text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors" style="background:var(--color-surface)"
+               aria-label="Halaman pertama">
+                <i class="fas fa-angle-double-left text-xs" aria-hidden="true"></i>
+            </a>
+            <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}"
+               class="px-3 py-2 text-sm text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors" style="background:var(--color-surface)"
+               aria-label="Halaman sebelumnya">
+                <i class="fas fa-angle-left text-xs" aria-hidden="true"></i>
+            </a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <span class="px-3 py-2 text-sm font-semibold text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-xl"
+                      aria-current="page">{{ num }}</span>
+                {% elif num >= page_obj.number|add:'-3' and num <= page_obj.number|add:'3' %}
+                <a href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}"
+                   class="px-3 py-2 text-sm text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors" style="background:var(--color-surface)"
+                   aria-label="Halaman {{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}"
+               class="px-3 py-2 text-sm text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors" style="background:var(--color-surface)"
+               aria-label="Halaman berikutnya">
+                <i class="fas fa-angle-right text-xs" aria-hidden="true"></i>
+            </a>
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}"
+               class="px-3 py-2 text-sm text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors" style="background:var(--color-surface)"
+               aria-label="Halaman terakhir">
+                <i class="fas fa-angle-double-right text-xs" aria-hidden="true"></i>
+            </a>
+            {% endif %}
+        </div>
+    </nav>
+    {% endif %}
+
+</div>
+</div>
+
+{# ================================================================
+   MODALS
+================================================================= #}
+
+{# ── Import CSV Modal ──────────────────────────────────────────── #}
+<div x-show="activeModal === 'import'"
+     x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+     class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+     @keydown.escape.window="closeModal()"
+     @click.self="closeModal()"
+     role="dialog" aria-modal="true" aria-labelledby="modal-import-title" x-cloak>
+
+    <div class="rounded-2xl shadow-2xl w-full max-w-md" style="background:var(--color-surface)"
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 scale-95"
+         x-transition:enter-end="opacity-100 scale-100">
+
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+            <h2 id="modal-import-title" class="text-lg font-bold text-slate-900">Import CSV</h2>
+            <button @click="closeModal()" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg transition-colors" aria-label="Tutup modal">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <form @submit.prevent="importCSV" class="p-6 space-y-4" novalidate>
+            {% csrf_token %}
+            <div>
+                <label for="csvFile" class="block text-sm font-medium text-slate-700 mb-1">File CSV</label>
+                <input type="file" id="csvFile" accept=".csv"
+                       @change="handleFileUpload($event)"
+                       class="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                       required>
+                <p class="text-xs text-slate-400 mt-1">Format: SKU, Jumlah Hitung, Catatan (per baris)</p>
+            </div>
+
+            <div x-show="csvFile" class="flex items-center gap-2 text-sm text-emerald-700 bg-emerald-50 px-3 py-2 rounded-xl">
+                <i class="fas fa-file-csv" aria-hidden="true"></i>
+                <span x-text="csvFile?.name" class="truncate"></span>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2">
+                <button type="button" @click="closeModal()"
+                        class="px-4 py-2 text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+                    Batal
+                </button>
+                <button type="submit" :disabled="isUploading || !csvFile"
+                        class="inline-flex items-center gap-2 px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition-colors">
+                    <i x-show="isUploading" class="fas fa-circle-notch fa-spin text-xs" aria-hidden="true"></i>
+                    <span x-text="isUploading ? 'Mengupload...' : 'Import'"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{# Toast container #}
+<div id="toast-container"
+     class="fixed bottom-4 right-4 z-50 space-y-2 pointer-events-none"
+     aria-live="polite"></div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+function stockOpnameForm() {
+    return {
+        // ── State ──────────────────────────────────────────────
+        locationId: null,
+        searchQuery: '',
+
+        // Keyed by variant.id — diinisialisasi dari json_script
+        productCounts: {},
+        productNotes: {},
+
+        activeModal: null,
+        previousFocus: null,
+        isSubmitting: false,
+        isUploading: false,
+        csvFile: null,
+
+        // ── Init ───────────────────────────────────────────────
+        init() {
+            // Ambil state awal dari json_script — bukan interpolasi Django ke JS
+            const formInit = JSON.parse(
+                document.getElementById('opname-form-init')?.textContent || 'null'
+            );
+            if (formInit) {
+                this.locationId  = formInit.location_id;
+                this.searchQuery = formInit.search_query;
+            }
+
+            // Inisialisasi productCounts dan productNotes dari json_script
+            // Ini AMAN — item.notes bisa mengandung karakter apapun tanpa risiko XSS
+            const productsInit = JSON.parse(
+                document.getElementById('products-init')?.textContent || '[]'
+            );
+            productsInit.forEach(p => {
+                // Gunakan nilai yang sudah ada, atau default ke string kosong
+                this.productCounts[p.id] = p.counted_qty !== '' ? Number(p.counted_qty) : '';
+                this.productNotes[p.id]  = p.notes ?? '';
+            });
+        },
+
+        // ── Search ─────────────────────────────────────────────
+        performSearch() {
+            const params = new URLSearchParams();
+            if (this.searchQuery.trim()) params.set('q', this.searchQuery.trim());
+            window.location.href = '?' + params.toString();
+        },
+
+        // ── Submit Opname ──────────────────────────────────────
+        submitOpname() {
+            this.isSubmitting = true;
+
+            const payload = {
+                location: this.locationId,
+                products: Object.entries(this.productCounts).map(([id, qty]) => ({
+                    variant_id: parseInt(id),
+                    counted_qty: parseInt(qty) || 0,
+                    notes: this.productNotes[id] ?? '',
+                }))
+            };
+
+            fetch(window.location.href, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': this.getCsrfToken(),
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: JSON.stringify(payload)
+            })
+                .then(res => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
+                .then(data => {
+                    if (data.success) {
+                        this.showToast('Opname berhasil disubmit!', 'success');
+                        this.productCounts = {};
+                        this.productNotes  = {};
+                        setTimeout(() => {
+                            window.location.href = '{% url "stock_opname_locations" %}';
+                        }, 1200);
+                    } else {
+                        this.showToast(data.error || 'Gagal mengirim opname', 'error');
+                    }
+                })
+                .catch(() => this.showToast('Terjadi kesalahan. Coba lagi.', 'error'))
+                .finally(() => { this.isSubmitting = false; });
+        },
+
+        // ── CSV Import ─────────────────────────────────────────
+        handleFileUpload(event) {
+            this.csvFile = event.target.files[0] ?? null;
+        },
+
+        importCSV() {
+            if (!this.csvFile) {
+                this.showToast('Pilih file CSV terlebih dahulu', 'error');
+                return;
+            }
+            this.isUploading = true;
+
+            const formData = new FormData();
+            formData.append('csv_file', this.csvFile);
+            formData.append('location', this.locationId);
+
+            fetch(window.location.href, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': this.getCsrfToken(),
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: formData
+            })
+                .then(res => { if (!res.ok) throw new Error(); return res.json(); })
+                .then(data => {
+                    if (data.success) {
+                        // Update state Alpine dengan data dari CSV — tidak perlu reload
+                        if (Array.isArray(data.products)) {
+                            data.products.forEach(p => {
+                                this.productCounts[p.id] = Number(p.counted_qty) || 0;
+                                this.productNotes[p.id]  = p.notes ?? '';
+                            });
+                        }
+                        this.showToast('CSV berhasil diimport!', 'success');
+                        this.closeModal();
+                    } else {
+                        this.showToast(data.error || 'Gagal mengimport CSV', 'error');
+                    }
+                })
+                .catch(() => this.showToast('Terjadi kesalahan saat upload', 'error'))
+                .finally(() => { this.isUploading = false; });
+        },
+
+        // ── Modal ──────────────────────────────────────────────
+        openModal(name) {
+            this.previousFocus = document.activeElement;
+            this.activeModal = name;
+            this.$nextTick(() => {
+                const modal = document.querySelector('[role="dialog"]:not([style*="display: none"])');
+                const first = modal?.querySelector('button, input, select, [tabindex]:not([tabindex="-1"])');
+                if (first) first.focus();
+            });
+        },
+
+        closeModal() {
+            this.activeModal  = null;
+            this.isUploading  = false;
+            this.csvFile      = null;
+            if (this.previousFocus) this.previousFocus.focus();
+        },
+
+        // ── CSRF ───────────────────────────────────────────────
+        getCsrfToken() {
+            return document.querySelector('[name=csrfmiddlewaretoken]')?.value ?? '';
+        },
+
+        // ── Toast ──────────────────────────────────────────────
+        showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const colors = { success: 'bg-green-500', error: 'bg-red-500', warning: 'bg-amber-500', info: 'bg-blue-500' };
+            const toast = document.createElement('div');
+            toast.className = [colors[type] ?? colors.info, 'text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 pointer-events-auto translate-x-full transition-transform duration-300 text-sm'].join(' ');
+            toast.setAttribute('role', 'status');
+            const msg = document.createElement('span');
+            msg.className = 'flex-1';
+            msg.textContent = message; // textContent — bukan innerHTML
+            const btn = document.createElement('button');
+            btn.setAttribute('aria-label', 'Tutup');
+            btn.className = 'text-white/80 hover:text-white flex-shrink-0';
+            btn.innerHTML = '<i class="fas fa-times text-xs" aria-hidden="true"></i>';
+            btn.addEventListener('click', dismiss);
+            toast.appendChild(msg);
+            toast.appendChild(btn);
+            container.appendChild(toast);
+            requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.remove('translate-x-full')));
+            const timer = setTimeout(dismiss, 5000);
+            function dismiss() {
+                clearTimeout(timer);
+                toast.classList.add('translate-x-full');
+                toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+            }
+        }
+    };
+}
+</script>
+{% endblock %}

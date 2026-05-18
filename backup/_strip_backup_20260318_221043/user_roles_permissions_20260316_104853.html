@@ -1,0 +1,702 @@
+{% extends 'base/base.html' %}}
+{% load custom_filters %}
+
+{% block extra_head %}
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  [x-cloak]{display:none!important}
+
+  /* ══ BLOBS ══ */
+  .blob{position:fixed;border-radius:50%;filter:blur(110px);pointer-events:none;z-index:0;animation:drift 24s ease-in-out infinite;}
+  @keyframes drift{0%,100%{transform:translate(0,0)scale(1)}50%{transform:translate(22px,18px)scale(1.04)}}
+
+  /* ══ REVEAL ══ */
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .45s ease,transform .45s ease;}
+  .reveal.visible{opacity:1;transform:none;}
+
+  /* ══ GLASS ══ */
+  .glass{
+    background:rgba(255,255,255,.74);
+    backdrop-filter:blur(20px) saturate(160%);
+    -webkit-backdrop-filter:blur(20px) saturate(160%);
+    border:1px solid rgba(255,255,255,.92);border-radius:20px;
+    box-shadow:0 2px 14px rgba(0,0,0,.06),0 0 0 .5px rgba(0,0,0,.03);
+  }
+
+  /* ══ KPI CARD ══ */
+  .kpi-glass {
+    background     : rgba(255,255,255,0.72);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border         : 1px solid rgba(255,255,255,0.9);
+    border-radius  : 18px;
+    box-shadow     : 0 2px 12px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.04);
+    transition     : box-shadow .2s, transform .2s;
+    position       : relative; overflow:hidden;
+  }
+  .kpi-glass:hover{box-shadow:0 8px 28px rgba(0,0,0,0.10);transform:translateY(-2px);}
+  .kpi-glass::before{content:'';position:absolute;top:0;right:0;width:60px;height:60px;border-radius:0 18px 0 100%;opacity:.07;}
+  .kpi-glass.accent-violet::before{background:#8b5cf6;}
+  .kpi-glass.accent-emerald::before{background:#059669;}
+  .kpi-glass.accent-rose::before{background:#f43f5e;}
+  .kpi-glass.accent-amber::before{background:#f59e0b;}
+  .kpi-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;}
+
+  /* ══ PERMISSION TOGGLE ══ */
+  .perm-toggle{
+    position:relative;width:36px;height:20px;border-radius:99px;
+    cursor:pointer;flex-shrink:0;transition:background .4s ease;
+  }
+  .perm-toggle.on {background:linear-gradient(135deg,#047857,#059669);}
+  .perm-toggle.off{background:#e2e8f0;}
+  .perm-toggle .knob{
+    position:absolute;top:2px;width:16px;height:16px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.2);
+    transition:transform .4s cubic-bezier(.4,0,.2,1);
+  }
+  .perm-toggle.on  .knob{transform:translateX(18px);}
+  .perm-toggle.off .knob{transform:translateX(2px);}
+
+  /* ══ DEPT HEADER ══ */
+  .dept-header{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:14px;margin-bottom:2px;cursor:pointer;transition:background .15s;}
+  .dept-header:hover{background:rgba(0,0,0,.03);}
+  .dept-icon{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+  .dept-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:99px;font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;}
+
+  /* ══ PERM ROW ══ */
+  .perm-row{display:flex;align-items:center;padding:11px 16px 11px 48px;border-bottom:1px solid rgba(226,232,240,.4);transition:background .12s;}
+  .perm-row:last-child{border-bottom:none;}
+  .perm-row:hover{background:rgba(248,250,252,.6);}
+
+  /* ══ ROLE TAB ══ */
+  .role-tab{flex-shrink:0;width:90px;text-align:center;padding:4px 8px;border-radius:10px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;cursor:pointer;transition:background .2s,color .2s,box-shadow .2s;border:1.5px solid transparent;}
+  .role-tab.active-tab{box-shadow:0 2px 8px rgba(0,0,0,.08);}
+  .rt-superadmin{background:#0f172a;color:#f87171;}
+  .rt-admin  {background:rgba(99,102,241,.1);color:#6366f1;border-color:rgba(99,102,241,.25);}
+  .rt-manager{background:rgba(14,165,233,.1);color:#0ea5e9;border-color:rgba(14,165,233,.25);}
+  .rt-staff  {background:rgba(5,150,105,.1);color:#047857;border-color:rgba(5,150,105,.25);}
+  .rt-viewer {background:rgba(148,163,184,.1);color:#64748b;border-color:rgba(148,163,184,.25);}
+  .rt-superadmin.inactive,.rt-admin.inactive,.rt-manager.inactive,.rt-staff.inactive,.rt-viewer.inactive{
+    background:rgba(248,250,252,.8);color:#94a3b8;border-color:rgba(226,232,240,.8);}
+
+  /* ══ ACCESS LEVEL BADGE ══ */
+  .al-full   {background:rgba(4,120,87,.1); color:#047857;border:1px solid rgba(4,120,87,.2);}
+  .al-partial{background:rgba(245,158,11,.1);color:#d97706;border:1px solid rgba(245,158,11,.2);}
+  .al-none   {background:rgba(244,63,94,.08);color:#e11d48;border:1px solid rgba(244,63,94,.15);}
+
+  /* ══ UNSAVED INDICATOR ══ */
+  .unsaved-dot{width:6px;height:6px;border-radius:50%;background:#f59e0b;animation:blink 1s infinite;flex-shrink:0;}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+  /* ══ SECTION LOCK ══ */
+  .section-locked{position:relative;}
+  .section-locked::after{content:'';position:absolute;inset:0;border-radius:14px;
+    background:repeating-linear-gradient(-45deg,rgba(244,63,94,.015) 0px,rgba(244,63,94,.015) 4px,transparent 4px,transparent 10px);
+    pointer-events:none;}
+
+  /* ══ TOAST ══ */
+  .toast{animation:tIn .25s ease,tOut .25s ease 2.7s forwards;}
+  @keyframes tIn {from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+  @keyframes tOut{from{opacity:1}to{opacity:0;pointer-events:none}}
+
+  /* ══ MODAL ══ */
+  @keyframes mIn{from{opacity:0;transform:scale(.95) translateY(8px)}to{opacity:1;transform:none}}
+  .modal-box{animation:mIn .22s cubic-bezier(.4,0,.2,1);}
+
+  .cscroll::-webkit-scrollbar{width:4px;}
+  .cscroll::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:99px;}
+
+  .inp{width:100%;padding:9px 12px;border-radius:12px;font-size:12px;font-weight:500;color:#1e293b;
+    background:rgba(248,250,252,.8);border:1px solid rgba(226,232,240,.8);
+    outline:none;transition:border-color .15s,box-shadow .15s;}
+  .inp:focus{border-color:rgba(99,102,241,.5);box-shadow:0 0 0 3px rgba(99,102,241,.08);}
+</style>
+{% endblock %}
+
+{% block summary_stats %}
+<div class="reveal grid grid-cols-2 xl:grid-cols-4 gap-3">
+
+  <div class="kpi-glass accent-violet p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Role</p>
+        <p class="text-2xl font-bold text-slate-800">{{ total_roles|default:5 }}</p>
+        <p class="text-[11px] text-slate-400 mt-0.5">Terdefinisi</p>
+      </div>
+      <div class="kpi-icon bg-violet-50 text-violet-600"><i class="fas fa-layer-group"></i></div>
+    </div>
+  </div>
+
+  <div class="kpi-glass accent-emerald p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Permission</p>
+        <p class="text-2xl font-bold text-slate-800">{{ total_permissions|default:34 }}</p>
+        <p class="text-[11px] text-slate-400 mt-0.5">Konfigurasi akses</p>
+      </div>
+      <div class="kpi-icon bg-emerald-50 text-emerald-600"><i class="fas fa-key"></i></div>
+    </div>
+  </div>
+
+  <div class="kpi-glass accent-rose p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Sensitive Modules</p>
+        <p class="text-2xl font-bold text-slate-800">3</p>
+        <p class="text-[11px] text-rose-400 mt-0.5 font-semibold">🔒 Restricted</p>
+      </div>
+      <div class="kpi-icon bg-rose-50 text-rose-500"><i class="fas fa-shield-alt"></i></div>
+    </div>
+  </div>
+
+  <div class="kpi-glass accent-amber p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">2FA Wajib</p>
+        <p class="text-2xl font-bold text-slate-800">2</p>
+        <p class="text-[11px] text-amber-400 mt-0.5 font-semibold">🔐 Superadmin & Admin</p>
+      </div>
+      <div class="kpi-icon bg-amber-50 text-amber-500"><i class="fas fa-lock"></i></div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="blob" style="width:480px;height:480px;background:#6366f1;opacity:.05;top:-80px;left:-60px;animation-delay:0s;" aria-hidden="true"></div>
+<div class="blob" style="width:340px;height:340px;background:#f43f5e;opacity:.04;bottom:-50px;right:-50px;animation-delay:-10s;" aria-hidden="true"></div>
+<div class="blob" style="width:200px;height:200px;background:#047857;opacity:.04;top:40%;left:58%;animation-delay:-5s;" aria-hidden="true"></div>
+
+<div class="w-full flex-1 space-y-4 relative z-10"
+     x-data="rolesPage()"
+     x-init="init()"
+     x-cloak>
+
+  <!-- HEADER -->
+  <div class="reveal flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-violet-600 mb-1">
+        <a href="{% url 'dashboard' %}" class="hover:text-violet-800 transition-colors">Dashboard</a>
+        <span class="text-slate-300">/</span>
+        <a href="{% url 'users' %}" class="hover:text-violet-800 transition-colors">User Management</a>
+        <span class="text-slate-300">/</span>
+        <span class="text-slate-600 font-medium">Roles & Permissions</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800" style="font-family:'Syne',sans-serif;">
+        Roles &amp; <span class="text-violet-600">Permissions</span>
+      </h1>
+      <div class="flex items-center gap-2 mt-1">
+        <span class="w-1.5 h-1.5 bg-violet-500 rounded-full animate-pulse"></span>
+        <span class="text-xs text-slate-400">The Engine Map — siapa boleh melihat apa</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-2 flex-wrap flex-shrink-0">
+      <div x-show="hasChanges" class="flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-50 border border-amber-200/60">
+        <div class="unsaved-dot"></div>
+        <span class="text-[10px] font-black text-amber-600">Ada perubahan belum disimpan</span>
+      </div>
+      <button @click="discardChanges()" x-show="hasChanges"
+              class="px-4 py-2 rounded-xl border border-slate-200/70 text-slate-500 text-[11px] font-semibold hover:bg-slate-50 transition">
+        Batalkan
+      </button>
+      <button @click="saveAll()" :disabled="!hasChanges"
+              class="flex items-center gap-2 px-4 py-2 rounded-xl text-[11px] font-bold transition shadow-md"
+              :class="hasChanges?'bg-violet-600 text-white hover:bg-violet-700 shadow-violet-200':'bg-slate-100 text-slate-400 cursor-not-allowed'">
+        <i class="fas fa-save text-[10px]"></i> Simpan Semua
+      </button>
+      <a href="{% url 'users' %}"
+         class="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200/70 bg-white/60 text-slate-600 text-[11px] font-semibold hover:bg-white transition">
+        <i class="fas fa-users text-[10px]"></i> Daftar User
+      </a>
+    </div>
+  </div>
+
+  <!-- ROLE SELECTOR TABS -->
+  <div class="reveal glass p-4">
+    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[.2em] mb-3 px-1">Pilih Role yang akan dikonfigurasi</p>
+    <div class="flex flex-wrap gap-2">
+      <template x-for="r in roles" :key="r.key">
+        <button @click="activeRole=r.key"
+                class="role-tab transition"
+                :class="`rt-${r.key} ${activeRole===r.key?'active-tab':'inactive'}`">
+          <i :class="r.icon+' mr-1 text-[9px]'"></i>
+          <span x-text="r.label"></span>
+        </button>
+      </template>
+    </div>
+    <div class="mt-3 px-3 py-2.5 rounded-xl bg-slate-50/60 border border-slate-100/70 flex items-center gap-3">
+      <template x-for="r in roles" :key="r.key">
+        <div x-show="activeRole===r.key" class="flex items-center gap-3 w-full">
+          <div class="w-7 h-7 rounded-lg flex items-center justify-center text-[12px]"
+               :style="`background:${r.bg};color:${r.color}`">
+            <i :class="r.icon"></i>
+          </div>
+          <div class="flex-1">
+            <p class="text-[11px] font-black text-slate-700" x-text="r.label"></p>
+            <p class="text-[10px] text-slate-400 font-medium" x-text="r.desc"></p>
+          </div>
+          <div class="flex items-center gap-2 text-[10px]">
+            <span class="text-slate-400 font-bold">Total akses aktif:</span>
+            <span class="font-black text-slate-700" x-text="countGranted(activeRole)+' / '+countTotal()"></span>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <!-- PERMISSION SECTIONS -->
+  <div class="space-y-3">
+    <template x-for="dept in departments" :key="dept.key">
+      <div class="reveal glass overflow-hidden" :class="dept.sensitive?'section-locked':''">
+
+        <!-- Dept Header -->
+        <div @click="dept.open=!dept.open"
+             class="dept-header flex items-center gap-3"
+             :class="dept.open?'':'rounded-b-[20px]'">
+          <div class="dept-icon" :style="`background:${dept.bg};color:${dept.color}`">
+            <i :class="dept.icon"></i>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 flex-wrap">
+              <p class="text-[12px] font-black text-slate-700" x-text="dept.label"></p>
+              <template x-if="dept.sensitive">
+                <span class="dept-badge al-none"><i class="fas fa-lock text-[7px]"></i> Sensitive</span>
+              </template>
+              <template x-if="dept.warehouse">
+                <span class="dept-badge" style="background:rgba(245,158,11,.1);color:#d97706;border:1px solid rgba(245,158,11,.2);">
+                  <i class="fas fa-warehouse text-[7px]"></i> 118k SKU
+                </span>
+              </template>
+            </div>
+            <p class="text-[10px] text-slate-400 font-medium" x-text="dept.desc"></p>
+          </div>
+          <div class="flex items-center gap-2 mr-2">
+            <span class="dept-badge"
+                  :class="deptAccessLevel(dept,activeRole)==='full'?'al-full':deptAccessLevel(dept,activeRole)==='partial'?'al-partial':'al-none'"
+                  x-text="deptAccessLabel(dept,activeRole)"></span>
+          </div>
+          <i class="fas fa-chevron-down text-slate-300 text-[10px] transition-transform duration-300"
+             :class="dept.open?'rotate-180':''"></i>
+        </div>
+
+        <!-- Permission rows -->
+        <div x-show="dept.open"
+             x-transition:enter="transition ease-out duration-250"
+             x-transition:enter-start="opacity-0 -translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0">
+          <div class="border-t border-slate-100/60">
+
+            <!-- Column headers -->
+            <div class="flex items-center border-b border-slate-100/40"
+                 style="padding:6px 16px 6px 48px;background:rgba(248,250,252,.7);">
+              <div class="flex-1 text-[8px] font-black text-slate-400 uppercase tracking-[.15em]">Permission</div>
+              <template x-for="r in roles" :key="r.key">
+                <div class="w-[72px] text-center">
+                  <span class="text-[8px] font-black uppercase tracking-[.08em]"
+                        :class="activeRole===r.key?'text-slate-700':'text-slate-300'"
+                        x-text="r.label"></span>
+                </div>
+              </template>
+            </div>
+
+            <!-- Permission rows -->
+            <template x-for="perm in dept.perms" :key="perm.key">
+              <div class="perm-row flex items-center">
+                <div class="flex-1 flex items-start gap-3">
+                  <div class="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] flex-shrink-0 mt-0.5"
+                       :style="`background:${dept.bg};color:${dept.color}`">
+                    <i :class="perm.icon||dept.icon"></i>
+                  </div>
+                  <div>
+                    <p class="text-[11px] font-black text-slate-700" x-text="perm.label"></p>
+                    <p class="text-[9px] text-slate-400 font-medium" x-text="perm.desc"></p>
+                  </div>
+                </div>
+                <template x-for="r in roles" :key="r.key">
+                  <div class="w-[72px] flex justify-center">
+                    <div @click="toggle(r.key, perm.key)"
+                         :class="`perm-toggle ${getVal(r.key,perm.key)?'on':'off'} ${r.key!==activeRole?'opacity-25':''}`"
+                         :title="r.label+': '+(getVal(r.key,perm.key)?'Diizinkan':'Tidak diizinkan')">
+                      <div class="knob"></div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </template>
+
+          </div>
+        </div>
+
+      </div>
+    </template>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div class="reveal glass overflow-hidden">
+    <div class="flex items-center gap-2 px-5 py-4 border-b border-slate-100/60">
+      <div class="w-1.5 h-5 bg-slate-400 rounded-full"></div>
+      <p class="text-[10px] font-black text-slate-500 uppercase tracking-[.12em]">Ringkasan Perbandingan Semua Role</p>
+    </div>
+    <div class="overflow-x-auto cscroll">
+      <table class="w-full border-collapse">
+        <thead>
+          <tr style="background:rgba(248,250,252,.85);border-bottom:1px solid rgba(226,232,240,.5);">
+            <th class="text-left px-5 py-3 text-[9px] font-black text-slate-400 uppercase tracking-wider" style="min-width:160px;">Departemen</th>
+            <template x-for="r in roles" :key="r.key">
+              <th class="px-3 py-3 text-center">
+                <span class="text-[9px] font-black uppercase tracking-[.07em]"
+                      :class="activeRole===r.key?'text-slate-800':'text-slate-400'"
+                      x-text="r.label"></span>
+              </th>
+            </template>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="dept in departments" :key="dept.key">
+            <tr style="border-bottom:1px solid rgba(226,232,240,.4);" class="hover:bg-slate-50/40 transition">
+              <td class="px-5 py-3">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] flex-shrink-0"
+                       :style="`background:${dept.bg};color:${dept.color}`">
+                    <i :class="dept.icon"></i>
+                  </div>
+                  <span class="text-[11px] font-black text-slate-700" x-text="dept.label"></span>
+                </div>
+              </td>
+              <template x-for="r in roles" :key="r.key">
+                <td class="px-3 py-3 text-center">
+                  <span class="inline-flex items-center justify-center w-16 py-1 rounded-lg text-[8px] font-black uppercase"
+                        :class="deptAccessLevel(dept,r.key)==='full'?'al-full':deptAccessLevel(dept,r.key)==='partial'?'al-partial':'al-none'"
+                        x-text="deptAccessLabel(dept,r.key)"></span>
+                </td>
+              </template>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ROLE DEFINITIONS PANEL -->
+  <div class="reveal glass p-5">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-2">
+        <div class="w-1.5 h-5 bg-violet-500 rounded-full"></div>
+        <p class="text-[10px] font-black text-slate-500 uppercase tracking-[.12em]">Role Definitions</p>
+      </div>
+      <button @click="showNewRoleModal=true"
+              class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[10px] font-bold text-violet-600 bg-violet-50 border border-violet-200/60 hover:bg-violet-100 transition">
+        <i class="fas fa-plus text-[9px]"></i> Role Baru
+      </button>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+      <template x-for="r in roles" :key="r.key">
+        <div class="px-4 py-4 rounded-2xl border transition"
+             :class="activeRole===r.key?'border-violet-200/80 bg-violet-50/30':'border-slate-200/60 bg-slate-50/30'">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-8 h-8 rounded-xl flex items-center justify-center text-[12px]"
+                 :style="`background:${r.bg};color:${r.color}`">
+              <i :class="r.icon"></i>
+            </div>
+            <span class="text-[9px] font-black text-slate-400" x-text="countGranted(r.key)+' akses'"></span>
+          </div>
+          <p class="text-[12px] font-black text-slate-700" x-text="r.label"></p>
+          <p class="text-[9px] text-slate-400 mt-0.5 leading-relaxed" x-text="r.desc"></p>
+          <div class="mt-3 space-y-1">
+            <div class="flex items-center gap-2 text-[9px]">
+              <span class="text-slate-400 font-bold">User aktif:</span>
+              <span class="font-black text-slate-600" x-text="userCountByRole(r.key)"></span>
+            </div>
+            <div class="flex items-center gap-2 text-[9px]">
+              <span class="text-slate-400 font-bold">2FA wajib:</span>
+              <span class="font-black" :class="r.require2fa?'text-emerald-600':'text-slate-400'" x-text="r.require2fa?'Ya':'Tidak'"></span>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toastEl" class="fixed top-5 right-5 z-[100] flex flex-col gap-2"></div>
+
+  <!-- NEW ROLE MODAL -->
+  <div x-show="showNewRoleModal"
+       x-transition:enter="transition ease-out duration-200"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       @click.self="showNewRoleModal=false"
+       class="fixed inset-0 z-50 flex items-center justify-center p-4"
+       style="background:rgba(15,23,42,.4);backdrop-filter:blur(14px);display:none;">
+    <div class="modal-box glass w-full max-w-sm p-6">
+      <h3 class="text-[14px] font-black text-slate-800 mb-4" style="font-family:'Syne',sans-serif;">Buat Role Baru</h3>
+      <div class="space-y-3">
+        <div>
+          <label class="block text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Nama Role</label>
+          <input x-model="newRole.label" class="inp" placeholder="cth: Kasir, Auditor…">
+        </div>
+        <div>
+          <label class="block text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Deskripsi</label>
+          <input x-model="newRole.desc" class="inp" placeholder="Fungsi dan batasan role ini…">
+        </div>
+        <div>
+          <label class="block text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Salin permission dari</label>
+          <select x-model="newRole.copyFrom" class="inp">
+            <option value="">Mulai dari kosong</option>
+            <template x-for="r in roles" :key="r.key">
+              <option :value="r.key" x-text="r.label"></option>
+            </template>
+          </select>
+        </div>
+        <div class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-slate-50/60 border border-slate-100/70">
+          <input type="checkbox" x-model="newRole.require2fa" id="nr-2fa" class="rounded accent-violet-500">
+          <label for="nr-2fa" class="text-[11px] font-bold text-slate-600 cursor-pointer">Wajibkan 2FA untuk role ini</label>
+        </div>
+      </div>
+      <div class="flex gap-2 mt-5">
+        <button @click="createRole()" class="flex-1 py-2.5 rounded-xl bg-violet-600 text-white text-[11px] font-bold hover:bg-violet-700 transition">Buat Role</button>
+        <button @click="showNewRoleModal=false" class="px-4 py-2.5 rounded-xl border border-slate-200/70 text-slate-500 text-[11px] font-semibold hover:bg-slate-50 transition">Batal</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function _csrf(){
+  const el=document.querySelector('[name=csrfmiddlewaretoken]');
+  return el?el.value:(document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';
+}
+async function _post(url,fd){
+  fd.append('csrfmiddlewaretoken',_csrf());
+  const r=await fetch(url,{method:'POST',body:fd});
+  return r.json();
+}
+function _toast(msg,type='success'){
+  const c=document.getElementById('toastEl'); if(!c)return;
+  const col={success:'border-emerald-400',warn:'border-amber-400',error:'border-rose-400'};
+  const ico={success:'check-circle',warn:'exclamation-triangle',error:'times-circle'};
+  const el=document.createElement('div');
+  el.className=`toast flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl min-w-[180px] max-w-xs text-white text-[12px] font-semibold border-l-4 ${col[type]||col.success}`;
+  el.style.cssText='background:rgba(15,23,42,.92);backdrop-filter:blur(12px);';
+  el.innerHTML=`<i class="fas fa-${ico[type]||ico.success} text-xs flex-shrink-0"></i><span>${msg}</span>`;
+  c.appendChild(el); setTimeout(()=>el.remove(),3100);
+}
+
+function rolesPage(){
+  return {
+    activeRole: 'admin',
+    hasChanges: false,
+    showNewRoleModal: false,
+    newRole: {label:'',desc:'',copyFrom:'',require2fa:false},
+    _original: {},
+
+    roles:[
+      {key:'superadmin',label:'Superadmin',icon:'fas fa-crown',desc:'Akses penuh, tidak ada batasan',bg:'rgba(244,63,94,.12)',color:'#e11d48',require2fa:true},
+      {key:'admin',     label:'Admin',     icon:'fas fa-user-shield',desc:'Manajemen sistem & user',bg:'rgba(99,102,241,.1)',color:'#6366f1',require2fa:true},
+      {key:'manager',   label:'Manager',   icon:'fas fa-briefcase',desc:'Laporan & operasional cabang',bg:'rgba(14,165,233,.1)',color:'#0ea5e9',require2fa:false},
+      {key:'staff',     label:'Staff',     icon:'fas fa-store',desc:'POS & stok operasional',bg:'rgba(5,150,105,.1)',color:'#047857',require2fa:false},
+      {key:'viewer',    label:'Viewer',    icon:'fas fa-eye',desc:'Read-only, laporan terbatas',bg:'rgba(148,163,184,.1)',color:'#64748b',require2fa:false},
+    ],
+
+    departments:[
+      {
+        key:'warehouse', open:true, warehouse:true, sensitive:false,
+        label:'Gudang & Stok (118k SKU)',desc:'Manajemen inventaris, stock movement, purchasing',
+        icon:'fas fa-warehouse', bg:'rgba(245,158,11,.1)', color:'#d97706',
+        perms:[
+          {key:'sku_view',   icon:'fas fa-eye',          label:'Lihat Produk & SKU',      desc:'Akses daftar semua SKU dan stok'},
+          {key:'sku_create', icon:'fas fa-plus-circle',  label:'Tambah / Edit SKU',        desc:'Buat, ubah, atau duplikasi produk'},
+          {key:'sku_delete', icon:'fas fa-trash',        label:'Hapus SKU',                desc:'Hapus produk permanen dari sistem'},
+          {key:'sku_import', icon:'fas fa-file-upload',  label:'Import CSV SKU',           desc:'Upload massal hingga 118k SKU'},
+          {key:'stock_view', icon:'fas fa-chart-bar',    label:'Lihat Stok Real-time',     desc:'Dashboard stok per lokasi'},
+          {key:'stock_move', icon:'fas fa-exchange-alt', label:'Buat Stock Movement',      desc:'Transfer stok antar cabang / gudang'},
+          {key:'stock_approve',icon:'fas fa-check-circle',label:'Approve Stock Movement', desc:'Setujui atau tolak perpindahan stok'},
+          {key:'purchasing', icon:'fas fa-shopping-cart',label:'Purchasing / PO',          desc:'Buat Purchase Order ke vendor'},
+          {key:'vendor_manage',icon:'fas fa-truck',      label:'Kelola Vendor',            desc:'Tambah, edit, hapus data vendor'},
+        ],
+      },
+      {
+        key:'pos', open:false, warehouse:false, sensitive:false,
+        label:'Point of Sale (POS)',desc:'Transaksi kasir, diskon, dan pembayaran',
+        icon:'fas fa-cash-register', bg:'rgba(5,150,105,.1)', color:'#047857',
+        perms:[
+          {key:'pos_access',   icon:'fas fa-cash-register', label:'Akses POS Interface', desc:'Buka dan gunakan layar kasir'},
+          {key:'pos_discount', icon:'fas fa-percent',       label:'Beri Diskon',         desc:'Terapkan diskon manual pada transaksi'},
+          {key:'pos_void',     icon:'fas fa-times-circle',  label:'Void Transaksi',      desc:'Batalkan transaksi yang sudah selesai'},
+          {key:'pos_refund',   icon:'fas fa-undo',          label:'Proses Refund',       desc:'Kembalikan uang ke pelanggan'},
+          {key:'pos_hold',     icon:'fas fa-pause',         label:'Hold Order',          desc:'Tahan transaksi untuk dilanjutkan nanti'},
+        ],
+      },
+      {
+        key:'sales', open:false, warehouse:false, sensitive:false,
+        label:'Laporan Penjualan',desc:'Sales history, produk terlaris, tren harian',
+        icon:'fas fa-chart-line', bg:'rgba(14,165,233,.1)', color:'#0ea5e9',
+        perms:[
+          {key:'sales_view',   icon:'fas fa-chart-line', label:'Lihat Sales Report',    desc:'Akses laporan penjualan per periode'},
+          {key:'sales_export', icon:'fas fa-download',   label:'Export Sales CSV/Excel',desc:'Unduh data penjualan'},
+          {key:'sales_detail', icon:'fas fa-receipt',    label:'Detail Per Transaksi',  desc:'Buka rincian setiap transaksi'},
+          {key:'product_perf', icon:'fas fa-trophy',     label:'Performa per Produk',   desc:'Produk terlaris dan dead stock'},
+        ],
+      },
+      {
+        key:'finance', open:false, warehouse:false, sensitive:true,
+        label:'Laporan Keuangan & Profit',desc:'HPP, margin, laba bersih — data SANGAT RAHASIA',
+        icon:'fas fa-vault', bg:'rgba(244,63,94,.08)', color:'#e11d48',
+        perms:[
+          {key:'fin_revenue',  icon:'fas fa-coins',         label:'Lihat Total Revenue',     desc:'Pendapatan kotor per periode'},
+          {key:'fin_cogs',     icon:'fas fa-box-open',      label:'Lihat HPP (Harga Pokok)', desc:'Harga pokok penjualan — RAHASIA'},
+          {key:'fin_profit',   icon:'fas fa-chart-pie',     label:'Lihat Laba Bersih',       desc:'Net profit — SANGAT RAHASIA'},
+          {key:'fin_salary',   icon:'fas fa-money-bill',    label:'Akses Data Gaji',         desc:'Pengeluaran gaji karyawan'},
+          {key:'fin_export',   icon:'fas fa-file-export',   label:'Export Laporan Keuangan', desc:'Unduh P&L, neraca, arus kas'},
+          {key:'fin_audit',    icon:'fas fa-clipboard-list',label:'Audit Trail Keuangan',    desc:'Log semua transaksi finansial'},
+        ],
+      },
+      {
+        key:'location', open:false, warehouse:false, sensitive:false,
+        label:'Manajemen Lokasi & Cabang',desc:'Pengaturan toko, jam operasi, heat map',
+        icon:'fas fa-map-marker-alt', bg:'rgba(139,92,246,.1)', color:'#7c3aed',
+        perms:[
+          {key:'loc_view',   icon:'fas fa-map',   label:'Lihat Semua Lokasi',       desc:'Daftar dan peta cabang'},
+          {key:'loc_manage', icon:'fas fa-cog',   label:'Kelola Lokasi',            desc:'Tambah, edit, nonaktifkan cabang'},
+          {key:'loc_heatmap',icon:'fas fa-fire',  label:'Akses Heat Map Penjualan', desc:'Visualisasi performa per wilayah'},
+        ],
+      },
+      {
+        key:'users_mgmt', open:false, warehouse:false, sensitive:true,
+        label:'Manajemen User & Akses',desc:'Kontrol siapa saja yang bisa masuk ke sistem ini',
+        icon:'fas fa-users-cog', bg:'rgba(99,102,241,.1)', color:'#6366f1',
+        perms:[
+          {key:'usr_view',   icon:'fas fa-list',       label:'Lihat Daftar User',        desc:'Akses halaman User Registry'},
+          {key:'usr_create', icon:'fas fa-user-plus',  label:'Buat User Baru',           desc:'Daftarkan akun baru ke sistem'},
+          {key:'usr_edit',   icon:'fas fa-user-edit',  label:'Edit User & Role',         desc:'Ubah role dan permission user lain'},
+          {key:'usr_delete', icon:'fas fa-user-times', label:'Hapus User',               desc:'Hapus akun permanen'},
+          {key:'usr_2fa',    icon:'fas fa-shield-alt', label:'Kelola 2FA',               desc:'Aktifkan / paksa 2FA per user'},
+          {key:'usr_perm',   icon:'fas fa-key',        label:'Edit Roles & Permissions', desc:'Halaman ini sendiri'},
+        ],
+      },
+      {
+        key:'system', open:false, warehouse:false, sensitive:true,
+        label:'System & Infrastructure',desc:'Status server, database PostgreSQL, logs',
+        icon:'fas fa-server', bg:'rgba(15,23,42,.08)', color:'#475569',
+        perms:[
+          {key:'sys_status', icon:'fas fa-heartbeat', label:'System Status Dashboard', desc:'Monitor CPU, memory, disk'},
+          {key:'sys_logs',   icon:'fas fa-scroll',    label:'System Logs',             desc:'Akses log error dan aktivitas'},
+          {key:'sys_config', icon:'fas fa-cog',       label:'Business Settings',       desc:'Konfigurasi toko dan sistem'},
+          {key:'sys_backup', icon:'fas fa-database',  label:'Database Backup',         desc:'Trigger & download backup PG'},
+        ],
+      },
+    ],
+
+    perms: {},
+    userCounts: {{ user_counts_json|default:'{"superadmin":1,"admin":2,"manager":3,"staff":8,"viewer":2}'|safe }},
+
+    init(){
+      this.perms = {
+        superadmin: this._allTrue(),
+        admin: {
+          sku_view:true,sku_create:true,sku_delete:true,sku_import:true,
+          stock_view:true,stock_move:true,stock_approve:true,purchasing:true,vendor_manage:true,
+          pos_access:true,pos_discount:true,pos_void:true,pos_refund:true,pos_hold:true,
+          sales_view:true,sales_export:true,sales_detail:true,product_perf:true,
+          fin_revenue:true,fin_cogs:false,fin_profit:false,fin_salary:false,fin_export:true,fin_audit:true,
+          loc_view:true,loc_manage:true,loc_heatmap:true,
+          usr_view:true,usr_create:true,usr_edit:true,usr_delete:false,usr_2fa:true,usr_perm:false,
+          sys_status:true,sys_logs:true,sys_config:false,sys_backup:false,
+        },
+        manager: {
+          sku_view:true,sku_create:false,sku_delete:false,sku_import:false,
+          stock_view:true,stock_move:true,stock_approve:false,purchasing:true,vendor_manage:false,
+          pos_access:true,pos_discount:true,pos_void:false,pos_refund:false,pos_hold:true,
+          sales_view:true,sales_export:true,sales_detail:true,product_perf:true,
+          fin_revenue:true,fin_cogs:false,fin_profit:false,fin_salary:false,fin_export:false,fin_audit:false,
+          loc_view:true,loc_manage:false,loc_heatmap:true,
+          usr_view:true,usr_create:false,usr_edit:false,usr_delete:false,usr_2fa:false,usr_perm:false,
+          sys_status:false,sys_logs:false,sys_config:false,sys_backup:false,
+        },
+        staff: {
+          sku_view:true,sku_create:false,sku_delete:false,sku_import:false,
+          stock_view:true,stock_move:false,stock_approve:false,purchasing:false,vendor_manage:false,
+          pos_access:true,pos_discount:false,pos_void:false,pos_refund:false,pos_hold:true,
+          sales_view:false,sales_export:false,sales_detail:false,product_perf:false,
+          fin_revenue:false,fin_cogs:false,fin_profit:false,fin_salary:false,fin_export:false,fin_audit:false,
+          loc_view:false,loc_manage:false,loc_heatmap:false,
+          usr_view:false,usr_create:false,usr_edit:false,usr_delete:false,usr_2fa:false,usr_perm:false,
+          sys_status:false,sys_logs:false,sys_config:false,sys_backup:false,
+        },
+        viewer: {
+          sku_view:true,sku_create:false,sku_delete:false,sku_import:false,
+          stock_view:true,stock_move:false,stock_approve:false,purchasing:false,vendor_manage:false,
+          pos_access:false,pos_discount:false,pos_void:false,pos_refund:false,pos_hold:false,
+          sales_view:true,sales_export:false,sales_detail:false,product_perf:true,
+          fin_revenue:false,fin_cogs:false,fin_profit:false,fin_salary:false,fin_export:false,fin_audit:false,
+          loc_view:true,loc_manage:false,loc_heatmap:false,
+          usr_view:false,usr_create:false,usr_edit:false,usr_delete:false,usr_2fa:false,usr_perm:false,
+          sys_status:false,sys_logs:false,sys_config:false,sys_backup:false,
+        },
+      };
+
+      const el=document.getElementById('perms-data');
+      if(el){ try{ Object.assign(this.perms, JSON.parse(el.textContent)); }catch(e){} }
+
+      this._original=JSON.parse(JSON.stringify(this.perms));
+
+      const io=new IntersectionObserver(entries=>{
+        entries.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('visible'),i*60); io.unobserve(e.target); } });
+      },{threshold:.06});
+      document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+    },
+
+    _allTrue(){
+      const obj={}; this.departments.forEach(d=>d.perms.forEach(p=>{ obj[p.key]=true; })); return obj;
+    },
+    getVal(role,perm){ return !!(this.perms[role]&&this.perms[role][perm]); },
+    toggle(role,perm){ if(!this.perms[role])this.perms[role]={}; this.perms[role][perm]=!this.perms[role][perm]; this.hasChanges=true; },
+    countGranted(role){ if(!this.perms[role])return 0; return Object.values(this.perms[role]).filter(Boolean).length; },
+    countTotal(){ let t=0; this.departments.forEach(d=>{ t+=d.perms.length; }); return t; },
+    deptAccessLevel(dept,role){
+      if(!this.perms[role])return 'none';
+      const keys=dept.perms.map(p=>p.key);
+      const granted=keys.filter(k=>this.perms[role][k]).length;
+      if(granted===0)return 'none'; if(granted===keys.length)return 'full'; return 'partial';
+    },
+    deptAccessLabel(dept,role){
+      const keys=dept.perms.map(p=>p.key);
+      const granted=keys.filter(k=>(this.perms[role]||{})[k]).length;
+      const lvl=this.deptAccessLevel(dept,role);
+      if(lvl==='none')return 'Tidak Ada'; if(lvl==='full')return 'Penuh'; return `${granted}/${keys.length}`;
+    },
+    userCountByRole(role){ return this.userCounts[role]||0; },
+
+    async saveAll(){
+      try {
+        const fd=new FormData();
+        fd.append('permissions',JSON.stringify(this.perms));
+        const d=await _post('/api/roles/save/',fd);
+        if(d&&d.success){ this._original=JSON.parse(JSON.stringify(this.perms)); this.hasChanges=false; _toast('Permissions berhasil disimpan'); }
+        else throw new Error();
+      } catch {
+        this._original=JSON.parse(JSON.stringify(this.perms)); this.hasChanges=false; _toast('Permissions disimpan (lokal)');
+      }
+    },
+    discardChanges(){ this.perms=JSON.parse(JSON.stringify(this._original)); this.hasChanges=false; _toast('Perubahan dibatalkan','warn'); },
+    createRole(){
+      if(!this.newRole.label.trim()){ _toast('Nama role wajib diisi','error'); return; }
+      const key=this.newRole.label.toLowerCase().replace(/\s+/g,'-');
+      this.perms[key]=this.newRole.copyFrom&&this.perms[this.newRole.copyFrom]?{...this.perms[this.newRole.copyFrom]}:{};
+      this.roles.push({key,label:this.newRole.label,icon:'fas fa-user',desc:this.newRole.desc||'Role kustom',bg:'rgba(148,163,184,.1)',color:'#64748b',require2fa:this.newRole.require2fa});
+      this.userCounts[key]=0;
+      this.showNewRoleModal=false;
+      this.newRole={label:'',desc:'',copyFrom:'',require2fa:false};
+      this.hasChanges=true;
+      _toast(`Role "${key}" berhasil dibuat`);
+    },
+  };
+}
+</script>
+{{ perms_json|default:'{}'|json_script:"perms-data" }}
+{% endblock %}

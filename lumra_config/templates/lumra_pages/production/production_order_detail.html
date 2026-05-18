@@ -1,0 +1,167 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}Kontrol Produksi - CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .control-panel { background: rgba(255,255,255,0.95); border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.08); border: 1px solid white; }
+  .big-status { font-size: 3rem; font-weight: 900; line-height: 1; }
+  .st-pending { color: #94a3b8; }
+  .st-in_progress { color: #2563eb; }
+  .st-completed { color: #16a34a; }
+  .control-btn { height: 60px; border-radius: 16px; font-weight: 800; font-size: 16px; transition: all 0.2s; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; }
+  .btn-start { background: #10b981; color: white; }
+  .btn-stop { background: #ef4444; color: white; }
+  .btn-complete { background: #0f172a; color: white; }
+  .progress-circle { width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(#0f172a var(--pct), #e2e8f0 0); display: flex; align-items: center; justify-content: center; position: relative; }
+  .progress-circle::before { content:''; position:absolute; width:100px; height:100px; background:white; border-radius:50%; }
+  .progress-text { position:relative; z-index:10; text-align:center; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-5xl mx-auto relative z-10" x-data="poDetailApp()" x-init="init()" x-cloak>
+  <div class="control-panel p-8 space-y-8">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-100 pb-6">
+      <div>
+        <h1 class="text-3xl font-black text-slate-800" x-text="po.product"></h1>
+        <p class="text-slate-500 font-mono mt-1" x-text="po.code + ' • Line: ' + po.line"></p>
+      </div>
+      <div class="text-right mt-4 md:mt-0">
+        <p class="text-xs font-bold text-slate-400 uppercase mb-1">Status Saat Ini</p>
+        <div class="big-status" :class="'st-' + po.status" x-text="formatStatus(po.status)"></div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+      <div class="flex justify-center">
+        <div class="progress-circle" :style="`--pct:${progressPct}%`">
+          <div class="progress-text">
+            <p class="text-xs text-slate-400 font-bold uppercase">Selesai</p>
+            <p class="text-2xl font-black text-slate-800" x-text="po.produced_qty"></p>
+            <p class="text-xs text-slate-400">/ <span x-text="po.target_qty"></span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-2 space-y-6">
+        <div class="grid grid-cols-2 gap-4">
+          <template x-if="po.status === 'pending'">
+            <button @click="startPO()" class="control-btn btn-start col-span-2"><i class="fas fa-play"></i> MULAI PRODUKSI</button>
+          </template>
+          <template x-if="po.status === 'in_progress'">
+            <div class="col-span-2 grid grid-cols-[80px_1fr_80px] gap-3">
+              <button @click="updateQty(-1)" class="h-14 rounded-xl bg-slate-100 text-slate-600 font-bold text-xl hover:bg-slate-200 transition">-</button>
+              <input aria-label="Input" type="number" x-model.number="po.produced_qty" min="0" :max="po.target_qty + 10" @change="saveManualQty()" class="h-14 rounded-xl border border-slate-200 bg-white text-center text-xl font-bold text-slate-800 outline-none focus:border-slate-400">
+              <button @click="updateQty(1)" class="h-14 rounded-xl bg-slate-100 text-slate-600 font-bold text-xl hover:bg-slate-200 transition">+</button>
+            </div>
+          </template>
+          <template x-if="po.status === 'in_progress'">
+            <button @click="pausePO()" class="control-btn btn-stop"><i class="fas fa-pause"></i> JEDA / STOP</button>
+          </template>
+          <template x-if="po.status === 'in_progress'">
+            <button @click="completePO()" :disabled="po.produced_qty < po.target_qty" class="control-btn btn-complete disabled:opacity-50"><i class="fas fa-check"></i> SELESAIKAN</button>
+          </template>
+          <template x-if="po.status === 'completed'">
+            <div class="col-span-2 bg-emerald-50 border border-emerald-100 rounded-xl p-4 text-center">
+              <i class="fas fa-check-circle text-3xl text-emerald-500 mb-2"></i>
+              <p class="font-bold text-emerald-800">Produksi Selesai</p>
+              <p class="text-xs text-emerald-600">Lanjutkan ke material consumption, waste, dan finished goods receipt.</p>
+            </div>
+          </template>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 text-sm">
+          <div class="bg-slate-50 p-3 rounded-xl">
+            <p class="text-xs text-slate-400 font-bold uppercase">Waktu Mulai</p>
+            <p class="font-bold text-slate-700" x-text="po.actual_start || '-'"></p>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-xl">
+            <p class="text-xs text-slate-400 font-bold uppercase">Scheduled Date</p>
+            <p class="font-bold text-slate-700" x-text="po.scheduled_date || '-'"></p>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-xl col-span-2">
+            <p class="text-xs text-slate-400 font-bold uppercase">Catatan Operator</p>
+            <p class="text-slate-600" x-text="po.notes || '-'"></p>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-4 rounded-xl">
+          <p class="text-xs font-bold uppercase text-slate-400 mb-3">Bahan yang Dibutuhkan</p>
+          <div class="text-sm text-slate-500">Detail bahan BOM belum dikirim dari backend untuk halaman ini.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t border-slate-100 pt-6 flex flex-wrap justify-between items-center gap-3">
+      <a href="{% url 'production_order_list' %}" class="text-slate-500 hover:text-slate-800 font-bold text-sm">Kembali ke Daftar</a>
+      <div class="flex gap-2" x-show="po.status === 'completed'">
+        <a href="{% url 'material_consumption' %}" class="bg-emerald-600 text-white px-4 py-3 rounded-xl font-bold shadow hover:bg-emerald-700 transition">Material Consumption</a>
+        <a href="{% url 'production_waste' %}" class="border border-slate-200 px-4 py-3 rounded-xl font-bold text-slate-600 hover:bg-slate-50 transition">Waste</a>
+        <a href="{% url 'finished_goods_receipt' %}" class="border border-slate-200 px-4 py-3 rounded-xl font-bold text-slate-600 hover:bg-slate-50 transition">Finished Goods</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+{{ po_data|json_script:"po-data" }}
+<script>
+function poDetailApp() {
+  return {
+    po: {},
+    get progressPct() {
+      if (!this.po.target_qty) return '0%';
+      return `${Math.min(((Number(this.po.produced_qty || 0) / Number(this.po.target_qty || 1)) * 100), 100).toFixed(1)}%`;
+    },
+    init() {
+      const el = document.getElementById('po-data');
+      if (!el || !el.textContent) return;
+      try {
+        const po = JSON.parse(el.textContent) || {};
+        this.po = {
+          id: po.id,
+          code: po.code,
+          product: po.product,
+          line: po.line || '',
+          target_qty: Number(po.target_qty || 0),
+          produced_qty: Number(po.produced_qty || 0),
+          status: po.status || 'pending',
+          actual_start: po.started_at || '',
+          scheduled_date: po.scheduled_date || '',
+          notes: po.notes || '',
+        };
+      } catch (error) {
+        this.po = {};
+      }
+    },
+    formatStatus(status) {
+      return String(status || '').replace('_', ' ');
+    },
+    startPO() {
+      if (!confirm('Mulai produksi sekarang?')) return;
+      this.po.status = 'in_progress';
+      this.po.actual_start = new Date().toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    },
+    pausePO() {
+      if (!confirm('Jeda produksi?')) return;
+      this.po.status = 'pending';
+    },
+    updateQty(delta) {
+      const nextQty = Number(this.po.produced_qty || 0) + delta;
+      if (nextQty < 0 || nextQty > Number(this.po.target_qty || 0) + 10) return;
+      this.po.produced_qty = nextQty;
+    },
+    saveManualQty() {
+      const nextQty = Number(this.po.produced_qty || 0);
+      if (nextQty < 0) this.po.produced_qty = 0;
+    },
+    completePO() {
+      if (!confirm(`Selesaikan produksi ini? Total ${this.po.produced_qty} unit akan dicatat sebagai output.`)) return;
+      this.po.status = 'completed';
+    },
+  }
+}
+</script>
+{% endblock %}

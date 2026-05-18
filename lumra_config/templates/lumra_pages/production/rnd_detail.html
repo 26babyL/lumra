@@ -1,0 +1,318 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}Detail Formula RnD - CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-panel {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.95);
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    padding: 24px;
+  }
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #94a3b8;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 10px;
+    margin-bottom: 16px;
+  }
+  .badge { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 99px; text-transform: uppercase; }
+  .badge-idea { background: #ede9fe; color: #5b21b6; }
+  .badge-in_trial { background: #fef3c7; color: #92400e; }
+  .badge-review { background: #dbeafe; color: #1e40af; }
+  .badge-approved { background: #dcfce7; color: #166534; }
+  .trial-tab {
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    background: transparent;
+    border: 1px solid #e2e8f0;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .trial-tab.active { background: #ede9fe; color: #5b21b6; border-color: #c4b5fd; }
+  .flavor-bar-bg { height: 6px; background: #f1f5f9; border-radius: 99px; overflow: hidden; }
+  .flavor-bar-fill { height: 100%; border-radius: 99px; transition: width 0.6s ease; }
+  .compare-col { border-radius: 12px; padding: 14px; }
+  .compare-col.best { background: #f0fdf4; border: 1px solid #86efac; }
+  .compare-col.default { background: #f8fafc; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-6xl mx-auto relative z-10 space-y-6"
+     x-data="rndDetailApp()"
+     x-init="init()"
+     data-status-url="{% url 'rnd_status_update' 0 %}"
+     data-promote-url="{% url 'rnd_promote' 0 %}"
+     data-trial-url="{% url 'rnd_trial_new' 0 %}"
+     x-cloak>
+  <div class="flex items-start justify-between">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-2">
+        <a href="{% url 'rnd_list' %}" class="hover:text-slate-800">Lab RnD</a>
+        <span>/</span>
+        <span class="text-slate-800 font-medium" x-text="rnd.name"></span>
+      </nav>
+      <div class="flex items-center gap-3 mb-1">
+        <span class="badge" :class="'badge-' + rnd.status" x-text="statusLabel"></span>
+        <h1 class="text-2xl font-bold text-slate-800" x-text="rnd.name"></h1>
+      </div>
+      <p class="text-sm text-slate-500">
+        Dibuat <span x-text="rnd.created_at"></span> oleh <span class="font-medium" x-text="rnd.created_by"></span>
+        • Trial <span x-text="rnd.trial_count"></span> dari <span x-text="rnd.planned_trials"></span>
+      </p>
+    </div>
+    <div class="flex gap-2 flex-shrink-0">
+      <a :href="`{% url 'rnd_form' %}?edit=${rnd.id}`" class="px-4 py-2 border border-slate-200 text-slate-600 rounded-lg text-sm font-bold hover:bg-slate-50">Edit Formula</a>
+      <button @click="addTrial()" class="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm font-bold shadow hover:bg-amber-600">
+        <i class="fas fa-plus mr-1"></i> Tambah Trial
+      </button>
+      <button x-show="rnd.status === 'approved'" @click="promoteToBOM()" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-bold shadow hover:bg-emerald-700">
+        <i class="fas fa-arrow-right mr-1"></i> Promote ke BOM
+      </button>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-2 flex-wrap" x-show="rnd.tags && rnd.tags.length">
+    <template x-for="tag in rnd.tags" :key="tag">
+      <span class="text-[11px] font-bold px-3 py-1 rounded-full bg-violet-100 text-violet-700" x-text="tag"></span>
+    </template>
+    <span class="text-xs text-slate-400 ml-1" x-show="rnd.based_on">Berdasarkan: <span class="font-medium text-slate-600" x-text="rnd.based_on"></span></span>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 space-y-6">
+      <div class="glass-panel">
+        <div class="section-title">Tasting Notes per Trial</div>
+        <div class="flex gap-2 flex-wrap mb-5">
+          <template x-for="trial in rnd.trials" :key="trial.id">
+            <button class="trial-tab" :class="activeTrial && activeTrial.id === trial.id ? 'active' : ''" @click="activeTrial = trial">
+              Trial #<span x-text="trial.number"></span>
+            </button>
+          </template>
+        </div>
+
+        <template x-if="activeTrial">
+          <div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-5">
+              <template x-for="dim in flavorDimensions" :key="dim.key">
+                <div>
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="text-xs text-slate-500" x-text="dim.label"></span>
+                    <div class="flex items-center gap-1">
+                      <span class="text-[10px] text-slate-300 font-mono" x-text="'H:' + (getHypothesis(dim.key) ?? '-')"></span>
+                      <span class="text-xs font-bold" :style="`color:${dim.color}`" x-text="(activeTrial.tasting[dim.key] ?? '-') + (activeTrial.tasting[dim.key] !== undefined ? '/10' : '')"></span>
+                    </div>
+                  </div>
+                  <div class="flavor-bar-bg">
+                    <div class="flavor-bar-fill" :style="`width:${(activeTrial.tasting[dim.key] || 0) * 10}%; background:${dim.color}`"></div>
+                  </div>
+                </div>
+              </template>
+            </div>
+            <div class="bg-slate-50 rounded-xl p-4 mb-4">
+              <p class="text-xs font-bold text-slate-400 mb-1">Catatan Tester</p>
+              <p class="text-sm text-slate-700 leading-relaxed" x-text="activeTrial.notes || '-'"></p>
+            </div>
+          </div>
+        </template>
+
+        <div x-show="!activeTrial" class="text-center py-8 text-slate-400">
+          <i class="fas fa-flask text-3xl mb-2 opacity-30"></i>
+          <p class="text-sm">Belum ada trial yang dijalankan</p>
+        </div>
+      </div>
+
+      <div class="glass-panel" x-show="rnd.trials && rnd.trials.length > 1">
+        <div class="section-title">Perbandingan Antar Trial</div>
+        <div class="overflow-x-auto -mx-6 px-6">
+          <div class="flex gap-3 min-w-max pb-2">
+            <template x-for="trial in rnd.trials" :key="trial.id">
+              <div class="compare-col w-40" :class="trial.is_best ? 'best' : 'default'">
+                <div class="text-xs font-bold mb-3 flex items-center gap-1" :class="trial.is_best ? 'text-emerald-700' : 'text-slate-600'">
+                  Trial #<span x-text="trial.number"></span>
+                  <span x-show="trial.is_best" class="text-emerald-500">★</span>
+                </div>
+                <template x-for="dim in flavorDimensions" :key="dim.key">
+                  <div class="flex justify-between text-xs mb-1.5">
+                    <span class="text-slate-400" x-text="dim.label"></span>
+                    <span class="font-bold" x-text="trial.tasting[dim.key] ?? '-'"></span>
+                  </div>
+                </template>
+                <div class="border-t border-slate-200 mt-2 pt-2">
+                  <div class="flex justify-between text-xs">
+                    <span class="text-slate-400">Score</span>
+                    <span class="font-bold" :class="trial.is_best ? 'text-emerald-600' : 'text-slate-600'" x-text="trial.success_probability + '%'"></span>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+        <p class="text-[10px] text-slate-400 mt-2 text-center">Geser untuk melihat semua trial.</p>
+      </div>
+    </div>
+
+    <div class="space-y-5">
+      <div class="bg-slate-800 text-white rounded-2xl p-6 shadow-xl">
+        <div class="section-title" style="color:#64748b; border-color:#334155">Probabilitas & Status</div>
+        <div class="text-center mb-4">
+          <p class="text-5xl font-bold text-emerald-400" x-text="rnd.success_probability + '%'"></p>
+          <p class="text-xs text-slate-400 mt-1">Kemungkinan berhasil</p>
+        </div>
+        <div class="bg-slate-700/50 rounded-xl p-3 text-xs text-slate-300 leading-relaxed" x-show="rnd.probability_reason">
+          <span x-text="rnd.probability_reason"></span>
+        </div>
+      </div>
+
+      <div class="glass-panel">
+        <div class="section-title">Promote ke BOM</div>
+        <template x-if="rnd.bom_id">
+          <a :href="`{% url 'bom_detail' 0 %}`.replace('/0/', `/${rnd.bom_id}/`)" class="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+            Lihat BOM terkait
+          </a>
+        </template>
+        <template x-if="!rnd.bom_id">
+          <div class="space-y-3">
+            <p class="text-sm text-slate-500">Formula harus berstatus approved sebelum bisa dipromote ke BOM.</p>
+            <button @click="promoteToBOM()" :disabled="rnd.status !== 'approved'" class="w-full rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white disabled:opacity-50">
+              Promote ke BOM
+            </button>
+          </div>
+        </template>
+      </div>
+
+      <div class="glass-panel">
+        <div class="section-title">Ubah Status Formula</div>
+        <div class="flex flex-col gap-2">
+          <button @click="updateStatus('idea')" :disabled="rnd.status === 'idea'" class="px-3 py-2 rounded-lg text-xs font-bold border border-violet-200 text-violet-700 hover:bg-violet-50 disabled:opacity-40">Idea</button>
+          <button @click="updateStatus('in_trial')" :disabled="rnd.status === 'in_trial'" class="px-3 py-2 rounded-lg text-xs font-bold border border-amber-200 text-amber-700 hover:bg-amber-50 disabled:opacity-40">In Trial</button>
+          <button @click="updateStatus('review')" :disabled="rnd.status === 'review'" class="px-3 py-2 rounded-lg text-xs font-bold border border-sky-200 text-sky-700 hover:bg-sky-50 disabled:opacity-40">Minta Review</button>
+          <button @click="updateStatus('approved')" :disabled="rnd.status === 'approved'" class="px-3 py-2 rounded-lg text-xs font-bold border border-emerald-200 text-emerald-700 hover:bg-emerald-50 disabled:opacity-40">Approve</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+{{ rnd_data|json_script:"rnd-data" }}
+<script>
+function rndDetailApp() {
+  return {
+    rnd: { trials: [], hypothesis: {}, tags: [] },
+    activeTrial: null,
+    flavorDimensions: [
+      { key: 'acidity', label: 'Acidity', color: '#3b82f6' },
+      { key: 'body', label: 'Body / Kepekatan', color: '#7c3aed' },
+      { key: 'sweetness', label: 'Sweetness', color: '#10b981' },
+      { key: 'bitterness', label: 'Bitterness', color: '#f59e0b' },
+      { key: 'aftertaste', label: 'Aftertaste', color: '#6366f1' },
+      { key: 'aroma', label: 'Aroma', color: '#ec4899' },
+    ],
+    get statusLabel() {
+      return { idea: 'Idea', in_trial: 'In Trial', review: 'Review', approved: 'Approved' }[this.rnd.status] || this.rnd.status;
+    },
+    getHypothesis(key) {
+      return this.rnd.hypothesis ? this.rnd.hypothesis[key] : undefined;
+    },
+    getBestActual(key) {
+      const best = this.rnd.trials.find((trial) => trial.is_best)
+        || this.rnd.trials.filter((trial) => trial.tasting && Object.keys(trial.tasting).length > 0).slice(-1)[0];
+      return best && best.tasting ? best.tasting[key] : undefined;
+    },
+    updateStatus(newStatus) {
+      if (this.rnd.bom_id && newStatus !== 'approved') {
+        if (!confirm('Formula ini sudah dipromote ke BOM. Menurunkan status dapat menyebabkan inkonsistensi data. Lanjutkan?')) return;
+      }
+      const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+      };
+      fetch(this.$el.dataset.statusUrl.replace('/0/', `/${this.rnd.id}/`), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+        body: JSON.stringify({ status: newStatus }),
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) this.rnd.status = newStatus;
+        else alert(data.error || 'Gagal update status');
+      })
+      .catch(() => alert('Terjadi kesalahan'));
+    },
+    addTrial() {
+      window.location.href = this.$el.dataset.trialUrl.replace('/0/', `/${this.rnd.id}/`);
+    },
+    promoteToBOM() {
+      if (!confirm('Promote formula ini ke BOM produksi?')) return;
+      const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+      };
+      fetch(this.$el.dataset.promoteUrl.replace('/0/', `/${this.rnd.id}/`), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+        body: JSON.stringify({}),
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success && data.bom_id) {
+          window.location.href = `{% url 'bom_detail' 0 %}`.replace('/0/', `/${data.bom_id}/`);
+        } else {
+          alert(data.error || 'Gagal promote ke BOM');
+        }
+      })
+      .catch(() => alert('Terjadi kesalahan'));
+    },
+    init() {
+      const el = document.getElementById('rnd-data');
+      if (!el || !el.textContent) return;
+      try {
+        const rnd = JSON.parse(el.textContent) || {};
+        this.rnd = {
+          id: rnd.id,
+          name: rnd.name || rnd.code || '',
+          status: rnd.status || 'idea',
+          created_at: rnd.created_at || '',
+          created_by: rnd.created_by || '-',
+          trial_count: rnd.trial_count || 0,
+          planned_trials: rnd.planned_trials || 3,
+          success_probability: Number(rnd.success_probability || 0),
+          probability_reason: rnd.probability_reason || '',
+          tags: rnd.tags || [],
+          based_on: rnd.based_on || '',
+          bom_id: rnd.bom_id || null,
+          hypothesis: rnd.hypothesis || {},
+          trials: (rnd.trials || []).map((trial, index) => ({
+            id: trial.id,
+            number: trial.number || (index + 1),
+            is_best: !!trial.is_best,
+            notes: trial.notes || '',
+            success_probability: Number(trial.success_probability || 0),
+            tasting: trial.tasting || {},
+          })),
+        };
+        this.activeTrial = this.rnd.trials.length ? this.rnd.trials[this.rnd.trials.length - 1] : null;
+      } catch (error) {
+        this.rnd = { trials: [], hypothesis: {}, tags: [] };
+      }
+    },
+  }
+}
+</script>
+{% endblock %}

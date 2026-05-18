@@ -1,0 +1,160 @@
+{% extends 'base/base.html' %}
+{% block title %}Neraca Percobaan — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-card { background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border: 1px solid white; border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+  
+  .tb-table { width: 100%; border-collapse: collapse; }
+  .tb-table th { text-align: left; padding: 16px; font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; }
+  .tb-table td { padding: 14px 16px; border-bottom: 1px solid #f1f5f9; font-size: 13px; color: #334155; }
+  .tb-table tr.group-header td { background: #f8fafc; font-weight: 700; color: #0f172a; }
+  
+  .col-money { text-align: right; font-family: monospace; }
+  .bal-badge { padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 14px; }
+  .bg-success { background: #dcfce7; color: #166534; }
+  .bg-danger { background: #fee2e2; color: #991b1b; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="tbApp()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex items-end justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">Neraca Percobaan (Trial Balance)</h1>
+      <p class="text-sm text-slate-400 mt-0.5">Validasi keseimbangan jurnal per periode.</p>
+    </div>
+    <div class="flex items-center gap-3 glass-card px-4 py-2">
+      <label class="text-xs font-bold text-slate-500 uppercase mr-2">Periode</label>
+      <input type="month" x-model="period" @change="window.location.href=`?period=${period}`" class="bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-sm font-bold text-slate-700 outline-none focus:border-slate-400">
+      <button class="text-slate-400 hover:text-slate-600"><i class="fas fa-print"></i></button>
+      <button class="text-slate-400 hover:text-slate-600"><i class="fas fa-download"></i></button>
+    </div>
+  </div>
+
+  <!-- Balance Status Banner -->
+  <div class="glass-card p-6 mb-6 flex items-center justify-between" :class="isBalanced ? 'bg-emerald-50/50' : 'bg-rose-50/50'">
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 rounded-full flex items-center justify-center" :class="isBalanced ? 'bg-emerald-500' : 'bg-rose-500'">
+        <i :class="isBalanced ? 'fas fa-check' : 'fas fa-times'" class="text-white text-xl"></i>
+      </div>
+      <div>
+        <h3 class="text-lg font-bold" :class="isBalanced ? 'text-emerald-800' : 'text-rose-800'" x-text="isBalanced ? 'SEIMBANG (BALANCED)' : 'TIDAK SEIMBANG'"></h3>
+        <p class="text-xs" :class="isBalanced ? 'text-emerald-600' : 'text-rose-600'">Total Debit = Total Kredit</p>
+      </div>
+    </div>
+    <div class="text-right">
+      <p class="text-xs text-slate-400 font-bold uppercase">Selisih</p>
+      <p class="text-2xl font-black font-mono" :class="isBalanced ? 'text-emerald-600' : 'text-rose-600'" x-text="formatCurrency(difference)"></p>
+    </div>
+  </div>
+
+  <!-- Main Table -->
+  <div class="glass-card overflow-hidden">
+    <div class="p-4 border-b border-slate-100 flex justify-between items-center">
+      <h3 class="font-bold text-slate-700 text-sm">Periode: <span class="text-slate-900" x-text="formatPeriod(period)"></span></h3>
+      <label class="flex items-center gap-2 text-xs font-bold text-slate-500 cursor-pointer">
+        <input type="checkbox" x-model="showZero" class="accent-slate-800"> Tampilkan Saldo Nol
+      </label>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="tb-table">
+        <thead>
+          <tr>
+            <th style="width: 15%">Kode Akun</th>
+            <th style="width: 45%">Nama Akun</th>
+            <th style="width: 20%" class="col-money">Debit</th>
+            <th style="width: 20%" class="col-money">Kredit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="group in accountGroups" :key="group.name">
+            <!-- Group Header -->
+            <tr class="group-header">
+              <td colspan="4" x-text="group.name"></td>
+            </tr>
+            
+            <!-- Accounts -->
+            <template x-for="acc in group.accounts.filter(a => showZero || a.debit !== 0 || a.credit !== 0)" :key="acc.code">
+              <tr>
+                <td class="font-mono text-slate-500" x-text="acc.code"></td>
+                <td class="font-medium text-slate-700" x-text="acc.name"></td>
+                <td class="col-money" x-text="acc.debit ? formatCurrency(acc.debit) : '-'"></td>
+                <td class="col-money" x-text="acc.credit ? formatCurrency(acc.credit) : '-'"></td>
+              </tr>
+            </template>
+            
+            <!-- Group Total -->
+            <tr class="bg-slate-50 font-bold">
+              <td colspan="2" class="text-right text-slate-500">Total <span x-text="group.name"></span></td>
+              <td class="col-money text-slate-800" x-text="formatCurrency(group.totalDebit)"></td>
+              <td class="col-money text-slate-800" x-text="formatCurrency(group.totalCredit)"></td>
+            </tr>
+          </template>
+        </tbody>
+        <tfoot class="font-bold bg-slate-100 border-t-2 border-slate-300">
+          <tr>
+            <td colspan="2" class="text-right text-slate-700 text-sm">GRAND TOTAL</td>
+            <td class="col-money text-lg text-slate-900" x-text="formatCurrency(grandTotalDebit)"></td>
+            <td class="col-money text-lg text-slate-900" x-text="formatCurrency(grandTotalCredit)"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script id="account-groups-data" type="application/json">
+{{ account_groups_json|safe }}
+</script>
+
+<script>
+function tbApp() {
+  return {
+    period: '{{ period|escapejs }}',
+    showZero: false,
+    accountGroups: [],
+
+    get grandTotalDebit() {
+      return this.accountGroups.reduce((s, g) => s + g.totalDebit, 0);
+    },
+
+    get grandTotalCredit() {
+      return this.accountGroups.reduce((s, g) => s + g.totalCredit, 0);
+    },
+
+    get difference() {
+      return this.grandTotalDebit - this.grandTotalCredit;
+    },
+
+    get isBalanced() {
+      return this.difference === 0;
+    },
+
+    formatCurrency(num) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+    },
+
+    formatPeriod(val) {
+      if(!val) return '-';
+      const [y, m] = val.split('-');
+      const date = new Date(y, m - 1);
+      return date.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+    },
+    init() {
+      const _account_groupsRaw = document.getElementById('account-groups-data');
+      if (_account_groupsRaw) {
+        try { this.account_groups = JSON.parse(_account_groupsRaw.textContent); }
+        catch(e) { console.error('account-groups-data parse error:', e); }
+      }}
+  }
+}
+</script>
+{% endblock %}

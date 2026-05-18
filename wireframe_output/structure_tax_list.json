@@ -1,0 +1,167 @@
+{
+  "filename": "tax_list.html",
+  "title": "{{ page_title }}",
+  "components": [
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "flex items-center justify-between mb-6",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h1",
+      "label": "HEADING (H1)",
+      "depth": 4,
+      "path": "root/body/div/div/div/h1",
+      "classes": "text-3xl font-bold text-slate-100",
+      "text_preview": "{{ page_title }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "mb-6 flex gap-4",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "input",
+      "label": "INPUT [text] Cari...",
+      "depth": 3,
+      "path": "root/body/div/div/input",
+      "classes": "flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 focus:outline-none focus:border-emerald-500",
+      "text_preview": "Cari...",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: [icon]",
+      "depth": 3,
+      "path": "root/body/div/div/button",
+      "classes": "px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-100 rounded-lg transition",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "search",
+      "tag": "i",
+      "label": "SEARCH BAR",
+      "depth": 4,
+      "path": "root/body/div/div/button/i",
+      "classes": "fas fa-search",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/h1",
+      "type": "heading",
+      "label": "HEADING (H1)",
+      "text_preview": "{{ page_title }}"
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/input",
+      "type": "input",
+      "label": "INPUT [text] Cari...",
+      "text_preview": "Cari..."
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/button",
+      "type": "button",
+      "label": "BUTTON: [icon]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/button/i",
+      "type": "search",
+      "label": "SEARCH BAR",
+      "text_preview": ""
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 6,
+    "by_type": {
+      "layout": 2,
+      "heading": 1,
+      "input": 1,
+      "button": 1,
+      "search": 1
+    },
+    "interactive": 2,
+    "with_scroll": 0,
+    "with_form_fields": 2,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

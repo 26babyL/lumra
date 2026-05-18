@@ -1,0 +1,344 @@
+{% extends "base/base_hybrid.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Resep & BOM — Lumra{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --card-radius: 12px;
+        --card-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
+        --card-border:  rgba(0,0,0,.06);
+    }
+    .bom-page { padding:1.25rem; display:flex; flex-direction:column; gap:1rem; }
+
+    /* ── KPI (dashboard-identical) ── */
+    .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:.875rem; }
+    .kpi-card { background:oklch(var(--b1)); border:.5px solid var(--card-border); border-radius:var(--card-radius); box-shadow:var(--card-shadow); padding:1.125rem 1.25rem; display:flex; flex-direction:column; gap:.5rem; transition:box-shadow 180ms ease,transform 180ms ease; }
+    .kpi-card:hover { box-shadow:0 4px 20px rgba(0,0,0,.08); transform:translateY(-1px); }
+    .kpi-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+    .kpi-value { font-size:1.6rem; font-weight:800; letter-spacing:-.02em; line-height:1; color:oklch(var(--bc)); }
+    .kpi-label { font-size:.75rem; font-weight:600; color:oklch(var(--bc)/.5); text-transform:uppercase; letter-spacing:.06em; }
+
+    /* ── Section card ── */
+    .section-card { background:oklch(var(--b1)); border:.5px solid var(--card-border); border-radius:var(--card-radius); box-shadow:var(--card-shadow); overflow:hidden; }
+
+    /* ── Toolbar ── */
+    .bom-toolbar { background:oklch(var(--b1)); border:.5px solid var(--card-border); border-radius:var(--card-radius); box-shadow:var(--card-shadow); padding:.875rem 1.25rem; display:flex; align-items:center; justify-content:space-between; gap:.75rem; flex-wrap:wrap; }
+
+    /* ── Filter pills ── */
+    .filter-pills { display:flex; align-items:center; gap:.375rem; flex-wrap:wrap; }
+    .filter-pill { padding:4px 14px; border-radius:20px; font-size:.72rem; font-weight:700; border:.5px solid oklch(var(--bc)/.12); background:oklch(var(--b2)); color:oklch(var(--bc)/.5); cursor:pointer; transition:all 140ms; white-space:nowrap; }
+    .filter-pill:hover { background:oklch(var(--b3)); color:oklch(var(--bc)); }
+    .filter-pill.active-all    { background:oklch(var(--bc)); color:oklch(var(--b1)); border-color:transparent; }
+    .filter-pill.active-active { background:rgba(0,168,107,.12); color:#065f46; border-color:rgba(0,168,107,.25); }
+    .filter-pill.active-draft  { background:rgba(100,116,139,.12); color:#334155; border-color:rgba(100,116,139,.25); }
+    .filter-pill.active-linked { background:rgba(59,130,246,.12); color:#1e40af; border-color:rgba(59,130,246,.25); }
+
+    /* ── BOM card grid ── */
+    .bom-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:.875rem; }
+    .bom-card {
+        background:oklch(var(--b1)); border:.5px solid var(--card-border);
+        border-radius:var(--card-radius); box-shadow:var(--card-shadow);
+        padding:1.125rem 1.25rem; display:flex; flex-direction:column; gap:.75rem;
+        transition:box-shadow 180ms ease,transform 180ms ease;
+        cursor:pointer; position:relative; overflow:hidden;
+    }
+    .bom-card:hover { box-shadow:0 6px 24px rgba(0,0,0,.1); transform:translateY(-2px); }
+    .bom-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; border-radius:var(--card-radius) var(--card-radius) 0 0; }
+    .bom-card.bom-active::before { background:linear-gradient(90deg,#00a86b,#34d399); }
+    .bom-card.bom-draft::before  { background:linear-gradient(90deg,#94a3b8,#cbd5e1); }
+
+    /* Status badge */
+    .status-badge { display:inline-flex; align-items:center; gap:4px; padding:2px 9px; border-radius:20px; font-size:.67rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
+    .status-badge::before { content:''; width:5px; height:5px; border-radius:50%; background:currentColor; display:inline-block; }
+    .status-badge.s-active { background:rgba(0,168,107,.1);  color:#065f46; }
+    .status-badge.s-draft  { background:rgba(100,116,139,.1);color:#334155; }
+    .status-badge.s-linked { background:rgba(59,130,246,.1); color:#1e40af; }
+    [data-theme="dark"] .status-badge.s-active { background:rgba(0,168,107,.2); color:#34d399; }
+    [data-theme="dark"] .status-badge.s-draft  { background:rgba(100,116,139,.2);color:#94a3b8; }
+    [data-theme="dark"] .status-badge.s-linked { background:rgba(59,130,246,.2); color:#60a5fa; }
+
+    /* Cost bar (mini) */
+    .cost-bar-wrap { height:4px; background:oklch(var(--b3)); border-radius:99px; overflow:hidden; margin-top:.25rem; }
+    .cost-bar-fill { height:100%; border-radius:99px; background:var(--jade,#00a86b); }
+
+    /* Hover overlay */
+    .bom-card-overlay { position:absolute; inset:0; background:oklch(var(--bc)/.04); backdrop-filter:blur(2px); border-radius:var(--card-radius); display:flex; align-items:center; justify-content:center; gap:.5rem; opacity:0; transition:opacity 180ms; pointer-events:none; }
+    .bom-card:hover .bom-card-overlay { opacity:1; pointer-events:auto; }
+    .overlay-btn { padding:.5rem 1rem; border-radius:8px; font-size:.78rem; font-weight:700; cursor:pointer; border:none; transition:transform 120ms; }
+    .overlay-btn:hover { transform:scale(1.04); }
+    .overlay-btn.primary   { background:oklch(var(--bc)); color:oklch(var(--b1)); }
+    .overlay-btn.secondary { background:oklch(var(--b1)); color:oklch(var(--bc)); border:.5px solid var(--card-border); }
+
+    /* Skeleton */
+    .skel { background:linear-gradient(90deg,oklch(var(--b2)) 25%,oklch(var(--b3)) 50%,oklch(var(--b2)) 75%); background-size:200% 100%; animation:skel-anim 1.4s ease infinite; border-radius:6px; }
+    @keyframes skel-anim{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    .skel-text{height:.85rem} .skel-val{height:1.6rem}
+
+    /* Form input */
+    .form-input { background:oklch(var(--b2)); border:.5px solid oklch(var(--bc)/.12); border-radius:8px; padding:.6rem .875rem; font-size:.85rem; color:oklch(var(--bc)); width:100%; outline:none; transition:border-color 150ms,box-shadow 150ms; }
+    .form-input:focus { border-color:var(--jade,#00a86b); box-shadow:0 0 0 3px rgba(0,168,107,.12); }
+    .form-input::placeholder { color:oklch(var(--bc)/.3); }
+
+    /* Pagination */
+    .page-btn { width:32px;height:32px;border-radius:8px;border:.5px solid oklch(var(--bc)/.1);background:oklch(var(--b1));display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:600;color:oklch(var(--bc)/.6);cursor:pointer;transition:background 140ms,color 140ms; }
+    .page-btn:hover:not(:disabled){background:oklch(var(--b2));color:oklch(var(--bc))}
+    .page-btn.active{background:var(--jade,#00a86b);color:#fff;border-color:transparent}
+    .page-btn:disabled{opacity:.35;cursor:not-allowed}
+
+    @media(max-width:640px){.bom-page{padding:.875rem;gap:.875rem}.kpi-value{font-size:1.35rem}.bom-grid{grid-template-columns:1fr}}
+</style>
+{% endblock %}
+
+{% block content %}
+{{ boms_data|json_script:"boms-data" }}
+
+<div class="bom-page" x-data="bomListApp()" x-init="init()" x-cloak>
+
+    <!-- ── Page Header ── -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;">
+        <div>
+            <h1 style="font-size:1.3rem;font-weight:800;color:oklch(var(--bc));margin:0 0 2px;">Resep &amp; Bill of Materials</h1>
+            <p style="font-size:.8rem;color:oklch(var(--bc)/.5);margin:0;">Definisi komposisi standar dan analisis biaya produk jadi</p>
+        </div>
+        <a href="{% url 'bom_form' %}"
+           style="display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px;border-radius:9px;background:var(--jade,#00a86b);color:white;font-size:.8rem;font-weight:700;text-decoration:none;">
+            <svg style="width:14px;height:14px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+            Buat Resep Baru
+        </a>
+    </div>
+
+    <!-- ── KPI Cards ── -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-icon" style="background:rgba(59,130,246,.1);">
+                <svg style="width:18px;height:18px;color:#3b82f6;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+            <div>
+                <div class="kpi-value" x-text="boms.length"></div>
+                <div class="kpi-label">Total BOM</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon" style="background:rgba(0,168,107,.1);">
+                <svg style="width:18px;height:18px;color:#00a86b;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div>
+                <div class="kpi-value" style="color:#00a86b;" x-text="boms.filter(b=>b.status==='active').length"></div>
+                <div class="kpi-label">Aktif</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon" style="background:rgba(59,130,246,.1);">
+                <svg style="width:18px;height:18px;color:#3b82f6;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+            </div>
+            <div>
+                <div class="kpi-value" x-text="boms.filter(b=>b.rnd_id).length"></div>
+                <div class="kpi-label">Dari R&amp;D</div>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon" style="background:rgba(0,168,107,.1);">
+                <svg style="width:18px;height:18px;color:#00a86b;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div>
+                <div class="kpi-value" x-text="formatCurrencyShort(avgCost)"></div>
+                <div class="kpi-label">Rata-rata HPP</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Toolbar ── -->
+    <div class="bom-toolbar">
+        <div class="filter-pills">
+            <button class="filter-pill" :class="filter==='all'    ? 'active-all'    : ''" @click="filter='all';currentPage=1">Semua BOM</button>
+            <button class="filter-pill" :class="filter==='active' ? 'active-active' : ''" @click="filter='active';currentPage=1">Aktif</button>
+            <button class="filter-pill" :class="filter==='draft'  ? 'active-draft'  : ''" @click="filter='draft';currentPage=1">Draft</button>
+            <button class="filter-pill" :class="filter==='linked' ? 'active-linked' : ''" @click="filter='linked';currentPage=1">Dari R&amp;D</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:.625rem;">
+            <div style="position:relative;">
+                <svg style="position:absolute;left:.625rem;top:50%;transform:translateY(-50%);width:14px;height:14px;color:oklch(var(--bc)/.35);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
+                <input type="text" class="form-input" style="padding-left:2rem;width:200px;height:34px;font-size:.8rem;"
+                       placeholder="Cari nama atau SKU..."
+                       x-model.debounce.200ms="searchQuery" @input="currentPage=1">
+            </div>
+            <span style="font-size:.75rem;color:oklch(var(--bc)/.4);white-space:nowrap;"><span x-text="filtered.length"></span> BOM</span>
+        </div>
+    </div>
+
+    <!-- ── Skeleton ── -->
+    <template x-if="loading">
+        <div class="bom-grid">
+            <template x-for="i in [1,2,3,4,5,6]" :key="i">
+                <div class="bom-card" style="cursor:default;">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                        <div class="skel" style="width:42px;height:42px;border-radius:10px;"></div>
+                        <div class="skel skel-text" style="width:4rem;border-radius:20px;"></div>
+                    </div>
+                    <div><div class="skel skel-text" style="width:75%;margin-bottom:.375rem;"></div><div class="skel skel-text" style="width:45%;height:.7rem;"></div></div>
+                    <div style="border-top:.5px solid oklch(var(--bc)/.06);padding-top:.75rem;display:flex;flex-direction:column;gap:.45rem;">
+                        <div class="skel skel-text" style="width:100%;"></div>
+                        <div class="skel skel-text" style="width:100%;"></div>
+                        <div class="skel" style="width:100%;height:4px;border-radius:99px;margin-top:.25rem;"></div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </template>
+
+    <!-- ── BOM Grid ── -->
+    <template x-if="!loading">
+        <div>
+            <div class="bom-grid" x-show="paginated.length > 0">
+                <template x-for="bom in paginated" :key="bom.id">
+                    <div class="bom-card" :class="bom.status === 'active' ? 'bom-active' : 'bom-draft'"
+                         @click="goDetail(bom.id)">
+
+                        <!-- Header -->
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;">
+                            <div class="kpi-icon" style="background:rgba(0,168,107,.1);">
+                                <svg style="width:16px;height:16px;color:#00a86b;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            </div>
+                            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.35rem;">
+                                <span class="status-badge" :class="bom.status==='active'?'s-active':'s-draft'" x-text="bom.status==='active'?'Aktif':'Draft'"></span>
+                                <span x-show="bom.rnd_id" class="status-badge s-linked">dari R&amp;D</span>
+                            </div>
+                        </div>
+
+                        <!-- Name + SKU -->
+                        <div>
+                            <div style="font-size:.92rem;font-weight:700;color:oklch(var(--bc));line-height:1.3;margin-bottom:.2rem;" x-text="bom.name"></div>
+                            <div style="font-size:.72rem;color:oklch(var(--bc)/.4);font-family:ui-monospace,monospace;">SKU: <span x-text="bom.sku"></span> &bull; v<span x-text="bom.version"></span></div>
+                        </div>
+
+                        <!-- Stats -->
+                        <div style="border-top:.5px solid oklch(var(--bc)/.06);padding-top:.75rem;display:flex;flex-direction:column;gap:.45rem;">
+                            <div style="display:flex;justify-content:space-between;font-size:.75rem;">
+                                <span style="color:oklch(var(--bc)/.5);">Bahan Baku</span>
+                                <span style="font-weight:700;" x-text="bom.ingredients_count + ' item'"></span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;font-size:.75rem;">
+                                <span style="color:oklch(var(--bc)/.5);">Est. HPP</span>
+                                <span style="font-weight:800;color:#00a86b;" x-text="formatCurrency(bom.cost)"></span>
+                            </div>
+                            <!-- Cost bar relative to max BOM cost -->
+                            <div class="cost-bar-wrap">
+                                <div class="cost-bar-fill" :style="`width:${costPct(bom.cost)}%`"></div>
+                            </div>
+                        </div>
+
+                        <!-- Hover overlay -->
+                        <div class="bom-card-overlay">
+                            <button class="overlay-btn secondary" @click.stop="goEdit(bom.id)">Edit</button>
+                            <button class="overlay-btn primary"   @click.stop="goDetail(bom.id)">Detail →</button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Empty -->
+            <div class="section-card" x-show="paginated.length === 0">
+                <div style="padding:3rem;text-align:center;color:oklch(var(--bc)/.35);">
+                    <svg style="width:36px;height:36px;margin:0 auto .75rem;" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <p style="font-size:.88rem;font-weight:700;">Resep tidak ditemukan</p>
+                    <p style="font-size:.78rem;margin-top:.25rem;">Coba ubah filter atau kata kunci</p>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- ── Pagination ── -->
+    <div x-show="!loading && totalPages > 1" style="display:flex;justify-content:center;align-items:center;gap:.375rem;">
+        <button class="page-btn" @click="currentPage > 1 && currentPage--" :disabled="currentPage===1">
+            <svg style="width:12px;height:12px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <template x-for="p in visiblePages" :key="p">
+            <button class="page-btn" :class="p===currentPage?'active':''" @click="currentPage=p" x-text="p"></button>
+        </template>
+        <button class="page-btn" @click="currentPage < totalPages && currentPage++" :disabled="currentPage===totalPages">
+            <svg style="width:12px;height:12px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </button>
+    </div>
+
+</div>
+
+<script>
+function bomListApp() {
+    return {
+        loading     : true,
+        boms        : [],
+        filter      : 'all',
+        searchQuery : '',
+        currentPage : 1,
+        itemsPerPage: 12,
+
+        get filtered() {
+            const q = this.searchQuery.trim().toLowerCase();
+            return this.boms.filter(b => {
+                const matchFilter = this.filter === 'all'
+                    || (this.filter === 'linked' ? !!b.rnd_id : b.status === this.filter);
+                const matchSearch = !q || b.name.toLowerCase().includes(q) || b.sku.toLowerCase().includes(q);
+                return matchFilter && matchSearch;
+            });
+        },
+        get paginated() {
+            const s = (this.currentPage-1)*this.itemsPerPage;
+            return this.filtered.slice(s, s+this.itemsPerPage);
+        },
+        get totalPages() { return Math.max(1,Math.ceil(this.filtered.length/this.itemsPerPage)); },
+        get visiblePages() {
+            const max=5,half=Math.floor(max/2);
+            let s=Math.max(1,this.currentPage-half),e=Math.min(this.totalPages,s+max-1);
+            if(e-s+1<max) s=Math.max(1,e-max+1);
+            const pp=[]; for(let i=s;i<=e;i++) pp.push(i); return pp;
+        },
+        get avgCost() {
+            if (!this.boms.length) return 0;
+            return this.boms.reduce((s,b)=>s+b.cost,0) / this.boms.length;
+        },
+        get maxCost() {
+            return Math.max(1, ...this.boms.map(b=>b.cost));
+        },
+
+        costPct(cost) { return Math.round((cost / this.maxCost) * 100); },
+
+        init() {
+            const el = document.getElementById('boms-data');
+            if (el?.textContent) {
+                try {
+                    const raw = JSON.parse(el.textContent) || [];
+                    this.boms = raw.map(b => ({
+                        id     : b.id,
+                        name   : b.name || b.code || '—',
+                        sku    : b.sku || b.finished_sku || '—',
+                        version: Number(b.version || 1),
+                        status : b.is_active ? 'active' : 'draft',
+                        ingredients_count: Number(b.ingredients_count || 0),
+                        cost   : Number(b.estimated_cost || 0),
+                        rnd_id : b.rnd_id || null,
+                    }));
+                } catch(e) { this.boms = []; }
+            }
+            this.loading = false;
+            this.$watch('searchQuery', ()=>{ this.currentPage=1; });
+            this.$watch('filter', ()=>{ this.currentPage=1; });
+        },
+
+        goDetail(id) { window.location.href = `{% url 'bom_detail' 0 %}`.replace('/0/',`/${id}/`); },
+        goEdit(id)   { window.location.href = `{% url 'bom_edit' 0 %}`.replace('/0/',`/${id}/edit/`); },
+
+        formatCurrency(n) {
+            return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',minimumFractionDigits:0}).format(n||0);
+        },
+        formatCurrencyShort(n) {
+            if (n >= 1_000_000) return 'Rp ' + (n/1_000_000).toFixed(1) + 'jt';
+            if (n >= 1_000)     return 'Rp ' + (n/1_000).toFixed(0) + 'rb';
+            return 'Rp ' + Math.round(n);
+        },
+    };
+}
+</script>
+{% endblock %}

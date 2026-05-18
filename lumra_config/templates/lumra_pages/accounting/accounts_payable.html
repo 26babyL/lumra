@@ -1,0 +1,245 @@
+{% extends "base/base_hybrid.html" %}
+
+{% block title %}Hutang Usaha — LUMRA{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="apApp()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-base-content/60 mb-1">
+        <a href="#" class="hover:text-base-content">Keuangan</a>
+        <span>/</span>
+        <span class="text-base-content font-medium">Hutang Usaha (AP)</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-base-content">Accounts Payable</h1>
+      <p class="text-sm text-base-content/60 mt-0.5">Monitoring kewajiban pembayaran kepada supplier.</p>
+    </div>
+    <a href="{% url 'payment_voucher_form' %}" class="btn btn-primary">
+      <i class="fas fa-money-bill-wave"></i> Buat Pembayaran
+    </a>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-slate-300">
+      <div class="card-body p-5">
+        <p class="text-xs font-bold text-base-content/60 uppercase">Total Hutang</p>
+        <p class="text-xl font-bold text-base-content mt-1" x-text="formatCurrency(totalAP)"></p>
+      </div>
+    </div>
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-success">
+      <div class="card-body p-5">
+        <p class="text-xs font-bold text-base-content/60 uppercase">Jatuh Tempo (0-30 Hari)</p>
+        <p class="text-xl font-bold text-success mt-1" x-text="formatCurrency(aging.current)"></p>
+      </div>
+    </div>
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-warning">
+      <div class="card-body p-5">
+        <p class="text-xs font-bold text-base-content/60 uppercase">Jatuh Tempo (31-60 Hari)</p>
+        <p class="text-xl font-bold text-warning mt-1" x-text="formatCurrency(aging.days31_60)"></p>
+      </div>
+    </div>
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-error">
+      <div class="card-body p-5">
+        <p class="text-xs font-bold text-base-content/60 uppercase">Jatuh Tempo (>60 Hari)</p>
+        <p class="text-xl font-bold text-error mt-1" x-text="formatCurrency(aging.days61_90)"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Aging Table -->
+  <div class="card bg-base-100 shadow-lg border border-base-300">
+    <div class="card-body p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-bold text-base-content">Aging Report</h2>
+        <div class="flex gap-2">
+          <select class="select select-bordered select-sm" x-model="selectedVendor" @change="filterByVendor()">
+            <option value="">Semua Supplier</option>
+            <template x-for="vendor in vendors" :key="vendor.id">
+              <option :value="vendor.id" x-text="vendor.name"></option>
+            </template>
+          </select>
+          <select class="select select-bordered select-sm" x-model="selectedPeriod" @change="updatePeriod()">
+            <option value="30">30 Hari</option>
+            <option value="60">60 Hari</option>
+            <option value="90">90 Hari</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="table table-compact w-full">
+          <thead>
+            <tr class="bg-base-200">
+              <th class="text-right">Supplier</th>
+              <th class="text-right">Invoice #</th>
+              < <th class="text-right">Tanggal</th>
+              <th class="text-right">Jumlah</th>
+              <th class="text-right">Umur (Hari)</th>
+              <th class="text-right">Status</th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="item in filteredPayables" :key="item.id">
+              <tr class="hover:bg-base-200">
+                <td class="text-left" x-text="item.vendor_name"></td>
+                <td class="text-left" x-text="item.invoice_number"></td>
+                <td class="text-left" x-text="formatDate(item.invoice_date)"></td>
+                <td class="text-right font-mono" x-text="formatCurrency(item.amount)"></td>
+                <td class="text-right" x-text="item.aging_days"></td>
+                <td>
+                  <span class="badge badge-sm" :class="getAgingBadgeClass(item.aging_days)" x-text="item.status"></span>
+                </td>
+                <td class="text-center">
+                  <button class="btn btn-ghost btn-xs" @click="viewDetails(item.id)">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+          <tfoot>
+            <tr class="bg-base-100 font-bold">
+              <td colspan="3">Total:</td>
+              <td class="text-right font-mono" x-text="formatCurrency(totalPayables)"></td>
+              <td colspan="3"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function apApp() {
+  return {
+    selectedVendor: '',
+    selectedPeriod: '30',
+    vendors: [],
+    payables: [],
+    filteredPayables: [],
+    totalAP: 0,
+    aging: {
+      current: 0,
+      days31_60: 0,
+      days61_90: 0,
+      days90_plus: 0
+    },
+    
+    init() {
+      this.loadPayables();
+    },
+    
+    loadPayables() {
+      // Mock data - replace with actual API call
+      this.vendors = [
+        { id: 1, name: 'Supplier A' },
+        { id: 2, name: 'Supplier B' },
+        { id: 3, name: 'Supplier C' }
+      ];
+      
+      this.payables = [
+        {
+          id: 1,
+          vendor_name: 'Supplier A',
+          invoice_number: 'INV-001',
+          invoice_date: '2024-01-15',
+          amount: 5000000,
+          aging_days: 15,
+          status: 'Unpaid'
+        },
+        {
+          id: 2,
+          vendor_name: 'Supplier B',
+          invoice_number: 'INV-002',
+          invoice_date: '2024-01-10',
+          amount: 3000000,
+          aging_days: 45,
+          status: 'Partial'
+        },
+        {
+          id: 3,
+          vendor_name: 'Supplier C',
+          invoice_number: 'INV-003',
+          invoice_date: '2024-01-05',
+          amount: 2000000,
+          aging_days: 75,
+          status: 'Overdue'
+        }
+      ];
+      
+      this.calculateTotals();
+      this.filterByVendor();
+    },
+    
+    calculateTotals() {
+      this.totalAP = this.payables.reduce((sum, item) => sum + item.amount, 0);
+      
+      this.aging.current = this.payables
+        .filter(item => item.aging_days <= 30)
+        .reduce((sum, item) => sum + item.amount, 0);
+      
+      this.aging.days31_60 = this.payables
+        .filter(item => item.aging_days > 30 && item.aging_days <= 60)
+        .reduce((sum, item) => sum + item.amount, 0);
+      
+      this.aging.days61_90 = this.payables
+        .filter(item => item.aging_days > 60 && item.aging_days <= 90)
+        .reduce((sum, item) => sum + item.amount, 0);
+      
+      this.aging.days90_plus = this.payables
+        .filter(item => item.aging_days > 90)
+        .reduce((sum, item) => sum + item.amount, 0);
+    },
+    
+    filterByVendor() {
+      if (this.selectedVendor) {
+        this.filteredPayables = this.payables.filter(item => 
+          item.vendor_id == this.selectedVendor
+        );
+      } else {
+        this.filteredPayables = [...this.payables];
+      }
+    },
+    
+    updatePeriod() {
+      // Update based on selected period
+      console.log('Update period:', this.selectedPeriod);
+    },
+    
+    viewDetails(id) {
+      console.log('View details:', id);
+      // Navigate to detail page
+    },
+    
+    getAgingBadgeClass(days) {
+      if (days <= 30) return 'badge-success';
+      if (days <= 60) return 'badge-warning';
+      return 'badge-error';
+    },
+    
+    formatCurrency(amount) {
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0
+      }).format(amount);
+    },
+    
+    formatDate(dateStr) {
+      return new Date(dateStr).toLocaleDateString('id-ID');
+    }
+  }
+}
+</script>
+{% endblock %}

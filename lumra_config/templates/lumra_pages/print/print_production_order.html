@@ -1,0 +1,58 @@
+{% extends 'lumra_pages/print/print_base.html' %}
+
+{% block content %}
+<div class="border-double mb-4 pb-4">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+            <div class="font-bold" style="font-size: 24px;">SURAT PERINTAH PRODUKSI</div>
+            <div class="text-sm">{{ document_number }}</div>
+            <div class="text-xs">Tanggal: {{ document_date|date:"d M Y H:i" }}</div>
+        </div>
+        <div class="text-right">
+            <div class="text-xs text-slate-400">Status</div>
+            <div class="font-bold">{{ production_order.get_status_display }}</div>
+            <div class="text-xs">Line: {{ production_order.line|default:"-" }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="mb-4">
+    <div class="font-bold">{{ product_name }}</div>
+    <div class="text-sm">SKU: {{ product_sku }}</div>
+    <div class="text-sm">Target: {{ target_quantity }} {{ unit_name }}</div>
+    <div class="text-sm">Aktual: {{ produced_quantity }} {{ unit_name }}</div>
+</div>
+
+<div class="mb-2 font-bold">Bill of Materials</div>
+<table class="table-w-full">
+    <thead>
+        <tr>
+            <th>Komponen</th>
+            <th>SKU</th>
+            <th class="text-right">Qty</th>
+            <th class="text-center">Unit</th>
+            <th>Catatan</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in bom_items %}
+        <tr>
+            <td>{{ item.component.product.name }}</td>
+            <td>{{ item.component.sku }}</td>
+            <td class="text-right">{{ item.quantity }}</td>
+            <td class="text-center">{{ item.unit.symbol|default:"-" }}</td>
+            <td>{{ item.notes|default:"-" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="text-center text-slate-400">BOM belum tersedia.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="mt-4">
+    <div class="font-bold">Catatan Produksi</div>
+    <div class="text-sm">{{ notes|default:"-" }}</div>
+</div>
+{% endblock %}

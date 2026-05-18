@@ -1,0 +1,159 @@
+{% extends "base/base_hybrid.html" %}
+{% block title %}Production Orders - CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-card { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.95); border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: all 0.2s; }
+  .glass-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+  .status-badge { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .st-pending { background: #f1f5f9; color: #475569; }
+  .st-process { background: #dbeafe; color: #2563eb; }
+  .st-completed { background: #dcfce7; color: #16a34a; }
+  .st-hold { background: #fee2e2; color: #dc2626; }
+  .progress-track { background: #e2e8f0; height: 6px; border-radius: 99px; overflow: hidden; margin-top: 10px; }
+  .progress-fill { background: #0f172a; height: 100%; transition: width 0.5s ease; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="poListApp()" x-init="init()" x-cloak>
+  <div class="flex items-end justify-between">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+        <a href="#" class="hover:text-slate-800">Produksi</a>
+        <span>/</span>
+        <span class="text-slate-800 font-medium">Surat Perintah Kerja (SPK)</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800">Production Orders</h1>
+      <p class="text-sm text-slate-400 mt-0.5">Monitoring eksekusi produksi di lantai kerja</p>
+    </div>
+    <a href="{% url 'production_order_form' %}" class="bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:bg-slate-700 transition flex items-center gap-2">
+      <i class="fas fa-plus"></i> Buat SPK Baru
+    </a>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="glass-card p-4"><p class="text-xs text-slate-400">Total PO</p><p class="text-2xl font-bold text-slate-800" x-text="filteredPOs.length"></p></div>
+    <div class="glass-card p-4"><p class="text-xs text-slate-400">Pending</p><p class="text-2xl font-bold text-slate-800" x-text="filteredPOs.filter((po) => po.status === 'pending').length"></p></div>
+    <div class="glass-card p-4"><p class="text-xs text-slate-400">In Progress</p><p class="text-2xl font-bold text-slate-800" x-text="filteredPOs.filter((po) => po.status === 'in_progress').length"></p></div>
+    <div class="glass-card p-4"><p class="text-xs text-slate-400">Completed</p><p class="text-2xl font-bold text-slate-800" x-text="filteredPOs.filter((po) => po.status === 'completed').length"></p></div>
+  </div>
+
+  <div class="flex items-center justify-between bg-white/60 backdrop-blur rounded-xl p-2 border border-white">
+    <div class="flex gap-1">
+      <button @click="filter='all'" class="px-4 py-2 rounded-lg text-xs font-bold transition" :class="filter==='all' ? 'bg-slate-800 text-white' : 'text-slate-600 hover:bg-slate-100'">Semua</button>
+      <button @click="filter='pending'" class="px-4 py-2 rounded-lg text-xs font-bold transition" :class="filter==='pending' ? 'bg-slate-200 text-slate-800' : 'text-slate-600 hover:bg-slate-100'">Antrian</button>
+      <button @click="filter='in_progress'" class="px-4 py-2 rounded-lg text-xs font-bold transition" :class="filter==='in_progress' ? 'bg-blue-100 text-blue-700' : 'text-slate-600 hover:bg-slate-100'">Sedang Dikerjakan</button>
+      <button @click="filter='completed'" class="px-4 py-2 rounded-lg text-xs font-bold transition" :class="filter==='completed' ? 'bg-emerald-100 text-emerald-700' : 'text-slate-600 hover:bg-slate-100'">Selesai</button>
+      <button @click="filter='on_hold'" class="px-4 py-2 rounded-lg text-xs font-bold transition" :class="filter==='on_hold' ? 'bg-rose-100 text-rose-700' : 'text-slate-600 hover:bg-slate-100'">Di-hold</button>
+    </div>
+    <div class="relative">
+      <input type="text" x-model="search" placeholder="Cari PO / Produk / Line..." class="bg-white/80 border border-slate-200 rounded-lg px-3 py-1.5 text-sm w-64 outline-none focus:border-slate-400">
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    <template x-for="po in filteredPOs" :key="po.id">
+      <div class="glass-card p-5 relative group cursor-pointer" @click="window.location.href=`{% url 'production_order_detail' 0 %}`.replace('/0/', `/${po.id}/`)">
+        <div class="flex justify-between items-start mb-3">
+          <div>
+            <h2 class="font-bold text-slate-800 text-lg leading-tight" x-text="po.product"></h2>
+            <p class="text-xs font-mono text-slate-400 mt-1" x-text="po.code"></p>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            <span class="status-badge" :class="statusClass(po.status)" x-text="formatStatus(po.status)"></span>
+            <span x-show="isOverdue(po)" class="text-[9px] font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded">OVERDUE</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-y-2 text-xs mb-4">
+          <div>
+            <span class="text-slate-400 block">Target Qty</span>
+            <span class="font-bold text-slate-700 text-sm" x-text="po.target_qty + ' ' + po.uom"></span>
+          </div>
+          <div class="text-right">
+            <span class="text-slate-400 block">Line</span>
+            <span class="font-bold text-slate-700 text-sm" x-text="po.line"></span>
+          </div>
+          <div>
+            <span class="text-slate-400 block">Plan Start</span>
+            <span class="font-medium text-slate-600" x-text="po.start_date"></span>
+          </div>
+          <div class="text-right">
+            <span class="text-slate-400 block">Priority</span>
+            <span class="font-bold" :class="po.priority === 'High' ? 'text-rose-500' : 'text-slate-500'" x-text="po.priority"></span>
+          </div>
+        </div>
+
+        <div class="mt-auto">
+          <div class="flex justify-between text-[10px] font-bold mb-1">
+            <span class="text-slate-500">Progress</span>
+            <span class="text-slate-700" x-text="progressPct(po) + '%'"></span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" :style="`width:${progressPct(po)}%`"></div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+{{ pos_data|json_script:"pos-data" }}
+<script>
+function poListApp() {
+  return {
+    pos: [],
+    filter: 'all',
+    search: '',
+    get filteredPOs() {
+      const query = this.search.toLowerCase();
+      return this.pos.filter((po) => {
+        const matchFilter = this.filter === 'all' || po.status === this.filter;
+        const matchSearch = [po.product, po.code, po.line].some((value) => String(value || '').toLowerCase().includes(query));
+        return matchFilter && matchSearch;
+      });
+    },
+    formatStatus(status) {
+      return String(status || '').replace('_', ' ');
+    },
+    statusClass(status) {
+      return { pending: 'st-pending', in_progress: 'st-process', completed: 'st-completed', on_hold: 'st-hold' }[status] || 'st-pending';
+    },
+    progressPct(po) {
+      if (!po.target_qty) return 0;
+      return Math.min(Math.round((Number(po.produced_qty || 0) / Number(po.target_qty || 1)) * 100), 100);
+    },
+    isOverdue(po) {
+      if (po.status !== 'pending' || !po.raw_scheduled_date) return false;
+      return new Date(po.raw_scheduled_date) < new Date();
+    },
+    init() {
+      const el = document.getElementById('pos-data');
+      if (!el || !el.textContent) return;
+      try {
+        const raw = JSON.parse(el.textContent) || [];
+        this.pos = raw.map((po) => ({
+          id: po.id,
+          code: po.code || '',
+          product: po.product || po.bom_name || '',
+          status: po.status || 'pending',
+          target_qty: Number(po.target_qty || po.target_quantity || 0),
+          produced_qty: Number(po.produced_qty || 0),
+          uom: po.uom || 'pcs',
+          line: po.line || '-',
+          start_date: po.start_date || po.scheduled_date || '-',
+          raw_scheduled_date: po.scheduled_date || '',
+          priority: po.priority || 'Normal',
+        }));
+      } catch (error) {
+        this.pos = [];
+      }
+    },
+  }
+}
+</script>
+{% endblock %}

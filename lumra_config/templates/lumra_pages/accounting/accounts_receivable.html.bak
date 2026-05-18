@@ -1,0 +1,193 @@
+{% extends 'base/base.html' %}
+{% block title %}Piutang Usaha — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-card { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.95); border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+  
+  .ar-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+  .ar-table th { text-align: right; padding: 12px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; border-bottom: 2px solid #f1f5f9; }
+  .ar-table td { padding: 14px; border-bottom: 1px solid #f8fafc; font-size: 13px; vertical-align: middle; }
+  .ar-table tr:hover td { background: #f8fafc; }
+  .text-left { text-align: left; }
+  .text-right { text-align: right; font-family: monospace; }
+  
+  .progress-mini { height: 4px; background: #f1f5f9; border-radius: 99px; overflow: hidden; width: 60px; }
+  .progress-fill { height: 100%; background: #3b82f6; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="arApp()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex items-end justify-between">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+        <a href="#" class="hover:text-slate-800">Keuangan</a>
+        <span>/</span>
+        <span class="text-slate-800 font-medium">Piutang Usaha (AR)</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800">Accounts Receivable</h1>
+      <p class="text-sm text-slate-400 mt-0.5">Monitoring tagihan yang belum dibayar oleh pelanggan.</p>
+    </div>
+    <button class="bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:bg-slate-700 transition flex items-center gap-2">
+      <i class="fas fa-file-invoice"></i> Kirim Pengingat
+    </button>
+  </div>
+
+  <!-- Summary -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="glass-card p-5">
+      <div class="flex justify-between items-center mb-2">
+        <p class="text-xs font-bold text-slate-400 uppercase">Total Piutang</p>
+        <i class="fas fa-wallet text-slate-300"></i>
+      </div>
+      <p class="text-2xl font-bold text-slate-800" x-text="formatCurrency(totalAR)"></p>
+    </div>
+    <div class="glass-card p-5">
+      <div class="flex justify-between items-center mb-2">
+        <p class="text-xs font-bold text-slate-400 uppercase">Jatuh Tempo Hari Ini</p>
+        <i class="fas fa-clock text-rose-300"></i>
+      </div>
+      <p class="text-2xl font-bold text-rose-600" x-text="formatCurrency(dueToday)"></p>
+    </div>
+    <div class="glass-card p-5">
+      <div class="flex justify-between items-center mb-2">
+        <p class="text-xs font-bold text-slate-400 uppercase">Overdue (>30 Hari)</p>
+        <i class="fas fa-exclamation-triangle text-amber-300"></i>
+      </div>
+      <p class="text-2xl font-bold text-amber-600" x-text="formatCurrency(overdue)"></p>
+    </div>
+  </div>
+
+  <!-- List Table -->
+  <div class="glass-card overflow-hidden">
+    <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+      <h3 class="font-bold text-slate-700 text-sm">Daftar Faktur Belum Lunas</h3>
+      <div class="relative w-48">
+        <input type="text" x-model="search" placeholder="Cari Customer / No. Faktur..." class="w-full bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-slate-400">
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="ar-table">
+        <thead>
+          <tr>
+            <th class="text-left" style="width: 25%">Customer</th>
+            <th class="text-left" style="width: 15%">No. Faktur</th>
+            <th class="text-right" style="width: 10%">Tgl Faktur</th>
+            <th class="text-right" style="width: 10%">Jatuh Tempo</th>
+            <th class="text-right" style="width: 10%">Total</th>
+            <th class="text-right" style="width: 10%">Umur (Hari)</th>
+            <th class="text-right" style="width: 10%">Sisa</th>
+            <th class="text-right" style="width: 10%" style="padding-right: 20px;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="inv in filteredInvoices" :key="inv.id">
+            <tr>
+              <td class="text-left">
+                <div class="font-bold text-slate-800" x-text="inv.customer"></div>
+                <!-- Progress bar for aging visualization -->
+                <div class="progress-mini mt-1">
+                  <div class="progress-fill" :style="`width: ${Math.min(100, (inv.age_days / 90) * 100)}%; background-color: ${getAgeColor(inv.age_days)}`"></div>
+                </div>
+              </td>
+              <td class="text-left font-mono text-xs text-slate-500" x-text="inv.number"></td>
+              <td class="text-right text-slate-600" x-text="inv.date"></td>
+              <td class="text-right font-bold" :class="isOverdue(inv) ? 'text-rose-600' : 'text-slate-700'" x-text="inv.due_date"></td>
+              <td class="text-right font-bold text-slate-700" x-text="formatCurrency(inv.total)"></td>
+              <td class="text-right font-bold" :class="getAgeTextColor(inv.age_days)" x-text="inv.age_days + ' Hari'"></td>
+              <td class="text-right font-bold text-slate-800" x-text="formatCurrency(inv.balance)"></td>
+              <td class="text-right pr-5">
+                <span class="px-2 py-1 rounded text-[10px] font-bold uppercase" 
+                      :class="getStatusClass(inv)">
+                  <span x-text="inv.status"></span>
+                </span>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script id="invoices-data" type="application/json">
+{{ invoices_json|safe }}
+</script>
+
+<!-- JSON injection for Accounts Receivable data -->
+<script id="invoices-data" type="application/json">
+{{ invoices_json|safe }}
+</script>
+
+<script>
+function arApp() {
+  return {
+    invoices: [],  // Populated by init()
+    search: '',
+    today: '{{ today|escapejs }}',
+    totalARAmount: {{ total_ar|default:0 }},
+    dueTodayAmount: {{ due_today|default:0 }},
+    overdueAmount: {{ overdue|default:0 }},
+
+    get filteredInvoices() {
+      return this.invoices.filter(i => {
+        return i.customer.toLowerCase().includes(this.search.toLowerCase()) || 
+               i.number.toLowerCase().includes(this.search.toLowerCase());
+      });
+    },
+
+    isOverdue(inv) {
+      return new Date(inv.due_date) < new Date(this.today);
+    },
+
+    getAgeColor(days) {
+      if (days < 0) return '#10b981'; // Not due yet (green)
+      if (days <= 30) return '#f59e0b'; // 1-30 days (yellow)
+      return '#ef4444'; // > 30 days (red)
+    },
+
+    getAgeTextColor(days) {
+      if (days < 0) return 'text-emerald-600';
+      if (days <= 30) return 'text-amber-600';
+      return 'text-rose-600';
+    },
+
+    getStatusClass(inv) {
+      const status = inv.status.toLowerCase();
+      if (status.includes('overdue')) return 'bg-rose-100 text-rose-700';
+      if (status.includes('due today')) return 'bg-amber-100 text-amber-700';
+      return 'bg-blue-100 text-blue-700';
+    },
+
+    formatCurrency(num) {
+      return new Intl.NumberFormat('id-ID', { 
+        style: 'currency', 
+        currency: 'IDR', 
+        minimumFractionDigits: 0 
+      }).format(num || 0);
+    },
+
+    init() {
+      // Load JSON data from script tag
+      const raw = document.getElementById('invoices-data');
+      if (raw) {
+        try {
+          this.invoices = JSON.parse(raw.textContent);
+        } catch(e) {
+          console.error('Failed to parse invoices JSON:', e);
+          this.invoices = [];
+        }
+      }
+    }
+  }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,81 @@
+{# base/partials/bg_blob.html — Emerald Odyssey Background Decorations
+   Variants: blob (default), bg-blob (reports), orb (sales_insight)
+
+   Usage:
+     {% include "base/partials/bg_blob.html" %}
+     {% include "base/partials/bg_blob.html" with variant="bg-blob" count=3 %}
+     {% include "base/partials/bg_blob.html" with variant="orb" count=3 %}
+#}
+
+<style>
+  .blob {
+    position: fixed; border-radius: 50%; filter: blur(80px);
+    opacity: 0.06; pointer-events: none; z-index: 0;
+    animation: drift 16s ease-in-out infinite alternate;
+  }
+  .blob-a { width: 420px; height: 420px; background: #00A86B; top: -100px; left: -80px; animation-delay: 0s; }
+  .blob-b { width: 280px; height: 280px; background: #00674F; bottom: -60px; right: -40px; animation-delay: -5s; }
+  .blob-c { width: 180px; height: 180px; background: #EFBF04; top: 50%; left: 40%; animation-delay: -2.5s; }
+  
+  .bg-blob {
+    position: fixed; border-radius: 50%; filter: blur(100px);
+    opacity: 0.05; pointer-events: none; z-index: 0;
+    animation: drift 18s ease-in-out infinite alternate;
+  }
+  .bg-blob-1 { width: 480px; height: 480px; background: #00674F; top: -120px; left: -160px; animation-delay: 0s; }
+  .bg-blob-2 { width: 320px; height: 320px; background: #00A86B; bottom: -80px; right: -80px; animation-delay: -7s; }
+  .bg-blob-3 { width: 220px; height: 220px; background: #EFBF04; top: 40%; left: 55%; animation-delay: -3.5s; opacity: 0.03; }
+  
+  .orb {
+    position: fixed; border-radius: 50%; filter: blur(60px);
+    opacity: 0.08; pointer-events: none; z-index: 0;
+    animation: pulse-orb 12s ease-in-out infinite;
+  }
+  .orb-1 { width: 340px; height: 340px; background: #00A86B; top: 10%; left: 5%; animation-delay: 0s; }
+  .orb-2 { width: 260px; height: 260px; background: #EFBF04; bottom: 15%; right: 10%; animation-delay: -4s; }
+  .orb-3 { width: 200px; height: 200px; background: #00674F; top: 60%; right: 20%; animation-delay: -8s; }
+  
+  .sh-bg-orb {
+    position: fixed; border-radius: 50%; filter: blur(90px);
+    opacity: 0.04; pointer-events: none; z-index: 0;
+    animation: drift 20s ease-in-out infinite alternate;
+  }
+  .sh-bg-orb-1 { width: 500px; height: 500px; background: #00674F; top: -150px; left: -100px; animation-delay: 0s; }
+  .sh-bg-orb-2 { width: 350px; height: 350px; background: #00A86B; bottom: -120px; right: -80px; animation-delay: -7s; }
+  .sh-bg-orb-3 { width: 280px; height: 280px; background: #EFBF04; top: 45%; left: 50%; animation-delay: -3.5s; }
+  
+  @keyframes drift {
+    from { transform: translate(0, 0) scale(1); }
+    to { transform: translate(20px, 28px) scale(1.06); }
+  }
+  @keyframes pulse-orb {
+    0%, 100% { transform: scale(1); opacity: 0.08; }
+    50% { transform: scale(1.08); opacity: 0.12; }
+  }
+</style>
+
+{% with variant=variant|default:"blob" count=count|default:3 %}
+
+{% if variant == "blob" %}
+<div class="blob blob-a" aria-hidden="true"></div>
+<div class="blob blob-b" aria-hidden="true"></div>
+{% if count >= 3 %}<div class="blob blob-c" aria-hidden="true"></div>{% endif %}
+
+{% elif variant == "bg-blob" %}
+<div class="bg-blob" aria-hidden="true"></div>
+<div class="bg-blob-1" aria-hidden="true"></div>
+<div class="bg-blob-2" aria-hidden="true"></div>
+{% if count >= 4 %}<div class="bg-blob-3" aria-hidden="true"></div>{% endif %}
+
+{% elif variant == "orb" %}
+<div class="orb orb-1" aria-hidden="true"></div>
+<div class="orb orb-2" aria-hidden="true"></div>
+{% if count >= 3 %}<div class="orb orb-3" aria-hidden="true"></div>{% endif %}
+
+{% elif variant == "sh-bg-orb" %}
+<div class="sh-bg-orb sh-bg-orb-1" aria-hidden="true"></div>
+<div class="sh-bg-orb sh-bg-orb-2" aria-hidden="true"></div>
+<div class="sh-bg-orb sh-bg-orb-3" aria-hidden="true"></div>
+
+{% endif %}
+{% endwith %}

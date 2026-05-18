@@ -1,0 +1,137 @@
+[
+  {
+    "type": "move",
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\activity_log.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\activity_log.html"
+  },
+  {
+    "type": "move",
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\add_stock_movement.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\add_stock_movement.html"
+  },
+  {
+    "type": "move",
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\campaign.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\marketing\\campaign.html"
+  },
+  {
+    "type": "move",
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\contact.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\contact.html"
+  },
+  {
+    "type": "move",
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\customers.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\customers.html"
+  },
+  {
+    "type": "move",
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\discount.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\marketing\\discount.html"
+  },
+  {
+    "type": "move",
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\loyalty_members.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\marketing\\loyalty_members.html"
+  },
+  {
+    "type": "move",
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\search.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\search.html"
+  },
+  {
+    "type": "move",
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\stock_movement.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\stock_movement.html"
+  },
+  {
+    "type": "move",
+    "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\trends_analysis.html",
+    "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\trends_analysis.html"
+  },
+  {
+    "type": "delete_root",
+    "file": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\activity_log.html",
+    "archive": "D:\\APPS\\Project\\lumra\\_archive\\lumra_pages_root\\20260312_143030\\activity_log.html"
+  },
+  {
+    "type": "delete_root",
+    "file": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\add_stock_movement.html",
+    "archive": "D:\\APPS\\Project\\lumra\\_archive\\lumra_pages_root\\20260312_143030\\add_stock_movement.html"
+  },
+  {
+    "type": "delete_root",
+    "file": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\campaign.html",
+    "archive": "D:\\APPS\\Project\\lumra\\_archive\\lumra_pages_root\\20260312_143030\\campaign.html"
+  },
+  {
+    "type": "delete_root",
+    "file": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\contact.html",
+    "archive": "D:\\APPS\\Project\\lumra\\_archive\\lumra_pages_root\\20260312_143030\\contact.html"
+  },
+  {
+    "type": "delete_root",
+    "file": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\customers.html",
+    "archive": "D:\\APPS\\Project\\lumra\\_archive\\lumra_pages_root\\20260312_143030\\customers.html"
+  },
+  {
+    "type": "delete_root",
+    "file": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\discount.html",
+    "archive": "D:\\APPS\\Project\\lumra\\_archive\\lumra_pages_root\\20260312_143030\\discount.html"
+  },
+  {
+    "type": "delete_root",
+    "file": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\loyalty_members.html",
+    "archive": "D:\\APPS\\Project\\lumra\\_archive\\lumra_pages_root\\20260312_143030\\loyalty_members.html"
+  },
+  {
+    "type": "delete_root",
+    "file": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\search.html",
+    "archive": "D:\\APPS\\Project\\lumra\\_archive\\lumra_pages_root\\20260312_143030\\search.html"
+  },
+  {
+    "type": "delete_root",
+    "file": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\stock_movement.html",
+    "archive": "D:\\APPS\\Project\\lumra\\_archive\\lumra_pages_root\\20260312_143030\\stock_movement.html"
+  },
+  {
+    "type": "delete_root",
+    "file": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\trends_analysis.html",
+    "archive": "D:\\APPS\\Project\\lumra\\_archive\\lumra_pages_root\\20260312_143030\\trends_analysis.html"
+  },
+  {
+    "type": "delete_root",
+    "file": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\about.html",
+    "archive": "D:\\APPS\\Project\\lumra\\_archive\\lumra_pages_root\\20260312_143030\\about.html"
+  },
+  {
+    "type": "delete_root",
+    "file": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\dashboard.html",
+    "archive": "D:\\APPS\\Project\\lumra\\_archive\\lumra_pages_root\\20260312_143030\\dashboard.html"
+  },
+  {
+    "type": "delete_root",
+    "file": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\market_insights.html",
+    "archive": "D:\\APPS\\Project\\lumra\\_archive\\lumra_pages_root\\20260312_143030\\market_insights.html"
+  },
+  {
+    "type": "delete_root",
+    "file": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\notification.html",
+    "archive": "D:\\APPS\\Project\\lumra\\_archive\\lumra_pages_root\\20260312_143030\\notification.html"
+  },
+  {
+    "type": "delete_root",
+    "file": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\profile.html",
+    "archive": "D:\\APPS\\Project\\lumra\\_archive\\lumra_pages_root\\20260312_143030\\profile.html"
+  },
+  {
+    "type": "delete_root",
+    "file": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\user_roles_permissions.html",
+    "archive": "D:\\APPS\\Project\\lumra\\_archive\\lumra_pages_root\\20260312_143030\\user_roles_permissions.html"
+  },
+  {
+    "type": "delete_root",
+    "file": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\users.html",
+    "archive": "D:\\APPS\\Project\\lumra\\_archive\\lumra_pages_root\\20260312_143030\\users.html"
+  }
+]

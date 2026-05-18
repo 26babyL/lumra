@@ -1,0 +1,169 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}Detail Permintaan — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>[x-cloak]{display:none!important}
+
+  .status-chip { display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+  .chip-pending { background: #FFF4E5; color: #FF9800; }
+  .chip-approved { background: #E6FFFA; color: #00B8A3; }
+  .chip-rejected { background: #FFF1F2; color: #E11D48; }
+  .timeline-item { position: relative; padding-left: 24px; padding-bottom: 24px; border-left: 2px solid #e2e8f0; }
+  .timeline-item::before { content:''; position: absolute; left: -6px; top: 0; width: 10px; height: 10px; border-radius: 50%; background: #94a3b8; }
+  .timeline-item.active::before { background: #00B8A3; box-shadow: 0 0 0 3px rgba(0, 184, 163, 0.2); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-5xl mx-auto relative z-10 space-y-6" x-data="reqDetailApp()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <div class="flex items-center gap-3 mb-1">
+        <h1 class="text-2xl font-bold text-slate-800" x-text="req.code || req.id"></h1>
+        <span class="status-chip" :class="'chip-' + statusChip(req.status)" x-text="formatStatus(req.status)"></span>
+      </div>
+      <p class="text-sm text-slate-500">Dibuat pada <span x-text="req.created_at"></span></p>
+    </div>
+    <div class="flex gap-2">
+      <button aria-label="Cetak" class="w-10 h-10 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center shadow-sm">
+        <i class="fas fa-print"></i>
+      </button>
+      <a href="{% url 'requisition_list' %}" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-600 font-medium hover:bg-slate-200 text-sm">Kembali</a>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Main Content (Left) -->
+    <div class="lg:col-span-2 space-y-6">
+      
+      <!-- Route Info -->
+      <div class="bg-white/80 backdrop-blur rounded-2xl p-6 border border-white shadow-sm">
+        <h2 class="font-bold text-slate-700 mb-4">Rute Pengiriman</h2>
+        <div class="flex items-center justify-between bg-slate-50 p-4 rounded-xl">
+          <div class="text-center">
+            <p class="text-xs text-slate-400 uppercase font-bold">Dari</p>
+            <p class="font-bold text-slate-800 text-lg mt-1" x-text="req.from"></p>
+          </div>
+          <div class="flex-1 px-4 flex flex-col items-center">
+             <i class="fas fa-arrow-right text-slate-300 text-xl"></i>
+             <span class="text-[10px] text-slate-400 mt-1 uppercase" x-text="req.distance + ' KM'"></span>
+          </div>
+          <div class="text-center">
+            <p class="text-xs text-slate-400 uppercase font-bold">Ke</p>
+            <p class="font-bold text-slate-800 text-lg mt-1" x-text="req.to"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Items Table -->
+      <div class="bg-white/80 backdrop-blur rounded-2xl p-6 border border-white shadow-sm">
+        <h3 class="font-bold text-slate-700 mb-4">Barang Diminta</h3>
+        <table class="w-full text-sm text-left">
+          <thead class="bg-slate-50 text-slate-500 border-b border-slate-100">
+            <tr>
+              <th class="pb-3 font-semibold">Produk</th>
+              <th class="pb-3 font-semibold text-right">Qty</th>
+              <th class="pb-3 font-semibold text-right">Satuan</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-50">
+            <template x-for="item in req.items" :key="item.sku">
+              <tr>
+                <td class="py-3">
+                  <div class="font-medium text-slate-800" x-text="item.name"></div>
+                  <div class="text-xs text-slate-400" x-text="item.sku"></div>
+                </td>
+                <td class="py-3 text-right font-bold" x-text="item.qty"></td>
+                <td class="py-3 text-right text-slate-500">Pcs</td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Sidebar (Right) -->
+    <div class="space-y-6">
+      <!-- Approval Actions -->
+      <div class="bg-white/80 backdrop-blur rounded-2xl p-6 border border-white shadow-sm sticky top-6">
+        <h3 class="font-bold text-slate-700 mb-4">Tindakan</h3>
+        
+        <div class="space-y-3">
+          <template x-if="req.status === 'waiting'">
+            <div>
+              <button @click="updateStatus('approved')" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold shadow-md shadow-emerald-200 transition flex items-center justify-center gap-2 mb-2">
+                <i class="fas fa-check"></i> Setujui Permintaan
+              </button>
+              <button @click="updateStatus('rejected')" class="w-full py-3 bg-white border border-rose-200 text-rose-500 hover:bg-rose-50 rounded-xl font-bold transition flex items-center justify-center gap-2">
+                <i class="fas fa-times"></i> Tolak Permintaan
+              </button>
+            </div>
+          </template>
+
+          <template x-if="req.status === 'approved'">
+            <button @click="updateStatus('in_transit')" class="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-bold shadow-md shadow-blue-200 transition flex items-center justify-center gap-2">
+              <i class="fas fa-truck"></i> Mulai Pengiriman
+            </button>
+          </template>
+          
+          <template x-if="req.status === 'in_transit'">
+            <button @click="updateStatus('completed')" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold shadow-md transition flex items-center justify-center gap-2">
+              <i class="fas fa-check-double"></i> Selesaikan (Diterima)
+            </button>
+          </template>
+
+          <div class="pt-4 border-t border-slate-100 mt-4">
+            <p class="text-xs text-slate-400 font-bold uppercase mb-2">Catatan:</p>
+            <p class="text-sm text-slate-600 italic" x-text="req.notes || '-'"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- History Log -->
+      <div class="bg-white/80 backdrop-blur rounded-2xl p-6 border border-white shadow-sm">
+        <h3 class="font-bold text-slate-700 mb-4">Riwayat</h3>
+        <div class="space-y-0">
+          <div class="timeline-item active">
+            <p class="text-sm font-bold text-slate-800" x-text="req.status"></p>
+            <p class="text-xs text-slate-400" x-text="new Date().toLocaleDateString()"></p>
+          </div>
+          <div class="timeline-item">
+            <p class="text-sm font-bold text-slate-800">Permintaan Dibuat</p>
+            <p class="text-xs text-slate-400" x-text="req.created_at"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+{{ requisition_data|json_script:"requisition-data" }}
+<script>
+function reqDetailApp() {
+  return {
+    req: { items: [] },
+    init() {
+      const el = document.getElementById('requisition-data');
+      if (el && el.textContent) {
+        try { this.req = JSON.parse(el.textContent) || { items: [] }; } catch(e) { this.req = { items: [] }; }
+      }
+    },
+    statusChip(s) {
+      const map = { waiting: 'pending', in_transit: 'transit' };
+      return map[s] || s || 'pending';
+    },
+    formatStatus(s) { return (s || '').toString().replace('_', ' '); },
+    updateStatus(newStatus) {
+      if(confirm(`Ubah status menjadi ${newStatus}?`)) {
+        this.req.status = newStatus;
+        // API Call here
+      }
+    }
+  }
+}
+</script>
+{% endblock %}

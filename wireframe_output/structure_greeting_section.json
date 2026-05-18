@@ -1,0 +1,96 @@
+{
+  "filename": "greeting_section.html",
+  "title": "greeting_section",
+  "components": [
+    {
+      "type": "alpine-root",
+      "tag": "div",
+      "label": "ALPINE COMPONENT [greetingData()]",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "greeting-container",
+      "text_preview": "{{ greeting_time }} Hello, {{ user.first_name|default:user.u…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": "greetingData()"
+    },
+    {
+      "type": "heading",
+      "tag": "h2",
+      "label": "HEADING (H2)",
+      "depth": 4,
+      "path": "root/body/div/div/div/h2",
+      "classes": "greeting-title",
+      "text_preview": "Hello, {{ user.first_name|default:user.username }} ! 👋",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "badge",
+      "tag": "div",
+      "label": "BADGE / STATUS",
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "classes": "meta-badge",
+      "text_preview": "{{ location }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "alpine-root",
+      "label": "ALPINE COMPONENT [greetingData()]",
+      "text_preview": "{{ greeting_time }} Hello, {{ user.first_name|default:user.u…"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/h2",
+      "type": "heading",
+      "label": "HEADING (H2)",
+      "text_preview": "Hello, {{ user.first_name|default:user.username }} ! 👋"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "type": "badge",
+      "label": "BADGE / STATUS",
+      "text_preview": "{{ location }}"
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 3,
+    "by_type": {
+      "alpine-root": 1,
+      "heading": 1,
+      "badge": 1
+    },
+    "interactive": 1,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

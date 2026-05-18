@@ -1,0 +1,158 @@
+{% extends 'base/base_hybrid.html' %}
+
+{% block title %}Login - CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  .auth-page-bg {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #00a86b 0%, #1A1A1A 45%, #003D2F 100%);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+  .auth-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.18;
+    pointer-events: none;
+    animation: drift 16s ease-in-out infinite alternate;
+  }
+  .auth-blob-1 { width:420px; height:420px; background:#00a86b; top:-80px; left:-100px; }
+  .auth-blob-2 { width:300px; height:300px; background:#1A1A1A; bottom:-60px; right:-80px; animation-delay:-6s; }
+  .auth-blob-3 { width:200px; height:200px; background:#008B61; top:50%; left:60%; animation-delay:-3s; }
+  @keyframes drift {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(30px, -20px) scale(1.05); }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-page-bg">
+  <!-- Background Pattern -->
+  <div class="auth-blob auth-blob-1"></div>
+  <div class="auth-blob auth-blob-2"></div>
+  <div class="auth-blob auth-blob-3"></div>
+  
+  <!-- Login Card -->
+  <div class="card bg-base-100/85 backdrop-blur-lg border border-base-300 shadow-2xl max-w-md w-full mx-4 relative z-10">
+    <div class="card-body p-10">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-success to-emerald-600 flex items-center justify-center shadow-lg">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 4h3v12h6.5V19H7V4z"/>
+          </svg>
+        </div>
+        <h1 class="text-2xl font-bold text-base-content mb-2">Selamat Datang</h1>
+        <p class="text-base-content/60">Masuk ke akun CoffeeShop Anda</p>
+      </div>
+
+      <!-- Login Form -->
+      <form method="post" class="space-y-6">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+          <div class="alert alert-error">
+            <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.932-3L13.932 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.932 3z"/>
+            </svg>
+            <div>
+              {% for error in form.non_field_errors %}
+                {{ error }}
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Username Field -->
+        <div class="form-control">
+          <label for="id_username" class="label">
+            <span class="label-text">Username atau Email</span>
+          </label>
+          <input 
+            type="text" 
+            name="username" 
+            id="id_username" 
+            class="input input-bordered input-primary w-full" 
+            placeholder="Masukkan username atau email"
+            value="{{ form.username.value|default:'' }}"
+            required
+            autocomplete="username"
+          >
+          {% if form.username.errors %}
+            <label class="label">
+              <span class="label-text-alt text-error">
+                {% for error in form.username.errors %}
+                  {{ error }}
+                {% endfor %}
+              </span>
+            </label>
+          {% endif %}
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-control">
+          <label for="id_password" class="label">
+            <span class="label-text">Password</span>
+          </label>
+          <input 
+            type="password" 
+            name="password" 
+            id="id_password" 
+            class="input input-bordered input-primary w-full" 
+            placeholder="Masukkan password"
+            required
+            autocomplete="current-password"
+          >
+          {% if form.password.errors %}
+            <label class="label">
+              <span class="label-text-alt text-error">
+                {% for error in form.password.errors %}
+                  {{ error }}
+                {% endfor %}
+              </span>
+            </label>
+          {% endif %}
+        </div>
+
+        <!-- Remember Me -->
+        <div class="form-control">
+          <label class="label cursor-pointer justify-start gap-3">
+            <input type="checkbox" name="remember_me" class="checkbox checkbox-primary">
+            <span class="label-text">Ingat saya</span>
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary w-full">
+          <i class="fas fa-sign-in-alt mr-2"></i>
+          Masuk
+        </button>
+      </form>
+
+      <!-- Footer Links -->
+      <div class="text-center mt-8 space-y-4">
+        <div class="flex items-center justify-center gap-4 text-sm">
+          <a href="{% url 'forgot_password' %}" class="link link-primary">
+            Lupa Password?
+          </a>
+          <span class="text-base-content/40">•</span>
+          <a href="{% url 'register' %}" class="link link-primary">
+            Daftar Akun Baru
+          </a>
+        </div>
+        
+        <div class="text-xs text-base-content/40">
+          &copy; {% now "Y" %} CoffeeShop. Hak cipta dilindungi.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

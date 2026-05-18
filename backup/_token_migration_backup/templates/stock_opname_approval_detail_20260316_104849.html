@@ -1,0 +1,555 @@
+
+<style>
+/* Glass Minimal — lumra_glass_fix.py fase 5 (konservatif) */
+.modal-overlay {
+  background: var(--glass-dark-bg, rgba(15,23,42,0.40));
+  backdrop-filter: var(--glass-dark-blur, blur(6px));
+  -webkit-backdrop-filter: var(--glass-dark-blur, blur(6px));
+}
+.panel-glass {
+  background: var(--glass-bg, rgba(255,255,255,0.72));
+  backdrop-filter: var(--glass-blur, blur(14px) saturate(180%));
+  -webkit-backdrop-filter: var(--glass-blur, blur(14px) saturate(180%));
+  border: 1px solid var(--glass-border, rgba(255,255,255,0.20));
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow, 0 2px 12px rgba(0,0,0,.06));
+}
+
+</style>
+{% extends 'base/base.html' %}
+{% block title %}Session Detail — {{ session.location.name }} — CoffeeShop{% endblock %}
+
+{#
+   Data session dan opname_data via json_script — menggantikan:
+   1. Interpolasi Django ke JS string (sessionStatus, approvedAt, rejectionReason)
+   2. DOM scraping dari <tr> di dalam <div> (invalid HTML)
+   3. ID hardcode di dalam closure JS
+
+   Di view, tambahkan:
+     context['session_init'] = json.dumps({
+         'id': session.id,
+         'status': session.status,
+         'approved_at_display': session.approved_at.strftime('%d %b %Y, %H:%M')
+                                if session.approved_at else '',
+         'rejection_reason': session.notes or '',
+         'location_name': session.location.name,
+     })
+     context['opname_items_json'] = [
+         {
+             'id': item.id,
+             'sku': item.variant.sku,
+             'product': item.variant.product.name,
+             'current_stock': item.current_stock or 0,
+             'counted_qty': item.counted_qty or 0,
+             'difference': item.difference or 0,
+             'notes': item.notes or '',
+         }
+         for item in opname_data
+     ]
+#}
+{{ session_init|json_script:"session-init-data" }}
+{{ opname_items_json|json_script:"opname-items-data" }}
+
+{% block content %}
+<div class="py-6 px-3 sm:px-4 lg:px-6"
+     x-data="sessionDetail()"
+     x-init="init()">
+<div class="max-w-7xl mx-auto space-y-6">
+
+    {# ── HEADER ──────────────────────────────────────────────── #}
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+        <div>
+            <nav aria-label="Breadcrumb" class="mb-1">
+                <ol class="flex items-center gap-2 text-sm text-emerald-600">
+                    <li><a href="{% url 'dashboard' %}" class="hover:text-emerald-800 transition-colors">Dashboard</a></li>
+                    <li aria-hidden="true"><span class="text-emerald-300">/</span></li>
+                    <li><a href="{% url 'stock_opname_locations' %}" class="hover:text-emerald-800 transition-colors">Opname Locations</a></li>
+                    <li aria-hidden="true"><span class="text-emerald-300">/</span></li>
+                    <li class="text-emerald-800 font-medium truncate max-w-xs" aria-current="page">
+                        {{ session.location.name }} #{{ session.id }}
+                    </li>
+                </ol>
+            </nav>
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-900">
+                Session Detail —
+                <span class="text-emerald-600">{{ session.location.name }}</span>
+            </h1>
+            <p class="text-sm text-gray-500 mt-0.5">Tinjau dan kelola data sesi opname</p>
+        </div>
+        <div class="flex gap-2 flex-shrink-0">
+            {#
+               Export via server endpoint — lebih reliable daripada client-side CSV build.
+               Data sudah tersedia di server, tidak perlu scraping DOM.
+               Endpoint: /api/opname/session/<id>/export/?format=csv
+            #}
+            <a href="{% url 'stock_opname_session_export' session.id %}?format=csv"
+               class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded-xl transition-colors shadow-sm">
+                <i class="fas fa-download text-xs" aria-hidden="true"></i> Export CSV
+            </a>
+            <button @click="printPage()"
+                    class="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm font-medium py-2 px-4 rounded-xl transition-colors">
+                <i class="fas fa-print text-xs" aria-hidden="true"></i> Print
+            </button>
+        </div>
+    </div>
+
+    {# ── SUMMARY CARD ────────────────────────────────────────── #}
+    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+        <h2 class="text-sm font-semibold text-gray-700 mb-4">Ringkasan Sesi</h2>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-gray-50 p-3 rounded-xl">
+                <p class="text-xs text-gray-500 mb-0.5">Lokasi</p>
+                <p class="text-sm font-semibold text-gray-900">{{ session.location.name }}</p>
+            </div>
+            <div class="bg-gray-50 p-3 rounded-xl">
+                <p class="text-xs text-gray-500 mb-0.5">Dimulai Oleh</p>
+                <p class="text-sm font-semibold text-gray-900">
+                    {{ session.created_by.get_full_name|default:session.created_by.username }}
+                </p>
+            </div>
+            <div class="bg-gray-50 p-3 rounded-xl">
+                <p class="text-xs text-gray-500 mb-0.5">Tanggal Mulai</p>
+                <p class="text-sm font-semibold text-gray-900">
+                    {{ session.created_at|date:"d M Y, H:i" }}
+                </p>
+            </div>
+            <div class="bg-gray-50 p-3 rounded-xl">
+                <p class="text-xs text-gray-500 mb-0.5">Status</p>
+                {#
+                   Status badge dirender server (SSR) — tidak ada reactive Alpine di sini.
+                   Setelah approve/reject, halaman di-redirect sehingga badge
+                   langsung mengambil nilai terbaru dari server.
+                   Status label format: replace underscore dilakukan di server.
+                #}
+                <span class="inline-flex px-2.5 py-1 text-xs font-semibold rounded-full
+                    {% if session.status == 'in_progress' %}bg-blue-100 text-blue-700
+                    {% elif session.status == 'submitted' %}bg-amber-100 text-amber-700
+                    {% elif session.status == 'approved' %}bg-green-100 text-green-700
+                    {% else %}bg-red-100 text-red-700{% endif %}">
+                    {{ session.status|title|replace:"_"," " }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    {# ── DATA TABLE ──────────────────────────────────────────── #}
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+             aria-labelledby="session-table-heading">
+
+        <div class="px-5 py-4 border-b border-gray-100">
+            <h2 id="session-table-heading" class="text-sm font-semibold text-gray-700">Data Opname</h2>
+            <p class="text-xs text-gray-400 mt-0.5">Stok sistem, jumlah terhitung, dan selisih</p>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-100" role="table">
+                <thead>
+                    <tr class="bg-gray-50">
+                        {#
+                           Sort headers — @click memanggil sortBy() di Alpine.
+                           Icon arah sort berubah secara reaktif.
+                        #}
+                        {% for col in table_columns %}
+                        <th scope="col"
+                            class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider
+                                   {% if col.sortable %}cursor-pointer hover:bg-gray-100 select-none{% endif %}"
+                            {% if col.sortable %}
+                            @click="sortBy('{{ col.key }}')"
+                            :aria-sort="sortColumn === '{{ col.key }}'
+                                ? (sortDirection === 'asc' ? 'ascending' : 'descending')
+                                : 'none'"
+                            {% endif %}>
+                            <span class="flex items-center gap-1">
+                                {{ col.label }}
+                                {% if col.sortable %}
+                                <span aria-hidden="true">
+                                    <i x-show="sortColumn !== '{{ col.key }}'" class="fas fa-sort text-gray-300 text-xs"></i>
+                                    <i x-show="sortColumn === '{{ col.key }}' && sortDirection === 'asc'" class="fas fa-sort-up text-emerald-500 text-xs"></i>
+                                    <i x-show="sortColumn === '{{ col.key }}' && sortDirection === 'desc'" class="fas fa-sort-down text-emerald-500 text-xs"></i>
+                                </span>
+                                {% endif %}
+                            </span>
+                        </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-50">
+                    {#
+                       Data dari Alpine sortedData (computed dari tableData yang di-parse dari json_script).
+                       Semua field ditampilkan via x-text — aman dari XSS.
+                       Tidak ada lagi DOM scraping dari hidden <tr> di luar <table>.
+                    #}
+                    <template x-for="item in sortedData" :key="item.id">
+                        <tr class="hover:bg-gray-50 transition-colors duration-150">
+                            <td class="px-5 py-4">
+                                <code class="bg-emerald-50 px-2 py-1 rounded text-xs font-mono text-emerald-700"
+                                      x-text="item.sku"></code>
+                            </td>
+                            <td class="px-5 py-4 text-sm font-medium text-gray-900"
+                                x-text="item.product"></td>
+                            <td class="px-5 py-4 text-sm text-gray-600"
+                                x-text="item.current_stock"></td>
+                            <td class="px-5 py-4 text-sm text-gray-900 font-medium"
+                                x-text="item.counted_qty"></td>
+                            <td class="px-5 py-4 text-sm font-semibold"
+                                :class="{
+                                    'text-green-600': item.difference > 0,
+                                    'text-red-600':   item.difference < 0,
+                                    'text-gray-500':  item.difference === 0
+                                }"
+                                x-text="item.difference > 0 ? '+' + item.difference : item.difference">
+                            </td>
+                            <td class="px-5 py-4 text-sm text-gray-500"
+                                x-text="item.notes || '—'"></td>
+                        </tr>
+                    </template>
+
+                    <tr x-show="sortedData.length === 0">
+                        <td colspan="6" class="px-5 py-10 text-center text-gray-400 text-sm">
+                            <i class="fas fa-inbox text-2xl mb-2 block opacity-40" aria-hidden="true"></i>
+                            Tidak ada data opname.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    {# ── ACTION AREA ─────────────────────────────────────────── #}
+    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+        <h2 class="text-sm font-semibold text-gray-700 mb-4">Tindakan</h2>
+
+        {# Status: submitted — tampilkan form approve/reject #}
+        <div x-show="sessionStatus === 'submitted'"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100">
+
+            {# Reason textarea — tersedia untuk kedua aksi #}
+            <div class="mb-4">
+                <label for="decisionReason" class="block text-sm font-medium text-gray-700 mb-1">
+                    Catatan / Alasan <span class="text-gray-400 font-normal">(opsional)</span>
+                </label>
+                <textarea id="decisionReason"
+                          x-model="decisionReason"
+                          rows="3"
+                          placeholder="Tambahkan catatan persetujuan atau alasan penolakan..."
+                          class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-gray-50 resize-none">
+                </textarea>
+            </div>
+
+            <div class="flex flex-wrap gap-3">
+                <button @click="openConfirm('approve')"
+                        :disabled="isProcessing"
+                        class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold py-2 px-5 rounded-xl transition-colors shadow-sm">
+                    <i x-show="isProcessing && pendingAction === 'approve'" class="fas fa-circle-notch fa-spin text-xs" aria-hidden="true"></i>
+                    <i x-show="!(isProcessing && pendingAction === 'approve')" class="fas fa-check text-xs" aria-hidden="true"></i>
+                    Setujui & Update Stok
+                </button>
+                <button @click="openConfirm('reject')"
+                        :disabled="isProcessing"
+                        class="inline-flex items-center gap-2 bg-red-500 hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold py-2 px-5 rounded-xl transition-colors shadow-sm">
+                    <i x-show="isProcessing && pendingAction === 'reject'" class="fas fa-circle-notch fa-spin text-xs" aria-hidden="true"></i>
+                    <i x-show="!(isProcessing && pendingAction === 'reject')" class="fas fa-times text-xs" aria-hidden="true"></i>
+                    Tolak
+                </button>
+            </div>
+        </div>
+
+        {# Status: approved #}
+        <div x-show="sessionStatus === 'approved'"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100">
+            <div class="p-4 bg-green-50 border border-green-200 rounded-xl">
+                <div class="flex items-center gap-2 text-green-800 font-medium text-sm mb-1">
+                    <i class="fas fa-check-circle" aria-hidden="true"></i>
+                    Sesi ini telah disetujui dan stok telah diperbarui.
+                </div>
+                {#
+                   approvedAt diambil dari json_script (server timezone) — bukan
+                   new Date().toLocaleString() yang pakai timezone client.
+                #}
+                <p x-show="approvedAt" class="text-xs text-gray-500">
+                    Disetujui pada: <span x-text="approvedAt"></span>
+                </p>
+            </div>
+        </div>
+
+        {# Status: rejected #}
+        <div x-show="sessionStatus === 'rejected'"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100">
+            <div class="p-4 bg-red-50 border border-red-200 rounded-xl">
+                <div class="flex items-center gap-2 text-red-800 font-medium text-sm mb-1">
+                    <i class="fas fa-times-circle" aria-hidden="true"></i>
+                    Sesi ini telah ditolak.
+                </div>
+                {#
+                   rejectionReason dari json_script — bukan interpolasi Django ke JS string.
+                   x-text aman dari XSS.
+                #}
+                <p x-show="rejectionReason" class="text-xs text-gray-500">
+                    Alasan: <span x-text="rejectionReason"></span>
+                </p>
+            </div>
+        </div>
+
+        {# Status: in_progress #}
+        <div x-show="sessionStatus === 'in_progress'">
+            <p class="text-sm text-gray-500">Sesi ini masih dalam proses penghitungan.</p>
+        </div>
+
+        <div class="mt-4">
+            <a href="{% url 'stock_opname_approvals' %}"
+               class="inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm font-medium py-2 px-4 rounded-xl transition-colors">
+                <i class="fas fa-arrow-left text-xs" aria-hidden="true"></i> Kembali ke Approvals
+            </a>
+        </div>
+    </div>
+
+</div>
+</div>
+
+{# ================================================================
+   MODALS
+================================================================= #}
+
+{# ── Confirmation Modal ────────────────────────────────────────── #}
+<div x-show="activeModal === 'confirm'"
+     x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+     class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+     @keydown.escape.window="closeModal()" @click.self="closeModal()"
+     role="dialog" aria-modal="true" aria-labelledby="modal-confirm-title" x-cloak>
+
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm"
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 scale-95"
+         x-transition:enter-end="opacity-100 scale-100">
+
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <h2 id="modal-confirm-title" class="text-lg font-bold text-gray-900"
+                x-text="pendingAction === 'approve' ? 'Setujui Sesi' : 'Tolak Sesi'"></h2>
+            <button @click="closeModal()" class="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg transition-colors" aria-label="Tutup">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <div class="p-6">
+            <p class="text-sm text-gray-600">
+                <span x-text="pendingAction === 'approve'
+                    ? 'Setujui sesi ini? Stok akan diperbarui secara otomatis.'
+                    : 'Tolak sesi ini? Tindakan ini tidak dapat dibatalkan.'">
+                </span>
+            </p>
+            <p x-show="decisionReason" class="mt-2 text-xs text-gray-400">
+                Catatan: <span x-text="decisionReason"></span>
+            </p>
+
+            <div class="flex justify-end gap-2 mt-5">
+                <button @click="closeModal()" :disabled="isProcessing"
+                        class="px-4 py-2 text-sm text-gray-600 bg-gray-100 hover:bg-gray-200 disabled:opacity-50 rounded-xl transition-colors">
+                    Batal
+                </button>
+                <button @click="executeDecision()" :disabled="isProcessing"
+                        class="inline-flex items-center gap-2 px-4 py-2 text-sm text-white disabled:opacity-50 rounded-xl transition-colors"
+                        :class="pendingAction === 'approve'
+                            ? 'bg-green-500 hover:bg-green-600'
+                            : 'bg-red-500 hover:bg-red-600'">
+                    <i x-show="isProcessing" class="fas fa-circle-notch fa-spin text-xs" aria-hidden="true"></i>
+                    <span x-text="isProcessing ? 'Memproses...' : (pendingAction === 'approve' ? 'Ya, Setujui' : 'Ya, Tolak')"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Toast container #}
+<div id="toast-container"
+     class="fixed bottom-4 right-4 z-50 space-y-2 pointer-events-none"
+     aria-live="polite"></div>
+
+{# CSRF token #}
+{% csrf_token %}
+
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+function sessionDetail() {
+    return {
+        // ── State ──────────────────────────────────────────────
+        sessionId: null,
+        sessionStatus: '',
+        approvedAt: '',
+        rejectionReason: '',
+
+        tableData: [],     // dari json_script — bukan DOM scraping
+        sortColumn: 'sku',
+        sortDirection: 'asc',
+
+        decisionReason: '',
+        pendingAction: null,  // 'approve' | 'reject' | null
+
+        activeModal: null,
+        previousFocus: null,
+        isProcessing: false,
+
+        // ── Computed ───────────────────────────────────────────
+        get sortedData() {
+            return [...this.tableData].sort((a, b) => {
+                let av = a[this.sortColumn];
+                let bv = b[this.sortColumn];
+
+                // String comparison case-insensitive
+                if (typeof av === 'string') av = av.toLowerCase();
+                if (typeof bv === 'string') bv = bv.toLowerCase();
+
+                if (av === bv) return 0;
+                const cmp = av > bv ? 1 : -1;
+                return this.sortDirection === 'asc' ? cmp : -cmp;
+            });
+        },
+
+        // ── Init ───────────────────────────────────────────────
+        init() {
+            // Dari json_script — bukan interpolasi Django ke JS string
+            const init = JSON.parse(
+                document.getElementById('session-init-data')?.textContent || 'null'
+            );
+            if (init) {
+                this.sessionId       = init.id;
+                this.sessionStatus   = init.status;
+                this.approvedAt      = init.approved_at_display;
+                // rejectionReason dari server — aman via json_script walaupun berisi
+                // karakter khusus seperti quotes, backslash, atau unicode
+                this.rejectionReason = init.rejection_reason;
+            }
+
+            // Data tabel dari json_script — menggantikan extractTableData() DOM scraping
+            this.tableData = JSON.parse(
+                document.getElementById('opname-items-data')?.textContent || '[]'
+            );
+        },
+
+        // ── Sort ───────────────────────────────────────────────
+        sortBy(column) {
+            if (this.sortColumn === column) {
+                this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                this.sortColumn    = column;
+                this.sortDirection = 'asc';
+            }
+        },
+
+        // ── Decision ───────────────────────────────────────────
+        openConfirm(action) {
+            this.pendingAction = action;
+            this.openModal('confirm');
+        },
+
+        executeDecision() {
+            if (!this.pendingAction || !this.sessionId) return;
+            this.isProcessing = true;
+
+            fetch(`/api/opname/session/${encodeURIComponent(this.sessionId)}/decision/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': this.getCsrfToken(),
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: JSON.stringify({
+                    decision: this.pendingAction,
+                    reason:   this.decisionReason,
+                })
+            })
+                .then(res => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
+                .then(data => {
+                    if (data.success) {
+                        const action = this.pendingAction;
+                        this.showToast(
+                            action === 'approve' ? 'Sesi berhasil disetujui!' : 'Sesi berhasil ditolak.',
+                            action === 'approve' ? 'success' : 'info'
+                        );
+                        // Update state lokal dari response server — bukan new Date() client
+                        this.sessionStatus = action === 'approve' ? 'approved' : 'rejected';
+                        if (action === 'approve' && data.approved_at_display) {
+                            this.approvedAt = data.approved_at_display;
+                        }
+                        if (action === 'reject') {
+                            this.rejectionReason = this.decisionReason;
+                        }
+                        this.closeModal();
+                        setTimeout(() => {
+                            window.location.href = '{% url "stock_opname_approvals" %}';
+                        }, 1200);
+                    } else {
+                        this.showToast(data.error || 'Gagal memproses keputusan', 'error');
+                    }
+                })
+                .catch(() => this.showToast('Terjadi kesalahan. Coba lagi.', 'error'))
+                .finally(() => { this.isProcessing = false; });
+        },
+
+        // ── Print ──────────────────────────────────────────────
+        printPage() {
+            window.print();
+        },
+
+        // ── Modal ──────────────────────────────────────────────
+        openModal(name) {
+            this.previousFocus = document.activeElement;
+            this.activeModal = name;
+            this.$nextTick(() => {
+                const modal = document.querySelector('[role="dialog"]:not([style*="display: none"])');
+                const first = modal?.querySelector('button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                if (first) first.focus();
+            });
+        },
+
+        closeModal() {
+            this.activeModal   = null;
+            this.isProcessing  = false;
+            if (this.previousFocus) this.previousFocus.focus();
+        },
+
+        // ── CSRF ───────────────────────────────────────────────
+        getCsrfToken() {
+            return document.querySelector('[name=csrfmiddlewaretoken]')?.value ?? '';
+        },
+
+        // ── Toast ──────────────────────────────────────────────
+        showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const colors = { success: 'bg-green-500', error: 'bg-red-500', warning: 'bg-amber-500', info: 'bg-blue-500' };
+            const toast = document.createElement('div');
+            toast.className = [colors[type] ?? colors.info, 'text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 pointer-events-auto translate-x-full transition-transform duration-300 text-sm'].join(' ');
+            toast.setAttribute('role', 'status');
+            const msg = document.createElement('span');
+            msg.className = 'flex-1';
+            msg.textContent = message; // textContent — bukan innerHTML
+            const btn = document.createElement('button');
+            btn.setAttribute('aria-label', 'Tutup');
+            btn.className = 'text-white/80 hover:text-white flex-shrink-0';
+            btn.innerHTML = '<i class="fas fa-times text-xs" aria-hidden="true"></i>';
+            btn.addEventListener('click', dismiss);
+            toast.appendChild(msg);
+            toast.appendChild(btn);
+            container.appendChild(toast);
+            requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.remove('translate-x-full')));
+            const timer = setTimeout(dismiss, 5000);
+            function dismiss() {
+                clearTimeout(timer);
+                toast.classList.add('translate-x-full');
+                toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+            }
+        }
+    };
+}
+</script>
+{% endblock %}

@@ -1,0 +1,647 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}Produk - Lumra{% endblock %}
+
+{% block extra_css %}
+<style>
+  .panel {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+  }
+  .field {
+    width: 100%;
+    border: 1px solid #dbe2ea;
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 13px;
+    background: #fff;
+  }
+  .field:focus {
+    outline: none;
+    border-color: #059669;
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.12);
+  }
+  .btn-soft {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    border: 1px solid #dbe2ea;
+    background: #fff;
+    color: #334155;
+  }
+  .btn-soft:hover {
+    background: #f8fafc;
+  }
+  .stat-card {
+    border-radius: 16px;
+    padding: 18px 20px;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(248,250,252,.92));
+  }
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .status-active { background: #dcfce7; color: #166534; }
+  .status-inactive { background: #e2e8f0; color: #475569; }
+  .stock-low { color: #b45309; font-weight: 700; }
+  .stock-out { color: #be123c; font-weight: 700; }
+  .table-wrap { overflow-x: auto; }
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15, 23, 42, 0.48);
+    padding: 20px;
+    z-index: 60;
+  }
+  .modal-backdrop.show { display: flex; }
+  .modal-card {
+    width: min(720px, 100%);
+    max-height: 90vh;
+    overflow: auto;
+    background: #fff;
+    border-radius: 18px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 24px 80px rgba(15, 23, 42, 0.25);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-5" id="products-page">
+  <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+    <div>
+      <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-emerald-600">Inventory</p>
+      <h1 class="text-3xl font-black text-slate-900">Produk</h1>
+      <p class="mt-1 text-sm text-slate-500">Filter, tambah, export, dan kelola produk tanpa memuat seluruh data sekaligus.</p>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <a href="/master/products/import-template/" class="btn-soft">
+        <i class="fas fa-file-arrow-down"></i>
+        Template CSV
+      </a>
+      <button type="button" class="btn-soft" data-open="import-modal">
+        <i class="fas fa-file-import"></i>
+        Import CSV
+      </button>
+      <a href="?{{ export_query }}" class="btn-soft">
+        <i class="fas fa-file-export"></i>
+        Export CSV
+      </a>
+      <button type="button" class="btn-primary" data-open="create-modal">
+        <i class="fas fa-plus"></i>
+        Tambah Produk
+      </button>
+    </div>
+  </div>
+
+  <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <div class="stat-card">
+      <div class="text-[11px] font-bold uppercase tracking-wide text-slate-400">Total Produk</div>
+      <div class="mt-2 text-3xl font-black text-slate-900">{{ total_products }}</div>
+      <div class="mt-1 text-xs text-slate-500">{{ filtered_total }} tampil dari hasil filter</div>
+    </div>
+    <div class="stat-card">
+      <div class="text-[11px] font-bold uppercase tracking-wide text-slate-400">Total SKU</div>
+      <div class="mt-2 text-3xl font-black text-slate-900">{{ total_sku }}</div>
+      <div class="mt-1 text-xs text-slate-500">Akumulasi seluruh varian</div>
+    </div>
+    <div class="stat-card">
+      <div class="text-[11px] font-bold uppercase tracking-wide text-slate-400">Stok Rendah</div>
+      <div class="mt-2 text-3xl font-black text-amber-600">{{ low_stock_count }}</div>
+      <div class="mt-1 text-xs text-slate-500">Threshold {{ low_stock_threshold }} pada halaman ini</div>
+    </div>
+    <div class="stat-card">
+      <div class="text-[11px] font-bold uppercase tracking-wide text-slate-400">Stok Habis</div>
+      <div class="mt-2 text-3xl font-black text-rose-600">{{ out_of_stock_count }}</div>
+      <div class="mt-1 text-xs text-slate-500">Harga rata-rata halaman Rp {{ average_price|floatformat:0 }}</div>
+    </div>
+  </div>
+
+  <div class="panel p-4">
+    <form method="get" class="grid gap-3 lg:grid-cols-6" action="#">
+      <div class="lg:col-span-2">
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Cari</label>
+        <input class="field" type="text" name="q" value="{{ query }}" placeholder="Nama, barcode, SKU, deskripsi">
+      </div>
+      <div>
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Kategori</label>
+        <select aria-label="Kategori" class="field" name="category">
+          <option value="">Semua</option>
+          {% for category in categories %}
+          <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Stok</label>
+        <select aria-label="Stok" class="field" name="stock">
+          <option value="">Semua</option>
+          <option value="normal" {% if selected_stock == "normal" %}selected{% endif %}>Normal</option>
+          <option value="low" {% if selected_stock == "low" %}selected{% endif %}>Rendah</option>
+          <option value="out" {% if selected_stock == "out" %}selected{% endif %}>Habis</option>
+        </select>
+      </div>
+      <div>
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Status</label>
+        <select aria-label="Status" class="field" name="status">
+          <option value="">Semua</option>
+          <option value="active" {% if selected_status == "active" %}selected{% endif %}>Aktif</option>
+          <option value="inactive" {% if selected_status == "inactive" %}selected{% endif %}>Nonaktif</option>
+        </select>
+      </div>
+      <div>
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Baris / halaman</label>
+        <select aria-label="Page Ukuran" class="field" name="page_size">
+          <option value="25" {% if page_size == 25 %}selected{% endif %}>25</option>
+          <option value="50" {% if page_size == 50 %}selected{% endif %}>50</option>
+          <option value="100" {% if page_size == 100 %}selected{% endif %}>100</option>
+          <option value="200" {% if page_size == 200 %}selected{% endif %}>200</option>
+        </select>
+      </div>
+      <div class="lg:col-span-6 flex flex-wrap gap-2">
+        <button type="submit" class="btn-primary">
+          <i class="fas fa-filter"></i>
+          Terapkan Filter
+        </button>
+        <a href="/master/products/" class="btn-soft">
+          <i class="fas fa-rotate-left"></i>
+          Reset
+        </a>
+      </div>
+    </form>
+  </div>
+
+  <div class="panel p-4">
+    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-3">
+      <div class="text-sm font-semibold text-slate-600">
+        Menampilkan {{ page_obj.start_index }}-{{ page_obj.end_index }} dari {{ filtered_total }} produk
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button type="button" class="btn-soft" id="bulk-activate"><i class="fas fa-check"></i> Aktifkan</button>
+        <button type="button" class="btn-soft" id="bulk-deactivate"><i class="fas fa-pause"></i> Nonaktifkan</button>
+        <button type="button" class="btn-soft text-rose-600" id="bulk-delete"><i class="fas fa-trash"></i> Hapus</button>
+      </div>
+    </div>
+
+    <div class="table-wrap mt-4">
+      <table class="min-w-full text-sm">
+        <thead>
+          <tr class="border-b border-slate-200 text-left text-[11px] uppercase tracking-wide text-slate-500">
+            <th class="px-3 py-3"><input aria-label="Pilih semua" type="checkbox" id="check-all"></th>
+            <th class="px-3 py-3">Produk</th>
+            <th class="px-3 py-3">Kategori</th>
+            <th class="px-3 py-3">Barcode</th>
+            <th class="px-3 py-3">Status</th>
+            <th class="px-3 py-3">Varian</th>
+            <th class="px-3 py-3">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for product in page_obj.object_list %}
+          <tr class="border-b border-slate-100 align-top" data-product-row="{{ product.id }}">
+            <td class="px-3 py-4">
+              <input aria-label="Pilih" type="checkbox" class="row-check" value="{{ product.id }}">
+            </td>
+            <td class="px-3 py-4">
+              <div class="font-bold text-slate-900">{{ product.name }}</div>
+              <div class="mt-1 max-w-md text-xs text-slate-500">{{ product.description|default:"-"|truncatechars:120 }}</div>
+            </td>
+            <td class="px-3 py-4 text-slate-600">{{ product.category.name|default:"-" }}</td>
+            <td class="px-3 py-4 font-mono text-xs text-slate-600">{{ product.barcode|default:"-" }}</td>
+            <td class="px-3 py-4">
+              <span class="status-chip {% if product.is_active %}status-active{% else %}status-inactive{% endif %}">
+                {% if product.is_active %}Aktif{% else %}Nonaktif{% endif %}
+              </span>
+            </td>
+            <td class="px-3 py-4">
+              <div class="space-y-2">
+                {% for variant in product.variants_with_stock %}
+                <div class="rounded-xl border border-slate-200 p-3">
+                  <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <div class="font-mono text-xs font-bold text-slate-700">{{ variant.sku }}</div>
+                      <div class="text-xs text-slate-500">{{ variant.size_weight|default:"-" }}</div>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-xs text-slate-500">Buy Rp {{ variant.price_buy|floatformat:0 }}</div>
+                      <div class="font-semibold text-slate-800">Sell Rp {{ variant.price_sell|floatformat:0 }}</div>
+                      <div class="{% if variant.net_stock <= 0 %}stock-out{% elif variant.net_stock < low_stock_threshold %}stock-low{% else %}text-slate-600{% endif %}">
+                        Stok {{ variant.net_stock|floatformat:0 }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-3 flex gap-2">
+                    <button
+                      type="button"
+                      class="btn-soft text-xs"
+                      data-open="variant-modal"
+                      data-variant-id="{{ variant.id }}"
+                      data-variant-sku="{{ variant.sku }}"
+                      data-variant-size="{{ variant.size_weight|default:'' }}"
+                      data-variant-buy="{{ variant.price_buy }}"
+                      data-variant-sell="{{ variant.price_sell }}"
+                    >
+                      <i class="fas fa-pen"></i>
+                      Edit Varian
+                    </button>
+                  </div>
+                </div>
+                {% empty %}
+                <div class="text-xs text-slate-500">Belum ada varian.</div>
+                {% endfor %}
+              </div>
+            </td>
+            <td class="px-3 py-4">
+              <div class="flex flex-col gap-2">
+                <button
+                  type="button"
+                  class="btn-soft text-xs"
+                  data-open="edit-modal"
+                  data-product-id="{{ product.id }}"
+                  data-product-name="{{ product.name }}"
+                  data-product-category="{{ product.category_id|default:'' }}"
+                  data-product-barcode="{{ product.barcode|default:'' }}"
+                  data-product-description="{{ product.description|default:''|escape }}"
+                  data-product-active="{% if product.is_active %}true{% else %}false{% endif %}"
+                >
+                  <i class="fas fa-pen"></i>
+                  Edit
+                </button>
+                <a href="/master/products/{{ product.id }}/" class="btn-soft text-xs">
+                  <i class="fas fa-eye"></i>
+                  Detail
+                </a>
+                <button type="button" class="btn-soft text-xs text-rose-600" data-delete-product="{{ product.id }}">
+                  <i class="fas fa-trash"></i>
+                  Hapus
+                </button>
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="px-3 py-10 text-center text-sm text-slate-500">
+              Tidak ada produk yang cocok dengan filter saat ini.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if page_obj.paginator.num_pages > 1 %}
+    <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+      <div class="text-xs text-slate-500">
+        Halaman {{ page_obj.number }} dari {{ page_obj.paginator.num_pages }}
+      </div>
+      <div class="flex flex-wrap gap-2">
+        {% if page_obj.has_previous %}
+        <a class="btn-soft" href="?q={{ query|urlencode }}&category={{ selected_category }}&stock={{ selected_stock }}&status={{ selected_status }}&page_size={{ page_size }}&page={{ page_obj.previous_page_number }}">Sebelumnya</a>
+        {% endif %}
+        {% if page_window and page_window.0 > 1 %}
+        <a class="btn-soft" href="?q={{ query|urlencode }}&category={{ selected_category }}&stock={{ selected_stock }}&status={{ selected_status }}&page_size={{ page_size }}&page=1">1</a>
+        {% if page_window.0 > 2 %}
+        <span class="px-2 py-2 text-xs text-slate-400">...</span>
+        {% endif %}
+        {% endif %}
+        {% for num in page_window %}
+        <a class="{% if num == page_obj.number %}btn-primary{% else %}btn-soft{% endif %}" href="?q={{ query|urlencode }}&category={{ selected_category }}&stock={{ selected_stock }}&status={{ selected_status }}&page_size={{ page_size }}&page={{ num }}">{{ num }}</a>
+        {% endfor %}
+        {% if page_window and page_window|last < page_obj.paginator.num_pages %}
+        {% if page_window|last < page_obj.paginator.num_pages|add:-1 %}
+        <span class="px-2 py-2 text-xs text-slate-400">...</span>
+        {% endif %}
+        <a class="btn-soft" href="?q={{ query|urlencode }}&category={{ selected_category }}&stock={{ selected_stock }}&status={{ selected_status }}&page_size={{ page_size }}&page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+        {% endif %}
+        {% if page_obj.has_next %}
+        <a class="btn-soft" href="?q={{ query|urlencode }}&category={{ selected_category }}&stock={{ selected_stock }}&status={{ selected_status }}&page_size={{ page_size }}&page={{ page_obj.next_page_number }}">Berikutnya</a>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="modal-backdrop" id="create-modal">
+  <div class="modal-card p-5">
+    <div class="mb-4 flex items-center justify-between">
+      <h2 class="text-xl font-black text-slate-900">Tambah Produk</h2>
+      <button type="button" class="btn-soft" data-close="create-modal">Tutup</button>
+    </div>
+    <form id="create-product-form" class="grid gap-3 md:grid-cols-2" action="#">
+      <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+      <div class="md:col-span-2">
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Nama Produk</label>
+        <input aria-label="Nama" class="field" type="text" name="name" required>
+      </div>
+      <div>
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">SKU Awal</label>
+        <input aria-label="SKU" class="field" type="text" name="sku" required>
+      </div>
+      <div>
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Barcode</label>
+        <input aria-label="Barcode" class="field" type="text" name="barcode">
+      </div>
+      <div>
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Kategori</label>
+        <select aria-label="Kategori ID" class="field" name="category_id">
+          <option value="">Tanpa kategori</option>
+          {% for category in categories %}
+          <option value="{{ category.id }}">{{ category.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Ukuran / Weight</label>
+        <input aria-label="Ukuran Berat" class="field" type="text" name="size_weight" value="default">
+      </div>
+      <div>
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Harga Beli</label>
+        <input aria-label="Harga Harga beli" class="field" type="number" name="price_buy" min="0" step="0.01">
+      </div>
+      <div>
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Harga Jual</label>
+        <input aria-label="Harga Harga jual" class="field" type="number" name="price_sell" min="0" step="0.01">
+      </div>
+      <div class="md:col-span-2">
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Deskripsi</label>
+        <textarea aria-label="Deskripsi" class="field" name="description" rows="3"></textarea>
+      </div>
+      <div>
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Status</label>
+        <select aria-label="IS Status aktif" class="field" name="is_active">
+          <option value="true">Aktif</option>
+          <option value="false">Nonaktif</option>
+        </select>
+      </div>
+      <div class="md:col-span-2 flex justify-end gap-2">
+        <button type="button" class="btn-soft" data-close="create-modal">Batal</button>
+        <button type="submit" class="btn-primary">Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="edit-modal">
+  <div class="modal-card p-5">
+    <div class="mb-4 flex items-center justify-between">
+      <h2 class="text-xl font-black text-slate-900">Edit Produk</h2>
+      <button type="button" class="btn-soft" data-close="edit-modal">Tutup</button>
+    </div>
+    <form id="edit-product-form" class="grid gap-3 md:grid-cols-2" action="#">
+      <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+      <input type="hidden" name="product_id" id="edit-product-id">
+      <div class="md:col-span-2">
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Nama Produk</label>
+        <input aria-label="Ubah produk Nama" class="field" type="text" name="name" id="edit-product-name" required>
+      </div>
+      <div>
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Kategori</label>
+        <select aria-label="Ubah produk Kategori" class="field" name="category_id" id="edit-product-category">
+          <option value="">Tanpa kategori</option>
+          {% for category in categories %}
+          <option value="{{ category.id }}">{{ category.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Barcode</label>
+        <input aria-label="Ubah produk Barcode" class="field" type="text" name="barcode" id="edit-product-barcode">
+      </div>
+      <div class="md:col-span-2">
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Deskripsi</label>
+        <textarea aria-label="Ubah produk Deskripsi" class="field" name="description" rows="3" id="edit-product-description"></textarea>
+      </div>
+      <div>
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Status</label>
+        <select aria-label="Ubah produk Status aktif" class="field" name="is_active" id="edit-product-active">
+          <option value="true">Aktif</option>
+          <option value="false">Nonaktif</option>
+        </select>
+      </div>
+      <div class="md:col-span-2 flex justify-end gap-2">
+        <button type="button" class="btn-soft" data-close="edit-modal">Batal</button>
+        <button type="submit" class="btn-primary">Simpan Perubahan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="variant-modal">
+  <div class="modal-card p-5">
+    <div class="mb-4 flex items-center justify-between">
+      <h2 class="text-xl font-black text-slate-900">Edit Varian</h2>
+      <button type="button" class="btn-soft" data-close="variant-modal">Tutup</button>
+    </div>
+    <form id="edit-variant-form" class="grid gap-3 md:grid-cols-2" action="#">
+      <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+      <input type="hidden" name="variant_id" id="edit-variant-id">
+      <div>
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">SKU</label>
+        <input aria-label="Ubah varian SKU" class="field" type="text" name="sku" id="edit-variant-sku" required>
+      </div>
+      <div>
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Size / Weight</label>
+        <input aria-label="Ubah varian Ukuran" class="field" type="text" name="size_weight" id="edit-variant-size">
+      </div>
+      <div>
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Harga Beli</label>
+        <input aria-label="Ubah varian Harga beli" class="field" type="number" name="price_buy" min="0" step="0.01" id="edit-variant-buy">
+      </div>
+      <div>
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Harga Jual</label>
+        <input aria-label="Ubah varian Harga jual" class="field" type="number" name="price_sell" min="0" step="0.01" id="edit-variant-sell">
+      </div>
+      <div class="md:col-span-2 flex justify-end gap-2">
+        <button type="button" class="btn-soft" data-close="variant-modal">Batal</button>
+        <button type="submit" class="btn-primary">Simpan Varian</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="import-modal">
+  <div class="modal-card p-5">
+    <div class="mb-4 flex items-center justify-between">
+      <h2 class="text-xl font-black text-slate-900">Import Produk via CSV</h2>
+      <button type="button" class="btn-soft" data-close="import-modal">Tutup</button>
+    </div>
+    <form id="import-form" enctype="multipart/form-data" class="space-y-4" action="#">
+      <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+      <div>
+        <label class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">File CSV</label>
+        <input aria-label="File" class="field" type="file" name="file" accept=".csv" required>
+      </div>
+      <div class="rounded-xl bg-slate-50 p-3 text-xs text-slate-500">
+        Pakai template resmi agar kolom dan format sesuai.
+      </div>
+      <div class="flex justify-end gap-2">
+        <button type="button" class="btn-soft" data-close="import-modal">Batal</button>
+        <button type="submit" class="btn-primary">Import</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  (() => {
+    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]')?.value || '';
+
+    function showToast(message) {
+      window.alert(message);
+    }
+
+    function openModal(id) {
+      document.getElementById(id)?.classList.add('show');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id)?.classList.remove('show');
+    }
+
+    async function postForm(url, formData) {
+      if (!formData.get('csrfmiddlewaretoken')) {
+        formData.append('csrfmiddlewaretoken', csrfToken);
+      }
+      const response = await fetch(url, { method: 'POST', body: formData });
+      return response.json();
+    }
+
+    document.querySelectorAll('[data-open]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const target = button.dataset.open;
+        if (target === 'edit-modal') {
+          document.getElementById('edit-product-id').value = button.dataset.productId || '';
+          document.getElementById('edit-product-name').value = button.dataset.productName || '';
+          document.getElementById('edit-product-category').value = button.dataset.productCategory || '';
+          document.getElementById('edit-product-barcode').value = button.dataset.productBarcode || '';
+          document.getElementById('edit-product-description').value = button.dataset.productDescription || '';
+          document.getElementById('edit-product-active').value = button.dataset.productActive || 'true';
+        }
+        if (target === 'variant-modal') {
+          document.getElementById('edit-variant-id').value = button.dataset.variantId || '';
+          document.getElementById('edit-variant-sku').value = button.dataset.variantSku || '';
+          document.getElementById('edit-variant-size').value = button.dataset.variantSize || '';
+          document.getElementById('edit-variant-buy').value = button.dataset.variantBuy || '';
+          document.getElementById('edit-variant-sell').value = button.dataset.variantSell || '';
+        }
+        openModal(target);
+      });
+    });
+
+    document.querySelectorAll('[data-close]').forEach((button) => {
+      button.addEventListener('click', () => closeModal(button.dataset.close));
+    });
+
+    document.getElementById('create-product-form')?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      const result = await postForm('/api/products/create/', data);
+      if (result.success) {
+        showToast('Produk berhasil ditambahkan.');
+        window.location.reload();
+      } else {
+        showToast(result.error || 'Gagal menambahkan produk.');
+      }
+    });
+
+    document.getElementById('edit-product-form')?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      const productId = data.get('product_id');
+      const result = await postForm(`/api/products/${productId}/update/`, data);
+      if (result.success) {
+        showToast('Produk berhasil diperbarui.');
+        window.location.reload();
+      } else {
+        showToast(result.error || 'Gagal memperbarui produk.');
+      }
+    });
+
+    document.getElementById('edit-variant-form')?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      const variantId = data.get('variant_id');
+      const result = await postForm(`/api/products/variants/${variantId}/update/`, data);
+      if (result.success) {
+        showToast('Varian berhasil diperbarui.');
+        window.location.reload();
+      } else {
+        showToast(result.error || 'Gagal memperbarui varian.');
+      }
+    });
+
+    document.getElementById('import-form')?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      const result = await postForm('/api/products/import/', data);
+      if (result.success) {
+        showToast(`Import selesai. ${result.imported || 0} baris masuk.`);
+        window.location.reload();
+      } else {
+        showToast(result.error || 'Gagal import CSV.');
+      }
+    });
+
+    document.querySelectorAll('[data-delete-product]').forEach((button) => {
+      button.addEventListener('click', async () => {
+        if (!window.confirm('Hapus produk ini?')) return;
+        const formData = new FormData();
+        formData.append('csrfmiddlewaretoken', csrfToken);
+        const result = await postForm(`/api/products/${button.dataset.deleteProduct}/delete/`, formData);
+        if (result.success) {
+          showToast('Produk berhasil dihapus.');
+          window.location.reload();
+        } else {
+          showToast(result.error || 'Gagal menghapus produk.');
+        }
+      });
+    });
+
+    const checkAll = document.getElementById('check-all');
+    const rowChecks = () => Array.from(document.querySelectorAll('.row-check'));
+    checkAll?.addEventListener('change', (event) => {
+      rowChecks().forEach((item) => { item.checked = event.target.checked; });
+    });
+
+    async function runBulk(action) {
+      const ids = rowChecks().filter((item) => item.checked).map((item) => item.value);
+      if (!ids.length) {
+        showToast('Pilih minimal satu produk.');
+        return;
+      }
+      if (action === 'delete' && !window.confirm(`Hapus ${ids.length} produk yang dipilih?`)) {
+        return;
+      }
+      const formData = new FormData();
+      formData.append('csrfmiddlewaretoken', csrfToken);
+      formData.append('action', action);
+      ids.forEach((id) => formData.append('ids[]', id));
+      const result = await postForm('/api/products/bulk/', formData);
+      if (result.success) {
+        showToast(`Bulk action selesai untuk ${result.count || ids.length} produk.`);
+        window.location.reload();
+      } else {
+        showToast(result.error || 'Bulk action gagal.');
+      }
+    }
+
+    document.getElementById('bulk-activate')?.addEventListener('click', () => runBulk('activate'));
+    document.getElementById('bulk-deactivate')?.addEventListener('click', () => runBulk('deactivate'));
+    document.getElementById('bulk-delete')?.addEventListener('click', () => runBulk('delete'));
+  })();
+</script>
+{% endblock %}

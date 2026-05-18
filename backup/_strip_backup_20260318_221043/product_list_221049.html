@@ -1,0 +1,1512 @@
+{% extends 'base/base.html' %}
+{% block title %}Produk — CoffeeShop{% endblock %}
+{% load i18n %}
+
+{% block extra_css %}
+<style>
+.bg-blob {
+  position: fixed; border-radius: 50%; filter: blur(100px);
+  opacity: 0.10; pointer-events: none; z-index: 0;
+  animation: drift 18s ease-in-out infinite alternate;
+}
+.bg-blob-1 { width:480px; height:480px; background:var(--color-primary,#059669); top:-120px; left:-160px; animation-delay:0s; }
+.bg-blob-2 { width:320px; height:320px; background:var(--color-primary-light,#10b981); bottom:-80px; right:-80px; animation-delay:-7s; }
+.bg-blob-3 { width:220px; height:220px; background:#34d399; top:40%; left:55%; animation-delay:-3.5s; }
+@keyframes drift {
+  from { transform: translate(0,0) scale(1); }
+  to   { transform: translate(20px,28px) scale(1.06); }
+}
+
+</style>
+
+<style>
+  [x-cloak] { display: none !important; }
+
+  /* ══ BLOBS ══ */
+  .blob {
+    position:fixed; border-radius:50%;
+    filter:blur(100px); opacity:.07;
+    pointer-events: none; z-index:0;
+    animation:drift 22s ease-in-out infinite;
+  }
+  .blob-a { width:500px; height:500px; background:var(--color-emerald-700); top:-100px; left:-80px; animation-delay:0s; }
+  .blob-b { width:360px; height:360px; background:var(--color-f59e0b); bottom:-60px; right:-40px; animation-delay:-9s; }
+  .blob-c { width:240px; height:240px; background:var(--color-0ea5e9); top:38%; left:62%; animation-delay:-5s; }
+  @keyframes drift { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(22px,18px) scale(1.04)} }
+
+  /* ══ REVEAL ══ */
+  .reveal { opacity:0; transform:translateY(14px); transition:opacity .4s ease,transform .4s ease; }
+  .reveal.visible { opacity:1; transform: none; }
+
+  /* ══ GLASS ══ */
+  .glass {
+    background:var(--color-white-a74);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border:1px solid var(--color-white-a92);
+    border-radius:18px;
+    box-shadow:0 2px 14px var(--color-black-a06),0 0 0 .5px var(--color-black-a03);
+  }
+
+  /* ══ SEARCH INPUT ══ */
+  .s-input {
+    background:var(--color-white-a6);
+    border:1px solid var(--color-slate-300-a5);
+    border-radius:12px;
+    transition:background .15s,border-color .15s,box-shadow .15s;
+  }
+  .s-input:focus {
+    background:var(--color-fff); border-color:var(--color-emerald-700-a4);
+    box-shadow:0 0 0 3px var(--color-emerald-700-a07); outline:var(--shadow-sm-16);
+  }
+
+  /* ══ STAT CARD ══ */
+  .stat-card {
+    position:relative; overflow:hidden;
+    padding:18px 22px; border-radius:16px;
+    background:var(--color-white-a75);
+    border:1px solid var(--color-white-a9);
+    box-shadow:0 2px 10px var(--color-black-a05);
+  }
+  .stat-card::before {
+    content:''; position:absolute;
+    top:0; right:0; width:60px; height:60px;
+    border-radius:50%; opacity:.07;
+  }
+  .stat-card.emerald::before { background:var(--color-emerald-700); }
+  .stat-card.amber::before   { background:var(--color-f59e0b); }
+  .stat-card.rose::before    { background:var(--color-f43f5e); }
+  .stat-card.sky::before     { background:var(--color-0ea5e9); }
+
+  /* ══ TABLE ══ */
+  .tbl-head {
+    background:var(--color-slate-50-a85);
+    backdrop-filter: var(--glass-blur);
+    position:sticky; top:0; z-index:10;
+  }
+  .tbl-th {
+    padding:11px 16px;
+    font-size:9px; font-weight:900; text-transform:uppercase; letter-spacing:.12em;
+    color:var(--color-slate-400); white-space:nowrap; user-select:var(--shadow-sm-16);
+  }
+  .tbl-th.sortable { cursor:pointer; transition:color .12s; }
+  .tbl-th.sortable:hover { color:var(--color-slate-600); }
+
+  .tbl-row {
+    border-bottom:1px solid var(--color-slate-200-a5);
+    transition:background .12s;
+  }
+  .tbl-row:last-child { border-bottom: none; }
+  .tbl-row:hover > td { background:rgba(0,0,0,0.06) !important; }
+  .tbl-row td { padding:11px 16px; vertical-align:middle; }
+
+  /* variant sub-row */
+  .variant-row td { background:var(--color-slate-50-a4); padding:8px 16px; }
+  .variant-row:hover > td { background:rgba(0,0,0,0.06) !important; }
+  .variant-row td { border-bottom:1px solid var(--color-slate-200-a3); }
+
+  /* flash */
+  .tbl-row.flash-green td { animation:flashGreen .6s ease; }
+  @keyframes flashGreen { 0%{background:var(--color-emerald-600-a15)} 100%{background:transparent} }
+  .tbl-row.flash-red td { animation:flashRed .4s ease; }
+  @keyframes flashRed { 0%{background:rgba(0,0,0,0.06)} 100%{background:transparent} }
+
+  /* ══ STATUS CHIP ══ */
+  .chip {
+    display:inline-flex; align-items:center; gap:4px;
+    padding:3px 9px; border-radius:99px;
+    font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:.07em;
+  }
+  .chip-active  { background:var(--color-emerald-600-a1);  color:var(--color-emerald-700); border:1px solid var(--color-emerald-600-a2); }
+  .chip-low     { background:rgba(0,0,0,0.06);  color:var(--color-d97706); border:1px solid rgba(0,0,0,0.06); }
+  .chip-out     { background:rgba(0,0,0,0.06);   color:var(--color-e11d48); border:1px solid rgba(0,0,0,0.06); }
+  .chip-inactive{ background:var(--color-slate-400-a1); color:var(--color-slate-500); border:1px solid var(--color-slate-400-a2); }
+
+  /* ══ SORT ICON ══ */
+  .sort-icon { opacity:.35; transition:opacity .12s; }
+  .tbl-th.active .sort-icon { opacity:1; color:var(--color-emerald-700); }
+
+  /* ══ BULK BAR ══ */
+  .bulk-bar {
+    background:var(--color-slate-900-a92);
+    backdrop-filter: var(--glass-blur);
+    border-radius:14px;
+    animation:slideUp .22s cubic-bezier(.4,0,.2,1);
+  }
+  @keyframes slideUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform: none} }
+
+  /* ══ CHECKBOX ══ */
+  .cb {
+    width:15px; height:15px; border-radius:4px;
+    border:1.5px solid var(--color-slate-300); cursor:pointer;
+    appearance:var(--shadow-sm-16); -webkit-appearance:var(--shadow-sm-16);
+    background:var(--color-fff); transition:background .12s,border-color .12s;
+    flex-shrink:0;
+  }
+  .cb:checked { background:var(--color-emerald-700); border-color:var(--color-emerald-700); }
+  .cb:checked::after {
+    content:''; display:block;
+    width:4px; height:7px;
+    border:2px solid var(--color-fff); border-top: none; border-left:var(--shadow-sm-16);
+    transform:rotate(42deg) translate(2px,-1px);
+  }
+  .cb:indeterminate { background:var(--color-emerald-700); border-color:var(--color-emerald-700); }
+  .cb:indeterminate::after {
+    content:''; display:block;
+    width:7px; height:2px; background:var(--color-fff);
+    margin:5px auto 0;
+  }
+
+  /* ══ PRODUCT THUMBNAIL ══ */
+  .prod-thumb {
+    width:36px; height:36px; border-radius:10px;
+    object-fit:cover; flex-shrink:0;
+    border:1.5px solid var(--color-white-a9);
+    box-shadow:0 2px 6px var(--color-black-a1);
+  }
+  .prod-thumb-placeholder {
+    width:36px; height:36px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; font-size:14px;
+    background:linear-gradient(135deg,var(--color-emerald-700-a12),rgba(0,0,0,0.06));
+    border:1.5px solid var(--color-white-a9);
+    box-shadow:0 2px 6px var(--color-black-a07);
+  }
+
+  /* ══ PRICE ══ */
+  .price-val { font-family:'DM Mono',monospace; font-size:12px; font-weight:600; color:var(--color-slate-800); }
+  .price-orig { font-family:'DM Mono',monospace; font-size:10px; color:var(--color-slate-400); text-decoration:line-through; }
+
+  /* ══ STOCK BAR ══ */
+  .stock-bar { height:3px; background:var(--color-slate-200); border-radius:99px; overflow:hidden; width:60px; }
+  .stock-fill { height:100%; border-radius:99px; transition:width .3s; }
+
+  /* ══ COLLAPSE TOGGLE ══ */
+  .variant-toggle { cursor:pointer; transition:color .12s; }
+  .variant-toggle:hover { color:var(--color-emerald-700); }
+  .chevron-icon { transition:transform .22s cubic-bezier(.4,0,.2,1); }
+  .chevron-icon.open { transform:rotate(180deg); }
+
+  /* ══ FORM INPUT ══ */
+  .f-input {
+    width:100%; padding:9px 12px; border-radius:11px;
+    border:1.5px solid var(--color-slate-300-a6);
+    background:var(--color-white-a65);
+    font-size:13px; font-weight:600; color:var(--color-slate-800);
+    transition:border-color .13s,box-shadow .13s,background .13s;
+  }
+  .f-input:focus {
+    border-color:var(--color-emerald-700-a45);
+    box-shadow:0 0 0 3px var(--color-emerald-700-a08);
+    background:var(--color-fff); outline:var(--shadow-sm-16);
+  }
+  .f-label { font-size:9px; font-weight:900; text-transform:uppercase; letter-spacing:.1em; color:var(--color-slate-400); margin-bottom:5px; display:block; }
+
+  /* ══ BTN ══ */
+  .btn-primary {
+    background:linear-gradient(135deg,var(--color-emerald-700),var(--color-0ea5e9));
+    border:var(--shadow-sm-16); border-radius:11px; color:var(--color-fff);
+    font-size:11px; font-weight:800; cursor:pointer;
+    padding:9px 18px; display:inline-flex; align-items:center; gap:6px;
+    box-shadow:0 4px 14px var(--color-emerald-700-a25);
+    transition:opacity .13s,transform .13s;
+  }
+  .btn-primary:hover { opacity:.9; transform:translateY(-1px); }
+  .btn-primary:disabled { opacity:.55; cursor:not-allowed; transform: none; }
+
+  .btn-ghost {
+    border:1.5px solid var(--color-slate-200-a8);
+    border-radius:10px; background:var(--color-white-a6);
+    color:var(--color-slate-500); font-size:11px; font-weight:700;
+    padding:8px 14px; cursor:pointer;
+    transition:background .12s,border-color .12s;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .btn-ghost:hover { background:var(--color-fff); border-color:var(--color-slate-300); }
+
+  /* ══ MODAL ══ */
+  @keyframes modalIn { from{opacity:0;transform:scale(.94) translateY(12px)} to{opacity:1;transform: none} }
+  .modal-box { animation:modalIn .22s cubic-bezier(.4,0,.2,1); }
+
+  /* ══ TOAST ══ */
+  .toast { animation:toastIn .25s ease, toastOut .25s ease 2.7s forwards; }
+  @keyframes toastIn  { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform: none} }
+  @keyframes toastOut { from{opacity:1} to{opacity:0;pointer-events: none} }
+
+  /* ══ UPLOAD ZONE ══ */
+  .upload-zone {
+    border:2px dashed var(--color-emerald-700-a25); border-radius:12px;
+    padding:20px; text-align:center; cursor:pointer;
+    background:rgba(0,0,0,0.06);
+    transition:border-color .13s,background .13s;
+  }
+  .upload-zone:hover { border-color:var(--color-emerald-700-a5); background:rgba(0,0,0,0.06); }
+
+  /* ══ SCROLLBAR ══ */
+  .custom-scroll::-webkit-scrollbar { width:4px; height:4px; }
+  .custom-scroll::-webkit-scrollbar-track { background:transparent; }
+  .custom-scroll::-webkit-scrollbar-thumb { background:var(--color-slate-200); border-radius:99px; }
+
+  /* ══ KBD ══ */
+  .kbd {
+    display:inline-block; padding:1px 5px; border-radius:4px;
+    background:var(--color-slate-100); border:1px solid var(--color-slate-200); border-bottom-width:2px;
+    font-size:9px; font-family:monospace; color:var(--color-slate-500); line-height:1.6;
+  }
+
+  /* ══ DM MONO ══ */
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;600&display=swap');
+</style>
+{% endblock %}
+
+{% block content %}
+
+
+  <!-- Ambient Blob Background -->
+  <div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+  <div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+  <div class="bg-blob bg-blob-3" aria-hidden="true"></div>
+
+<!--{# Blobs #}-->
+<div class="blob blob-a"></div>
+<div class="blob blob-b"></div>
+<div class="blob blob-c"></div>
+
+<div class="w-full flex-1 space-y-5 relative z-10"
+     x-data="productList()"
+     x-init="init()"
+     x-cloak
+     @keydown.window="handleKey($event)">
+
+  <!--{# ══ HEADER ══ #}-->
+  <div class="reveal flex items-end justify-between gap-4 flex-wrap">
+    <div>
+      <p class="text-[10px] font-black text-emerald-500 uppercase tracking-[.25em] mb-1">Master Data</p>
+      <h1 class="text-2xl font-black text-slate-800 tracking-tight">
+        Daftar <span class="text-emerald-600">Produk</span>
+      </h1>
+      <p class="text-sm text-slate-400 mt-0.5">Kelola semua produk, harga, stok, dan varian</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button @click="openImportModal()" class="btn-ghost">
+        <i class="fas fa-file-upload text-[10px]"></i> Import
+      </button>
+      <a href="?export=csv" class="btn-ghost">
+        <i class="fas fa-file-download text-[10px]"></i> Export CSV
+      </a>
+      <button @click="openAddModal()" class="btn-primary">
+        <i class="fas fa-plus text-[10px]"></i> Tambah Produk
+        <span class="kbd ml-1">N</span>
+      </button>
+    </div>
+  </div>
+
+  <!--{# ══ STAT STRIP ══ #}-->
+  <div class="reveal grid grid-cols-2 lg:grid-cols-4 gap-3">
+
+    <div class="stat-card emerald">
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1">Total Produk</p>
+          <p class="text-2xl font-black text-slate-800">{{ total_products|default:"0" }}</p>
+          <p class="text-[10px] text-emerald-500 font-bold mt-1">+{{ new_this_month|default:"0" }} bulan ini</p>
+        </div>
+        <div class="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
+          <i class="fas fa-box text-emerald-500 text-[14px]"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-card amber">
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1">Stok Rendah</p>
+          <p class="text-2xl font-black text-slate-800">{{ low_stock_count|default:"0" }}</p>
+          <p class="text-[10px] text-amber-500 font-bold mt-1">Perlu restock</p>
+        </div>
+        <div class="w-9 h-9 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center">
+          <i class="fas fa-exclamation-triangle text-amber-500 text-[14px]"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-card rose">
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1">Habis</p>
+          <p class="text-2xl font-black text-slate-800">{{ out_of_stock_count|default:"0" }}</p>
+          <p class="text-[10px] text-rose-400 font-bold mt-1">Stok = 0</p>
+        </div>
+        <div class="w-9 h-9 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center">
+          <i class="fas fa-times-circle text-rose-400 text-[14px]"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-card sky">
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1">Total SKU</p>
+          <p class="text-2xl font-black text-slate-800">{{ total_sku|default:"0" }}</p>
+          <p class="text-[10px] text-sky-500 font-bold mt-1">Termasuk varian</p>
+        </div>
+        <div class="w-9 h-9 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center">
+          <i class="fas fa-tags text-sky-500 text-[14px]"></i>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!--{# ══ TOOLBAR ══ #}-->
+  <div class="reveal glass p-4">
+    <div class="flex flex-wrap items-center gap-3">
+
+      <!--{# Search #}-->
+      <div class="relative flex-1 min-w-[200px]">
+        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-[11px] pointer-events-none"></i>
+        <input type="text" x-model="q" @input.debounce.300ms="filterProducts()"
+               placeholder="Cari nama, SKU, kategori… "
+               class="s-input w-full pl-9 pr-8 py-2.5 text-[12px] font-medium text-slate-700">
+        <span class="kbd absolute right-3 top-1/2 -translate-y-1/2">/</span>
+      </div>
+
+      <!--{# Category filter #}-->
+      <select x-model="filterCategory" @change="filterProducts()"
+              class="s-input px-3 py-2.5 text-[11px] font-bold text-slate-600 pr-8 min-w-[140px]">
+        <option value="">Semua Kategori</option>
+        {% for cat in categories %}
+        <option value="{{ cat.id }}">{{ cat.name }}</option>
+        {% endfor %}
+      </select>
+
+      <!--{# Stock filter #}-->
+      <select x-model="filterStock" @change="filterProducts()"
+              class="s-input px-3 py-2.5 text-[11px] font-bold text-slate-600 pr-8">
+        <option value="">Semua Stok</option>
+        <option value="normal">Normal</option>
+        <option value="low">Stok Rendah</option>
+        <option value="out">Habis</option>
+      </select>
+
+      <!--{# Status filter #}-->
+      <select x-model="filterStatus" @change="filterProducts()"
+              class="s-input px-3 py-2.5 text-[11px] font-bold text-slate-600 pr-8">
+        <option value="">Semua Status</option>
+        <option value="active">Aktif</option>
+        <option value="inactive">Nonaktif</option>
+      </select>
+
+      <!--{# Reset #}-->
+      <button x-show="q||filterCategory||filterStock||filterStatus"
+              @click="resetFilter()"
+              class="btn-ghost text-rose-400 border-rose-200/60 hover:border-rose-300">
+        <i class="fas fa-times text-[10px]"></i> Reset
+      </button>
+
+      <!--{# Count #}-->
+      <p class="text-[10px] text-slate-400 font-bold ml-auto hidden lg:block">
+        <span x-text="filtered.length"></span> produk
+      </p>
+
+    </div>
+  </div>
+
+  <!--{# ══ BULK ACTION BAR ══ #}-->
+  <div x-show="selected.length > 0" x-cloak class="reveal">
+    <div class="bulk-bar px-5 py-3 flex items-center gap-4 flex-wrap">
+      <p class="text-white text-[12px] font-bold">
+        <span x-text="selected.length"></span> produk dipilih
+      </p>
+      <div class="flex gap-2 ml-auto flex-wrap">
+        <button @click="bulkAction('activate')"
+                class="px-4 py-2 rounded-xl bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-[11px] font-bold hover:bg-emerald-500/30 transition flex items-center gap-2">
+          <i class="fas fa-check text-[10px]"></i> Aktifkan
+        </button>
+        <button @click="bulkAction('deactivate')"
+                class="px-4 py-2 rounded-xl bg-amber-500/20 border border-amber-400/30 text-amber-300 text-[11px] font-bold hover:bg-amber-500/30 transition flex items-center gap-2">
+          <i class="fas fa-pause text-[10px]"></i> Nonaktifkan
+        </button>
+        <button @click="bulkAction('delete')"
+                class="px-4 py-2 rounded-xl bg-rose-500/20 border border-rose-400/30 text-rose-300 text-[11px] font-bold hover:bg-rose-500/30 transition flex items-center gap-2">
+          <i class="fas fa-trash text-[10px]"></i> Hapus
+          <span class="kbd border-slate-600 text-slate-300" style="background:var(--color-surface-strong)">Del</span>
+        </button>
+        <button @click="selected=[]"
+                class="px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-slate-400 text-[11px] font-bold hover:bg-white/10 transition">
+          <i class="fas fa-times text-[10px]"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!--{# ══ TABLE ══ #}-->
+  <div class="reveal glass overflow-hidden">
+    <div class="overflow-x-auto custom-scroll">
+      <table class="w-full border-collapse">
+
+        <!--{# Head #}-->
+        <thead class="tbl-head">
+          <tr>
+            <th class="tbl-th w-10">
+              <input type="checkbox" class="cb"
+                     :checked="selected.length===filtered.length && filtered.length>0"
+                     :indeterminate="selected.length>0 && selected.length<filtered.length"
+                     @change="toggleAll($event.target.checked)">
+            </th>
+            <th class="tbl-th w-12">Foto</th>
+            <th class="tbl-th sortable" :class="{active:sortKey==='name'}"
+                @click="sortBy('name')">
+              Nama Produk
+              <i class="fas fa-sort sort-icon ml-1 text-[8px]"></i>
+            </th>
+            <th class="tbl-th">SKU</th>
+            <th class="tbl-th sortable" :class="{active:sortKey==='category'}"
+                @click="sortBy('category')">
+              Kategori
+              <i class="fas fa-sort sort-icon ml-1 text-[8px]"></i>
+            </th>
+            <th class="tbl-th sortable" :class="{active:sortKey==='price'}"
+                @click="sortBy('price')">
+              Harga
+              <i class="fas fa-sort sort-icon ml-1 text-[8px]"></i>
+            </th>
+            <th class="tbl-th sortable" :class="{active:sortKey==='stock'}"
+                @click="sortBy('stock')">
+              Stok
+              <i class="fas fa-sort sort-icon ml-1 text-[8px]"></i>
+            </th>
+            <th class="tbl-th">Status</th>
+            <th class="tbl-th">Varian</th>
+            <th class="tbl-th w-16">Aksi</th>
+          </tr>
+        </thead>
+
+        <!--{# Body #}-->
+        <tbody>
+          <template x-for="p in paginated" :key="p.id">
+            <template x-if="true">
+              <tbody>
+                <!--{# ── Product row ── #}-->
+                <tr class="tbl-row" :id="'row-'+p.id"
+                    :class="{'bg-emerald-50/30': selected.includes(p.id)}">
+
+                  <!--{# Checkbox #}-->
+                  <td class="w-10">
+                    <input type="checkbox" class="cb"
+                           :checked="selected.includes(p.id)"
+                           @change="toggleRow(p.id)">
+                  </td>
+
+                  <!--{# Thumbnail #}-->
+                  <td class="w-12">
+                    <template x-if="p.image">
+                      <img :src="p.image" :alt="p.name" class="prod-thumb">
+                    </template>
+                    <template x-if="!p.image">
+                      <div class="prod-thumb-placeholder">
+                        <span x-text="p.name.charAt(0).toUpperCase()"></span>
+                      </div>
+                    </template>
+                  </td>
+
+                  <!--{# Name + desc #}-->
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <div>
+                        <p class="text-[12px] font-black text-slate-800 leading-tight" x-text="p.name"></p>
+                        <p class="text-[10px] text-slate-400 mt-0.5 truncate max-w-[180px]" x-text="p.description || '—'"></p>
+                      </div>
+                    </div>
+                  </td>
+
+                  <!--{# SKU #}-->
+                  <td>
+                    <span class="text-[10px] font-mono font-bold text-slate-500 bg-slate-100/70 px-2 py-0.5 rounded-md"
+                          x-text="p.sku || '—'"></span>
+                  </td>
+
+                  <!--{# Category #}-->
+                  <td>
+                    <span class="chip chip-active" x-show="p.category"
+                          :style="`background:${p.category_color}18; color:${p.category_color}; border-color:${p.category_color}33`"
+                          x-text="p.category || '—'"></span>
+                    <span class="text-[11px] text-slate-300" x-show="!p.category">—</span>
+                  </td>
+
+                  <!--{# Price #}-->
+                  <td>
+                    <span class="price-val" x-text="fmt(p.price)"></span>
+                    <template x-if="p.original_price && p.original_price > p.price">
+                      <p class="price-orig" x-text="fmt(p.original_price)"></p>
+                    </template>
+                  </td>
+
+                  <!--{# Stock #}-->
+                  <td>
+                    <div class="flex flex-col gap-1">
+                      <span class="text-[12px] font-black"
+                            :class="p.stock===0?'text-rose-400':p.stock<=p.low_stock_threshold?'text-amber-500':'text-slate-700'"
+                            x-text="p.stock"></span>
+                      <div class="stock-bar">
+                        <div class="stock-fill"
+                             :style="`width:${Math.min(100,(p.stock/(p.low_stock_threshold*3||30))*100)}%;
+                                      background:${p.stock===0?'#f43f5e':p.stock<=p.low_stock_threshold?'#f59e0b':'#059669'}`"></div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <!--{# Status #}-->
+                  <td>
+                    <span class="chip"
+                          :class="p.is_active?'chip-active':'chip-inactive'"
+                          x-text="p.is_active?'Aktif':'Nonaktif'"></span>
+                  </td>
+
+                  <!--{# Variants toggle #}-->
+                  <td>
+                    <template x-if="p.variants && p.variants.length > 0">
+                      <button class="variant-toggle flex items-center gap-1.5 text-[10px] font-bold text-slate-500"
+                              @click="toggleVariants(p.id)">
+                        <i class="fas fa-layer-group text-[9px] text-slate-400"></i>
+                        <span x-text="p.variants.length + ' varian'"></span>
+                        <i class="fas fa-chevron-down text-[8px] chevron-icon"
+                           :class="{open: expandedVariants.includes(p.id)}"></i>
+                      </button>
+                    </template>
+                    <template x-if="!p.variants || p.variants.length === 0">
+                      <span class="text-[10px] text-slate-300">—</span>
+                    </template>
+                  </td>
+
+                  <!--{# Actions #}-->
+                  <td>
+                    <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition"
+                         style="opacity:1">
+                      <button @click="openEditModal(p)"
+                              class="w-7 h-7 rounded-lg bg-slate-100/80 hover:bg-emerald-50 hover:text-emerald-400 text-slate-400 flex items-center justify-center transition"
+                              title="Edit">
+                        <i class="fas fa-pen text-[10px]"></i>
+                      </button>
+                      <button @click="confirmDelete(p)"
+                              class="w-7 h-7 rounded-lg bg-slate-100/80 hover:bg-rose-50 hover:text-rose-500 text-slate-400 flex items-center justify-center transition"
+                              title="Hapus">
+                        <i class="fas fa-trash text-[10px]"></i>
+                      </button>
+                    </div>
+                  </td>
+
+                </tr>
+
+                <!--{# ── Variant rows (collapsible) ── #}-->
+                <template x-if="p.variants && p.variants.length > 0 && expandedVariants.includes(p.id)">
+                  <template x-for="v in p.variants" :key="v.id">
+                    <tr class="variant-row">
+                      <td></td>
+                      <td>
+                        <div class="w-5 h-5 rounded-md flex items-center justify-center ml-2" style="background:var(--color-bg)">
+                          <i class="fas fa-code-branch text-slate-300 text-[8px]"></i>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="flex items-center gap-2 pl-3">
+                          <div class="w-1 h-6 rounded-full" style="background:var(--color-surface)"></div>
+                          <div>
+                            <p class="text-[11px] font-bold text-slate-600" x-text="v.name"></p>
+                            <p class="text-[9px] text-slate-400" x-text="v.attributes_display || ''"></p>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <span class="text-[9px] font-mono font-bold text-slate-400 bg-slate-100/50 px-1.5 py-0.5 rounded"
+                              x-text="v.sku || '—'"></span>
+                      </td>
+                      <td></td>
+                      <td>
+                        <span class="price-val text-[11px]" x-text="fmt(v.price)"></span>
+                      </td>
+                      <td>
+                        <span class="text-[11px] font-black"
+                              :class="v.stock===0?'text-rose-400':v.stock<=5?'text-amber-500':'text-slate-600'"
+                              x-text="v.stock"></span>
+                      </td>
+                      <td>
+                        <span class="chip text-[8px]"
+                              :class="v.is_active?'chip-active':'chip-inactive'"
+                              x-text="v.is_active?'Aktif':'Nonaktif'"></span>
+                      </td>
+                      <td></td>
+                      <td>
+                        <button @click="openEditVariantModal(p, v)"
+                                class="w-6 h-6 rounded-lg bg-slate-100/80 hover:bg-emerald-50 hover:text-emerald-400 text-slate-400 flex items-center justify-center transition"
+                                title="Edit Varian">
+                          <i class="fas fa-pen text-[9px]"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </template>
+                </template>
+
+              </tbody>
+            </template>
+          </template>
+
+          <!--{# Empty state #}-->
+          <tr x-show="filtered.length === 0">
+            <td colspan="10">
+              <div class="flex flex-col items-center justify-center py-16 select-none">
+                <div class="w-16 h-16 rounded-2xl bg-slate-100/80 flex items-center justify-center mb-4">
+                  <i class="fas fa-box-open text-3xl text-slate-200"></i>
+                </div>
+                <p class="text-[13px] font-black text-slate-400">Produk tidak ditemukan</p>
+                <p class="text-[11px] text-slate-300 mt-1" x-show="q||filterCategory||filterStock||filterStatus">
+                  Coba ubah filter atau kata kunci pencarian
+                </p>
+                <button x-show="q||filterCategory||filterStock||filterStatus"
+                        @click="resetFilter()"
+                        class="mt-4 btn-ghost text-emerald-500 border-emerald-200/60">
+                  <i class="fas fa-redo text-[10px]"></i> Reset Filter
+                </button>
+              </div>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <!--{# ── Pagination ── #}-->
+    <div class="flex items-center justify-between px-5 py-3.5 border-t border-slate-100/60 bg-white/20">
+      <p class="text-[10px] text-slate-400 font-bold">
+        Halaman <span x-text="page"></span> dari <span x-text="totalPages"></span>
+        &nbsp;·&nbsp; <span x-text="filtered.length"></span> produk
+      </p>
+      <div class="flex items-center gap-1.5">
+        <button @click="page=1" :disabled="page===1"
+                class="w-7 h-7 rounded-lg bg-slate-100/80 text-slate-400 text-[10px] flex items-center justify-center hover:bg-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition">
+          <i class="fas fa-angle-double-left"></i>
+        </button>
+        <button @click="page--" :disabled="page===1"
+                class="w-7 h-7 rounded-lg bg-slate-100/80 text-slate-400 text-[10px] flex items-center justify-center hover:bg-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition">
+          <i class="fas fa-angle-left"></i>
+        </button>
+        <template x-for="pg in pageNumbers" :key="pg">
+          <button @click="page=pg"
+                  class="w-7 h-7 rounded-lg text-[11px] font-bold transition"
+                  :class="pg===page
+                    ? 'bg-emerald-500 text-white shadow-md shadow-emerald-200'
+                    : 'bg-slate-100/80 text-slate-500 hover:bg-slate-200'"
+                  x-text="pg"></button>
+        </template>
+        <button @click="page++" :disabled="page===totalPages"
+                class="w-7 h-7 rounded-lg bg-slate-100/80 text-slate-400 text-[10px] flex items-center justify-center hover:bg-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition">
+          <i class="fas fa-angle-right"></i>
+        </button>
+        <button @click="page=totalPages" :disabled="page===totalPages"
+                class="w-7 h-7 rounded-lg bg-slate-100/80 text-slate-400 text-[10px] flex items-center justify-center hover:bg-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition">
+          <i class="fas fa-angle-double-right"></i>
+        </button>
+      </div>
+    </div>
+
+  </div><!--{# end table card #}-->
+
+  <!--{# ══ TOAST ══ #}-->
+  <div class="fixed top-5 right-5 z-[100] flex flex-col gap-2" id="toastEl"></div>
+
+  <!--{# ══════════════════════════════════════
+     MODAL — Add / Edit Product
+  ══════════════════════════════════════ #}-->
+  <div x-show="showFormModal"
+       x-transition:enter="transition ease-out duration-200"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       class="fixed inset-0 z-50 flex items-start justify-center p-4 pt-10 overflow-y-auto"
+       style="background:rgba(15,23,42,.4);backdrop-filter: var(--glass-blur);display:none;"
+       @click.self="showFormModal=false">
+    <div class="modal-box glass w-full max-w-2xl p-6 mb-10">
+
+      <div class="flex items-center justify-between mb-5">
+        <div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.12em]"
+             x-text="editingProduct ? 'Edit Data' : 'Produk Baru'"></p>
+          <p class="text-[15px] font-black text-slate-800 mt-0.5"
+             x-text="editingProduct ? 'Edit Produk' : 'Tambah Produk'"></p>
+        </div>
+        <button @click="showFormModal=false"
+                class="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 hover:bg-slate-200 transition" style="background:var(--color-bg)">
+          <i class="fas fa-times text-[11px]"></i>
+        </button>
+      </div>
+
+      <form x-ref="productForm" @submit.prevent="submitProduct()" class="space-y-4">
+        {% csrf_token %}
+        <input type="hidden" name="product_id" :value="editingProduct?.id || ''">
+
+        <!--{# Name + SKU #}-->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="f-label">Nama Produk *</label>
+            <input type="text" name="name" x-model="form.name"
+                   class="f-input" placeholder="Kopi Susu Gula Aren" required>
+          </div>
+          <div>
+            <label class="f-label">SKU</label>
+            <input type="text" name="sku" x-model="form.sku"
+                   class="f-input font-mono" placeholder="KSG-001">
+          </div>
+        </div>
+
+        <!--{# Description #}-->
+        <div>
+          <label class="f-label">Deskripsi</label>
+          <textarea name="description" x-model="form.description" rows="2"
+                    class="f-input resize-none" placeholder="Deskripsi singkat produk…"></textarea>
+        </div>
+
+        <!--{# Category + Status #}-->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="f-label">Kategori</label>
+            <select name="category" x-model="form.category" class="f-input">
+              <option value="">— Pilih Kategori —</option>
+              {% for cat in categories %}
+              <option value="{{ cat.id }}">{{ cat.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label class="f-label">Status</label>
+            <select name="is_active" x-model="form.is_active" class="f-input">
+              <option value="true">Aktif</option>
+              <option value="false">Nonaktif</option>
+            </select>
+          </div>
+        </div>
+
+        <!--{# Price #}-->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="f-label">Harga Jual *</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[11px] font-bold text-slate-400">Rp</span>
+              <input type="number" name="price" x-model="form.price"
+                     class="f-input pl-9" placeholder="25000" required min="0">
+            </div>
+          </div>
+          <div>
+            <label class="f-label">Harga Modal</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[11px] font-bold text-slate-400">Rp</span>
+              <input type="number" name="cost_price" x-model="form.cost_price"
+                     class="f-input pl-9" placeholder="15000" min="0">
+            </div>
+          </div>
+        </div>
+
+        <!--{# Stock + Threshold #}-->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="f-label">Stok Awal</label>
+            <input type="number" name="stock" x-model="form.stock"
+                   class="f-input" placeholder="100" min="0">
+          </div>
+          <div>
+            <label class="f-label">Batas Stok Rendah</label>
+            <input type="number" name="low_stock_threshold" x-model="form.low_stock_threshold"
+                   class="f-input" placeholder="10" min="0">
+          </div>
+        </div>
+
+        <!--{# Image upload #}-->
+        <div>
+          <label class="f-label">Foto Produk</label>
+          <label class="upload-zone block" for="productImageInput">
+            <template x-if="form.imagePreview">
+              <img :src="form.imagePreview" class="w-20 h-20 rounded-xl object-cover mx-auto mb-2">
+            </template>
+            <template x-if="!form.imagePreview">
+              <i class="fas fa-image text-2xl text-emerald-200 block mb-1"></i>
+            </template>
+            <p class="text-[11px] font-bold text-slate-400">Klik atau drag foto</p>
+            <p class="text-[10px] text-slate-300 mt-0.5">JPG, PNG, WebP — maks 2MB</p>
+            <input type="file" id="productImageInput" name="image" accept="image/*"
+                   class="hidden" @change="previewImage($event)">
+          </label>
+        </div>
+
+        <!--{# Action buttons #}-->
+        <div class="flex gap-2.5 pt-2">
+          <button type="button" @click="showFormModal=false"
+                  class="flex-1 py-2.5 rounded-xl border border-slate-200 text-[12px] font-bold text-slate-500 hover:bg-slate-50 transition">
+            Batal
+          </button>
+          <button type="submit" class="btn-primary flex-1 justify-center py-2.5"
+                  :disabled="formLoading">
+            <i class="fas" :class="formLoading?'fa-circle-notch fa-spin':'fa-save'" style="font-size:11px;"></i>
+            <span x-text="formLoading ? 'Menyimpan…' : (editingProduct ? 'Update' : 'Simpan')"></span>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!--{# ══════════════════════════════════════
+     MODAL — Edit Variant
+  ══════════════════════════════════════ #}-->
+  <div x-show="showVariantModal"
+       x-transition:enter="transition ease-out duration-200"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       class="fixed inset-0 z-50 flex items-center justify-center p-4"
+       style="background:rgba(15,23,42,.4);backdrop-filter: var(--glass-blur);display:none;"
+       @click.self="showVariantModal=false">
+    <div class="modal-box glass w-full max-w-md p-6">
+
+      <div class="flex items-center justify-between mb-5">
+        <div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.12em]">Edit Varian</p>
+          <p class="text-[15px] font-black text-slate-800 mt-0.5" x-text="variantForm.name"></p>
+        </div>
+        <button @click="showVariantModal=false"
+                class="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 hover:bg-slate-200 transition" style="background:var(--color-bg)">
+          <i class="fas fa-times text-[11px]"></i>
+        </button>
+      </div>
+
+      <form x-ref="variantFormEl" @submit.prevent="submitVariant()" class="space-y-3.5">
+        {% csrf_token %}
+        <input type="hidden" name="variant_id" :value="variantForm.id">
+        <input type="hidden" name="product_id" :value="variantForm.product_id">
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="f-label">Nama Varian *</label>
+            <input type="text" name="name" x-model="variantForm.name" class="f-input" required>
+          </div>
+          <div>
+            <label class="f-label">SKU</label>
+            <input type="text" name="sku" x-model="variantForm.sku" class="f-input font-mono">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="f-label">Harga</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[11px] font-bold text-slate-400">Rp</span>
+              <input type="number" name="price" x-model="variantForm.price" class="f-input pl-9" min="0">
+            </div>
+          </div>
+          <div>
+            <label class="f-label">Stok</label>
+            <input type="number" name="stock" x-model="variantForm.stock" class="f-input" min="0">
+          </div>
+        </div>
+
+        <div>
+          <label class="f-label">Atribut (misal: Ukuran: M, Warna: Merah)</label>
+          <input type="text" name="attributes_display" x-model="variantForm.attributes_display"
+                 class="f-input" placeholder="Ukuran: M">
+        </div>
+
+        <div>
+          <label class="f-label">Status</label>
+          <select name="is_active" x-model="variantForm.is_active" class="f-input">
+            <option value="true">Aktif</option>
+            <option value="false">Nonaktif</option>
+          </select>
+        </div>
+
+        <div class="flex gap-2.5 pt-2">
+          <button type="button" @click="showVariantModal=false"
+                  class="flex-1 py-2.5 rounded-xl border border-slate-200 text-[12px] font-bold text-slate-500 hover:bg-slate-50 transition">
+            Batal
+          </button>
+          <button type="submit" class="btn-primary flex-1 justify-center py-2.5"
+                  :disabled="variantLoading">
+            <i class="fas" :class="variantLoading?'fa-circle-notch fa-spin':'fa-save'" style="font-size:11px;"></i>
+            <span x-text="variantLoading?'Menyimpan…':'Update Varian'"></span>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!--{# ══════════════════════════════════════
+     MODAL — Import CSV
+  ══════════════════════════════════════ #}-->
+  <div x-show="showImportModal"
+       x-transition:enter="transition ease-out duration-200"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       class="fixed inset-0 z-50 flex items-center justify-center p-4"
+       style="background:rgba(15,23,42,.4);backdrop-filter: var(--glass-blur);display:none;"
+       @click.self="showImportModal=false">
+    <div class="modal-box glass w-full max-w-md p-6">
+
+      <div class="flex items-center justify-between mb-5">
+        <div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.12em]">Upload File</p>
+          <p class="text-[15px] font-black text-slate-800 mt-0.5">Import Produk</p>
+        </div>
+        <button @click="showImportModal=false"
+                class="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 hover:bg-slate-200 transition" style="background:var(--color-bg)">
+          <i class="fas fa-times text-[11px]"></i>
+        </button>
+      </div>
+
+      <!--{# Template download #}-->
+      <div class="flex items-center gap-3 p-3 rounded-xl bg-sky-50/60 border border-sky-100/70 mb-4">
+        <div class="w-8 h-8 rounded-xl bg-sky-100 flex items-center justify-center flex-shrink-0">
+          <i class="fas fa-file-csv text-sky-500 text-[12px]"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-[11px] font-bold text-slate-700">Download template CSV</p>
+          <p class="text-[10px] text-slate-400">Gunakan format yang benar</p>
+        </div>
+        <a href="{% url 'products_import_template' %}"
+           class="text-[10px] font-bold text-sky-500 hover:text-sky-600 flex items-center gap-1">
+          <i class="fas fa-download text-[9px]"></i> Unduh
+        </a>
+      </div>
+
+      <form x-ref="importForm" @submit.prevent="submitImport()" class="space-y-4">
+        {% csrf_token %}
+        <div>
+          <label class="upload-zone block" for="importFileInput">
+            <template x-if="importFile">
+              <div class="flex items-center justify-center gap-2 mb-1">
+                <i class="fas fa-file-csv text-emerald-400 text-xl"></i>
+                <span class="text-[12px] font-bold text-slate-600" x-text="importFile.name"></span>
+              </div>
+            </template>
+            <template x-if="!importFile">
+              <i class="fas fa-upload text-2xl text-emerald-200 block mb-1"></i>
+            </template>
+            <p class="text-[11px] font-bold text-slate-400">Klik atau drag file CSV</p>
+            <p class="text-[10px] text-slate-300 mt-0.5">Format: .csv, maks 5MB</p>
+            <input type="file" id="importFileInput" name="file" accept=".csv"
+                   class="hidden" @change="importFile=$event.target.files[0]">
+          </label>
+        </div>
+
+        <div class="flex gap-2.5">
+          <button type="button" @click="showImportModal=false"
+                  class="flex-1 py-2.5 rounded-xl border border-slate-200 text-[12px] font-bold text-slate-500 hover:bg-slate-50 transition">
+            Batal
+          </button>
+          <button type="submit" class="btn-primary flex-1 justify-center py-2.5"
+                  :disabled="!importFile||importLoading">
+            <i class="fas" :class="importLoading?'fa-circle-notch fa-spin':'fa-file-import'" style="font-size:11px;"></i>
+            <span x-text="importLoading?'Mengimpor…':'Import'"></span>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!--{# ══════════════════════════════════════
+     MODAL — Delete Confirm
+  ══════════════════════════════════════ #}-->
+  <div x-show="showDeleteModal"
+       x-transition:enter="transition ease-out duration-200"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       class="fixed inset-0 z-50 flex items-center justify-center p-4"
+       style="background:rgba(15,23,42,.4);backdrop-filter: var(--glass-blur);display:none;"
+       @click.self="showDeleteModal=false">
+    <div class="modal-box glass w-full max-w-sm p-6 text-center">
+      <div class="w-14 h-14 rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-trash text-rose-400 text-xl"></i>
+      </div>
+      <p class="text-[15px] font-black text-slate-800">Hapus Produk?</p>
+      <p class="text-[12px] text-slate-400 mt-1.5">
+        Produk <strong class="text-slate-600" x-text="deletingProduct?.name"></strong> akan dihapus permanen.
+      </p>
+      <div class="flex gap-2.5 mt-5">
+        <button @click="showDeleteModal=false"
+                class="flex-1 py-2.5 rounded-xl border border-slate-200 text-[12px] font-bold text-slate-500 hover:bg-slate-50 transition">
+          Batal
+        </button>
+        <button @click="doDelete()"
+                class="flex-1 py-2.5 rounded-xl bg-rose-500 text-white text-[12px] font-black hover:bg-rose-600 transition flex items-center justify-center gap-2"
+                :disabled="deleteLoading">
+          <i class="fas" :class="deleteLoading?'fa-circle-notch fa-spin':'fa-trash'" style="font-size:11px;"></i>
+          <span x-text="deleteLoading?'Menghapus…':'Hapus'"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div><!--{# end x-data #}-->
+{% endblock %}
+
+{% block extra_scripts %}
+<!--{# Inject products JSON from Django view #}-->
+{{ products_json|json_script:"products-data" }}
+
+<script>
+function productList() {
+  return {
+
+    /* ── Raw data from Django ── */
+    products: [],
+
+    /* ── Filter state ── */
+    q              : '',
+    filterCategory : '',
+    filterStock    : '',
+    filterStatus   : '',
+    sortKey        : 'name',
+    sortDir        : 'asc',
+
+    /* ── Derived ── */
+    filtered: [],
+
+    /* ── Pagination ── */
+    page    : 1,
+    perPage : 25,
+
+    /* ── Selection ── */
+    selected: [],
+
+    /* ── Variants ── */
+    expandedVariants: [],
+
+    /* ── Modal state ── */
+    showFormModal   : false,
+    showVariantModal: false,
+    showImportModal : false,
+    showDeleteModal : false,
+
+    /* ── Editing state ── */
+    editingProduct  : null,
+    deletingProduct : null,
+
+    /* ── Loading ── */
+    formLoading   : false,
+    variantLoading: false,
+    importLoading : false,
+    deleteLoading : false,
+
+    /* ── Form data ── */
+    form: {
+      name:'', sku:'', description:'', category:'',
+      price:'', cost_price:'', stock:'', low_stock_threshold:'10',
+      is_active:'true', imagePreview: null, imageFile: null,
+    },
+
+    /* ── Variant form ── */
+    variantForm: {
+      id:'', product_id:'', name:'', sku:'',
+      price:'', stock:'', attributes_display:'', is_active:'true',
+    },
+
+    /* ── Import ── */
+    importFile: null,
+
+    /* ──────────────────────────────
+       INIT
+    ────────────────────────────── */
+    init() {
+      /* Load products from json_script tag */
+      const raw = document.getElementById('products-data');
+      if (raw) {
+        try { this.products = JSON.parse(raw.textContent); } catch(e) {}
+      }
+      this.filterProducts();
+
+      /* Scroll reveal */
+      const io = new IntersectionObserver(entries => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i * 50);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: .06 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    },
+
+    /* ──────────────────────────────
+       KEYBOARD SHORTCUTS
+    ────────────────────────────── */
+    handleKey(e) {
+      /* / = focus search */
+      if (e.key === '/' && !['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) {
+        e.preventDefault();
+        document.querySelector('input[x-model="q"]')?.focus();
+      }
+      /* N = new product */
+      if (e.key === 'n' && !['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) {
+        this.openAddModal();
+      }
+      /* Delete = bulk delete */
+      if (e.key === 'Delete' && this.selected.length > 0) {
+        this.bulkAction('delete');
+      }
+      /* Escape = close modals */
+      if (e.key === 'Escape') {
+        this.showFormModal = false;
+        this.showVariantModal = false;
+        this.showImportModal = false;
+        this.showDeleteModal = false;
+      }
+    },
+
+    /* ──────────────────────────────
+       FILTER & SORT
+    ────────────────────────────── */
+    filterProducts() {
+      const q = this.q.toLowerCase().trim();
+      let list = this.products.filter(p => {
+        /* Search */
+        if (q && !p.name.toLowerCase().includes(q) &&
+                 !( p.sku||'' ).toLowerCase().includes(q) &&
+                 !( p.category||'' ).toLowerCase().includes(q)) return false;
+        /* Category */
+        if (this.filterCategory && String(p.category_id) !== String(this.filterCategory)) return false;
+        /* Stock */
+        if (this.filterStock === 'out'    && p.stock !== 0) return false;
+        if (this.filterStock === 'low'    && (p.stock === 0 || p.stock > (p.low_stock_threshold||10))) return false;
+        if (this.filterStock === 'normal' && p.stock <= (p.low_stock_threshold||10)) return false;
+        /* Status */
+        if (this.filterStatus === 'active'   && !p.is_active) return false;
+        if (this.filterStatus === 'inactive' && p.is_active)  return false;
+        return true;
+      });
+
+      /* Sort */
+      list.sort((a, b) => {
+        let va = a[this.sortKey] ?? '', vb = b[this.sortKey] ?? '';
+        if (typeof va === 'string') va = va.toLowerCase();
+        if (typeof vb === 'string') vb = vb.toLowerCase();
+        if (va < vb) return this.sortDir === 'asc' ? -1 : 1;
+        if (va > vb) return this.sortDir === 'asc' ? 1 : -1;
+        return 0;
+      });
+
+      this.filtered = list;
+      this.page = 1;
+    },
+
+    sortBy(key) {
+      if (this.sortKey === key) {
+        this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
+      } else {
+        this.sortKey = key;
+        this.sortDir = 'asc';
+      }
+      this.filterProducts();
+    },
+
+    resetFilter() {
+      this.q = ''; this.filterCategory = '';
+      this.filterStock = ''; this.filterStatus = '';
+      this.filterProducts();
+    },
+
+    /* ──────────────────────────────
+       PAGINATION
+    ────────────────────────────── */
+    get paginated() {
+      const start = (this.page - 1) * this.perPage;
+      return this.filtered.slice(start, start + this.perPage);
+    },
+    get totalPages() {
+      return Math.max(1, Math.ceil(this.filtered.length / this.perPage));
+    },
+    get pageNumbers() {
+      const total = this.totalPages;
+      const cur   = this.page;
+      let pages   = [];
+      if (total <= 7) {
+        for (let i = 1; i <= total; i++) pages.push(i);
+      } else {
+        pages = [1];
+        if (cur > 3)       pages.push('…');
+        for (let i = Math.max(2, cur-1); i <= Math.min(total-1, cur+1); i++) pages.push(i);
+        if (cur < total-2) pages.push('…');
+        pages.push(total);
+      }
+      return pages.filter(p => p !== '…'); /* simplified for Alpine */
+    },
+
+    /* ──────────────────────────────
+       SELECTION
+    ────────────────────────────── */
+    toggleRow(id) {
+      if (this.selected.includes(id)) this.selected = this.selected.filter(s => s !== id);
+      else this.selected.push(id);
+    },
+    toggleAll(checked) {
+      this.selected = checked ? this.filtered.map(p => p.id) : [];
+    },
+
+    /* ──────────────────────────────
+       VARIANTS
+    ────────────────────────────── */
+    toggleVariants(productId) {
+      if (this.expandedVariants.includes(productId)) {
+        this.expandedVariants = this.expandedVariants.filter(id => id !== productId);
+      } else {
+        this.expandedVariants.push(productId);
+      }
+    },
+
+    /* ──────────────────────────────
+       MODALS
+    ────────────────────────────── */
+    openAddModal() {
+      this.editingProduct = null;
+      this.form = {
+        name:'', sku:'', description:'', category:'',
+        price:'', cost_price:'', stock:'', low_stock_threshold:'10',
+        is_active:'true', imagePreview:null, imageFile:null,
+      };
+      this.showFormModal = true;
+    },
+
+    openEditModal(p) {
+      this.editingProduct = p;
+      this.form = {
+        name: p.name, sku: p.sku||'', description: p.description||'',
+        category: p.category_id||'', price: p.price, cost_price: p.cost_price||'',
+        stock: p.stock, low_stock_threshold: p.low_stock_threshold||10,
+        is_active: p.is_active ? 'true' : 'false',
+        imagePreview: p.image||null, imageFile: null,
+      };
+      this.showFormModal = true;
+    },
+
+    openEditVariantModal(product, variant) {
+      this.variantForm = {
+        id: variant.id, product_id: product.id,
+        name: variant.name, sku: variant.sku||'',
+        price: variant.price, stock: variant.stock,
+        attributes_display: variant.attributes_display||'',
+        is_active: variant.is_active ? 'true' : 'false',
+      };
+      this.showVariantModal = true;
+    },
+
+    openImportModal() {
+      this.importFile = null;
+      this.showImportModal = true;
+    },
+
+    confirmDelete(p) {
+      this.deletingProduct = p;
+      this.showDeleteModal = true;
+    },
+
+    /* ──────────────────────────────
+       IMAGE PREVIEW
+    ────────────────────────────── */
+    previewImage(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      this.form.imageFile = file;
+      const reader = new FileReader();
+      reader.onload = ev => { this.form.imagePreview = ev.target.result; };
+      reader.readAsDataURL(file);
+    },
+
+    /* ──────────────────────────────
+       SUBMIT — Product
+    ────────────────────────────── */
+    submitProduct() {
+      this.formLoading = true;
+      const fd = new FormData(this.$refs.productForm);
+      if (this.form.imageFile) fd.set('image', this.form.imageFile);
+
+      const url = this.editingProduct
+        ? `/api/products/${this.editingProduct.id}/update/`
+        : '/api/products/create/';
+
+      this._post(url, fd)
+        .then(d => {
+          if (d.success) {
+            this._toast(this.editingProduct ? 'Produk diperbarui ✓' : 'Produk ditambahkan ✓');
+            this.showFormModal = false;
+            /* Update local data */
+            if (this.editingProduct) {
+              const idx = this.products.findIndex(p => p.id === this.editingProduct.id);
+              if (idx !== -1) {
+                this.products[idx] = { ...this.products[idx], ...d.product };
+                this.flashRow(this.editingProduct.id, 'green');
+              }
+            } else {
+              this.products.unshift(d.product);
+              this.flashRow(d.product.id, 'green');
+            }
+            this.filterProducts();
+          } else if (d.errors) {
+            Object.values(d.errors).flat().forEach(msg => this._toast(msg, 'error'));
+          } else {
+            this._toast(d.error || 'Gagal menyimpan', 'error');
+          }
+        })
+        .finally(() => this.formLoading = false);
+    },
+
+    /* ──────────────────────────────
+       SUBMIT — Variant
+    ────────────────────────────── */
+    submitVariant() {
+      this.variantLoading = true;
+      const fd = new FormData(this.$refs.variantFormEl);
+      this._post(`/api/products/variants/${this.variantForm.id}/update/`, fd)
+        .then(d => {
+          if (d.success) {
+            this._toast('Varian diperbarui ✓');
+            this.showVariantModal = false;
+            /* Update local variant data */
+            const prod = this.products.find(p => p.id === this.variantForm.product_id);
+            if (prod && prod.variants) {
+              const vi = prod.variants.findIndex(v => v.id === this.variantForm.id);
+              if (vi !== -1) prod.variants[vi] = { ...prod.variants[vi], ...d.variant };
+            }
+            this.filterProducts();
+          } else {
+            this._toast(d.error || 'Gagal memperbarui varian', 'error');
+          }
+        })
+        .finally(() => this.variantLoading = false);
+    },
+
+    /* ──────────────────────────────
+       DELETE
+    ────────────────────────────── */
+    doDelete() {
+      if (!this.deletingProduct) return;
+      this.deleteLoading = true;
+      const fd = new FormData();
+      this._post(`/api/products/${this.deletingProduct.id}/delete/`, fd)
+        .then(d => {
+          if (d.success) {
+            this.flashRow(this.deletingProduct.id, 'red');
+            setTimeout(() => {
+              this.products = this.products.filter(p => p.id !== this.deletingProduct.id);
+              this.filterProducts();
+            }, 420);
+            this._toast('Produk dihapus');
+            this.showDeleteModal = false;
+          } else {
+            this._toast(d.error || 'Gagal menghapus', 'error');
+          }
+        })
+        .finally(() => this.deleteLoading = false);
+    },
+
+    /* ──────────────────────────────
+       BULK ACTION
+    ────────────────────────────── */
+    bulkAction(action) {
+      if (action === 'delete' && !confirm(`Hapus ${this.selected.length} produk?`)) return;
+      const fd = new FormData();
+      fd.append('action', action);
+      this.selected.forEach(id => fd.append('ids[]', id));
+      this._post('/api/products/bulk/', fd)
+        .then(d => {
+          if (d.success) {
+            if (action === 'delete') {
+              this.selected.forEach(id => {
+                this.flashRow(id, 'red');
+              });
+              setTimeout(() => {
+                this.products = this.products.filter(p => !this.selected.includes(p.id));
+                this.selected = [];
+                this.filterProducts();
+              }, 420);
+              this._toast(`${d.count || this.selected.length} produk dihapus`);
+            } else {
+              const isActive = action === 'activate';
+              this.selected.forEach(id => {
+                const p = this.products.find(p => p.id === id);
+                if (p) p.is_active = isActive;
+                this.flashRow(id, 'green');
+              });
+              this.selected = [];
+              this.filterProducts();
+              this._toast(`${d.count || 0} produk diperbarui ✓`);
+            }
+          } else {
+            this._toast(d.error || 'Gagal', 'error');
+          }
+        });
+    },
+
+    /* ──────────────────────────────
+       IMPORT CSV
+    ────────────────────────────── */
+    submitImport() {
+      if (!this.importFile) return;
+      this.importLoading = true;
+      const fd = new FormData(this.$refs.importForm);
+      this._post('/api/products/import/', fd)
+        .then(d => {
+          if (d.success) {
+            this._toast(`${d.imported || 0} produk berhasil diimport ✓`);
+            this.showImportModal = false;
+            setTimeout(() => location.reload(), 900);
+          } else {
+            this._toast(d.error || 'Gagal import', 'error');
+          }
+        })
+        .finally(() => this.importLoading = false);
+    },
+
+    /* ──────────────────────────────
+       FLASH ROW
+    ────────────────────────────── */
+    flashRow(id, type) {
+      const row = document.getElementById('row-' + id);
+      if (!row) return;
+      const cls = type === 'green' ? 'flash-green' : 'flash-red';
+      row.classList.add(cls);
+      setTimeout(() => row.classList.remove(cls), 700);
+    },
+
+    /* ──────────────────────────────
+       HELPERS
+    ────────────────────────────── */
+    fmt(val) {
+      if (!val && val !== 0) return '—';
+      return 'Rp ' + Number(val).toLocaleString('id-ID');
+    },
+
+    _csrf() {
+      return document.cookie.match(/csrftoken=([^;]+)/)?.[1] || '';
+    },
+
+    _post(url, fd) {
+      if (!fd.has('csrfmiddlewaretoken')) {
+        fd.append('csrfmiddlewaretoken', this._csrf());
+      }
+      return fetch(url, { method: 'POST', body: fd })
+        .then(r => r.ok ? r.json() : { success: false, error: 'Network error' })
+        .catch(() => ({ success: false, error: 'Koneksi error' }));
+    },
+
+    _toast(msg, type = 'success') {
+      const c = document.getElementById('toastEl');
+      if (!c) return;
+      const colors = { success:'border-emerald-400', warn:'border-amber-400', error:'border-rose-400' };
+      const icons  = { success:'check-circle', warn:'exclamation-triangle', error:'times-circle' };
+      const el = document.createElement('div');
+      el.className = `toast flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl min-w-[200px] max-w-xs text-white text-[12px] font-semibold border-l-4 ${colors[type]||colors.success}`;
+      el.style.cssText = 'background:rgba(15,23,42,.92);backdrop-filter: var(--glass-blur);';
+      el.innerHTML = `<i class="fas fa-${icons[type]||icons.success} text-xs flex-shrink-0"></i><span>${msg}</span>`;
+      c.appendChild(el);
+      setTimeout(() => el.remove(), 3100);
+    },
+
+  };
+}
+</script>
+{% endblock %}

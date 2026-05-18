@@ -1,0 +1,407 @@
+{
+  "filename": "message_detail.html",
+  "title": "message_detail",
+  "components": [
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "w-full flex-1 space-y-4 relative z-10",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": "chatDetailApp()"
+    },
+    {
+      "type": "nav",
+      "tag": "nav",
+      "label": "[ NAVIGATION BAR ]",
+      "depth": 3,
+      "path": "root/body/div/div/nav",
+      "classes": "flex items-center gap-2 text-xs mb-1",
+      "text_preview": "Dashboard / Pesan Pribadi /",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 5,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "a",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 4,
+      "path": "root/body/div/div/div/a",
+      "classes": "w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "classes": "flex-1 min-w-0",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h2",
+      "label": "HEADING (H2)",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/h2",
+      "classes": "text-sm font-bold text-slate-800 truncate",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "classes": "flex items-center gap-1",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: [icon]",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/button",
+      "classes": "w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "calendar",
+      "tag": "i",
+      "label": "CALENDAR",
+      "depth": 5,
+      "path": "root/body/div/div/div/p/i",
+      "classes": "fas fa-calendar-alt w-4 text-slate-400",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "badge",
+      "tag": "i",
+      "label": "BADGE / STATUS",
+      "depth": 6,
+      "path": "root/body/div/div/div/template/p/i",
+      "classes": "fas fa-user-tag w-4 text-slate-400",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "classes": "flex-1 flex flex-col items-center justify-center text-center py-16",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (column)",
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/div",
+      "classes": "empty-icon w-14 h-14 rounded-full flex items-center justify-center bg-slate-100 mb-3",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "form",
+      "tag": "form",
+      "label": "[ FORM ]",
+      "depth": 4,
+      "path": "root/body/div/div/div/form",
+      "classes": "relative",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "input",
+      "label": "INPUT [text] Tulis balasan…",
+      "depth": 5,
+      "path": "root/body/div/div/div/form/input",
+      "classes": "reply-input",
+      "text_preview": "Tulis balasan…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: [icon]",
+      "depth": 5,
+      "path": "root/body/div/div/div/form/button",
+      "classes": "send-btn",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/template/div",
+      "classes": "flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl min-w-56 max-w-xs text-white text-sm",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "i",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 4,
+      "path": "root/body/div/template/div/i",
+      "classes": "text-xs flex-shrink-0",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/nav",
+      "type": "nav",
+      "label": "[ NAVIGATION BAR ]",
+      "text_preview": "Dashboard / Pesan Pribadi /"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/a",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/h2",
+      "type": "heading",
+      "label": "HEADING (H2)",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/button",
+      "type": "button",
+      "label": "BUTTON: [icon]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/p/i",
+      "type": "calendar",
+      "label": "CALENDAR",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/div/template/p/i",
+      "type": "badge",
+      "label": "BADGE / STATUS",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/form",
+      "type": "form",
+      "label": "[ FORM ]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/form/input",
+      "type": "input",
+      "label": "INPUT [text] Tulis balasan…",
+      "text_preview": "Tulis balasan…"
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/form/button",
+      "type": "button",
+      "label": "BUTTON: [icon]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/template/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/template/div/i",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    }
+  ],
+  "issues": [
+    {
+      "type": "alpine_xcloak",
+      "severity": "info",
+      "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template",
+      "path": ""
+    }
+  ],
+  "stats": {
+    "total_components": 16,
+    "by_type": {
+      "layout": 8,
+      "nav": 1,
+      "heading": 1,
+      "button": 2,
+      "calendar": 1,
+      "badge": 1,
+      "form": 1,
+      "input": 1
+    },
+    "interactive": 3,
+    "with_scroll": 0,
+    "with_form_fields": 3,
+    "scroll_nestings": 0,
+    "issues": 1,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 1
+    }
+  }
+}

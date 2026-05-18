@@ -1,0 +1,55 @@
+{# base/partials/data_table.html #}
+{# Reusable data table component with sorting, filtering #}
+
+<div class="overflow-x-auto">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="bg-slate-800 border-b border-slate-700">
+        {% for column in table_columns %}
+          <th class="px-6 py-3 text-left font-semibold text-slate-300">
+            {% if column.sortable %}
+              <button class="flex items-center gap-2 hover:text-emerald-400 transition">
+                {{ column.label }}
+                <i class="fas fa-sort text-slate-500"></i>
+              </button>
+            {% else %}
+              {{ column.label }}
+            {% endif %}
+          </th>
+        {% endfor %}
+        <th class="px-6 py-3 text-center font-semibold text-slate-300">Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in table_rows %}
+        <tr class="border-b border-slate-700 hover:bg-slate-800/50 transition">
+          {% for column in table_columns %}
+            <td class="px-6 py-4 text-slate-300">
+              {{ row|get_item:column.key }}
+            </td>
+          {% endfor %}
+          <td class="px-6 py-4 text-center">
+            <div class="flex items-center justify-center gap-2">
+              {% if row.edit_url %}
+                <a href="{{ row.edit_url }}" class="text-emerald-400 hover:text-emerald-300" title="Edit">
+                  <i class="fas fa-pen"></i>
+                </a>
+              {% endif %}
+              {% if row.delete_url %}
+                <button onclick="deleteItem('{{ row.delete_url }}')" class="text-red-400 hover:text-red-300" title="Hapus">
+                  <i class="fas fa-trash"></i>
+                </button>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="{{ table_columns|length|add:1 }}" class="px-6 py-8 text-center text-slate-400">
+            Tidak ada data
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,72 @@
+{
+  "filename": "error_maintenance.html",
+  "title": "Pemeliharaan Sistem — CoffeeShop",
+  "components": [
+    {
+      "type": "heading",
+      "tag": "h1",
+      "label": "HEADING (H1)",
+      "depth": 2,
+      "path": "root/body/div/h1",
+      "classes": "",
+      "text_preview": "Maaf, Kami Sedang Bermasalah",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "a",
+      "label": "BUTTON: Kembali ke Beranda",
+      "depth": 2,
+      "path": "root/body/div/a",
+      "classes": "btn",
+      "text_preview": "Kembali ke Beranda",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 2,
+      "path": "root/body/div/h1",
+      "type": "heading",
+      "label": "HEADING (H1)",
+      "text_preview": "Maaf, Kami Sedang Bermasalah"
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/a",
+      "type": "button",
+      "label": "BUTTON: Kembali ke Beranda",
+      "text_preview": "Kembali ke Beranda"
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 2,
+    "by_type": {
+      "heading": 1,
+      "button": 1
+    },
+    "interactive": 1,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

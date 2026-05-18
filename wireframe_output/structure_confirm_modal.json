@@ -1,0 +1,142 @@
+{
+  "filename": "confirm_modal.html",
+  "title": "confirm_modal",
+  "components": [
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "fixed inset-0 bg-black/50 flex items-center justify-center z-50",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h3",
+      "label": "HEADING (H3)",
+      "depth": 4,
+      "path": "root/body/div/div/div/h3",
+      "classes": "text-lg font-bold text-slate-100 flex items-center gap-2",
+      "text_preview": "{{ modal_title }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "px-6 py-4 bg-slate-900/50 border-t border-slate-700 flex gap-3 justify-end",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: Batal",
+      "depth": 4,
+      "path": "root/body/div/div/div/button",
+      "classes": "px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-100 transition font-medium",
+      "text_preview": "Batal",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: Konfirmasi",
+      "depth": 4,
+      "path": "root/body/div/div/div/button",
+      "classes": "px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition font-medium",
+      "text_preview": "Konfirmasi",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/h3",
+      "type": "heading",
+      "label": "HEADING (H3)",
+      "text_preview": "{{ modal_title }}"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/button",
+      "type": "button",
+      "label": "BUTTON: Batal",
+      "text_preview": "Batal"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/button",
+      "type": "button",
+      "label": "BUTTON: Konfirmasi",
+      "text_preview": "Konfirmasi"
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 5,
+    "by_type": {
+      "layout": 2,
+      "heading": 1,
+      "button": 2
+    },
+    "interactive": 2,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

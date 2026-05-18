@@ -1,0 +1,236 @@
+{% extends 'base/base_hybrid.html' %}
+
+{% block title %}Buat Akun — LUMRA{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-12 px-6 lg:px-12 flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10">
+  <div class="w-full max-w-2xl mx-auto">
+    <div class="card bg-base-100 shadow-2xl border border-primary/20">
+      <div class="card-body p-8">
+        <!-- Header -->
+        <div class="mb-6">
+          <h1 class="text-2xl font-bold text-base-content mb-2">Buat Akun Baru</h1>
+          <p class="text-base-content/60 text-sm">Menambahkan struktur ke Chart of Accounts.</p>
+        </div>
+
+        <!-- Form -->
+        <form method="post" @submit="prepareSubmit" class="space-y-6">
+          {% csrf_token %}
+          
+          <!-- Account Code -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Kode Akun</span>
+            </label>
+            <div class="flex gap-2">
+              <input 
+                type="text" 
+                name="code" 
+                x-model="form.code" 
+                placeholder="cth: 1-101" 
+                class="input input-bordered input-primary flex-1 font-mono"
+              >
+              <button type="button" class="btn btn-ghost" @click="checkCodeAvailability()">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+            <div class="text-xs text-base-content/60 mt-1">
+              <span x-show="codeStatus.available" class="text-success">
+                <i class="fas fa-check-circle mr-1"></i> Kode tersedia
+              </span>
+              <span x-show="codeStatus.taken" class="text-error">
+                <i class="fas fa-times-circle mr-1"></i> Kode sudah digunakan
+              </span>
+            </div>
+          </div>
+
+          <!-- Account Name -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Nama Akun</span>
+            </label>
+            <input 
+              type="text" 
+              name="name" 
+              x-model="form.name" 
+              placeholder="cth: Kas Kecil" 
+              class="input input-bordered input-primary"
+              required
+            >
+          </div>
+
+          <!-- Account Type -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Tipe Akun</span>
+            </label>
+            <select name="type" x-model="form.type" class="select select-bordered select-primary">
+              <option value="">Pilih Tipe Akun</option>
+              <option value="asset">Asset (Aset)</option>
+              <option value="liability">Liability (Kewajiban)</option>
+              <option value="equity">Equity (Modal)</option>
+              <option value="revenue">Revenue (Pendapatan)</option>
+              <option value="expense">Expense (Beban)</option>
+            </select>
+          </div>
+
+          <!-- Account Level -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Level Akun</span>
+            </label>
+            <select name="level" x-model="form.level" class="select select-bordered select-primary">
+              <option value="">Pilih Level</option>
+              <option value="1">Level 1</option>
+              <option value="2">Level 2</option>
+              <option value="3">Level 3</option>
+              <option value="4">Level 4</option>
+              <option value="5">Level 5</option>
+            </select>
+          </div>
+
+          <!-- Parent Account -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Akun Induk</span>
+            </label>
+            <select name="parent" x-model="form.parent" class="select select-bordered">
+              <option value="">Tidak ada akun induk</option>
+              <template x-for="account in parentAccounts" :key="account.id">
+                <option :value="account.id" x-text="`${account.code} - ${account.name}`"></option>
+              </template>
+            </select>
+          </div>
+
+          <!-- Description -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Deskripsi</span>
+            </label>
+            <textarea 
+              name="description" 
+              x-model="form.description" 
+              placeholder="Deskripsi akun..." 
+              class="textarea textarea-bordered"
+              rows="3"
+            ></textarea>
+          </div>
+
+          <!-- Normal Balance -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Normal Balance</span>
+            </label>
+            <select name="normal_balance" x-model="form.normal_balance" class="select select-bordered select-primary">
+              <option value="debit">Debit</option>
+              <option value="credit">Kredit</option>
+            </select>
+          </div>
+
+          <!-- Active Status -->
+          <div class="form-control">
+            <label class="label cursor-pointer">
+              <input type="checkbox" name="is_active" x-model="form.is_active" class="checkbox checkbox-primary">
+              <span class="label-text">Aktif</span>
+            </label>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="flex gap-4">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save mr-2"></i>
+              Simpan Akun
+            </button>
+            <button type="button" @click="resetForm()" class="btn btn-ghost">
+              <i class="fas fa-redo mr-2"></i>
+              Reset
+            </button>
+            <a href="{% url 'accounting:chart_of_accounts' %}" class="btn btn-ghost">
+              <i class="fas fa-times mr-2"></i>
+              Batal
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function coaFormApp() {
+  return {
+    form: {
+      code: '',
+      name: '',
+      type: '',
+      level: '',
+      parent: '',
+      description: '',
+      normal_balance: 'debit',
+      is_active: true
+    },
+    codeStatus: {
+      available: false,
+      taken: false
+    },
+    parentAccounts: [],
+    
+    init() {
+      this.loadParentAccounts();
+    },
+    
+    loadParentAccounts() {
+      // Mock data - replace with actual API call
+      this.parentAccounts = [
+        { id: 1, code: '1-100', name: 'Aset Lancar' },
+        { id: 2, code: '1-200', name: 'Aset Tetap' },
+        { id: 3, code: '2-100', name: 'Utang Dagang' },
+        { id: 4, code: '3-100', name: 'Modal Saham' }
+      ];
+    },
+    
+    checkCodeAvailability() {
+      if (this.form.code) {
+        // Mock API call to check code availability
+        const isAvailable = !this.parentAccounts.some(acc => acc.code === this.form.code);
+        
+        this.codeStatus.available = isAvailable;
+        this.codeStatus.taken = !isAvailable;
+        
+        // Reset status after 3 seconds
+        setTimeout(() => {
+          this.codeStatus.available = false;
+          this.codeStatus.taken = false;
+        }, 3000);
+      }
+    },
+    
+    prepareSubmit() {
+      // Add form validation here
+      console.log('Submitting form:', this.form);
+    },
+    
+    resetForm() {
+      this.form = {
+        code: '',
+        name: '',
+        type: '',
+        level: '',
+        parent: '',
+        description: '',
+        normal_balance: 'debit',
+        is_active: true
+      };
+      this.codeStatus.available = false;
+      this.codeStatus.taken = false;
+    }
+  }
+}
+</script>
+{% endblock %}

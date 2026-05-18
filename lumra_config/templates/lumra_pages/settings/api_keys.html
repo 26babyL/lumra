@@ -1,0 +1,126 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}API Keys — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-card { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.95); border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+  
+  .key-display { font-family: 'Courier New', monospace; letter-spacing: 1px; background: #1e293b; color: #10b981; padding: 8px 12px; border-radius: 6px; font-size: 13px; display: inline-block; cursor: pointer; }
+  .key-display:hover { background: #334155; }
+  
+  .status-dot { height: 8px; width: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+  .st-active { background: #10b981; box-shadow: 0 0 0 2px #6ee7b7; }
+  .st-expired { background: #ef4444; box-shadow: 0 0 0 2px #fca5a5; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="apiApp()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex items-end justify-between">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+        <a href="#" class="hover:text-slate-800">System</a>
+        <span>/</span>
+        <span class="text-slate-800 font-medium">Integrations</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800">API Keys</h1>
+      <p class="text-sm text-slate-400 mt-0.5">Kunci akses untuk koneksi aplikasi mobile atau pihak ketiga.</p>
+    </div>
+    <button @click="generateKey" class="bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:bg-slate-700 transition flex items-center gap-2">
+      <i class="fas fa-plus"></i> Generate New Key
+    </button>
+  </div>
+
+  <!-- Key List -->
+  <div class="grid grid-cols-1 gap-4">
+    <template x-for="key in keys" :key="key.id">
+      <div class="glass-card p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        
+        <!-- Left: Info -->
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500">
+            <i class="fas fa-key"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-800" x-text="key.name"></h3>
+            <p class="text-xs text-slate-400 mt-1">Created: <span x-text="key.created_at"></span> • Expires: <span x-text="key.expires_at" class="font-bold" :class="isExpired(key) ? 'text-rose-500' : 'text-slate-500'"></span></p>
+          </div>
+        </div>
+
+        <!-- Center: Key Value (Masked) -->
+        <div class="flex-1 bg-slate-50 rounded-lg p-3 relative group cursor-pointer" @click="copyKey(key.secret)">
+          <p class="text-[10px] text-slate-400 uppercase font-bold mb-1">Secret Key (Klik untuk salin)</p>
+          <div class="flex items-center gap-2">
+            <code class="text-sm text-slate-600 select-all" x-text="key.visible ? key.secret : 'sk_live_******************************'"></code>
+            <i class="fas fa-eye text-slate-400 group-hover:text-slate-600"></i>
+          </div>
+        </div>
+
+        <!-- Right: Status & Actions -->
+        <div class="flex items-center gap-3">
+          <div class="text-right">
+            <div class="flex items-center justify-end gap-2 mb-1">
+              <span class="status-dot" :class="isExpired(key) ? 'st-expired' : 'st-active'"></span>
+              <span class="text-xs font-bold" :class="isExpired(key) ? 'text-rose-600' : 'text-emerald-600'" x-text="isExpired(key) ? 'Expired' : 'Active'"></span>
+            </div>
+            <p class="text-[10px] text-slate-400" x-text="key.last_used">Last used: 2 hours ago</p>
+          </div>
+          
+          <div class="flex gap-2">
+            <button @click="revokeKey(key.id)" class="w-10 h-10 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 flex items-center justify-center transition" title="Revoke Key">
+              <i class="fas fa-ban"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function apiApp() {
+  return {
+    keys: [
+      { id: 1, name: 'Mobile POS App', created_at: '2023-01-15', expires_at: '2024-01-15', secret: 'sk_live_83742938472938472398', last_used: '10 mins ago', visible: false },
+      { id: 2, name: 'Supplier Portal', created_at: '2022-05-20', expires_at: '2023-05-20', secret: 'sk_live_9988776655544332211', last_used: '1 day ago', visible: false },
+    ],
+    
+    isExpired(key) {
+      return new Date(key.expires_at) < new Date();
+    },
+
+    copyKey(text) {
+      navigator.clipboard.writeText(text);
+      alert('Key copied to clipboard!');
+    },
+
+    generateKey() {
+      const newKey = 'sk_live_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      this.keys.unshift({
+        id: Date.now(),
+        name: 'New Integration Key',
+        created_at: new Date().toISOString().split('T')[0],
+        expires_at: '2024-12-31',
+        secret: newKey,
+        last_used: 'Never',
+        visible: true
+      });
+    },
+
+    revokeKey(id) {
+      if(confirm('Revoke API key ini? Aplikasi yang menggunakan key ini tidak akan bisa mengakses sistem.')) {
+        this.keys = this.keys.filter(k => k.id !== id);
+      }
+    },
+
+    init(){}
+  }
+}
+</script>
+{% endblock %}

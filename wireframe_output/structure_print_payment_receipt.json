@@ -1,0 +1,256 @@
+{
+  "filename": "print_payment_receipt.html",
+  "title": "Payment Receipt — CoffeeShop",
+  "components": [
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "flex flex-col items-center mb-6 border-b border-dashed border-slate-200 pb-6",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (column)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h2",
+      "label": "HEADING (H2)",
+      "depth": 3,
+      "path": "root/body/div/div/h2",
+      "classes": "text-emerald-600",
+      "text_preview": "BUKTI KAS",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "flex flex-col mb-6",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (column)",
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "flex justify-between mb-2",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "flex justify-between mb-2",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "flex justify-between",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h1",
+      "label": "HEADING (H1)",
+      "depth": 3,
+      "path": "root/body/div/div/h1",
+      "classes": "text-4xl font-black mt-1",
+      "text_preview": "{{ amount_received }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "flex justify-between text-sm text-slate-600 border-b border-dashed border-slate-200 pb-2",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "flex justify-between text-sm text-slate-600",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "classes": "flex justify-center gap-2 mt-4",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/h2",
+      "type": "heading",
+      "label": "HEADING (H2)",
+      "text_preview": "BUKTI KAS"
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/h1",
+      "type": "heading",
+      "label": "HEADING (H1)",
+      "text_preview": "{{ amount_received }}"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 10,
+    "by_type": {
+      "layout": 8,
+      "heading": 2
+    },
+    "interactive": 0,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

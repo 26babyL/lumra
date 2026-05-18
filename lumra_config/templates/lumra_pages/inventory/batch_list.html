@@ -1,0 +1,273 @@
+{% extends 'base/base_hybrid.html' %}
+
+{% block title %}Daftar Batch — LUMRA{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="batchList()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-base-content">Daftar Batch</h1>
+      <p class="text-base-content/60 text-sm">Monitoring batch produk dan tracking kadaluarsa.</p>
+    </div>
+    <a href="{% url 'inventory:batch_form' %}" class="btn btn-primary">
+      <i class="fas fa-plus mr-2"></i> Tambah Batch
+    </a>
+  </div>
+
+  <!-- Filters -->
+  <div class="card bg-base-100 shadow-lg border border-base-300">
+    <div class="card-body p-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Produk</span>
+          </label>
+          <select x-model="filters.product" class="select select-bordered select-sm">
+            <option value="">Semua Produk</option>
+            <template x-for="product in products" :key="product.id">
+              <option :value="product.id" x-text="product.name"></option>
+            </template>
+          </select>
+        </div>
+        
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Status</span>
+          </label>
+          <select x-model="filters.status" class="select select-bordered select-sm">
+            <option value="">Semua Status</option>
+            <option value="active">Aktif</option>
+            <option value="expired">Kadaluarsa</option>
+            <option value="expiring">Akan Kadaluarsa</option>
+          </select>
+        </div>
+        
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Tanggal Kadaluarsa</span>
+          </label>
+          <input 
+            type="date" 
+            x-model="filters.expiry_date" 
+            class="input input-bordered input-sm"
+          >
+        </div>
+        
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Search</span>
+          </label>
+          <input 
+            type="text" 
+            x-model="filters.search" 
+            placeholder="Cari batch..."
+            class="input input-bordered input-sm"
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Batch List -->
+  <div class="card bg-base-100 shadow-lg border border-base-300">
+    <div class="card-body p-0">
+      <div class="overflow-x-auto">
+        <table class="table table-compact w-full">
+          <thead>
+            <tr class="bg-base-200">
+              <th class="text-left">Batch Number</th>
+              <th class="text-left">Produk</th>
+              <th class="text-left">Tanggal Produksi</th>
+              <th class="text-left">Tanggal Kadaluarsa</th>
+              <th class="text-right">Jumlah Awal</th>
+              <th class="text-right">Sisa</th>
+              <th class="text-left">Status</th>
+              <th class="text-center">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="batch in filteredBatches" :key="batch.id">
+              <tr class="hover:bg-base-200">
+                <td class="font-mono" x-text="batch.batch_number"></td>
+                <td>
+                  <div>
+                    <p class="font-semibold" x-text="batch.product_name"></p>
+                    <p class="text-xs text-base-content/60" x-text="batch.product_sku"></p>
+                  </div>
+                </td>
+                <td x-text="formatDate(batch.manufacturing_date)"></td>
+                <td>
+                  <div>
+                    <p x-text="formatDate(batch.expiry_date)"></p>
+                    <p class="text-xs" :class="getExpiryClass(batch.days_until_expiry)" x-text="`${batch.days_until_expiry} hari`"></p>
+                  </div>
+                </td>
+                <td class="text-right font-mono" x-text="batch.initial_quantity"></td>
+                <td class="text-right font-mono" x-text="batch.remaining_quantity"></td>
+                <td>
+                  <span class="badge badge-sm" :class="getBatchStatusClass(batch.status)" x-text="getBatchStatusText(batch.status)"></span>
+                </td>
+                <td class="text-center">
+                  <div class="flex gap-2 justify-center">
+                    <button class="btn btn-ghost btn-xs" @click="viewBatch(batch.id)">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn btn-ghost btn-xs" @click="editBatch(batch.id)">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function batchList() {
+  return {
+    batches: [],
+    products: [],
+    filters: {
+      product: '',
+      status: '',
+      expiry_date: '',
+      search: ''
+    },
+    filteredBatches: [],
+    
+    init() {
+      this.loadBatches();
+      this.loadProducts();
+    },
+    
+    loadBatches() {
+      // Mock data - replace with actual API call
+      this.batches = [
+        {
+          id: 1,
+          batch_number: 'BATCH-001',
+          product_name: 'Produk A',
+          product_sku: 'PRD-001',
+          manufacturing_date: '2024-01-01',
+          expiry_date: '2024-12-31',
+          days_until_expiry: 180,
+          initial_quantity: 1000,
+          remaining_quantity: 750,
+          status: 'active'
+        },
+        {
+          id: 2,
+          batch_number: 'BATCH-002',
+          product_name: 'Produk B',
+          product_sku: 'PRD-002',
+          manufacturing_date: '2023-12-01',
+          expiry_date: '2024-06-30',
+          days_until_expiry: 30,
+          initial_quantity: 500,
+          remaining_quantity: 200,
+          status: 'expiring'
+        },
+        {
+          id: 3,
+          batch_number: 'BATCH-003',
+          product_name: 'Produk C',
+          product_sku: 'PRD-003',
+          manufacturing_date: '2023-06-01',
+          expiry_date: '2024-01-15',
+          days_until_expiry: -15,
+          initial_quantity: 300,
+          remaining_quantity: 50,
+          status: 'expired'
+        }
+      ];
+      
+      this.applyFilters();
+    },
+    
+    loadProducts() {
+      // Mock data - replace with actual API call
+      this.products = [
+        { id: 1, name: 'Produk A' },
+        { id: 2, name: 'Produk B' },
+        { id: 3, name: 'Produk C' }
+      ];
+    },
+    
+    applyFilters() {
+      this.filteredBatches = this.batches.filter(batch => {
+        let matches = true;
+        
+        if (this.filters.product && batch.product_id != this.filters.product) {
+          matches = false;
+        }
+        
+        if (this.filters.status && batch.status != this.filters.status) {
+          matches = false;
+        }
+        
+        if (this.filters.search) {
+          const search = this.filters.search.toLowerCase();
+          if (!batch.batch_number.toLowerCase().includes(search) &&
+              !batch.product_name.toLowerCase().includes(search) &&
+              !batch.product_sku.toLowerCase().includes(search)) {
+            matches = false;
+          }
+        }
+        
+        return matches;
+      });
+    },
+    
+    getBatchStatusClass(status) {
+      switch(status) {
+        case 'active': return 'badge-success';
+        case 'expiring': return 'badge-warning';
+        case 'expired': return 'badge-error';
+        default: return 'badge-neutral';
+      }
+    },
+    
+    getBatchStatusText(status) {
+      switch(status) {
+        case 'active': return 'Aktif';
+        case 'expiring': return 'Akan Kadaluarsa';
+        case 'expired': return 'Kadaluarsa';
+        default: return 'Tidak Diketahui';
+      }
+    },
+    
+    getExpiryClass(days) {
+      if (days < 0) return 'text-error';
+      if (days <= 30) return 'text-warning';
+      return 'text-success';
+    },
+    
+    formatDate(dateStr) {
+      return new Date(dateStr).toLocaleDateString('id-ID');
+    },
+    
+    viewBatch(id) {
+      console.log('View batch:', id);
+      // Navigate to batch detail
+    },
+    
+    editBatch(id) {
+      console.log('Edit batch:', id);
+      // Navigate to batch edit
+    }
+  }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,283 @@
+{
+  "filename": "dashboard_layout.html",
+  "title": "dashboard_layout",
+  "components": [
+    {
+      "type": "section",
+      "tag": "section",
+      "label": "[ SECTION ]",
+      "depth": 2,
+      "path": "root/body/div/section",
+      "classes": "greeting-container",
+      "text_preview": "{{ greeting_time|default:\"Good Morning\" }} Hello, {{ user.first_name|default:use…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "greeting-section",
+      "x_data": "greetingData()"
+    },
+    {
+      "type": "heading",
+      "tag": "h2",
+      "label": "HEADING (H2)",
+      "depth": 5,
+      "path": "root/body/div/section/div/div/h2",
+      "classes": "greeting-title",
+      "text_preview": "Hello, {{ user.first_name|default:user.username }} ! 👋",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "badge",
+      "tag": "div",
+      "label": "BADGE / STATUS",
+      "depth": 5,
+      "path": "root/body/div/section/div/div/div",
+      "classes": "meta-badge",
+      "text_preview": "{{ location|default:\"Dashboard\" }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "section",
+      "tag": "section",
+      "label": "[ SECTION ]",
+      "depth": 2,
+      "path": "root/body/div/section",
+      "classes": "",
+      "text_preview": "{% if metrics_title %} {{ metrics_label|default:\"OVERVIEW\" }} {{ metrics_title }…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "metrics-section",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h3",
+      "label": "HEADING (H3)",
+      "depth": 5,
+      "path": "root/body/div/section/div/div/h3",
+      "classes": "dashboard-section-title",
+      "text_preview": "{{ metrics_title }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 4,
+      "path": "root/body/div/section/div/div",
+      "classes": "metric-card",
+      "text_preview": "{% if card.badge %} {% endif %} {{ card.title }} {% if card.status %} {{ card.st…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "badge",
+      "tag": "div",
+      "label": "BADGE / STATUS",
+      "depth": 5,
+      "path": "root/body/div/section/div/div/div",
+      "classes": "metric-badge",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "i",
+      "label": "CARD",
+      "depth": 6,
+      "path": "root/body/div/section/div/div/div/i",
+      "classes": "fas fa-{{ card.badge_icon|default:'check' }}",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "i",
+      "label": "CARD",
+      "depth": 7,
+      "path": "root/body/div/section/div/div/div/div/i",
+      "classes": "fas fa-arrow-{% if card.change_type == 'down' %}down{% else %}up{% endif %}",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "progressbar",
+      "tag": "div",
+      "label": "PROGRESS BAR",
+      "depth": 7,
+      "path": "root/body/div/section/div/div/div/div/div",
+      "classes": "metric-progress-bar",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "sidebar",
+      "tag": "div",
+      "label": "SIDEBAR",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "dashboard-sidebar",
+      "text_preview": "{% block dashboard_sidebar %} {# Sidebar sections (quick stats, notifications, e…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 2,
+      "path": "root/body/div/section",
+      "type": "section",
+      "label": "[ SECTION ]",
+      "text_preview": "{{ greeting_time|default:\"Good Morning\" }} Hello, {{ user.first_name|default:use…"
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/section/div/div/h2",
+      "type": "heading",
+      "label": "HEADING (H2)",
+      "text_preview": "Hello, {{ user.first_name|default:user.username }} ! 👋"
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/section/div/div/div",
+      "type": "badge",
+      "label": "BADGE / STATUS",
+      "text_preview": "{{ location|default:\"Dashboard\" }}"
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/section",
+      "type": "section",
+      "label": "[ SECTION ]",
+      "text_preview": "{% if metrics_title %} {{ metrics_label|default:\"OVERVIEW\" }} {{ metrics_title }…"
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/section/div/div/h3",
+      "type": "heading",
+      "label": "HEADING (H3)",
+      "text_preview": "{{ metrics_title }}"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/section/div/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "{% if card.badge %} {% endif %} {{ card.title }} {% if card.status %} {{ card.st…"
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/section/div/div/div",
+      "type": "badge",
+      "label": "BADGE / STATUS",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/section/div/div/div/i",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": ""
+    },
+    {
+      "depth": 7,
+      "path": "root/body/div/section/div/div/div/div/i",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": ""
+    },
+    {
+      "depth": 7,
+      "path": "root/body/div/section/div/div/div/div/div",
+      "type": "progressbar",
+      "label": "PROGRESS BAR",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "sidebar",
+      "label": "SIDEBAR",
+      "text_preview": "{% block dashboard_sidebar %} {# Sidebar sections (quick stats, notifications, e…"
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 11,
+    "by_type": {
+      "section": 2,
+      "heading": 2,
+      "badge": 2,
+      "card": 3,
+      "progressbar": 1,
+      "sidebar": 1
+    },
+    "interactive": 0,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

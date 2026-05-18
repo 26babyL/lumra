@@ -1,0 +1,127 @@
+{
+  "filename": "tabs.html",
+  "title": "tabs",
+  "components": [
+    {
+      "type": "alpine-root",
+      "tag": "div",
+      "label": "ALPINE COMPONENT [{ activeTab: '{{ active_tab|default:'tab]",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "mb-6",
+      "text_preview": "{% for tab in tabs %} {% if tab.icon %} {% endif %} {{ tab.l…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": "{ activeTab: '{{ active_tab|default:'tab1' }}' }"
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "flex gap-2 border-b border-slate-700 overflow-x-auto",
+      "text_preview": "",
+      "has_scroll": true,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: {% if tab.icon %} {% endif %} {{ tab.lab…",
+      "depth": 3,
+      "path": "root/body/div/div/button",
+      "classes": "px-4 py-3 font-medium transition whitespace-nowrap",
+      "text_preview": "{% if tab.icon %} {% endif %} {{ tab.label }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "filter",
+      "tag": "i",
+      "label": "FILTER / TAB",
+      "depth": 4,
+      "path": "root/body/div/div/button/i",
+      "classes": "fas {{ tab.icon }} mr-2",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "alpine-root",
+      "label": "ALPINE COMPONENT [{ activeTab: '{{ active_tab|default:'tab]",
+      "text_preview": "{% for tab in tabs %} {% if tab.icon %} {% endif %} {{ tab.l…"
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/button",
+      "type": "button",
+      "label": "BUTTON: {% if tab.icon %} {% endif %} {{ tab.lab…",
+      "text_preview": "{% if tab.icon %} {% endif %} {{ tab.label }}"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/button/i",
+      "type": "filter",
+      "label": "FILTER / TAB",
+      "text_preview": ""
+    }
+  ],
+  "issues": [
+    {
+      "type": "alpine_xcloak",
+      "severity": "info",
+      "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template",
+      "path": ""
+    }
+  ],
+  "stats": {
+    "total_components": 4,
+    "by_type": {
+      "alpine-root": 1,
+      "layout": 1,
+      "button": 1,
+      "filter": 1
+    },
+    "interactive": 2,
+    "with_scroll": 1,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 1,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 1
+    }
+  }
+}

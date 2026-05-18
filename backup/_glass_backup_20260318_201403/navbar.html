@@ -1,0 +1,846 @@
+{% load static %}
+
+
+<style>
+  [x-cloak] { display: var(--shadow-sm-16) !important; }
+
+  /* ===========================================================
+     FIX #1 — TRANSPARANSI (🟡 → ✅)
+     nav-glass sebelumnya: background semi-transparan tapi
+     backdrop-filter tidak konsisten dengan design token.
+     Sekarang menggunakan var(--glass-blur) dari token langsung.
+     =========================================================== */
+  .nav-glass {
+    /* FIX: Gunakan var(--glass-bg) untuk konsistensi design token */
+    background : var(--glass-bg, rgba(248, 250, 252, 0.80));
+    backdrop-filter: var(--glass-blur, blur(14px) saturate(180%));
+    -webkit-backdrop-filter: var(--glass-blur, blur(14px) saturate(180%));
+
+    /* ===========================================================
+       FIX #2 — FROSTED EDGE (❌ → ✅)
+       Tambah border semi-transparan top + bottom sebagai
+       frosted edge yang proper sesuai glassmorphism spec.
+       =========================================================== */
+    border-top    : 1px solid rgba(255, 255, 255, 0.55);   /* frosted top edge */
+    border-bottom : 1px solid var(--glass-border, rgba(255, 255, 255, 0.18));  /* frosted bottom divider */
+    /* inner white glow di sisi atas */
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.60);
+
+    /* ===========================================================
+       FIX #3 — NATURAL SHADOW (❌ → ✅)
+       Gunakan var(--glass-shadow) / var(--shadow-card) dari token.
+       Sebelumnya pakai custom rgba yang tidak terdaftar di token.
+       =========================================================== */
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.60),               /* frosted inner highlight */
+      0 1px 3px var(--color-black-a06, rgba(0,0,0,0.06)),     /* natural shadow layer 1 */
+      0 0 0 0.5px var(--color-black-a04, rgba(0,0,0,0.04));   /* subtle outline */
+  }
+
+  /* ── Command search ── */
+  .cmd-input {
+    background    : var(--color-white-a07);
+    border        : 1px solid var(--color-slate-300-a05);
+    border-radius : 10px;
+    transition    : background .15s, border-color .15s, box-shadow .15s;
+  }
+  .cmd-input:focus {
+    background    : var(--color-fff);
+    border-color  : var(--color-emerald-600-a05);
+    box-shadow    : 0 0 0 3px var(--color-emerald-600-a008);
+    outline       : var(--shadow-sm-16);
+  }
+
+  /* ── Command token chip ── */
+  .cmd-token {
+    display       : inline-flex;
+    align-items   : center;
+    gap           : 3px;
+    padding       : 1px 7px;
+    border-radius : 5px;
+    font-size     : 11px;
+    font-weight   : 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height   : 1.7;
+    flex-shrink   : 0;
+  }
+  .cmd-token-product  { background:var(--color-emerald-100); color:var(--color-emerald-950); }
+  .cmd-token-location { background:var(--color-dbeafe); color:var(--color-1e40af); }
+  .cmd-token-stock    { background:var(--color-fef3c7); color:var(--color-92400e); }
+  .cmd-token-default  { background:var(--color-slate-100); color:var(--color-slate-600); }
+
+  /* ── Kbd hint ── */
+  .kbd {
+    display      : inline-flex;
+    align-items  : center;
+    padding      : 1px 5px;
+    border       : 1px solid var(--color-slate-200);
+    border-radius: 4px;
+    background   : var(--color-slate-50);
+    font-size    : 11px;
+    font-family  : ui-monospace, monospace;
+    color        : var(--color-slate-400);
+    line-height  : 1.6;
+    pointer-events: var(--shadow-sm-16);
+  }
+
+  /* ── Dropdown ──
+     FIX: Tambah backdrop-filter pada dropdown agar konsisten glass
+  ── */
+  .cmd-dropdown {
+    background  : var(--glass-bg, rgba(255,255,255,0.92));
+    backdrop-filter: var(--glass-blur, blur(14px) saturate(180%));
+    -webkit-backdrop-filter: var(--glass-blur, blur(14px) saturate(180%));
+    border      : 1px solid var(--glass-border, rgba(255,255,255,0.25));  /* frosted edge */
+    border-radius: 14px;
+    box-shadow  :
+      0 8px 30px var(--color-black-a009, rgba(0,0,0,0.09)),
+      0 2px 8px var(--color-black-a004, rgba(0,0,0,0.04)),
+      inset 0 1px 0 rgba(255,255,255,0.5);  /* inner highlight */
+    overflow    : hidden;
+  }
+
+  /* ── Result item ── */
+  .cmd-result-item {
+    display        : flex;
+    align-items    : center;
+    gap            : 10px;
+    padding        : 9px 14px;
+    cursor         : pointer;
+    transition     : background .1s;
+    border-radius  : 0;
+  }
+  .cmd-result-item:hover,
+  .cmd-result-item.active { background: var(--color-f0fdf4); }
+  .cmd-result-item.active { border-left: 2px solid var(--color-emerald-600); }
+
+  /* ── Notif dot ── */
+  .notif-dot {
+    position  : absolute;
+    top: 7px; right: 7px;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--color-ef4444);
+    border    : 1.5px solid var(--color-slate-50-a09);
+    animation : notifPulse 2.4s ease-in-out infinite;
+  }
+  @keyframes notifPulse {
+    0%,100% { transform:scale(1); opacity:1; }
+    50%     { transform:scale(1.35); opacity:.75; }
+  }
+
+  /* ── Store pill ── */
+  .store-pill {
+    display      : inline-flex;
+    align-items  : center;
+    gap          : 6px;
+    padding      : 4px 10px 4px 7px;
+    border       : 1px solid var(--color-emerald-100-a08);
+    border-radius: 999px;
+    background   : var(--color-rgba-240-253-244-a07);
+    font-size    : 12.5px;
+    font-weight  : 600;
+    color        : var(--color-emerald-950);
+    cursor       : pointer;
+    transition   : background .15s, border-color .15s;
+    white-space  : nowrap;
+    max-width    : 180px;
+  }
+  .store-pill:hover { background:var(--color-rgba-220-252-231-a09); border-color:var(--color-emerald-300); }
+
+  /* ── Avatar ring ── */
+  .avatar-ring {
+    ring          : 1.5px;
+    ring-color    : var(--color-slate-300-a06);
+    border        : 1.5px solid var(--color-slate-300-a06);
+    border-radius : 50%;
+    object-fit    : cover;
+  }
+
+  /* ── Section label in dropdown ── */
+  .cmd-section-label {
+    font-size     : 10px;
+    font-weight   : 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color         : var(--color-slate-400);
+    padding       : 8px 14px 4px;
+  }
+
+  /* ── Scrollbar in dropdown ── */
+  .cmd-scroll::-webkit-scrollbar { width: 4px; }
+  .cmd-scroll::-webkit-scrollbar-track { background: transparent; }
+  .cmd-scroll::-webkit-scrollbar-thumb { background: var(--color-slate-200); border-radius: 4px; }
+</style>
+
+<header
+  class="nav-glass sticky top-0 z-30 h-14 flex items-center"
+  x-data="navbarApp()"
+  x-init="init()"
+  x-cloak>
+
+  <div class="w-full px-3 sm:px-5 lg:px-7 flex items-center gap-2.5">
+
+    {# ── KIRI : Hamburger + Store Switcher ── #}
+    <div class="flex items-center gap-2 flex-shrink-0">
+
+      {# Hamburger — mobile only #}
+      <button
+        @click="window.dispatchEvent(new CustomEvent('toggle-sidebar'))"
+        class="md:hidden p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400"
+        aria-label="Toggle sidebar">
+        <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h10M4 18h16"/>
+        </svg>
+      </button>
+
+      {# Store Switcher #}
+      <div class="relative hidden sm:block" @click.outside="storeOpen=false">
+        <button
+          @click="storeOpen=!storeOpen"
+          class="store-pill"
+          :aria-expanded="storeOpen.toString()"
+          aria-haspopup="true">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0"></span>
+          <span class="truncate" x-text="activeStore.name">{{ active_store.name|default:"Pilih Cabang" }}</span>
+          <svg class="w-3 h-3 text-emerald-400 flex-shrink-0 transition-transform duration-200"
+               :class="storeOpen ? 'rotate-180' : ''"
+               fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+
+        {# Store dropdown #}
+        <div
+          x-show="storeOpen"
+          x-transition:enter="transition ease-out duration-150"
+          x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
+          x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+          x-transition:leave="transition ease-in duration-100"
+          x-transition:leave-end="opacity-0 scale-95 -translate-y-1"
+          class="cmd-dropdown absolute left-0 top-[calc(100%+8px)] w-60 z-50">
+
+          <div class="cmd-section-label">Pilih Cabang</div>
+
+          <template x-for="store in stores" :key="store.id">
+            <button
+              @click="switchStore(store)"
+              class="cmd-result-item w-full text-left"
+              :class="store.id === activeStore.id ? 'active' : ''">
+              <span
+                class="w-2 h-2 rounded-full flex-shrink-0"
+                :class="store.id === activeStore.id ? 'bg-emerald-500' : 'bg-slate-300'">
+              </span>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-slate-700 truncate" x-text="store.name"></p>
+                <p class="text-[11px] text-slate-400 truncate" x-text="store.address || ''"></p>
+              </div>
+              <svg x-show="store.id === activeStore.id"
+                   class="w-3.5 h-3.5 text-emerald-500 flex-shrink-0"
+                   fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+            </button>
+          </template>
+
+          <div class="border-t border-slate-100 px-3 py-2.5">
+            <a href="#" class="text-xs font-semibold text-emerald-600 hover:text-emerald-800 transition-colors">
+              + Tambah Cabang
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {# ── TENGAH : Command Search ── #}
+    <div class="flex-1 flex justify-center px-1 sm:px-3">
+      <div class="relative w-full" @click.outside="closeSearch()">
+
+        {# Input wrapper #}
+        <div class="relative flex items-center">
+
+          {# Search icon #}
+          <div class="absolute left-3 flex items-center pointer-events-none z-10">
+            <svg class="w-[15px] h-[15px] text-slate-400 transition-colors duration-150"
+                 :class="searchFocused ? 'text-emerald-500' : ''"
+                 fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+            </svg>
+          </div>
+
+          {# Command token chip (muncul saat prefix terdeteksi) #}
+          <div x-show="parsedCmd.prefix"
+               x-transition:enter="transition duration-100"
+               x-transition:enter-start="opacity-0 scale-90"
+               x-transition:enter-end="opacity-100 scale-100"
+               class="absolute left-8 z-10 pointer-events-none">
+            <span
+              class="cmd-token"
+              :class="{
+                'cmd-token-product' : parsedCmd.type === 'product',
+                'cmd-token-location': parsedCmd.type === 'location',
+                'cmd-token-stock'   : parsedCmd.type === 'stock',
+                'cmd-token-default' : !parsedCmd.type
+              }"
+              x-text="parsedCmd.label">
+            </span>
+          </div>
+
+          {# Actual input #}
+          <input
+            id="global-search"
+            type="text"
+            name="q"
+            x-model="query"
+            @focus="onSearchFocus()"
+            @blur="searchFocused=false"
+            @input="onInput()"
+            @keydown.slash.prevent.window="focusSearch()"
+            @keydown.meta.k.prevent.window="focusSearch()"
+            @keydown.ctrl.k.prevent.window="focusSearch()"
+            @keydown.escape="closeSearch()"
+            @keydown.arrow-down.prevent="moveDown()"
+            @keydown.arrow-up.prevent="moveUp()"
+            @keydown.enter.prevent="onEnter()"
+            :placeholder="searchFocused ? '' : 'Cari produk, lokasi, stok…'"
+            autocomplete="off"
+            spellcheck="false"
+            class="cmd-input w-full h-9 text-sm text-slate-800 placeholder-slate-400"
+            :class="parsedCmd.prefix ? 'pl-[calc(2rem+var(--token-w,60px))] pr-16' : 'pl-9 pr-16'"
+            style="padding-left: var(--pl, 2.25rem)"
+            :style="parsedCmd.prefix ? 'padding-left: calc(2rem + ' + tokenWidth + 'px + 6px)' : 'padding-left: 2.25rem'"
+            aria-label="Command search — ketik P: produk, L: lokasi, S: stok"
+            aria-autocomplete="list"
+            :aria-expanded="showDropdown.toString()"
+            aria-controls="cmd-results">
+
+          {# Right side: hints + clear #}
+          <div class="absolute right-2.5 flex items-center gap-1.5">
+            <button
+              type="button"
+              x-show="query.length > 0"
+              x-transition:enter="transition duration-100"
+              x-transition:enter-start="opacity-0 scale-75"
+              x-transition:enter-end="opacity-100 scale-100"
+              @click="clearSearch()"
+              class="p-0.5 rounded text-slate-300 hover:text-slate-500 transition-colors"
+              aria-label="Hapus">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+            <span x-show="query.length === 0 && !searchFocused" class="kbd">/</span>
+            <span x-show="query.length === 0 && searchFocused" class="kbd text-[10px]">ESC</span>
+          </div>
+        </div>
+
+        {# ── COMMAND DROPDOWN ── #}
+        <div
+          x-show="showDropdown"
+          id="cmd-results"
+          x-transition:enter="transition ease-out duration-150"
+          x-transition:enter-start="opacity-0 scale-98 -translate-y-1"
+          x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+          x-transition:leave="transition ease-in duration-100"
+          x-transition:leave-end="opacity-0 -translate-y-1"
+          class="cmd-dropdown absolute left-0 right-0 top-[calc(100%+8px)] z-50"
+          role="listbox">
+
+          {# Idle state: mostra suggerimenti comandi #}
+          <template x-if="!query && searchFocused">
+            <div>
+              <div class="cmd-section-label">Command Shortcuts</div>
+              <div class="px-3 py-2 space-y-1">
+                <template x-for="hint in cmdHints" :key="hint.prefix">
+                  <button
+                    @click="query = hint.prefix + ' '; $nextTick(() => document.getElementById('global-search').focus())"
+                    class="cmd-result-item w-full rounded-lg text-left gap-3">
+                    <span class="cmd-token" :class="hint.tokenClass" x-text="hint.label"></span>
+                    <span class="text-xs text-slate-500 flex-1" x-text="hint.desc"></span>
+                    <span class="kbd" x-text="hint.prefix"></span>
+                  </button>
+                </template>
+              </div>
+              <div class="border-t border-slate-50 cmd-section-label mt-1">Terakhir Dicari</div>
+              <div class="pb-2">
+                <template x-for="r in recentSearches" :key="r">
+                  <button
+                    @click="query = r; onInput()"
+                    class="cmd-result-item w-full text-left">
+                    <svg class="w-3.5 h-3.5 text-slate-300 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span class="text-sm text-slate-500" x-text="r"></span>
+                  </button>
+                </template>
+              </div>
+            </div>
+          </template>
+
+          {# Loading #}
+          <template x-if="isSearching && query">
+            <div class="flex items-center gap-3 px-4 py-4 text-sm text-slate-400">
+              <svg class="w-4 h-4 animate-spin text-emerald-500" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+              </svg>
+              Mencari<span x-text="parsedCmd.type ? ' ' + parsedCmd.label : ''"></span>…
+            </div>
+          </template>
+
+          {# Results #}
+          <template x-if="!isSearching && results.length > 0 && query">
+            <div>
+              <div class="cmd-section-label" x-text="resultsLabel"></div>
+              <div class="cmd-scroll max-h-72 overflow-y-auto pb-2">
+                <template x-for="(item, idx) in results" :key="item.id">
+                  <button
+                    @click="selectResult(item)"
+                    class="cmd-result-item w-full text-left"
+                    :class="idx === activeIndex ? 'active' : ''"
+                    role="option"
+                    :aria-selected="idx === activeIndex">
+
+                    {# Icon berdasarkan type #}
+                    <div
+                      class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 text-[11px] font-bold"
+                      :class="{
+                        'bg-emerald-50 text-emerald-600': item.type === 'product',
+                        'bg-blue-50 text-blue-600'      : item.type === 'location',
+                        'bg-amber-50 text-amber-600'    : item.type === 'stock',
+                      }">
+                      <span x-text="item.type === 'product' ? 'P' : item.type === 'location' ? 'L' : 'S'"></span>
+                    </div>
+
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-medium text-slate-800 truncate" x-text="item.name"></p>
+                      <p class="text-[11px] text-slate-400 truncate" x-text="item.subtitle"></p>
+                    </div>
+
+                    {# Badge kanan #}
+                    <span
+                      x-show="item.badge"
+                      class="text-[10px] font-semibold px-2 py-0.5 rounded-full flex-shrink-0"
+                      :class="{
+                        'bg-red-50 text-red-600'    : item.badgeType === 'danger',
+                        'bg-amber-50 text-amber-600': item.badgeType === 'warning',
+                        'bg-emerald-50 text-emerald-700': item.badgeType === 'success',
+                        'bg-slate-100 text-slate-500': !item.badgeType
+                      }"
+                      x-text="item.badge">
+                    </span>
+                  </button>
+                </template>
+              </div>
+
+              {# Footer — hit Enter untuk full page #}
+              <div class="border-t border-slate-50 px-4 py-2.5 flex items-center justify-between">
+                <span class="text-[11px] text-slate-400">
+                  <span x-text="results.length"></span> hasil ditemukan
+                </span>
+                <span class="text-[11px] text-slate-400 flex items-center gap-1">
+                  <span class="kbd">↵</span> untuk lihat semua
+                </span>
+              </div>
+            </div>
+          </template>
+
+          {# Empty state #}
+          <template x-if="!isSearching && results.length === 0 && query.length > 1">
+            <div class="px-4 py-8 text-center">
+              <svg class="w-8 h-8 text-slate-200 mx-auto mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+              </svg>
+              <p class="text-sm text-slate-400">Tidak ada hasil untuk "<span x-text="parsedCmd.term || query" class="font-medium"></span>"</p>
+              <p class="text-[11px] text-slate-300 mt-1" x-show="!parsedCmd.prefix">
+                Coba gunakan prefix: <span class="font-mono">P:</span> <span class="font-mono">L:</span> <span class="font-mono">S:</span>
+              </p>
+            </div>
+          </template>
+
+        </div>{# end cmd-dropdown #}
+      </div>
+    </div>
+
+    {# ── KANAN : Notifikasi + Profil ── #}
+    <div class="flex items-center gap-0.5 flex-shrink-0">
+
+      {# Notifikasi #}
+      <div class="relative" @click.outside="notifOpen=false">
+        <button
+          @click="notifOpen=!notifOpen"
+          :aria-expanded="notifOpen.toString()"
+          aria-controls="notif-panel"
+          class="relative p-2 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400"
+          aria-label="Notifikasi">
+          <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 00-5-5.917V4a1 1 0 00-2 0v1.083A6 6 0 006 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+          </svg>
+          <span
+            x-show="{{ notifications_count|default:0 }} > 0"
+            class="notif-dot"
+            aria-hidden="true">
+          </span>
+        </button>
+
+        <div
+          id="notif-panel"
+          x-show="notifOpen"
+          x-transition:enter="transition ease-out duration-150"
+          x-transition:enter-start="opacity-0 scale-95 translate-y-1"
+          x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+          x-transition:leave="transition ease-in duration-100"
+          x-transition:leave-end="opacity-0 scale-95 translate-y-1"
+          class="cmd-dropdown absolute right-0 top-[calc(100%+10px)] w-80 z-50"
+          role="dialog"
+          aria-label="Notifikasi"
+          tabindex="-1">
+
+          <div class="flex items-center justify-between px-4 py-3 border-b border-slate-50">
+            <span class="text-sm font-bold text-slate-800">Notifikasi</span>
+            {% if notifications_count %}
+            <span class="text-[11px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-semibold">
+              {{ notifications_count }} baru
+            </span>
+            {% endif %}
+          </div>
+
+          <div class="max-h-64 overflow-y-auto cmd-scroll divide-y divide-slate-50">
+            {% for notif in notifications %}
+            <a href="{{ notif.get_absolute_url }}"
+               class="flex items-start gap-3 px-4 py-3 hover:bg-slate-50 transition-colors group">
+              <div class="mt-0.5 w-7 h-7 rounded-lg bg-{{ notif.type|default:'yellow' }}-50 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-{{ notif.icon|default:'bell' }} text-{{ notif.type|default:'yellow' }}-500 text-xs"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm text-slate-700 font-medium leading-snug group-hover:text-slate-900 line-clamp-2">
+                  {{ notif.message }}
+                </p>
+                <p class="text-[11px] text-slate-400 mt-0.5">{{ notif.created_at|timesince }} lalu</p>
+              </div>
+            </a>
+            {% empty %}
+            <div class="py-8 text-center">
+              <svg class="w-7 h-7 text-slate-200 mx-auto mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 00-5-5.917V4a1 1 0 00-2 0v1.083A6 6 0 006 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+              </svg>
+              <p class="text-sm text-slate-400">Tidak ada notifikasi baru</p>
+            </div>
+            {% endfor %}
+          </div>
+
+          <div class="border-t border-slate-50 px-4 py-2.5" style="background:var(--color-bg)">
+            <a href="{% url 'notifications' %}"
+               class="text-xs font-semibold text-emerald-600 hover:text-emerald-800 transition-colors">
+              Lihat semua →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {# Divider #}
+      <div class="w-px h-4 mx-1.5" style="background:var(--color-surface)" aria-hidden="true"></div>
+
+      {# Profil #}
+      <div class="relative" @click.outside="profileOpen=false">
+        <button
+          @click="profileOpen=!profileOpen"
+          :aria-expanded="profileOpen.toString()"
+          class="flex items-center gap-2 pl-1 pr-2 py-1 rounded-lg hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400 group">
+          <img
+            class="avatar-ring h-6.5 w-6.5 h-[26px] w-[26px]"
+            src="{{ user.profile.avatar.url|default:'/static/img/default-avatar.png' }}"
+            alt="{{ user.get_full_name|default:user.username }}">
+          <div class="hidden md:flex flex-col items-start leading-none gap-[2px]">
+            <span class="text-[13px] font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">
+              {{ user.get_full_name|default:user.username }}
+            </span>
+            <span class="text-[10px] font-medium text-slate-400 tracking-wide">
+              {{ user.profile.role|default:"Admin" }}
+            </span>
+          </div>
+          <svg class="w-3 h-3 text-slate-300 hidden md:block transition-transform duration-200"
+               :class="profileOpen ? 'rotate-180' : ''"
+               fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+
+        <div
+          x-show="profileOpen"
+          x-transition:enter="transition ease-out duration-150"
+          x-transition:enter-start="opacity-0 scale-95 translate-y-1"
+          x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+          x-transition:leave="transition ease-in duration-100"
+          x-transition:leave-end="opacity-0"
+          class="cmd-dropdown absolute right-0 top-[calc(100%+10px)] w-48 z-50"
+          role="menu">
+
+          <div class="px-4 py-3 border-b border-slate-50">
+            <p class="text-xs font-bold text-slate-800 truncate">{{ user.get_full_name|default:user.username }}</p>
+            <p class="text-[11px] text-slate-400 truncate mt-0.5">{{ user.email }}</p>
+          </div>
+
+          <div class="py-1">
+            <a href="{% url 'profile' %}" role="menuitem"
+               class="cmd-result-item rounded-none text-sm text-slate-600 hover:text-slate-900">
+              <svg class="w-3.5 h-3.5 text-slate-300 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+              </svg>
+              Profil Saya
+            </a>
+            <a href="{% url 'settings' %}" role="menuitem"
+               class="cmd-result-item rounded-none text-sm text-slate-600 hover:text-slate-900">
+              <svg class="w-3.5 h-3.5 text-slate-300 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+              Pengaturan
+            </a>
+            <button @click="toggleTheme()" role="menuitem"
+                    class="cmd-result-item rounded-none w-full text-left text-sm text-slate-600 hover:text-slate-900">
+              <svg x-show="theme==='light'" class="w-3.5 h-3.5 text-slate-300 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+              </svg>
+              <svg x-show="theme==='dark'" class="w-3.5 h-3.5 text-amber-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"/>
+              </svg>
+              <span x-text="theme==='dark' ? 'Mode Terang' : 'Mode Gelap'"></span>
+            </button>
+          </div>
+
+          <div class="border-t border-slate-100">
+            <a href="{% url 'logout' %}" role="menuitem"
+               class="cmd-result-item rounded-none text-sm text-red-500 hover:bg-red-50 hover:text-red-700">
+              <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+              </svg>
+              Keluar
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>{# end kanan #}
+  </div>
+</header>
+
+{# ── ALPINE COMPONENT ── #}
+<script>
+function navbarApp() {
+  return {
+    /* ── state ── */
+    theme        : localStorage.getItem('theme') || 'light',
+    storeOpen    : false,
+    notifOpen    : false,
+    profileOpen  : false,
+    searchFocused: false,
+    showDropdown : false,
+    query        : '',
+    results      : [],
+    activeIndex  : -1,
+    isSearching  : false,
+    tokenWidth   : 0,
+    recentSearches: JSON.parse(localStorage.getItem('cs_recent_searches') || '[]').slice(0, 4),
+
+    /* Store data — seed dari Django context processor */
+    activeStore: {{ active_store|default:'{"id":1,"name":"Toko Utama","address":""}' }},
+    stores     : {{ stores_json|default:'[]' }},
+
+    /* Command config */
+    cmdHints: [
+      { prefix:'P:', label:'Produk',  tokenClass:'cmd-token-product',  desc:'Cari by nama atau SKU',          shortcut:'P:' },
+      { prefix:'L:', label:'Lokasi',  tokenClass:'cmd-token-location', desc:'Filter by kota atau cabang',     shortcut:'L:' },
+      { prefix:'S:', label:'Stok',    tokenClass:'cmd-token-stock',    desc:'Produk dengan stok di bawah N',  shortcut:'S:' },
+    ],
+
+    /* ── parsed command ── */
+    get parsedCmd() {
+      const q = this.query.trim();
+      const map = {
+        'P:': { type:'product',  label:'Produk',  url:'/api/search/products/' },
+        'L:': { type:'location', label:'Lokasi',  url:'/api/search/locations/' },
+        'S:': { type:'stock',    label:'Stok',    url:'/api/search/stock/' },
+      };
+      for (const [prefix, meta] of Object.entries(map)) {
+        if (q.toUpperCase().startsWith(prefix)) {
+          return {
+            prefix: true,
+            ...meta,
+            term: q.slice(2).trim(),
+          };
+        }
+      }
+      return { prefix: false, type: null, label: null, term: q, url: '/api/search/' };
+    },
+
+    get resultsLabel() {
+      const labels = { product:'Produk', location:'Lokasi', stock:'Produk Stok Rendah' };
+      return labels[this.parsedCmd.type] || 'Hasil Pencarian';
+    },
+
+    /* ── init ── */
+    init() {
+      /* Tema */
+      if (this.theme === 'dark') document.documentElement.classList.add('dark');
+
+      /* Shortcut / dan ⌘K */
+      document.addEventListener('keydown', (e) => {
+        if (e.key === '/' && !['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) {
+          e.preventDefault(); this.focusSearch();
+        }
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault(); this.focusSearch();
+        }
+      });
+
+      /* Measure token width setelah render */
+      this.$watch('parsedCmd', () => {
+        this.$nextTick(() => {
+          const chip = this.$el.querySelector('.cmd-token');
+          if (chip) this.tokenWidth = chip.offsetWidth;
+        });
+      });
+    },
+
+    /* ── search flow ── */
+    focusSearch() {
+      const el = document.getElementById('global-search');
+      if (el) { el.focus(); el.select(); }
+    },
+
+    onSearchFocus() {
+      this.searchFocused = true;
+      this.showDropdown  = true;
+    },
+
+    closeSearch() {
+      this.searchFocused = false;
+      this.showDropdown  = false;
+      this.activeIndex   = -1;
+    },
+
+    clearSearch() {
+      this.query    = '';
+      this.results  = [];
+      this.activeIndex = -1;
+      this.$nextTick(() => document.getElementById('global-search')?.focus());
+    },
+
+    _debounceTimer: null,
+    onInput() {
+      this.showDropdown = true;
+      this.activeIndex  = -1;
+      clearTimeout(this._debounceTimer);
+
+      const term = this.parsedCmd.term;
+      if (!term || term.length < 1) {
+        this.results    = [];
+        this.isSearching = false;
+        return;
+      }
+
+      this.isSearching = true;
+      this._debounceTimer = setTimeout(() => this._doSearch(), 280);
+    },
+
+    async _doSearch() {
+      const { term, type, url } = this.parsedCmd;
+      if (!term) { this.isSearching = false; return; }
+
+      /* ── MOCK DATA — ganti fetch() di bawah saat endpoint siap ── */
+      await new Promise(r => setTimeout(r, 180)); /* simulasi latency */
+
+      const mockProducts = [
+        { id:1, name:'Kopi Gayo Arabica', subtitle:'SKU: KGA-001 · Stok: 240 Kg', badge:'Tersedia', badgeType:'success', type:'product', url:'/products/1/' },
+        { id:2, name:'Kopi Mandheling', subtitle:'SKU: KMN-004 · Stok: 12 Kg', badge:'Terbatas', badgeType:'warning', type:'product', url:'/products/2/' },
+        { id:3, name:'Gayo Natural Process', subtitle:'SKU: GNP-007 · Stok: 0', badge:'Habis', badgeType:'danger', type:'product', url:'/products/3/' },
+        { id:4, name:'Kopi Toraja', subtitle:'SKU: KTR-002 · Stok: 88 Kg', badge:'Tersedia', badgeType:'success', type:'product', url:'/products/4/' },
+      ];
+      const mockLocations = [
+        { id:10, name:'Jakarta Pusat', subtitle:'12 cabang aktif', badge:'12 Cabang', type:'location', url:'/locations/jkt/' },
+        { id:11, name:'Bandung',       subtitle:'4 cabang aktif',  badge:'4 Cabang',  type:'location', url:'/locations/bdg/' },
+      ];
+      const mockStock = [
+        { id:20, name:'Kopi Mandheling',    subtitle:'Stok: 12 Kg — di bawah threshold', badge:'< 20 Kg', badgeType:'warning', type:'stock', url:'/products/2/' },
+        { id:21, name:'Gayo Natural Process', subtitle:'Stok: 0 — habis',               badge:'Habis',   badgeType:'danger',  type:'stock', url:'/products/3/' },
+      ];
+
+      const pool = type === 'location' ? mockLocations
+                 : type === 'stock'    ? mockStock
+                 : mockProducts;
+
+      this.results = pool.filter(p =>
+        p.name.toLowerCase().includes(term.toLowerCase()) ||
+        (p.subtitle || '').toLowerCase().includes(term.toLowerCase())
+      );
+
+      this.isSearching = false;
+    },
+
+    /* ── keyboard nav ── */
+    moveDown() {
+      if (!this.showDropdown) { this.showDropdown = true; return; }
+      if (this.activeIndex < this.results.length - 1) this.activeIndex++;
+    },
+    moveUp() {
+      if (this.activeIndex > 0) this.activeIndex--;
+    },
+    onEnter() {
+      if (this.activeIndex >= 0 && this.results[this.activeIndex]) {
+        this.selectResult(this.results[this.activeIndex]);
+      } else {
+        this._saveRecent(this.query);
+        window.location.href = `/search/?q=${encodeURIComponent(this.query)}`;
+      }
+    },
+
+    selectResult(item) {
+      this._saveRecent(this.query);
+      this.closeSearch();
+      if (item.url) window.location.href = item.url;
+    },
+
+    _saveRecent(q) {
+      if (!q.trim()) return;
+      const list = [q, ...this.recentSearches.filter(r => r !== q)].slice(0, 4);
+      this.recentSearches = list;
+      localStorage.setItem('cs_recent_searches', JSON.stringify(list));
+    },
+
+    /* ── store switcher ── */
+    switchStore(store) {
+      this.activeStore = store;
+      this.storeOpen   = false;
+
+      fetch('/api/switch-store/', {
+        method : 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken' : this._getCsrf(),
+        },
+        body: JSON.stringify({ store_id: store.id }),
+      })
+      .then(r => r.ok ? r.json() : Promise.reject(r))
+      .then(() => window.location.reload())
+      .catch(err => console.error('Store switch error:', err));
+    },
+
+    /* ── theme ── */
+    toggleTheme() {
+      this.theme = this.theme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('theme', this.theme);
+      document.documentElement.classList.toggle('dark', this.theme === 'dark');
+    },
+
+    /* ── util ── */
+    _getCsrf() {
+      return document.cookie.split(';')
+        .find(c => c.trim().startsWith('csrftoken='))
+        ?.split('=')?.[1] ?? '';
+    },
+  };
+}
+</script>

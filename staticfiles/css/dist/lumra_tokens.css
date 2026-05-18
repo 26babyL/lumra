@@ -1,0 +1,414 @@
+/*
+ * ============================================================
+ *  LUMRA ERP — EMERALD ODYSSEY
+ *  lumra_token.css · Design Token Reference
+ *  Blueprint v3.0 · 2026
+ *  "You use other ERPs to run a business.
+ *   You use Lumra when you are building an empire."
+ * ============================================================
+ *
+ *  INSTRUKSI PENGGUNAAN:
+ *  File ini adalah SATU-SATUNYA sumber kebenaran untuk semua
+ *  token desain Lumra ERP. Copy file ini ke static/css/ dan
+ *  import sebagai baris pertama di lumra_design_system.css.
+ *  Tidak ada warna, spacing, atau radius yang boleh ditulis
+ *  hardcoded di template manapun tanpa melalui token ini.
+ *
+ * ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+
+  /* ═══════════════════════════════════════════════════════
+   *  ■ EMERALD ODYSSEY PALETTE — Lima Warna Inti
+   *  Tidak ada warna baru tanpa persetujuan lead design.
+   * ═══════════════════════════════════════════════════════ */
+
+  --color-primary:   #00674F;  /* Base Emerald  — sidebar, branding, identity */
+  --color-secondary: #00A86B;  /* Jade Accent   — CTA, badge aktif, chart fill */
+  --color-accent:    #EFBF04;  /* Odyssey Gold  — rating, KPI highlight, Tier Gold */
+  --color-neutral:   #FDFBD4;  /* Ivory Cream   — zebra row odd, off-white alt bg */
+  --color-contrast:  #000080;  /* Deep Navy     — heading berat, Tier Platinum, authority */
+
+
+  /* ═══════════════════════════════════════════════════════
+   *  ■ ALPHA VARIANTS — Transparansi Palette Utama
+   * ═══════════════════════════════════════════════════════ */
+
+  /* Primary / Base Emerald */
+  --color-primary-a04:  rgba(0, 103, 79, 0.04);
+  --color-primary-a06:  rgba(0, 103, 79, 0.06);
+  --color-primary-a08:  rgba(0, 103, 79, 0.08);
+  --color-primary-a10:  rgba(0, 103, 79, 0.10);
+  --color-primary-a12:  rgba(0, 103, 79, 0.12);
+  --color-primary-a15:  rgba(0, 103, 79, 0.15);
+  --color-primary-a20:  rgba(0, 103, 79, 0.20);
+  --color-primary-a30:  rgba(0, 103, 79, 0.30);
+
+  /* Secondary / Jade Accent */
+  --color-secondary-a10: rgba(0, 168, 107, 0.10);
+  --color-secondary-a12: rgba(0, 168, 107, 0.12);
+  --color-secondary-a15: rgba(0, 168, 107, 0.15);
+  --color-secondary-a20: rgba(0, 168, 107, 0.20);
+  --color-secondary-a30: rgba(0, 168, 107, 0.30);
+
+  /* Accent / Odyssey Gold */
+  --color-accent-a10:  rgba(239, 191, 4, 0.10);
+  --color-accent-a15:  rgba(239, 191, 4, 0.15);
+  --color-accent-a20:  rgba(239, 191, 4, 0.20);
+  --color-accent-a40:  rgba(239, 191, 4, 0.40);
+
+  /* Contrast / Deep Navy */
+  --color-contrast-a06: rgba(0, 0, 128, 0.06);
+  --color-contrast-a08: rgba(0, 0, 128, 0.08);
+  --color-contrast-a10: rgba(0, 0, 128, 0.10);
+  --color-contrast-a15: rgba(0, 0, 128, 0.15);
+  --color-contrast-a20: rgba(0, 0, 128, 0.20);
+
+  /* Neutral / Ivory Cream */
+  --color-neutral-a50: rgba(253, 251, 212, 0.50);
+  --color-neutral-a80: rgba(253, 251, 212, 0.80);
+
+
+  /* ═══════════════════════════════════════════════════════
+   *  ■ SEMANTIC COLORS — Aligned to Odyssey Palette
+   *  Warna semantik WAJIB selaras dengan karakter Odyssey.
+   *  Merah kritis TIDAK PERNAH berdiri sendiri — selalu
+   *  digabung dengan Navy untuk mempertahankan identitas.
+   * ═══════════════════════════════════════════════════════ */
+
+  /* Sukses — stok aman, approval diterima, order selesai */
+  --color-success-bg:     rgba(0, 168, 107, 0.15);
+  --color-success-border: rgba(0, 168, 107, 0.30);
+  --color-success-text:   #00674F;
+
+  /* Warning — review diperlukan, stok menengah, draft */
+  --color-warning-bg:     rgba(239, 191, 4, 0.15);
+  --color-warning-border: rgba(239, 191, 4, 0.40);
+  --color-warning-text:   #635200;
+
+  /* Kritis/Danger — stok kritis, error sistem, overdue
+     ATURAN: JANGAN pakai merah polos — WAJIB gradient ke navy */
+  --color-danger-from:    #A32D2D;
+  --color-danger-to:      #000080;
+  --color-danger-bg:      linear-gradient(135deg, rgba(163, 45, 45, 0.12), rgba(0, 0, 128, 0.08));
+  --color-danger-border:  rgba(163, 45, 45, 0.20);
+  --color-danger-text:    #A32D2D;
+
+  /* Info — draft status, informasi netral */
+  --color-info-bg:     rgba(0, 0, 128, 0.08);
+  --color-info-border: rgba(0, 0, 128, 0.20);
+  --color-info-text:   #000080;
+
+
+  /* ═══════════════════════════════════════════════════════
+   *  ■ GLASS PROTOCOL — Identitas Visual Lumra
+   *  Frosted edge + natural shadow 4 lapis + backdrop blur.
+   *  TIDAK ADA versi setengah. Ketiganya WAJIB hadir bersama.
+   * ═══════════════════════════════════════════════════════ */
+
+  /* Background Tint — sesuai konteks parent */
+  --glass-bg-emerald: rgba(0, 103, 79, 0.08);
+  --glass-bg-gold:    rgba(239, 191, 4, 0.07);
+  --glass-bg-navy:    rgba(0, 0, 128, 0.06);
+  --glass-bg-white:   rgba(255, 255, 255, 0.85);
+
+  /* Frosted Edge — mensimulasikan pantulan cahaya */
+  --glass-border:       0.5px solid rgba(255, 255, 255, 0.10);
+  --glass-border-top:   rgba(255, 255, 255, 0.25);   /* atas: terang */
+  --glass-border-left:  rgba(255, 255, 255, 0.20);   /* kiri: sedikit terang */
+  --glass-border-right: rgba(255, 255, 255, 0.05);   /* kanan: gelap */
+  --glass-border-bottom: rgba(255, 255, 255, 0.05);  /* bawah: gelap */
+
+  /* Backdrop Blur — min 12px agar efek terasa */
+  --glass-blur:       blur(12px);    /* default komponen */
+  --glass-blur-heavy: blur(20px);    /* panel utama, sidebar */
+  --glass-blur-light: blur(8px);     /* overlay ringan */
+
+
+  /* ═══════════════════════════════════════════════════════
+   *  ■ SHADOW SYSTEM — Natural Shadow Berlapis
+   *  Satu shadow = murah. Empat shadow = premium.
+   *  TIDAK BISA dikurangi tanpa merusak karakter Odyssey.
+   * ═══════════════════════════════════════════════════════ */
+
+  /* Natural — bayangan resting, makin memudar */
+  --shadow-natural:
+    0 1px  3px  rgba(0, 0, 0, 0.08),
+    0 4px  12px rgba(0, 0, 0, 0.06),
+    0 8px  24px rgba(0, 0, 0, 0.04),
+    0 16px 48px rgba(0, 0, 0, 0.03);
+
+  /* Hover — emerald tinted, lebih terangkat */
+  --shadow-hover:
+    0 4px  16px rgba(0, 103, 79, 0.16),
+    0 8px  24px rgba(0, 0, 0, 0.06),
+    0 16px 32px rgba(0, 0, 0, 0.04);
+
+  /* Focus ring — emerald outline untuk input aktif */
+  --shadow-focus:
+    0 0 0 3px rgba(0, 168, 107, 0.25);
+
+  /* Elevated — modal, drawer, popup */
+  --shadow-elevated:
+    0 8px  24px rgba(0, 0, 0, 0.12),
+    0 16px 48px rgba(0, 0, 0, 0.08),
+    0 32px 64px rgba(0, 0, 0, 0.06);
+
+  /* Gold highlight — KPI tertinggi, elemen premium */
+  --shadow-gold:
+    0 0 0 1px rgba(239, 191, 4, 0.30),
+    0 4px 16px rgba(239, 191, 4, 0.12);
+
+
+  /* ═══════════════════════════════════════════════════════
+   *  ■ SPACING — Kelipatan 4px (Invisible Grid 8px)
+   *  Semua padding, margin, gap WAJIB dari token ini.
+   *  Nilai non-kelipatan 4px = pelanggaran grid.
+   * ═══════════════════════════════════════════════════════ */
+
+  --sp-0:  0px;
+  --sp-1:  4px;   /* xs  */
+  --sp-2:  8px;   /* sm  */
+  --sp-3:  12px;  /* md- */
+  --sp-4:  16px;  /* md  */
+  --sp-5:  20px;  /* md+ */
+  --sp-6:  24px;  /* lg  */
+  --sp-7:  28px;
+  --sp-8:  32px;  /* xl  */
+  --sp-10: 40px;  /* 2xl */
+  --sp-12: 48px;  /* 3xl */
+  --sp-14: 56px;
+  --sp-16: 64px;  /* 4xl */
+  --sp-20: 80px;
+  --sp-24: 96px;
+
+
+  /* ═══════════════════════════════════════════════════════
+   *  ■ COMPONENT DIMENSIONS — Ukuran Standar Komponen
+   * ═══════════════════════════════════════════════════════ */
+
+  /* Heights — kelipatan 8px */
+  --height-btn-sm:    32px;  /* 4×8 — touch target minimum */
+  --height-btn-md:    40px;  /* 5×8 — default */
+  --height-btn-lg:    48px;  /* 6×8 — CTA, primary action */
+  --height-input:     40px;  /* 5×8 — form input standar */
+  --height-badge:     20px;  /* compact, boleh non-8 */
+  --height-nav-item:  40px;  /* 5×8 — sidebar & navbar item */
+  --height-table-row: 40px;  /* 5×8 — tidak boleh di bawah ini */
+  --height-navbar:    56px;  /* 7×8 — konsisten semua halaman */
+  --height-kpi-card:  96px;  /* minimum, glass protocol required */
+
+  /* Widths */
+  --width-sidebar:          240px; /* 30×8 */
+  --width-sidebar-collapsed: 64px; /* 8×8  */
+
+
+  /* ═══════════════════════════════════════════════════════
+   *  ■ BORDER RADIUS — Token Wajib
+   *  TIDAK ADA nilai border-radius custom di template.
+   *  Semua WAJIB menggunakan token --radius-* ini.
+   * ═══════════════════════════════════════════════════════ */
+
+  --radius-xs:   4px;
+  --radius-sm:   6px;
+  --radius-md:   8px;
+  --radius-lg:   10px;
+  --radius-xl:   14px;
+  --radius-2xl:  20px;
+  --radius-pill: 100px;
+
+
+  /* ═══════════════════════════════════════════════════════
+   *  ■ TYPOGRAPHY — Plus Jakarta Sans
+   *  Dipilih karena karakter geometris-modern — profesional
+   *  tanpa steril. Semua angka: font-variant: tabular-nums.
+   * ═══════════════════════════════════════════════════════ */
+
+  /* Font Families */
+  --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body:    'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+  /* Font Sizes — Level Hierarki */
+  --text-h1:     28px;  /* H1 / Page Title    — judul halaman utama */
+  --text-h2:     22px;  /* H2 / Section Title — sub-judul section */
+  --text-h3:     16px;  /* H3 / Card Title    — judul KPI card, panel */
+  --text-body:   14px;  /* Body / Description — teks deskripsi */
+  --text-table:  13px;  /* Table / Form       — sel tabel, input */
+  --text-label:  11px;  /* Label / Badge      — badge status, tag */
+  --text-kpi-sm: 28px;  /* KPI Number kecil   — tabular-nums wajib */
+  --text-kpi-lg: 36px;  /* KPI Number besar   — tabular-nums wajib */
+  --text-mono:   13px;  /* Code / Monospace   — SKU, ID, teknis */
+
+  /* Font Weights */
+  --weight-regular:   400;
+  --weight-medium:    500;
+  --weight-semibold:  600;
+
+  /* Line Heights — selalu kelipatan font-size */
+  --leading-tight:  1.25;  /* heading */
+  --leading-snug:   1.375;
+  --leading-normal: 1.5;   /* body 14px = 21px (approx 20px) */
+  --leading-relaxed: 1.625;
+
+  /* Letter Spacing */
+  --tracking-tight:  -0.01em;
+  --tracking-normal:  0em;
+  --tracking-wide:    0.04em;
+  --tracking-wider:   0.08em;  /* table header, badge uppercase */
+
+
+  /* ═══════════════════════════════════════════════════════
+   *  ■ TRANSITIONS — Standar Animasi per Komponen
+   *  Konsistensi timing menciptakan produk yang terasa hidup.
+   * ═══════════════════════════════════════════════════════ */
+
+  --transition-fast:    150ms ease;               /* nav item hover, badge */
+  --transition-base:    200ms ease;               /* card hover, button */
+  --transition-slow:    300ms ease;               /* sidebar collapse */
+  --transition-modal:   250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-drawer:  300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-sidebar: 300ms ease;
+
+  /* Shimmer & Loading */
+  --duration-shimmer:  1.5s;   /* ease-in-out infinite — cukup lambat */
+  --duration-spinner:  0.6s;   /* linear infinite — feedback segera */
+  --duration-reveal:   300ms;  /* ease forwards */
+  --duration-pulse:    2s;     /* ease-in-out infinite — badge kritis */
+
+  /* Staggered Reveal Delays */
+  --delay-reveal-1: 0ms;
+  --delay-reveal-2: 50ms;
+  --delay-reveal-3: 100ms;
+  --delay-reveal-4: 150ms;
+  --delay-reveal-5: 200ms;
+
+
+  /* ═══════════════════════════════════════════════════════
+   *  ■ Z-INDEX SCALE — Layer Management
+   * ═══════════════════════════════════════════════════════ */
+
+  --z-base:       0;
+  --z-raised:     10;
+  --z-dropdown:   100;
+  --z-sticky:     200;
+  --z-drawer:     300;
+  --z-modal:      400;
+  --z-toast:      500;
+  --z-tooltip:    600;
+
+
+  /* ═══════════════════════════════════════════════════════
+   *  ■ TIER SYSTEM — Customer & Vendor Badges
+   * ═══════════════════════════════════════════════════════ */
+
+  /* Tier Platinum — tertinggi */
+  --tier-platinum-bg:   #000080;
+  --tier-platinum-text: #EFBF04;
+
+  /* Tier Gold — kedua */
+  --tier-gold-bg:   #EFBF04;
+  --tier-gold-text: #000000;
+
+  /* Tier Silver — ketiga */
+  --tier-silver-bg:   #888888;
+  --tier-silver-text: #FFFFFF;
+
+  /* Vendor Verified */
+  --tier-verified-bg:   #00674F;
+  --tier-verified-text: #FDFBD4;
+
+
+  /* ═══════════════════════════════════════════════════════
+   *  ■ TABLE — Odyssey Standard
+   * ═══════════════════════════════════════════════════════ */
+
+  --table-header-bg:        #00674F;
+  --table-header-text:      #FFFFFF;
+  --table-header-size:      10px;
+  --table-header-tracking:  0.08em;
+  --table-zebra-odd:        rgba(0, 103, 79, 0.035);  /* tint emerald tipis */
+  --table-zebra-even:       #FFFFFF;
+  --table-row-hover:        rgba(0, 103, 79, 0.055);  /* lebih gelap dari odd */
+  --table-border:           rgba(0, 103, 79, 0.08);
+
+
+  /* ═══════════════════════════════════════════════════════
+   *  ■ CHART PALETTE — Chart.js Colors
+   * ═══════════════════════════════════════════════════════ */
+
+  --chart-primary:   #00A86B;  /* jade — data utama */
+  --chart-secondary: #00674F;  /* emerald — data sekunder */
+  --chart-accent:    #EFBF04;  /* gold — aksen / highlight */
+  --chart-navy:      #000080;  /* navy — data keempat */
+  --chart-neutral:   #CCCCCC;  /* abu — data inaktif */
+
+
+  /* ═══════════════════════════════════════════════════════
+   *  ■ BREAKPOINTS — Referensi Desain Responsif
+   *  (Digunakan sebagai referensi, bukan CSS var langsung)
+   *  --bp-mobile:  390px
+   *  --bp-tablet:  768px
+   *  --bp-laptop:  1280px
+   *  --bp-desktop: 1440px
+   * ═══════════════════════════════════════════════════════ */
+
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+ *  GLOBAL RESET & BASE
+ *  Opinionated reset yang selaras dengan Emerald Odyssey
+ * ═══════════════════════════════════════════════════════════ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-normal);
+  color: #1A1A1A;
+  background-color: #F4F6F4;
+}
+
+/* Tabular nums global — semua angka di tabel dan KPI */
+.tabular-nums,
+[class*="kpi-value"],
+[class*="tbl-"] td,
+[class*="stat-value"] {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Heading defaults */
+h1 { font-size: var(--text-h1); font-weight: var(--weight-semibold); line-height: var(--leading-tight); }
+h2 { font-size: var(--text-h2); font-weight: var(--weight-semibold); line-height: var(--leading-tight); }
+h3 { font-size: var(--text-h3); font-weight: var(--weight-medium);   line-height: var(--leading-snug);  }
+
+/* Monospace elements */
+code, pre, .mono, [class*="sku-"], [class*="id-"] {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono);
+}
+
+/* Focus visible global */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}

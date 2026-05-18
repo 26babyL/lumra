@@ -1,0 +1,192 @@
+{
+  "module_name": "etc",
+  "template_total": 5,
+  "templates": [
+    {
+      "template_name": "lumra_pages/etc/error_404.html",
+      "template_file": "lumra_config/templates/lumra_pages/etc/error_404.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 0,
+      "structure_stats": {
+        "component_total": 5,
+        "interactive_total": 2,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "search",
+            "label": "SEARCH BAR",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Page Not Found"
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "🔍"
+          },
+          {
+            "type": "input",
+            "label": "INPUT [text] Search...",
+            "text_preview": "Search..."
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: 🔍",
+            "text_preview": "🔍"
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/etc/error_500.html",
+      "template_file": "lumra_config/templates/lumra_pages/etc/error_500.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 0,
+      "structure_stats": {
+        "component_total": 1,
+        "interactive_total": 0,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Oops! Something went wrong"
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/etc/error_maintenance.html",
+      "template_file": "lumra_config/templates/lumra_pages/etc/error_maintenance.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 0,
+      "structure_stats": {
+        "component_total": 2,
+        "interactive_total": 1,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Maaf, Kami Sedang Bermasalah"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Kembali ke Beranda",
+            "text_preview": "Kembali ke Beranda"
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/etc/error_session_expired.html",
+      "template_file": "lumra_config/templates/lumra_pages/etc/error_session_expired.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 0,
+      "structure_stats": {
+        "component_total": 4,
+        "interactive_total": 1,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Sesi Anda Berakhir Demi alasan keamanan, sesi login Anda telah berakhir. Silakan…"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H2)",
+            "text_preview": "Sesi Anda Berakhir"
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "Login Kembali"
+          },
+          {
+            "type": "button-primary",
+            "label": "BUTTON (Primary)",
+            "text_preview": "Login Kembali"
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/etc/error_403.html",
+      "template_file": "lumra_config/templates/lumra_pages/etc/error_403.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 2,
+        "interactive_total": 0,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "403"
+          }
+        ],
+        "issues": []
+      }
+    }
+  ],
+  "views": [
+    {
+      "view_name": "users_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 1517,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def users_view(request):\n    \"\"\"Manajemen pengguna — staff/admin only.\"\"\"\n    # FIX: gunakan redirect ke 403 page, bukan render langsung (status code tetap 200 di versi lama)\n    if not request.user.is_staff:\n        return render(request, \"lumra_pages/etc/error_403.html\", status=403)\n\n    # FIX: pindahkan import ke atas file — import di dalam fungsi hanya untuk menghindari circular import\n    users = User.objects.select_related(\"userprofile\").order_by(\"username\")\n    context = {\"users\": users}\n    return render(request, \"lumra_pages/settings/users.html\", context)"
+    }
+  ]
+}

@@ -1,0 +1,1097 @@
+{
+  "module_name": "accounting",
+  "template_total": 13,
+  "templates": [
+    {
+      "template_name": "lumra_pages/accounting/accounts_payable.html",
+      "template_file": "lumra_config/templates/lumra_pages/accounting/accounts_payable.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 17,
+        "interactive_total": 2,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Keuangan / Hutang Usaha (AP)"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Accounts Payable"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Total Hutang"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Jatuh Tempo (0-30 Hari)"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='text-xs font-bold text-slate-500 hover:text-emeral'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/accounting/accounts_receivable.html",
+      "template_file": "lumra_config/templates/lumra_pages/accounting/accounts_receivable.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 17,
+        "interactive_total": 2,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Keuangan / Piutang Usaha (AR)"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Accounts Receivable"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Kirim Pengingat",
+            "text_preview": "Kirim Pengingat"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Total Piutang"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/accounting/balance_sheet.html",
+      "template_file": "lumra_config/templates/lumra_pages/accounting/balance_sheet.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 16,
+        "interactive_total": 2,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Neraca (Balance Sheet)"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Per"
+          },
+          {
+            "type": "input",
+            "label": "INPUT [date] asOfDate",
+            "text_preview": "asOfDate"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: [icon]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Total Aset"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/accounting/cash_flow.html",
+      "template_file": "lumra_config/templates/lumra_pages/accounting/cash_flow.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 9,
+        "interactive_total": 2,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Laporan Arus Kas (Cash Flow)"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Periode"
+          },
+          {
+            "type": "input",
+            "label": "INPUT [month] period",
+            "text_preview": "period"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: [icon]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Cash Flow untuk Periode Berakhir Aktivitas Operasional Arus Kas Bersih dari Akti…"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H2)",
+            "text_preview": "Cash Flow untuk Periode Berakhir"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/accounting/chart_of_accounts.html",
+      "template_file": "lumra_config/templates/lumra_pages/accounting/chart_of_accounts.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 18,
+        "interactive_total": 7,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Keuangan / Chart of Accounts"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Buku Besar Pembantu (COA)"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Semua Asset Liability Equity Pendapatan Beban"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Semua",
+            "text_preview": "Semua"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/accounting/general_ledger.html",
+      "template_file": "lumra_config/templates/lumra_pages/accounting/general_ledger.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 11,
+        "interactive_total": 2,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Buku Besar (General Ledger) Akun {% for account in accounts %} {{ account.code }…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Buku Besar (General Ledger)"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT [select] account",
+            "text_preview": "account"
+          },
+          {
+            "type": "input",
+            "label": "INPUT [month] period",
+            "text_preview": "period"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "{{ account_name }} Saldo Awal Tanggal Ref Keterangan Debit Kredit Saldo Saldo Aw…"
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/accounting/journal_entry_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/accounting/journal_entry_list.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 18,
+        "interactive_total": 5,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Keuangan / Jurnal Umum"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Journal Entry List"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Semua",
+            "text_preview": "Semua"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/accounting/profit_loss_statement.html",
+      "template_file": "lumra_config/templates/lumra_pages/accounting/profit_loss_statement.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 15,
+        "interactive_total": 1,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Laporan Laba Rugi"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Periode"
+          },
+          {
+            "type": "input",
+            "label": "INPUT [month] period",
+            "text_preview": "period"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Total Pendapatan"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Total Beban"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/accounting/trial_balance.html",
+      "template_file": "lumra_config/templates/lumra_pages/accounting/trial_balance.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 17,
+        "interactive_total": 4,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Neraca Percobaan (Trial Balance)"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Periode"
+          },
+          {
+            "type": "input",
+            "label": "INPUT [month] period",
+            "text_preview": "period"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: [icon]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: [icon]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Total Debit = Total Kredit Selisih"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/accounting/chart_of_accounts_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/accounting/chart_of_accounts_form.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 5,
+      "structure_stats": {
+        "component_total": 14,
+        "interactive_total": 2,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Buat Akun Baru Menambahkan struktur ke Chart of Accounts. {% csrf_token %} Kode…"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Buat Akun Baru"
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "{% csrf_token %} Kode Akun Cek Ketersediaan Nama Akun Tipe Akun Asset (Aset) Lia…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT FIELD",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Cek Ketersediaan",
+            "text_preview": "Cek Ketersediaan"
+          },
+          {
+            "type": "input",
+            "label": "INPUT FIELD",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/accounting/journal_entry_detail.html",
+      "template_file": "lumra_config/templates/lumra_pages/accounting/journal_entry_detail.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 5,
+      "structure_stats": {
+        "component_total": 12,
+        "interactive_total": 3,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [journalDetailApp()]",
+            "text_preview": "Tanggal: Deskripsi Akun Debit Kredit Total Dibuat pada {{ en…"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Tanggal: Deskripsi Akun Debit Kredit Total Dibuat pada {{ entry.created_at|date:…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": ""
+          },
+          {
+            "type": "hero",
+            "label": "HERO / BANNER",
+            "text_preview": ""
+          },
+          {
+            "type": "table",
+            "label": "[ TABLE ]",
+            "text_preview": "Akun Debit Kredit Total"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/accounting/journal_entry_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/accounting/journal_entry_form.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 5,
+      "structure_stats": {
+        "component_total": 22,
+        "interactive_total": 5,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [journalFormApp()]",
+            "text_preview": "Input Jurnal Umum Pastikan Debit dan Kredit seimbang. Batal…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Input Jurnal Umum"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "{% csrf_token %} Tanggal Transaksi No. Referensi Deskripsi Transaksi Akun Debit…"
+          },
+          {
+            "type": "input",
+            "label": "INPUT [hidden] lines_json",
+            "text_preview": "lines_json"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT FIELD",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT FIELD",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/accounting/payment_voucher_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/accounting/payment_voucher_form.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 5,
+      "structure_stats": {
+        "component_total": 25,
+        "interactive_total": 9,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [paymentVoucherApp()]",
+            "text_preview": "Payment Voucher (PV) Dokumen bukti pengeluaran kas / bank. B…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Payment Voucher (PV)"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "{% csrf_token %} No. Bukti Tanggal Bayar Dibayar Kepada (Supplier) -- Pilih Supp…"
+          },
+          {
+            "type": "input",
+            "label": "INPUT [hidden] number",
+            "text_preview": "number"
+          },
+          {
+            "type": "input",
+            "label": "INPUT [hidden] selected_invoice_ids",
+            "text_preview": "selected_invoice_ids"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT FIELD",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    }
+  ],
+  "views": [
+    {
+      "view_name": "chart_of_accounts",
+      "view_module": "lumra_config.views.accounting_views",
+      "view_file": "lumra_config/views/accounting_views.py",
+      "line": 131,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def chart_of_accounts(request):\n    accounts = Account.objects.select_related(\"parent\").all()\n    context = {\n        \"accounts\": accounts,\n        \"accounts_json\": json.dumps(_serialize_accounts(accounts)),\n    }\n    return render(request, \"lumra_pages/accounting/chart_of_accounts.html\", context)"
+    },
+    {
+      "view_name": "chart_of_accounts_form",
+      "view_module": "lumra_config.views.accounting_views",
+      "view_file": "lumra_config/views/accounting_views.py",
+      "line": 184,
+      "decorators": [
+        "login_required",
+        "atomic"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def chart_of_accounts_form(request, pk=None):\n    account = get_object_or_404(Account, pk=pk) if pk else None\n\n    if request.method == \"POST\":\n        parent = None\n        parent_id = request.POST.get(\"parent_id\")\n        if parent_id:\n            parent = get_object_or_404(Account, pk=parent_id)\n\n        payload = {\n            \"code\": request.POST.get(\"code\", \"\").strip(),\n            \"name\": request.POST.get(\"name\", \"\").strip(),\n            \"account_type\": request.POST.get(\"type\", \"asset\"),\n            \"level\": int(request.POST.get(\"level\", \"2\") or 2),\n            \"parent\": parent,\n            \"notes\": request.POST.get(\"notes\", \"\").strip(),\n            \"allow_posting\": request.POST.get(\"level\", \"2\") != \"1\",\n        }\n\n        if account:\n            for key, value in payload.items():\n                setattr(account, key, value)\n        else:\n            account = Account(**payload)\n\n        try:\n            account.full_clean()\n            account.save()\n            messages.success(request, \"Akun berhasil disimpan.\")\n            return redirect(\"chart_of_accounts\")\n        except ValidationError as exc:\n            messages.error(request, \"; \".join(exc.messages))\n\n    parent_accounts = Account.objects.filter(level=1, is_active=True).order_by(\"code\")\n    form_data = {\n        \"code\": getattr(account, \"code\", \"\"),\n        \"name\": getattr(account, \"name\", \"\"),\n        \"type\": getattr(account, \"account_type\", \"asset\"),\n        \"level\": getattr(account, \"level\", 2),\n        \"parent_id\": getattr(account, \"parent_id\", \"\") or \"\",\n    }\n    context = {\n        \"account\": account,\n        \"form_data\": form_data,\n        \"generated_code\": getattr(account, \"code\", \"\"),\n        \"parent_accounts\": parent_accounts,\n        \"parent_accounts_json\": json.dumps(_serialize_accounts(parent_accounts)),\n    }\n    return render(request, \"lumra_pages/accounting/chart_of_accounts_form.html\", context)"
+    },
+    {
+      "view_name": "general_ledger",
+      "view_module": "lumra_config.views.accounting_views",
+      "view_file": "lumra_config/views/accounting_views.py",
+      "line": 230,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def general_ledger(request):\n    period = request.GET.get(\"period\") or timezone.localdate().strftime(\"%Y-%m\")\n    start_date, end_date = _month_window(period)\n    accounts = Account.objects.filter(allow_posting=True, is_active=True).order_by(\"code\")\n    selected_account = accounts.filter(pk=request.GET.get(\"account\")).first() or accounts.first()\n\n    ledger_rows = []\n    opening_balance = Decimal(\"0\")\n    account_name = \"-\"\n\n    if selected_account:\n        account_name = f\"{selected_account.code} {selected_account.name}\"\n        opening_balance = _account_balance(selected_account, start_date - timedelta(days=1))\n        running_balance = opening_balance\n        lines = JournalEntryLine.objects.filter(\n            account=selected_account,\n            journal_entry__status=\"posted\",\n            journal_entry__date__range=(start_date, end_date),\n        ).select_related(\"journal_entry\").order_by(\"journal_entry__date\", \"id\")\n\n        for line in lines:\n            running_balance += _account_delta(selected_account, line.debit, line.credit)\n            ledger_rows.append(\n                {\n                    \"id\": line.id,\n                    \"date\": line.journal_entry.date.isoformat(),\n                    \"ref\": line.journal_entry.number,\n                    \"desc\": line.description or line.journal_entry.description,\n                    \"debit\": float(line.debit),\n                    \"credit\": float(line.credit),\n                    \"balance\": float(running_balance),\n                }\n            )\n\n    context = {\n        \"accounts\": accounts,\n        \"selected_account_id\": str(selected_account.id) if selected_account else \"\",\n        \"period\": period,\n        \"account_name\": account_name,\n        \"opening_balance\": float(opening_balance),\n        \"transactions_json\": json.dumps(ledger_rows),\n    }\n    return render(request, \"lumra_pages/accounting/general_ledger.html\", context)"
+    },
+    {
+      "view_name": "journal_entry_list",
+      "view_module": "lumra_config.views.accounting_views",
+      "view_file": "lumra_config/views/accounting_views.py",
+      "line": 240,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def journal_entry_list(request):\n    journals = JournalEntry.objects.prefetch_related(\"lines\").all()\n    context = {\n        \"journals\": journals,\n        \"journals_json\": json.dumps([_serialize_journal(entry) for entry in journals]),\n    }\n    return render(request, \"lumra_pages/accounting/journal_entry_list.html\", context)"
+    },
+    {
+      "view_name": "journal_entry_form",
+      "view_module": "lumra_config.views.accounting_views",
+      "view_file": "lumra_config/views/accounting_views.py",
+      "line": 313,
+      "decorators": [
+        "login_required",
+        "atomic"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def journal_entry_form(request, pk=None):\n    entry = get_object_or_404(JournalEntry.objects.prefetch_related(\"lines\"), pk=pk) if pk else None\n\n    if request.method == \"POST\":\n        lines_raw = request.POST.get(\"lines_json\", \"[]\")\n        description = request.POST.get(\"description\", \"\").strip()\n        try:\n            lines_payload = json.loads(lines_raw)\n        except json.JSONDecodeError:\n            lines_payload = []\n\n        total_debit = Decimal(\"0\")\n        total_credit = Decimal(\"0\")\n        validated_lines = []\n        for item in lines_payload:\n            account_id = item.get(\"account_id\")\n            if not account_id:\n                continue\n            line = JournalEntryLine(\n                account=get_object_or_404(Account, pk=account_id, allow_posting=True),\n                debit=_decimal(item.get(\"debit\")),\n                credit=_decimal(item.get(\"credit\")),\n            )\n            line.full_clean(exclude=[\"journal_entry\"])\n            validated_lines.append(line)\n            total_debit += line.debit\n            total_credit += line.credit\n\n        if not description:\n            messages.error(request, \"Deskripsi jurnal wajib diisi.\")\n        elif total_debit <= 0 or total_debit != total_credit:\n            messages.error(request, \"Debit dan kredit harus seimbang.\")\n        else:\n            if not entry:\n                entry = JournalEntry(number=_generate_number(\"JE\", JournalEntry), created_by=request.user)\n            entry.date = _parse_date(request.POST.get(\"date\"))\n            entry.description = description\n            entry.reference = request.POST.get(\"reference\", \"\").strip()\n            entry.source = \"manual\"\n            entry.status = \"draft\"\n            entry.save()\n            entry.lines.all().delete()\n            for line in validated_lines:\n                line.journal_entry = entry\n                line.save()\n            messages.success(request, \"Jurnal berhasil disimpan sebagai draft.\")\n            return redirect(\"journal_entry_detail\", pk=entry.pk)\n\n    posting_accounts = Account.objects.filter(allow_posting=True, is_active=True).order_by(\"code\")\n    initial_lines = []\n    if entry:\n        initial_lines = [\n            {\n                \"account_id\": line.account_id,\n                \"debit\": float(line.debit),\n                \"credit\": float(line.credit),\n            }\n            for line in entry.lines.select_related(\"account\").all()\n        ]\n    if not initial_lines:\n        initial_lines = [{\"account_id\": \"\", \"debit\": 0, \"credit\": 0}, {\"account_id\": \"\", \"debit\": 0, \"credit\": 0}]\n\n    context = {\n        \"entry\": entry,\n        \"generated_number\": entry.number if entry else _generate_number(\"JE\", JournalEntry),\n        \"posting_accounts_json\": json.dumps(_serialize_accounts(posting_accounts)),\n        \"initial_lines_json\": json.dumps(initial_lines),\n    }\n    return render(request, \"lumra_pages/accounting/journal_entry_form.html\", context)"
+    },
+    {
+      "view_name": "journal_entry_detail",
+      "view_module": "lumra_config.views.accounting_views",
+      "view_file": "lumra_config/views/accounting_views.py",
+      "line": 349,
+      "decorators": [
+        "login_required",
+        "atomic"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def journal_entry_detail(request, pk):\n    entry = get_object_or_404(JournalEntry.objects.prefetch_related(\"lines__account\"), pk=pk)\n\n    if request.method == \"POST\" and request.POST.get(\"action\") == \"post\":\n        if not entry.is_balanced:\n            messages.error(request, \"Jurnal tidak seimbang, posting dibatalkan.\")\n        elif entry.status == \"posted\":\n            messages.info(request, \"Jurnal sudah berstatus posted.\")\n        else:\n            entry.status = \"posted\"\n            entry.posted_by = request.user\n            entry.posted_at = timezone.now()\n            entry.save(update_fields=[\"status\", \"posted_by\", \"posted_at\", \"updated_at\"])\n            messages.success(request, \"Jurnal berhasil di-posting.\")\n        return redirect(\"journal_entry_detail\", pk=entry.pk)\n\n    lines_json = [\n        {\n            \"id\": line.id,\n            \"account_code\": line.account.code,\n            \"account_name\": line.account.name,\n            \"debit\": float(line.debit),\n            \"credit\": float(line.credit),\n        }\n        for line in entry.lines.all()\n    ]\n    context = {\n        \"entry\": entry,\n        \"lines_json\": json.dumps(lines_json),\n        \"total_amount\": float(entry.total_amount),\n    }\n    return render(request, \"lumra_pages/accounting/journal_entry_detail.html\", context)"
+    },
+    {
+      "view_name": "payment_voucher_form",
+      "view_module": "lumra_config.views.accounting_views",
+      "view_file": "lumra_config/views/accounting_views.py",
+      "line": 458,
+      "decorators": [
+        "login_required",
+        "atomic"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def payment_voucher_form(request, pk=None):\n    voucher = get_object_or_404(PaymentVoucher.objects.prefetch_related(\"allocations\"), pk=pk) if pk else None\n    vendors = Vendor.objects.filter(is_active=True).order_by(\"name\")\n    cash_accounts = Account.objects.filter(allow_posting=True, is_cash_account=True, is_active=True).order_by(\"code\")\n    ap_account = _resolve_ap_account()\n\n    if request.method == \"POST\":\n        selected_ids_raw = request.POST.get(\"selected_invoice_ids\", \"[]\")\n        try:\n            selected_ids = json.loads(selected_ids_raw)\n        except json.JSONDecodeError:\n            selected_ids = []\n\n        invoice_map = {\n            invoice.id: invoice\n            for invoice in AccountsPayableEntry.objects.select_related(\"vendor\").filter(pk__in=selected_ids)\n        }\n        allocations = []\n        allocation_total = Decimal(\"0\")\n        for invoice_id in selected_ids:\n            invoice = invoice_map.get(invoice_id)\n            if invoice and invoice.balance > 0:\n                allocations.append((invoice, invoice.balance))\n                allocation_total += invoice.balance\n\n        amount_paid = _decimal(request.POST.get(\"amount_paid\"))\n        vendor = get_object_or_404(Vendor, pk=request.POST.get(\"supplier_id\"))\n        cash_account = get_object_or_404(Account, pk=request.POST.get(\"bank_id\"), allow_posting=True)\n\n        if not allocations:\n            messages.error(request, \"Pilih minimal satu invoice hutang.\")\n        elif amount_paid != allocation_total:\n            messages.error(request, \"Jumlah dibayar harus sama dengan total invoice terpilih.\")\n        elif ap_account is None:\n            messages.error(request, \"Belum ada akun hutang usaha yang bisa dipakai posting.\")\n        else:\n            journal = JournalEntry.objects.create(\n                number=_generate_number(\"JE\", JournalEntry),\n                date=_parse_date(request.POST.get(\"date\")),\n                reference=request.POST.get(\"number\") or _generate_number(\"PV\", PaymentVoucher),\n                description=request.POST.get(\"memo\", \"\").strip() or f\"Payment voucher {vendor.name}\",\n                status=\"posted\",\n                source=\"payment_voucher\",\n                created_by=request.user,\n                posted_by=request.user,\n                posted_at=timezone.now(),\n            )\n            JournalEntryLine.objects.create(\n                journal_entry=journal,\n                account=ap_account,\n                debit=amount_paid,\n                credit=Decimal(\"0\"),\n                description=f\"Pelunasan hutang {vendor.name}\",\n            )\n            JournalEntryLine.objects.create(\n                journal_entry=journal,\n                account=cash_account,\n                debit=Decimal(\"0\"),\n                credit=amount_paid,\n                description=f\"Pembayaran dari {cash_account.name}\",\n            )\n\n            voucher = PaymentVoucher.objects.create(\n                number=request.POST.get(\"number\") or _generate_number(\"PV\", PaymentVoucher),\n                date=_parse_date(request.POST.get(\"date\")),\n                vendor=vendor,\n                cash_account=cash_account,\n                method=request.POST.get(\"method\", \"transfer\"),\n                memo=request.POST.get(\"memo\", \"\").strip(),\n                amount_paid=amount_paid,\n                created_by=request.user,\n                journal_entry=journal,\n            )\n\n            for invoice, amount in allocations:\n                PaymentVoucherAllocation.objects.create(voucher=voucher, payable_entry=invoice, amount=amount)\n                invoice.paid_amount += amount\n                invoice.status = \"paid\" if invoice.paid_amount >= invoice.total_amount else \"partial\"\n                invoice.save(update_fields=[\"paid_amount\", \"status\", \"updated_at\"])\n\n            messages.success(request, \"Payment voucher berhasil diproses.\")\n            return redirect(\"accounts_payable\")\n\n    payables = AccountsPayableEntry.objects.select_related(\"vendor\").filter(status__in=[\"open\", \"partial\"]).order_by(\"due_date\")\n    payables_by_vendor = {}\n    for payable in payables:\n        payables_by_vendor.setdefault(payable.vendor_id, []).append(\n            {\n                \"id\": payable.id,\n                \"number\": payable.invoice_number,\n                \"total\": float(payable.total_amount),\n                \"balance\": float(payable.balance),\n                \"due_date\": payable.due_date.isoformat(),\n            }\n        )\n\n    context = {\n        \"voucher\": voucher,\n        \"generated_number\": voucher.number if voucher else _generate_number(\"PV\", PaymentVoucher),\n        \"vendors\": vendors,\n        \"cash_accounts\": cash_accounts,\n        \"selected_vendor_id\": request.GET.get(\"vendor\", \"\"),\n        \"payables_json\": json.dumps(payables_by_vendor),\n    }\n    return render(request, \"lumra_pages/accounting/payment_voucher_form.html\", context)"
+    },
+    {
+      "view_name": "trial_balance",
+      "view_module": "lumra_config.views.accounting_views",
+      "view_file": "lumra_config/views/accounting_views.py",
+      "line": 501,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def trial_balance(request):\n    period = request.GET.get(\"period\") or timezone.localdate().strftime(\"%Y-%m\")\n    _, end_date = _month_window(period)\n    groups = []\n    grand_debit = Decimal(\"0\")\n    grand_credit = Decimal(\"0\")\n\n    for account_type, label in Account.ACCOUNT_TYPES:\n        accounts = []\n        for account in Account.objects.filter(account_type=account_type, is_active=True).order_by(\"code\"):\n            balance = _account_balance(account, end_date)\n            debit, credit = _balance_to_columns(account, balance)\n            accounts.append(\n                {\n                    \"code\": account.code,\n                    \"name\": account.name,\n                    \"debit\": float(debit),\n                    \"credit\": float(credit),\n                }\n            )\n        total_debit = sum(Decimal(str(item[\"debit\"])) for item in accounts)\n        total_credit = sum(Decimal(str(item[\"credit\"])) for item in accounts)\n        grand_debit += total_debit\n        grand_credit += total_credit\n        groups.append(\n            {\n                \"name\": label.upper(),\n                \"accounts\": accounts,\n                \"totalDebit\": float(total_debit),\n                \"totalCredit\": float(total_credit),\n            }\n        )\n\n    context = {\n        \"period\": period,\n        \"account_groups_json\": json.dumps(groups),\n        \"grand_total_debit\": float(grand_debit),\n        \"grand_total_credit\": float(grand_credit),\n    }\n    return render(request, \"lumra_pages/accounting/trial_balance.html\", context)"
+    },
+    {
+      "view_name": "balance_sheet",
+      "view_module": "lumra_config.views.accounting_views",
+      "view_file": "lumra_config/views/accounting_views.py",
+      "line": 538,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def balance_sheet(request):\n    as_of_date = _parse_date(request.GET.get(\"as_of_date\"), timezone.localdate())\n\n    def collect(account_type):\n        items = []\n        total = Decimal(\"0\")\n        for account in Account.objects.filter(account_type=account_type, allow_posting=True, is_active=True).order_by(\"code\"):\n            balance = _account_balance(account, as_of_date)\n            if balance:\n                items.append({\"name\": f\"{account.code} {account.name}\", \"amount\": float(balance)})\n                total += balance\n        return items, total\n\n    asset_items, total_assets = collect(\"asset\")\n    liability_items, total_liabilities = collect(\"liability\")\n    equity_items, total_equity = collect(\"equity\")\n    revenue_items, total_revenue = collect(\"revenue\")\n    expense_items, total_expense = collect(\"expense\")\n    current_earnings = total_revenue - total_expense\n    if current_earnings:\n        equity_items.append({\"name\": \"Laba Tahun Berjalan\", \"amount\": float(current_earnings)})\n        total_equity += current_earnings\n\n    context = {\n        \"as_of_date\": as_of_date.isoformat(),\n        \"assets_current_json\": json.dumps(asset_items),\n        \"assets_fixed_json\": json.dumps([]),\n        \"liabilities_json\": json.dumps(liability_items),\n        \"equity_json\": json.dumps(equity_items),\n        \"total_assets\": float(total_assets),\n        \"total_liabilities\": float(total_liabilities),\n        \"total_equity\": float(total_equity),\n    }\n    return render(request, \"lumra_pages/accounting/balance_sheet.html\", context)"
+    },
+    {
+      "view_name": "profit_loss_statement",
+      "view_module": "lumra_config.views.accounting_views",
+      "view_file": "lumra_config/views/accounting_views.py",
+      "line": 589,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def profit_loss_statement(request):\n    period = request.GET.get(\"period\") or timezone.localdate().strftime(\"%Y-%m\")\n    start_date, end_date = _month_window(period)\n\n    def collect(account_type):\n        items = []\n        total = Decimal(\"0\")\n        accounts = Account.objects.filter(\n            account_type=account_type,\n            allow_posting=True,\n            is_active=True,\n        ).order_by(\"code\")\n        for account in accounts:\n            lines = JournalEntryLine.objects.filter(\n                account=account,\n                journal_entry__status=\"posted\",\n                journal_entry__date__range=(start_date, end_date),\n            )\n            totals = lines.aggregate(debit=Sum(\"debit\"), credit=Sum(\"credit\"))\n            debit = totals[\"debit\"] or Decimal(\"0\")\n            credit = totals[\"credit\"] or Decimal(\"0\")\n            amount = credit - debit if account_type == \"revenue\" else debit - credit\n            if amount:\n                items.append(\n                    {\n                        \"code\": account.code,\n                        \"name\": account.name,\n                        \"amount\": float(amount),\n                    }\n                )\n                total += amount\n        return items, total\n\n    revenue_items, total_revenue = collect(\"revenue\")\n    expense_items, total_expense = collect(\"expense\")\n    gross_profit = total_revenue\n    net_profit = total_revenue - total_expense\n\n    context = {\n        \"period\": period,\n        \"revenue_json\": json.dumps(revenue_items),\n        \"expense_json\": json.dumps(expense_items),\n        \"total_revenue\": float(total_revenue),\n        \"total_expense\": float(total_expense),\n        \"gross_profit\": float(gross_profit),\n        \"net_profit\": float(net_profit),\n    }\n    return render(request, \"lumra_pages/accounting/profit_loss_statement.html\", context)"
+    },
+    {
+      "view_name": "cash_flow_statement",
+      "view_module": "lumra_config.views.accounting_views",
+      "view_file": "lumra_config/views/accounting_views.py",
+      "line": 638,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def cash_flow_statement(request):\n    period = request.GET.get(\"period\") or timezone.localdate().strftime(\"%Y-%m\")\n    start_date, end_date = _month_window(period)\n    beginning_balance = Decimal(\"0\")\n    ending_balance = Decimal(\"0\")\n    cash_accounts = list(Account.objects.filter(is_cash_account=True, allow_posting=True, is_active=True))\n\n    for account in cash_accounts:\n        beginning_balance += _account_balance(account, start_date - timedelta(days=1))\n        ending_balance += _account_balance(account, end_date)\n\n    sections = {\"operating\": {}, \"investing\": {}, \"financing\": {}}\n    entries = JournalEntry.objects.filter(status=\"posted\", date__range=(start_date, end_date)).prefetch_related(\n        Prefetch(\"lines\", queryset=JournalEntryLine.objects.select_related(\"account\"))\n    )\n\n    for entry in entries:\n        lines = list(entry.lines.all())\n        cash_lines = [line for line in lines if line.account.is_cash_account]\n        if not cash_lines:\n            continue\n        other_types = {line.account.account_type for line in lines if not line.account.is_cash_account}\n        if other_types & {\"revenue\", \"expense\"} or other_types & {\"asset\"} and any(line.account.name.lower().find(\"piutang\") >= 0 for line in lines):\n            section = \"operating\"\n        elif other_types & {\"asset\"}:\n            section = \"investing\"\n        else:\n            section = \"financing\"\n\n        for line in cash_lines:\n            amount = _account_delta(line.account, line.debit, line.credit)\n            sections[section][line.account.name] = sections[section].get(line.account.name, Decimal(\"0\")) + amount\n\n    operating = [{\"name\": name, \"amount\": float(amount)} for name, amount in sections[\"operating\"].items()]\n    investing = [{\"name\": name, \"amount\": float(amount)} for name, amount in sections[\"investing\"].items()]\n    financing = [{\"name\": name, \"amount\": float(amount)} for name, amount in sections[\"financing\"].items()]\n\n    context = {\n        \"period\": period,\n        \"beginning_balance\": float(beginning_balance),\n        \"operating_json\": json.dumps(operating),\n        \"investing_json\": json.dumps(investing),\n        \"financing_json\": json.dumps(financing),\n        \"ending_balance\": float(ending_balance),\n    }\n    return render(request, \"lumra_pages/accounting/cash_flow.html\", context)"
+    },
+    {
+      "view_name": "accounts_receivable",
+      "view_module": "lumra_config.views.accounting_views",
+      "view_file": "lumra_config/views/accounting_views.py",
+      "line": 680,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def accounts_receivable(request):\n    today = timezone.localdate()\n    entries = AccountsReceivableEntry.objects.select_related(\"customer\").filter(status__in=[\"open\", \"partial\"]).order_by(\"due_date\")\n    rows = []\n    total_ar = Decimal(\"0\")\n    due_today = Decimal(\"0\")\n    overdue = Decimal(\"0\")\n\n    for item in entries:\n        balance = item.balance\n        age_days = (today - item.due_date).days\n        status = \"Overdue\" if age_days > 0 else \"Due Today\" if age_days == 0 else \"Unpaid\"\n        rows.append(\n            {\n                \"id\": item.id,\n                \"customer\": item.customer.name,\n                \"number\": item.invoice_number,\n                \"date\": item.invoice_date.isoformat(),\n                \"due_date\": item.due_date.isoformat(),\n                \"total\": float(item.total_amount),\n                \"balance\": float(balance),\n                \"status\": status,\n                \"age_days\": age_days,\n            }\n        )\n        total_ar += balance\n        if age_days == 0:\n            due_today += balance\n        if age_days > 30:\n            overdue += balance\n\n    context = {\n        \"invoices_json\": json.dumps(rows),\n        \"total_ar\": float(total_ar),\n        \"due_today\": float(due_today),\n        \"overdue\": float(overdue),\n        \"today\": today.isoformat(),\n    }\n    return render(request, \"lumra_pages/accounting/accounts_receivable.html\", context)"
+    },
+    {
+      "view_name": "accounts_payable",
+      "view_module": "lumra_config.views.accounting_views",
+      "view_file": "lumra_config/views/accounting_views.py",
+      "line": 736,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def accounts_payable(request):\n    today = timezone.localdate()\n    payables = AccountsPayableEntry.objects.select_related(\"vendor\").filter(status__in=[\"open\", \"partial\"]).order_by(\"vendor__name\", \"due_date\")\n    vendor_rows = {}\n\n    for item in payables:\n        vendor_data = vendor_rows.setdefault(\n            item.vendor_id,\n            {\n                \"id\": item.vendor_id,\n                \"name\": item.vendor.name,\n                \"invoices_count\": 0,\n                \"total\": Decimal(\"0\"),\n                \"aging\": {\"current\": Decimal(\"0\"), \"m1_30\": Decimal(\"0\"), \"m31_60\": Decimal(\"0\"), \"m60\": Decimal(\"0\")},\n            },\n        )\n        balance = item.balance\n        vendor_data[\"invoices_count\"] += 1\n        vendor_data[\"total\"] += balance\n\n        age = (today - item.due_date).days\n        if age <= 30:\n            vendor_data[\"aging\"][\"current\"] += balance\n        elif age <= 60:\n            vendor_data[\"aging\"][\"m1_30\"] += balance\n        elif age <= 90:\n            vendor_data[\"aging\"][\"m31_60\"] += balance\n        else:\n            vendor_data[\"aging\"][\"m60\"] += balance\n\n    suppliers = []\n    totals = {\"current\": Decimal(\"0\"), \"m1_30\": Decimal(\"0\"), \"m31_60\": Decimal(\"0\"), \"m60\": Decimal(\"0\")}\n    total_ap = Decimal(\"0\")\n    for item in vendor_rows.values():\n        total_ap += item[\"total\"]\n        for key in totals:\n            totals[key] += item[\"aging\"][key]\n        suppliers.append(\n            {\n                \"id\": item[\"id\"],\n                \"name\": item[\"name\"],\n                \"invoices_count\": item[\"invoices_count\"],\n                \"total\": float(item[\"total\"]),\n                \"aging\": {key: float(value) for key, value in item[\"aging\"].items()},\n            }\n        )\n\n    context = {\n        \"suppliers_json\": json.dumps(suppliers),\n        \"total_ap\": float(total_ap),\n        \"aging_json\": json.dumps({key: float(value) for key, value in totals.items()}),\n    }\n    return render(request, \"lumra_pages/accounting/accounts_payable.html\", context)"
+    }
+  ]
+}

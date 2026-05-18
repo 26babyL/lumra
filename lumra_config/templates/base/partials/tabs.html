@@ -1,0 +1,30 @@
+<style>[x-cloak]{display:none!important}</style>
+{# base/partials/tabs.html - DaisyUI Version#}
+# Tabbed navigation component
+
+<div x-data="{ activeTab: '{{ active_tab|default:'tab1' }}' }" class="mb-6">
+  <!-- Tab buttons -->
+  <div class="tabs tabs-bordered gap-2">
+    {% for tab in tabs %}
+      <button 
+        @click="activeTab = '{{ tab.id }}'"
+        :class="{
+          'tab-active': activeTab === '{{ tab.id }}'
+        }"
+        class="tab tab-bordered"
+      >
+        {% if tab.icon %}<i class="fas {{ tab.icon }} mr-2"></i>{% endif %}
+        {{ tab.label }}
+      </button>
+    {% endfor %}
+  </div>
+
+  <!-- Tab content -->
+  <div class="mt-6">
+    {% for tab in tabs %}
+      <div x-show="activeTab === '{{ tab.id }}'" x-cloak>
+        {{ tab.content|safe }}
+      </div>
+    {% endfor %}
+  </div>
+</div>

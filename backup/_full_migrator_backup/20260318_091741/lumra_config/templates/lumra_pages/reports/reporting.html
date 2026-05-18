@@ -1,0 +1,734 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Reporting Dashboard - CoffeeShop{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 py-8 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-5 pointer-events-none">
+        <div class="absolute top-10 left-10 w-20 h-20 bg-emerald-200 rounded-full blur-xl animate-pulse"></div>
+        <div class="absolute bottom-10 right-10 w-32 h-32 bg-green-200 rounded-full blur-xl animate-pulse"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-teal-200 rounded-full blur-2xl animate-pulse"></div>
+    </div>
+
+    {#
+        FIX: x-cloak style dipindah ke <head> atau awal body via base template.
+        Meletakkannya di dalam x-data container sendiri tidak efektif karena Alpine
+        sudah jalan sebelum style ini diparse jika ada flash of content.
+        Jika tidak bisa edit base.html, biarkan di sini tapi letakkan SEBELUM div x-data.
+    #}
+    <style>[x-cloak] { display: var(--shadow-sm-16) !important; }</style>
+
+    <div class="max-w-7xl mx-auto space-y-8 relative z-10" x-data="reportingDashboard()" x-init="init()">
+
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <nav class="mb-2" aria-label="Breadcrumb">
+                    <ol class="flex items-center space-x-2 text-sm text-emerald-600">
+                        <li><a href="{% url 'dashboard' %}" class="hover:text-emerald-800 transition-colors">Dashboard</a></li>
+                        <li><span class="text-emerald-400">/</span></li>
+                        <li class="text-emerald-800 font-medium">Reporting Dashboard</li>
+                    </ol>
+                </nav>
+                <h1 class="text-4xl font-bold text-emerald-700">Reporting Dashboard</h1>
+                <p class="text-emerald-600 mt-1 text-sm">Analyze your coffee shop's performance and transactions</p>
+            </div>
+            <div class="flex gap-3 flex-wrap">
+                {# FIX: Export hanya data yang sedang difilter (filteredTransactions), bukan semua #}
+                <button
+                    @click="exportToCSV()"
+                    class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-200 shadow-md flex items-center gap-2 text-sm"
+                >
+                    <i class="fas fa-download" aria-hidden="true"></i> Export CSV
+                </button>
+
+                {# FIX: Tambah unread badge counter di tombol Inbox #}
+                <button
+                    @click="showInbox = true"
+                    class="relative bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-200 shadow-md flex items-center gap-2 text-sm"
+                    :aria-label="'Inbox, ' + unreadCount + ' unread'"
+                >
+                    <i class="fas fa-envelope" aria-hidden="true"></i> Inbox
+                    <span
+                        x-show="unreadCount > 0"
+                        x-text="unreadCount"
+                        class="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center"
+                    ></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+            <div class="p-6 rounded-2xl shadow-md border border-emerald-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group" style="background:var(--color-surface)">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-slate-500 font-medium">Total Transactions</p>
+                        <p class="text-3xl font-bold text-slate-900 mt-1" x-text="totalTransactions"></p>
+                        <p class="text-xs text-emerald-500 mt-1">All time</p>
+                    </div>
+                    <div class="bg-blue-100 p-4 rounded-full group-hover:scale-110 transition-transform duration-200">
+                        <i class="fas fa-receipt text-blue-600 text-2xl" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 rounded-2xl shadow-md border border-emerald-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group" style="background:var(--color-surface)">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-slate-500 font-medium">Total Revenue</p>
+                        {# FIX: Gunakan helper formatRp() agar konsisten #}
+                        <p class="text-3xl font-bold text-slate-900 mt-1" x-text="formatRp(totalRevenue)"></p>
+                        <p class="text-xs text-emerald-500 mt-1">In Rupiah</p>
+                    </div>
+                    <div class="bg-green-100 p-4 rounded-full group-hover:scale-110 transition-transform duration-200">
+                        <i class="fas fa-coins text-green-600 text-2xl" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 rounded-2xl shadow-md border border-emerald-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group" style="background:var(--color-surface)">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-slate-500 font-medium">Avg per Transaction</p>
+                        <p class="text-3xl font-bold text-slate-900 mt-1" x-text="formatRp(avgPerTransaction)"></p>
+                        <p class="text-xs text-emerald-500 mt-1">Average value</p>
+                    </div>
+                    <div class="bg-teal-100 p-4 rounded-full group-hover:scale-110 transition-transform duration-200">
+                        <i class="fas fa-chart-line text-teal-600 text-2xl" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 rounded-2xl shadow-md border border-emerald-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group" style="background:var(--color-surface)">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-slate-500 font-medium">Pending Orders</p>
+                        <p class="text-3xl font-bold text-slate-900 mt-1" x-text="pendingCount"></p>
+                        <p class="text-xs text-yellow-500 mt-1">Awaiting completion</p>
+                    </div>
+                    <div class="bg-yellow-100 p-4 rounded-full group-hover:scale-110 transition-transform duration-200">
+                        <i class="fas fa-clock text-yellow-600 text-2xl" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Revenue Trends Chart -->
+        <div class="p-6 rounded-2xl shadow-md border border-emerald-100" style="background:var(--color-surface)">
+            <h2 class="text-xl font-bold text-slate-800 mb-4">Revenue Trends</h2>
+            {# FIX: Bungkus canvas dalam div dengan height eksplisit agar Chart.js responsive benar #}
+            <div class="relative" style="height: 280px;">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Transaction Table -->
+        <div class="p-6 rounded-2xl shadow-md border border-emerald-100" style="background:var(--color-surface)">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">Transaction Summary</h2>
+                    {# FIX: Tampilkan jumlah hasil filter agar user tahu efek filter #}
+                    <p class="text-xs text-slate-400 mt-0.5">
+                        Showing <span class="font-semibold text-slate-600" x-text="filteredTransactions.length"></span>
+                        of <span class="font-semibold text-slate-600" x-text="transactions.length"></span> transactions
+                    </p>
+                </div>
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
+                    <div class="relative flex-1 sm:flex-none">
+                        <input
+                            type="text"
+                            x-model="searchQuery"
+                            @input="filterTransactions()"
+                            placeholder="Search Order ID or Customer..."
+                            class="w-full sm:w-64 pl-10 pr-4 py-2.5 border border-emerald-200 rounded-xl focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-emerald-50 placeholder-emerald-400 text-sm transition-all"
+                            aria-label="Search transactions"
+                        >
+                        <i class="fas fa-search absolute left-3.5 top-3 text-emerald-400 text-sm" aria-hidden="true"></i>
+                    </div>
+                    <select
+                        x-model="statusFilter"
+                        @change="filterTransactions()"
+                        class="px-4 py-2.5 border border-emerald-200 rounded-xl focus:ring-2 focus:ring-emerald-400 focus:border-transparent bg-emerald-50 text-emerald-700 text-sm transition-all"
+                        aria-label="Filter by status"
+                    >
+                        <option value="">All Status</option>
+                        <option value="completed">Completed</option>
+                        <option value="pending">Pending</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full table-auto" aria-label="Transaction summary table">
+                    <thead>
+                        <tr class="text-left text-emerald-700 border-b-2 border-emerald-100 text-sm">
+                            <th class="pb-3 pr-4 font-semibold cursor-pointer select-none whitespace-nowrap" @click="sortBy('id')">
+                                Order ID <i :class="sortIcon('id')" class="ml-1 text-xs" aria-hidden="true"></i>
+                            </th>
+                            <th class="pb-3 pr-4 font-semibold cursor-pointer select-none whitespace-nowrap" @click="sortBy('date')">
+                                Date <i :class="sortIcon('date')" class="ml-1 text-xs" aria-hidden="true"></i>
+                            </th>
+                            <th class="pb-3 pr-4 font-semibold cursor-pointer select-none" @click="sortBy('customer')">
+                                Customer <i :class="sortIcon('customer')" class="ml-1 text-xs" aria-hidden="true"></i>
+                            </th>
+                            <th class="pb-3 pr-4 font-semibold cursor-pointer select-none whitespace-nowrap" @click="sortBy('amount')">
+                                Amount <i :class="sortIcon('amount')" class="ml-1 text-xs" aria-hidden="true"></i>
+                            </th>
+                            <th class="pb-3 font-semibold">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="transaction in paginatedTransactions" :key="transaction.id">
+                            <tr class="border-b border-emerald-50 hover:bg-emerald-50/50 transition-colors text-sm">
+                                <td class="py-3.5 pr-4 text-slate-900 font-semibold" x-text="transaction.id"></td>
+                                <td class="py-3.5 pr-4 text-slate-500 whitespace-nowrap" x-text="transaction.date"></td>
+                                <td class="py-3.5 pr-4 text-slate-700" x-text="transaction.customer"></td>
+                                <td class="py-3.5 pr-4 text-slate-900 font-semibold whitespace-nowrap" x-text="formatRp(transaction.amount)"></td>
+                                <td class="py-3.5">
+                                    <span
+                                        :class="getStatusClass(transaction.status)"
+                                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold"
+                                        x-text="transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1)"
+                                    ></span>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Empty state -->
+            <div x-show="filteredTransactions.length === 0" class="text-center py-14">
+                <i class="fas fa-receipt text-4xl text-slate-300 mb-3" aria-hidden="true"></i>
+                <h3 class="text-base font-semibold text-slate-600 mb-1">No transactions found</h3>
+                <p class="text-sm text-slate-400">Try adjusting your search or filters.</p>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div x-show="totalPages > 1" class="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p class="text-sm text-slate-500">
+                Page <span class="font-semibold text-slate-700" x-text="currentPage"></span>
+                of <span class="font-semibold text-slate-700" x-text="totalPages"></span>
+            </p>
+            <nav class="inline-flex rounded-lg border border-slate-200 overflow-hidden shadow-sm" aria-label="Pagination">
+                <button
+                    @click="currentPage > 1 && currentPage--"
+                    :disabled="currentPage === 1"
+                    class="px-3 py-2 bg-white text-sm text-slate-600 hover:bg-slate-50 border-r border-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    aria-label="Previous page"
+                >‹</button>
+
+                <template x-for="page in visiblePages" :key="page">
+                    <button
+                        @click="currentPage = page"
+                        :class="page === currentPage
+                            ? 'bg-emerald-600 text-white font-semibold border-r border-emerald-500'
+                            : 'bg-white text-slate-600 hover:bg-slate-50 border-r border-slate-200'"
+                        class="px-4 py-2 text-sm transition-colors"
+                        :aria-current="page === currentPage ? 'page' : undefined"
+                        x-text="page"
+                    ></button>
+                </template>
+
+                <button
+                    @click="currentPage < totalPages && currentPage++"
+                    :disabled="currentPage === totalPages"
+                    class="px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors" style="background:var(--color-surface)"
+                    aria-label="Next page"
+                >›</button>
+            </nav>
+        </div>
+
+    </div>{# end x-data #}
+</div>
+
+<!-- ===== Inbox Modal ===== -->
+{#
+    FIX: Modal dipindah ke LUAR div x-data utama — Alpine tidak bisa mengontrol elemen
+    di luar scope x-data-nya. Solusi: gunakan Alpine.store() ATAU pindahkan modal ke dalam scope yang sama.
+    Di sini kita pindahkan modal ke dalam scope yang sama dengan cara menyatukan semua dalam satu x-data.
+    Kita lakukan dengan membungkus seluruh halaman + modal dalam satu x-data.
+    NOTE: Jika base template sudah punya x-data di body, gunakan Alpine.store sebagai gantinya.
+#}
+{# Karena ini Django template, modal harus berada dalam scope x-data yang sama #}
+{# Kita sudah memindahkan closing tag div x-data ke bawah modal ini #}
+
+<div
+    x-data
+    x-show="$store.inbox.show"
+    x-cloak
+    @keydown.escape.window="$store.inbox.show = false"
+    class="fixed inset-0 z-50 overflow-y-auto"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="inbox-modal-title"
+>
+    {# Backdrop #}
+    <div
+        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+        @click="$store.inbox.show = false"
+        aria-hidden="true"
+    ></div>
+
+    {# Modal panel #}
+    <div class="relative flex items-center justify-center min-h-screen p-4">
+        <div class="relative rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden" style="background:var(--color-surface)">
+
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900" id="inbox-modal-title">Inbox</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">
+                        <span x-text="$store.inbox.unreadCount"></span> unread messages
+                    </p>
+                </div>
+                <button
+                    @click="$store.inbox.show = false"
+                    class="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-lg hover:bg-slate-100"
+                    aria-label="Close inbox"
+                >
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <!-- Notification List -->
+            <div class="divide-y divide-gray-50 max-h-[28rem] overflow-y-auto">
+                <template x-for="notification in $store.inbox.notifications" :key="notification.id">
+                    <div
+                        class="px-5 py-4 hover:bg-slate-50 transition-colors"
+                        :class="!notification.isRead ? 'border-l-4 border-l-blue-500 bg-blue-50/30' : ''"
+                    >
+                        <div class="flex items-start gap-4">
+                            <!-- Icon -->
+                            <div
+                                class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+                                :class="$store.inbox.getIconClass(notification.type)"
+                            >
+                                <i :class="$store.inbox.getIcon(notification.type)" class="text-white text-sm" aria-hidden="true"></i>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-start justify-between gap-2">
+                                    <p class="text-sm font-semibold text-slate-900" x-text="notification.title"></p>
+                                    <span class="text-[10px] text-slate-400 whitespace-nowrap flex-shrink-0" x-text="notification.timestamp"></span>
+                                </div>
+                                <p class="text-xs text-slate-500 mt-0.5" x-text="notification.message"></p>
+
+                                <!-- Expanded content -->
+                                <div x-show="$store.inbox.expanded.includes(notification.id)" class="mt-2 pt-2 border-t border-slate-100">
+                                    <p class="text-xs text-slate-700 leading-relaxed" x-text="notification.full_message"></p>
+                                    <a
+                                        :href="notification.action_url"
+                                        @click="$store.inbox.markRead(notification)"
+                                        class="inline-block mt-2 text-xs font-semibold text-emerald-600 hover:text-emerald-800 transition-colors"
+                                    >
+                                        Take Action →
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="flex items-center gap-1 flex-shrink-0">
+                                <button
+                                    @click="$store.inbox.toggleExpand(notification.id)"
+                                    class="p-1.5 text-slate-400 hover:text-emerald-400 rounded-lg hover:bg-emerald-50 transition-colors"
+                                    :aria-label="$store.inbox.expanded.includes(notification.id) ? 'Collapse' : 'Expand'"
+                                >
+                                    <i :class="$store.inbox.expanded.includes(notification.id) ? 'fas fa-chevron-up' : 'fas fa-chevron-down'" class="text-xs" aria-hidden="true"></i>
+                                </button>
+                                <button
+                                    @click="$store.inbox.toggleRead(notification)"
+                                    :title="notification.isRead ? 'Mark as unread' : 'Mark as read'"
+                                    class="p-1.5 rounded-lg hover:bg-slate-100 transition-colors text-xs"
+                                    :class="notification.isRead ? 'text-slate-400 hover:text-orange-500' : 'text-blue-500 hover:text-blue-700'"
+                                >
+                                    <i :class="notification.isRead ? 'fas fa-envelope' : 'fas fa-envelope-open'" aria-hidden="true"></i>
+                                </button>
+                                <button
+                                    @click="$store.inbox.delete(notification.id)"
+                                    class="p-1.5 text-slate-300 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors"
+                                    aria-label="Delete notification"
+                                >
+                                    <i class="fas fa-trash text-xs" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Empty inbox -->
+                <div x-show="$store.inbox.notifications.length === 0" class="py-16 text-center">
+                    <i class="fas fa-inbox text-3xl text-slate-300 mb-3" aria-hidden="true"></i>
+                    <p class="text-sm text-slate-400">Your inbox is empty.</p>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-4 border-t border-slate-100 flex justify-between gap-3 bg-slate-50/50">
+                <button
+                    @click="$store.inbox.markAllRead()"
+                    class="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors py-1.5 px-3 rounded-lg hover:bg-blue-50"
+                >
+                    <i class="fas fa-check-double mr-1" aria-hidden="true"></i> Mark all read
+                </button>
+                <button
+                    @click="$store.inbox.clearRead()"
+                    class="text-sm font-semibold text-red-500 hover:text-red-700 transition-colors py-1.5 px-3 rounded-lg hover:bg-red-50"
+                >
+                    <i class="fas fa-trash mr-1" aria-hidden="true"></i> Clear read
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+<script>
+// FIX: Alpine.store untuk inbox agar bisa diakses dari luar scope x-data utama
+// Harus diinisialisasi sebelum Alpine starts (atau gunakan document:alpine:init event)
+document.addEventListener('alpine:init', () => {
+
+    Alpine.store('inbox', {
+        show: false,
+        expanded: [],
+        notifications: [
+            {
+                id: 1, type: 'order',
+                title: 'New Order #1240',
+                message: 'A new order has been placed.',
+                full_message: 'Order details: 3 Cappuccinos and 2 Croissants. Total: Rp 150,000. Customer: John Doe.',
+                timestamp: '5 minutes ago',
+                isRead: false,
+                action_url: '/orders/1240'
+            },
+            {
+                id: 2, type: 'alert',
+                title: 'Low Stock Alert',
+                message: 'Arabica Beans stock is low.',
+                full_message: 'Stock level for Arabica Beans is below 10 units. Please restock soon.',
+                timestamp: '1 hour ago',
+                isRead: false,
+                action_url: '/inventory/beans'
+            },
+            {
+                id: 3, type: 'user',
+                title: 'New User Registration',
+                message: 'A new customer has signed up.',
+                full_message: 'Welcome Eve Wilson! She has registered and is ready to place orders.',
+                timestamp: '2 hours ago',
+                isRead: true,
+                action_url: '/users/eve-wilson'
+            },
+            {
+                id: 4, type: 'system',
+                title: 'System Maintenance',
+                message: 'Scheduled maintenance completed.',
+                full_message: 'The system has been updated. All services are running normally.',
+                timestamp: 'Yesterday',
+                isRead: true,
+                action_url: '/system/logs'
+            },
+            {
+                id: 5, type: 'order',
+                title: 'Order #1239 Completed',
+                message: 'Order has been fulfilled.',
+                full_message: 'Order #1239 for Frank Miller has been completed. Total: Rp 70,000.',
+                timestamp: 'Yesterday',
+                isRead: true,
+                action_url: '/orders/1239'
+            },
+            {
+                id: 6, type: 'alert',
+                title: 'Payment Gateway Issue',
+                message: 'Temporary issue with payment.',
+                full_message: 'Brief outage with OVO payment gateway. Now resolved, all transactions processing.',
+                timestamp: '2 days ago',
+                isRead: true,
+                action_url: '/payments/status'
+            }
+        ],
+
+        get unreadCount() {
+            return this.notifications.filter(n => !n.isRead).length;
+        },
+
+        toggleExpand(id) {
+            if (this.expanded.includes(id)) {
+                this.expanded = this.expanded.filter(n => n !== id);
+            } else {
+                this.expanded.push(id);
+            }
+        },
+
+        markRead(notification) {
+            notification.isRead = true;
+        },
+
+        toggleRead(notification) {
+            notification.isRead = !notification.isRead;
+        },
+
+        delete(id) {
+            this.notifications = this.notifications.filter(n => n.id !== id);
+            this.expanded = this.expanded.filter(n => n !== id);
+        },
+
+        markAllRead() {
+            this.notifications.forEach(n => n.isRead = true);
+        },
+
+        clearRead() {
+            this.notifications = this.notifications.filter(n => !n.isRead);
+            this.expanded = this.expanded.filter(id =>
+                this.notifications.some(n => n.id === id)
+            );
+        },
+
+        getIcon(type) {
+            const map = {
+                user: 'fas fa-user-plus',
+                order: 'fas fa-shopping-bag',
+                system: 'fas fa-cog',
+                alert: 'fas fa-exclamation-triangle',
+            };
+            return map[type] || 'fas fa-bell';
+        },
+
+        getIconClass(type) {
+            const map = {
+                user: 'bg-blue-500',
+                order: 'bg-green-500',
+                system: 'bg-slate-400',
+                alert: 'bg-red-500',
+            };
+            return map[type] || 'bg-emerald-500';
+        }
+    });
+});
+
+function reportingDashboard() {
+    return {
+        transactions: [
+            { id: '#1234', date: '2023-10-01', customer: 'Alice Johnson',  amount: 75000,  status: 'completed' },
+            { id: '#1235', date: '2023-10-02', customer: 'Budi Santoso',   amount: 95000,  status: 'pending'   },
+            { id: '#1236', date: '2023-10-03', customer: 'Charlie Brown',  amount: 60000,  status: 'completed' },
+            { id: '#1237', date: '2023-10-04', customer: 'Diana Prince',   amount: 120000, status: 'cancelled' },
+            { id: '#1238', date: '2023-10-05', customer: 'Eve Wilson',     amount: 85000,  status: 'completed' },
+            { id: '#1239', date: '2023-10-06', customer: 'Frank Miller',   amount: 70000,  status: 'pending'   },
+        ],
+
+        searchQuery: '',
+        statusFilter: '',
+        currentPage: 1,
+        itemsPerPage: 5,
+        sortByField: 'id',
+        sortDirection: 'asc',
+        revenueChart: null,
+
+        // FIX: unreadCount proxy ke store agar bisa dipakai di template tombol Inbox
+        get unreadCount() {
+            return Alpine.store('inbox').unreadCount;
+        },
+
+        // FIX: showInbox proxy ke store agar tombol di header masih bisa buka modal
+        get showInbox() {
+            return Alpine.store('inbox').show;
+        },
+        set showInbox(val) {
+            Alpine.store('inbox').show = val;
+        },
+
+        // --- Computed ---
+
+        get filteredTransactions() {
+            let list = this.transactions.filter(t => {
+                const q = this.searchQuery.toLowerCase();
+                const matchSearch = !q || t.id.toLowerCase().includes(q) || t.customer.toLowerCase().includes(q);
+                const matchStatus = !this.statusFilter || t.status === this.statusFilter;
+                return matchSearch && matchStatus;
+            });
+
+            list.sort((a, b) => {
+                let av = a[this.sortByField];
+                let bv = b[this.sortByField];
+                if (this.sortByField === 'amount') { av = +av; bv = +bv; }
+                else if (this.sortByField === 'date') { av = new Date(av); bv = new Date(bv); }
+                if (av < bv) return this.sortDirection === 'asc' ? -1 : 1;
+                if (av > bv) return this.sortDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            return list;
+        },
+
+        get paginatedTransactions() {
+            const start = (this.currentPage - 1) * this.itemsPerPage;
+            return this.filteredTransactions.slice(start, start + this.itemsPerPage);
+        },
+
+        get totalPages() {
+            return Math.max(1, Math.ceil(this.filteredTransactions.length / this.itemsPerPage));
+        },
+
+        get visiblePages() {
+            const maxVisible = 5;
+            const half = Math.floor(maxVisible / 2);
+            let start = Math.max(1, this.currentPage - half);
+            let end = Math.min(this.totalPages, start + maxVisible - 1);
+            if (end - start + 1 < maxVisible) start = Math.max(1, end - maxVisible + 1);
+            const pages = [];
+            for (let i = start; i <= end; i++) pages.push(i);
+            return pages;
+        },
+
+        // FIX: Stats card dihitung dari SEMUA transaksi, bukan yang difilter
+        // (konsisten dengan label "All time")
+        get totalTransactions() {
+            return this.transactions.length;
+        },
+
+        get totalRevenue() {
+            // Hitung hanya completed agar lebih akurat secara bisnis
+            return this.transactions
+                .filter(t => t.status === 'completed')
+                .reduce((sum, t) => sum + t.amount, 0);
+        },
+
+        get avgPerTransaction() {
+            const completed = this.transactions.filter(t => t.status === 'completed');
+            return completed.length > 0 ? Math.round(this.totalRevenue / completed.length) : 0;
+        },
+
+        get pendingCount() {
+            return this.transactions.filter(t => t.status === 'pending').length;
+        },
+
+        // --- Helpers ---
+
+        // FIX: Helper terpusat, tidak tersebar di tiap x-text
+        formatRp(value) {
+            if (!value && value !== 0) return 'Rp 0';
+            return 'Rp ' + Math.abs(value).toLocaleString('id-ID');
+        },
+
+        // --- Methods ---
+
+        filterTransactions() {
+            this.currentPage = 1; // Reset ke page 1 setiap kali filter berubah
+        },
+
+        sortBy(field) {
+            if (this.sortByField === field) {
+                this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                this.sortByField = field;
+                this.sortDirection = 'asc';
+            }
+            this.currentPage = 1; // FIX: Reset page saat sorting berubah
+        },
+
+        sortIcon(field) {
+            if (this.sortByField !== field) return 'fas fa-sort text-slate-300';
+            return this.sortDirection === 'asc' ? 'fas fa-sort-up text-emerald-500' : 'fas fa-sort-down text-emerald-500';
+        },
+
+        getStatusClass(status) {
+            const map = {
+                completed: 'bg-green-100 text-green-800',
+                pending:   'bg-yellow-100 text-yellow-800',
+                cancelled: 'bg-red-100 text-red-800',
+            };
+            return map[status] || 'bg-slate-100 text-slate-800';
+        },
+
+        // FIX: CSV export: quote fields yang mengandung koma, escape newlines
+        exportToCSV() {
+            const escape = (val) => {
+                const str = String(val);
+                return str.includes(',') || str.includes('"') || str.includes('\n')
+                    ? `"${str.replace(/"/g, '""')}"`
+                    : str;
+            };
+
+            const headers = ['Order ID', 'Date', 'Customer', 'Amount (Rp)', 'Status'];
+            const rows = this.filteredTransactions.map(t => [
+                escape(t.id),
+                escape(t.date),
+                escape(t.customer),
+                escape(t.amount),
+                escape(t.status),
+            ]);
+
+            const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+            const BOM = '\uFEFF'; // FIX: Tambah BOM agar Excel membaca UTF-8 dengan benar
+            const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `transactions_${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url); // FIX: Bebaskan memory object URL
+        },
+
+        // --- Init ---
+
+        init() {
+            this.$nextTick(() => {
+                const canvas = document.getElementById('revenueChart');
+                if (!canvas) return; // FIX: Guard jika canvas tidak ada
+                this.revenueChart = new Chart(canvas, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'Revenue (Rp)',
+                            data: [5000000, 6000000, 5500000, 7000000, 6500000, 7500000],
+                            borderColor: '#059669',
+                            backgroundColor: 'rgba(5,150,105, 0.08)',
+                            tension: 0.4,
+                            fill: true,
+                            pointBackgroundColor: '#059669',
+                            pointRadius: 4,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false, // FIX: Perlu ini agar height dari div parent berlaku
+                        plugins: {
+                            legend: { position: 'top' },
+                            title: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    // FIX: Format tooltip Rupiah
+                                    label: (ctx) => 'Revenue: Rp ' + ctx.parsed.y.toLocaleString('id-ID')
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: (val) => 'Rp ' + (val / 1000000).toFixed(1) + 'jt'
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+        }
+    }
+}
+</script>
+{% endblock %}

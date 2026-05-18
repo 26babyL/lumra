@@ -1,0 +1,614 @@
+[
+  {
+    "file": "lumra_config\\templates\\base\\activity_drawer.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\base\\alert.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\base\\alert_inner.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\base\\approval_modal.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\base\\base.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\base\\footer.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\base\\kpi_card.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\base\\kpi_card_inner.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\base\\kpi_card_white.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\base\\navbar.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\base\\partials\\bg_blob.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\base\\partials\\form_field.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\base\\sidebar.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\base\\sidebar_item.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\base\\sidebar_right.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\auth\\login.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\auth\\register.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\etc\\error_403.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\etc\\error_404.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\etc\\error_500.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\inventory\\add_stock_movement.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\inventory\\product_details.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\inventory\\product_list.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\inventory\\products.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\inventory\\stock_movement.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\inventory\\stock_movement_form.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\inventory\\stock_opname_approval_detail.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\inventory\\stock_opname_approvals.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\inventory\\stock_opname_form.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\inventory\\stock_opname_locations.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\inventory\\stock_overview.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\inventory\\stock_planning.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\inventory\\stock_purchasing.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\inventory\\supplier_price_confirm_delete.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\inventory\\supplier_price_form.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\inventory\\supplier_price_list.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\marketing\\add_campaign.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\marketing\\campaign.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\marketing\\campaign_list.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\marketing\\discount.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\marketing\\loyalty_members.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\master_data\\categories_list.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\master_data\\category_form.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\master_data\\customer.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\master_data\\customer_detail.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\master_data\\customer_form.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\master_data\\customers.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\master_data\\customers_list.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\master_data\\location_list.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\master_data\\locations.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\master_data\\stock_opname.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\master_data\\stock_opname_session_detail.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\master_data\\unit_form.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\master_data\\units_list.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\master_data\\vendor_form.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\master_data\\vendor_list.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\master_data\\vendors_list.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\messages\\inbox.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\messages\\notification.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\production\\recipe_detail.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\production\\recipe_form.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\production\\recipe_list.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\reports\\activity_log.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\reports\\base_report.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\reports\\purchasing_report.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\reports\\report_activity_log.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\reports\\report_inventory_log.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\reports\\report_inventory_low.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\reports\\report_inventory_stock.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\reports\\report_profit_loss_detail.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\reports\\report_sales_by_outlet.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\reports\\report_sales_by_payment.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\reports\\report_sales_by_product.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\reports\\report_sales_summary.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\reports\\reporting.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\reports\\requisition_report.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\reports\\sales_history.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\reports\\sales_history_product.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\reports\\sales_report.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\reports\\sales_report_after.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\reports\\transaction_summary.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\reports\\transfer_report.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\sales_insight\\dashboard.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\sales_insight\\financial_reports.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\sales_insight\\market_insights.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\sales_insight\\pos.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\sales_insight\\sales_intelligence.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\sales_insight\\sales_performance.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\sales_insight\\trends_analysis.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\settings\\about.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\settings\\business_feature_matrix.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\settings\\business_form_general.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\settings\\business_profile.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\settings\\business_settings.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\settings\\contact.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\settings\\profile.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\settings\\search.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\settings\\settings.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\settings\\system_status.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\settings\\user_list.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\settings\\user_roles_permissions.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  },
+  {
+    "file": "lumra_config\\templates\\lumra_pages\\settings\\users.html",
+    "fixed": false,
+    "fixes_applied": [],
+    "count": 0
+  }
+]

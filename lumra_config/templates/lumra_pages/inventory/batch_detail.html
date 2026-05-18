@@ -1,0 +1,165 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}Detail Batch — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  .timeline-item { position: relative; padding-left: 24px; padding-bottom: 24px; border-left: 2px solid #e2e8f0; }
+  .timeline-item::before { content:''; position: absolute; left: -6px; top: 0; width: 10px; height: 10px; border-radius: 50%; background: #94a3b8; }
+  .timeline-item:last-child { border-left-color: transparent; }
+  
+  .info-card { background: rgba(255,255,255,0.8); border: 1px solid white; border-radius: 16px; padding: 20px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-6xl mx-auto relative z-10 space-y-6" x-data="batchDetailApp()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex items-center justify-between bg-white/80 backdrop-blur rounded-2xl p-6 border border-white shadow-sm">
+    <div>
+      <div class="flex items-center gap-3 mb-1">
+        <h1 class="text-2xl font-bold text-slate-800" x-text="batch.code"></h1>
+        <span class="px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-600" x-text="batch.product"></span>
+      </div>
+      <p class="text-sm text-slate-500">ID Referensi: <span class="font-mono">#REF-99281</span></p>
+    </div>
+    <div class="flex gap-2">
+      <button class="px-4 py-2 bg-slate-100 text-slate-600 rounded-lg text-sm font-bold hover:bg-slate-200">Cetak Label</button>
+      <a href="{% url 'batch_list' %}" class="px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-lg text-sm font-bold hover:bg-slate-50">Kembali</a>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Left Column: Vital Stats & History -->
+    <div class="lg:col-span-2 space-y-6">
+      
+      <!-- Vital Stats Grid -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="info-card text-center">
+          <p class="text-[10px] text-slate-400 uppercase font-bold">Total Masuk</p>
+          <p class="text-lg font-bold text-slate-800" x-text="batch.initial_qty"></p>
+        </div>
+        <div class="info-card text-center">
+          <p class="text-[10px] text-slate-400 uppercase font-bold">Sisa Stok</p>
+          <p class="text-lg font-bold text-emerald-600" x-text="batch.current_qty"></p>
+        </div>
+        <div class="info-card text-center">
+          <p class="text-[10px] text-slate-400 uppercase font-bold">Terjual</p>
+          <p class="text-lg font-bold text-blue-600" x-text="batch.sold_qty"></p>
+        </div>
+        <div class="info-card text-center">
+          <p class="text-[10px] text-slate-400 uppercase font-bold">Rusak/Hilang</p>
+          <p class="text-lg font-bold text-rose-600" x-text="batch.damage_qty"></p>
+        </div>
+      </div>
+
+      <!-- Location Info -->
+      <div class="info-card">
+        <h3 class="font-bold text-slate-700 mb-4">Lokasi Saat Ini</h3>
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <div>
+            <p class="text-sm font-bold text-slate-800">Zone: <span x-text="batch.zone"></span></p>
+            <p class="text-xs text-slate-500">Rak: <span x-text="batch.rack"></span> • Posisi: <span x-text="batch.shelf"></span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Movement Timeline -->
+      <div class="info-card">
+        <h3 class="font-bold text-slate-700 mb-4">Riwayat Pergerakan</h3>
+        <div class="space-y-0">
+          <template x-for="log in batch.history" :key="log.id">
+            <div class="timeline-item">
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="text-sm font-bold text-slate-800" x-text="log.action"></p>
+                  <p class="text-xs text-slate-500" x-text="log.note"></p>
+                </div>
+                <span class="text-xs font-mono text-slate-400" x-text="log.date"></span>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Expiry & Actions -->
+    <div class="space-y-6">
+      
+      <!-- Expiry Card -->
+      <div class="bg-white/80 backdrop-blur rounded-2xl p-6 border border-white shadow-sm relative overflow-hidden">
+        <div class="absolute top-0 right-0 p-4 opacity-10">
+          <i class="fas fa-hourglass-end text-6xl text-slate-800"></i>
+        </div>
+        <h3 class="font-bold text-slate-700 mb-2">Masa Berlaku</h3>
+        <div class="mb-4">
+          <p class="text-xs text-slate-400 uppercase font-bold">Produksi</p>
+          <p class="text-sm font-medium text-slate-600" x-text="batch.prod_date"></p>
+        </div>
+        <div class="mb-6">
+          <p class="text-xs text-slate-400 uppercase font-bold">Kedaluwarsa</p>
+          <p class="text-2xl font-bold" :class="batch.days_left > 30 ? 'text-emerald-600' : 'text-rose-600'" x-text="batch.exp_date"></p>
+        </div>
+        
+        <div class="bg-slate-50 rounded-xl p-4 text-center">
+          <p class="text-xs text-slate-500 uppercase font-bold">Sisa Waktu</p>
+          <p class="text-3xl font-bold text-slate-800" x-text="batch.days_left + ' Hari'"></p>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="info-card space-y-3">
+        <button class="w-full py-3 bg-slate-800 text-white rounded-xl font-bold shadow hover:bg-slate-700 transition flex items-center justify-center gap-2">
+          <i class="fas fa-exchange-alt"></i> Pindahkan Lokasi
+        </button>
+        <button class="w-full py-3 bg-white border border-rose-200 text-rose-600 rounded-xl font-bold hover:bg-rose-50 transition flex items-center justify-center gap-2">
+          <i class="fas fa-trash-alt"></i> Catat Kerusakan
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ batch_data|json_script:"batch-data" }}
+<script>
+function batchDetailApp() {
+  return {
+    batch: { history: [] },
+    init() {
+      const el = document.getElementById('batch-data');
+      if (el && el.textContent) {
+        try {
+          const b = JSON.parse(el.textContent) || {};
+          const exp = b.expiry_date || '';
+          const daysLeft = exp ? Math.ceil((new Date(exp) - new Date()) / (1000*60*60*24)) : 0;
+          this.batch = {
+            code: b.code || '',
+            product: b.product || '',
+            initial_qty: b.qty || 0,
+            current_qty: b.qty || 0,
+            sold_qty: 0,
+            damage_qty: 0,
+            prod_date: b.production_date || '',
+            exp_date: exp,
+            zone: b.zone || '-',
+            rack: '-',
+            shelf: '-',
+            days_left: daysLeft,
+            history: [],
+          };
+        } catch(e) {
+          this.batch = { history: [] };
+        }
+      }
+    }
+  }
+}
+</script>
+{% endblock %}

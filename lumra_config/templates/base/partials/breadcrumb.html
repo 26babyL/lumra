@@ -1,0 +1,30 @@
+{# base/partials/breadcrumb.html - DaisyUI Version #}
+# Breadcrumb navigation for page hierarchy
+
+<nav class="bg-base-300 border-b border-base-300 p-3">
+  <ol class="flex flex-wrap items-center gap-2 text-sm">
+    <li>
+      <a href="{% url 'dashboard' %}" class="text-primary hover:text-primary-focus transition-colors">
+        <i class="fas fa-home"></i> Home
+      </a>
+    </li>
+    
+    {% for item in breadcrumb_items %}
+      <li class="text-base-content/60">
+        <i class="fas fa-chevron-right"></i>
+      </li>
+      
+      {% if item.url %}
+        <li>
+          <a href="{{ item.url }}" class="text-primary hover:text-primary-focus transition-colors">
+            {{ item.label }}
+          </a>
+        </li>
+      {% else %}
+        <li class="text-base-content font-medium">
+          {{ item.label }}
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ol>
+</nav>

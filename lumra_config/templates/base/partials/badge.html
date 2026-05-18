@@ -1,0 +1,24 @@
+{# base/partials/badge.html - DaisyUI Version#}
+# Reusable badge component untuk display status, labels, tags
+
+{% if badge_type == 'success' %}
+  <span class="badge badge-success badge-sm">
+    {{ badge_text }}
+  </span>
+{% elif badge_type == 'danger' %}
+  <span class="badge badge-error badge-sm">
+    {{ badge_text }}
+  </span>
+{% elif badge_type == 'warning' %}
+  <span class="badge badge-warning badge-sm">
+    {{ badge_text }}
+  </span>
+{% elif badge_type == 'info' %}
+  <span class="badge badge-info badge-sm">
+    {{ badge_text }}
+  </span>
+{% else %}
+  <span class="badge badge-neutral badge-sm">
+    {{ badge_text }}
+  </span>
+{% endif %}

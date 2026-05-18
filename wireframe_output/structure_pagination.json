@@ -1,0 +1,95 @@
+{
+  "filename": "pagination.html",
+  "title": "pagination",
+  "components": [
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "flex items-center justify-between mt-6 px-6 py-4 bg-slate-900/50 rounded-lg border border-slate-700",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "nav",
+      "tag": "nav",
+      "label": "[ NAVIGATION BAR ]",
+      "depth": 2,
+      "path": "root/body/div/nav",
+      "classes": "flex items-center gap-2",
+      "text_preview": "{% if page_obj.has_previous %} Sebelumnya {% else %} Sebelumnya {% endif %} {% f…",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 9,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/nav/div",
+      "classes": "flex items-center gap-1",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/nav",
+      "type": "nav",
+      "label": "[ NAVIGATION BAR ]",
+      "text_preview": "{% if page_obj.has_previous %} Sebelumnya {% else %} Sebelumnya {% endif %} {% f…"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/nav/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 3,
+    "by_type": {
+      "layout": 2,
+      "nav": 1
+    },
+    "interactive": 0,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

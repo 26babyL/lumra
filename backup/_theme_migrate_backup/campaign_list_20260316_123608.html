@@ -1,0 +1,488 @@
+{% extends 'lumra_pages/reports/base_report.html' %}
+{% load custom_filters %}
+
+{% block extra_head %}
+<style>
+  [x-cloak] { display:var(--shadow-sm-16) !important; }
+
+  @keyframes drift { 0%,100%{transform:translate(0,0)scale(1)} 50%{transform:translate(22px,18px)scale(1.04)} }
+
+  .status-active    { background:var(--color-emerald-600-a1);  color:var(--color-emerald-700); border:1px solid var(--color-emerald-600-a2); }
+
+  .status-paused    { background:var(--color-rgba-245-158-11-a1);  color:var(--color-d97706); border:1px solid var(--color-rgba-245-158-11-a2); }
+
+  .status-completed { background:var(--color-rgba-59-130-246-a1);  color:var(--color-2563eb); border:1px solid var(--color-rgba-59-130-246-a2); }
+
+  .status-draft     { background:var(--color-slate-400-a1); color:var(--color-slate-500); border:1px solid var(--color-slate-400-a2); }
+
+  .type-badge { display:inline-flex; align-items:center; gap:3px; padding:2px 8px; border-radius:8px; font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; }
+
+  .type-discount  { background:var(--color-emerald-700-a08);   color:var(--color-emerald-700); }
+
+  .type-bogo      { background:var(--color-rgba-139-92-246-a08);  color:var(--color-7c3aed); }
+
+  .type-bundle    { background:var(--color-rgba-14-165-233-a08);  color:var(--color-0369a1); }
+
+  .type-tiered    { background:var(--color-rgba-245-158-11-a08);  color:var(--color-b45309); }
+
+  .type-loyalty   { background:var(--color-rgba-244-63-94-a08);   color:var(--color-be123c); }
+
+  .table-card { background:var(--color-white-a88); backdrop-filter:var(--backdrop-blur-20px-saturate-150); -webkit-backdrop-filter:var(--backdrop-blur-20px-saturate-150); border:1px solid var(--color-white-a9); border-radius:18px; box-shadow:0 2px 16px var(--color-black-a06); overflow:hidden; }
+
+  .custom-scrollbar::-webkit-scrollbar { height:4px; }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb { background:var(--color-slate-200); border-radius:99px; }
+
+  tr.data-row { transition:background .12s; }
+
+  tr.data-row:hover td { background:var(--color-rgba-240-253-244-a55) !important; }
+
+  .action-btn { width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; transition:all .12s; font-size:11px; }
+
+  .prog-track { height:4px; border-radius:99px; background:var(--color-slate-300-a3); overflow:hidden; min-width:80px; }
+
+  .prog-fill  { height:100%; border-radius:99px; transition:width .6s cubic-bezier(.4,0,.2,1); }
+
+  .bar-input { background:transparent; border:var(--shadow-sm-16); font-size:13px; color:var(--color-slate-800); padding:4px 0; outline:var(--shadow-sm-16); min-width:0; }
+
+  .bar-input::placeholder { color:var(--color-slate-400); }
+
+  .bar-input-wrap { display:flex; align-items:center; gap:6px; padding:4px 10px; border-radius:9px; transition:background .12s; }
+
+  .bar-input-wrap:focus-within { background:var(--color-emerald-600-a07); }
+
+  .bar-input-wrap i { color:var(--color-slate-400); font-size:11px; flex-shrink:0; }
+
+  .bar-select { background:transparent; border:var(--shadow-sm-16); font-size:13px; color:var(--color-slate-800); padding:4px 20px 4px 0; outline:var(--shadow-sm-16); appearance:var(--shadow-sm-16); -webkit-appearance:var(--shadow-sm-16); cursor:pointer; min-width:90px; }
+
+  @keyframes tIn  { from{opacity:0;transform:translateX(16px)} to{opacity:1;transform:var(--shadow-sm-16)} }
+
+  @keyframes tOut { from{opacity:1} to{opacity:0;pointer-events:var(--shadow-sm-16)} }
+
+  @keyframes mIn { from{opacity:0;transform:scale(.95) translateY(8px)} to{opacity:1;transform:var(--shadow-sm-16)} }
+
+  .modal-box { animation:mIn .22s cubic-bezier(.4,0,.2,1); }
+
+  .tier-chip { display:inline-flex; align-items:center; gap:3px; padding:2px 7px; border-radius:99px; font-size:8px; font-weight:900; text-transform:uppercase; letter-spacing:.06em; }
+
+  .tier-gold     { background:var(--color-rgba-245-158-11-a1); color:var(--color-b45309); border:1px solid var(--color-rgba-245-158-11-a2); }
+
+  .tier-vip      { background:var(--color-rgba-139-92-246-a1); color:var(--color-6d28d9); border:1px solid var(--color-rgba-139-92-246-a2); }
+
+  .tier-all      { background:var(--color-emerald-600-a1); color:var(--color-emerald-700); border:1px solid var(--color-emerald-600-a2); }
+
+  .tier-silver   { background:var(--color-slate-400-a12); color:var(--color-slate-600); border:1px solid var(--color-slate-400-a3); }
+
+  .tier-platinum { background:var(--color-rgba-59-130-246-a1); color:var(--color-1d4ed8); border:1px solid var(--color-rgba-59-130-246-a2); }
+</style>
+{% endblock %}
+
+{% block summary_stats %}
+<div class="reveal grid grid-cols-2 xl:grid-cols-4 gap-3">
+
+  <div class="kpi-glass accent-blue p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Campaigns</p>
+        <p class="text-2xl font-bold text-slate-800">{{ total_campaigns|default:0 }}</p>
+        <p class="text-[11px] text-slate-400 mt-0.5">All time</p>
+      </div>
+      <div class="kpi-icon bg-blue-50 text-blue-500"><i class="fas fa-bullhorn"></i></div>
+    </div>
+  </div>
+
+  <div class="kpi-glass accent-emerald p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Active Now</p>
+        <p class="text-2xl font-bold text-slate-800">{{ active_campaigns|default:0 }}</p>
+        <p class="text-[11px] text-emerald-500 mt-0.5 font-semibold">▶ Running</p>
+      </div>
+      <div class="kpi-icon bg-emerald-50 text-emerald-600"><i class="fas fa-play"></i></div>
+    </div>
+  </div>
+
+  <div class="kpi-glass accent-violet p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Budget</p>
+        <p class="text-2xl font-bold text-slate-800">{{ total_budget|default:0|floatformat:0 }}</p>
+        <p class="text-[11px] text-slate-400 mt-0.5">Across all</p>
+      </div>
+      <div class="kpi-icon bg-violet-50 text-violet-600"><i class="fas fa-coins"></i></div>
+    </div>
+  </div>
+
+  <div class="kpi-glass accent-amber p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Average ROI</p>
+        <p class="text-2xl font-bold text-slate-800">{{ avg_roi|default:0 }}%</p>
+        <p class="text-[11px] text-amber-500 mt-0.5 font-semibold">📈 Return</p>
+      </div>
+      <div class="kpi-icon bg-amber-50 text-amber-500"><i class="fas fa-chart-line"></i></div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="blob" style="width:500px;height:500px;background:#047857;opacity:.05;top:-100px;left:-80px;animation-delay:0s;" aria-hidden="true"></div>
+<div class="blob" style="width:360px;height:360px;background:#6366f1;opacity:.04;bottom:-60px;right:-60px;animation-delay:-10s;" aria-hidden="true"></div>
+<div class="blob" style="width:240px;height:240px;background:#f59e0b;opacity:.04;top:38%;left:62%;animation-delay:-5s;" aria-hidden="true"></div>
+
+<div class="w-full flex-1 space-y-4 relative z-10"
+     x-data="campaignList()"
+     x-init="init()"
+     x-cloak>
+
+  <!-- HEADER -->
+  <div class="reveal flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-emerald-600 mb-1">
+        <a href="{% url 'dashboard' %}" class="hover:text-emerald-800 transition-colors">Dashboard</a>
+        <span class="text-slate-300">/</span>
+        <span class="text-slate-600 font-medium">Campaigns</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800">Marketing <span class="text-emerald-600">Campaigns</span></h1>
+      <div class="flex items-center gap-2 mt-1">
+        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+        <span class="text-xs text-slate-400">Promo Engine — Diskon, BOGO, Bundle, Tiered</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-2 flex-shrink-0">
+      <a href="{% url 'add_campaign' %}" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500 text-white text-[11px] font-bold hover:bg-emerald-600 transition shadow-md shadow-emerald-200">
+        <i class="fas fa-plus text-[10px]"></i> Campaign Baru
+      </a>
+    </div>
+  </div>
+
+  <!-- ACTION BAR / FILTERS -->
+  <form method="get" id="filterForm">
+    <div class="reveal glass px-4 py-3 flex flex-wrap items-center gap-3">
+
+      <!-- Search -->
+      <div class="bar-input-wrap flex-1" style="min-width:200px;">
+        <i class="fas fa-search"></i>
+        <input type="text" name="q" value="{{ query }}"
+               placeholder="Cari nama campaign atau tipe..."
+               class="bar-input flex-1">
+      </div>
+
+      <div class="w-px h-6 bg-slate-200/60 hidden sm:block flex-shrink-0"></div>
+
+      <!-- Status filter -->
+      <div class="bar-input-wrap flex-shrink-0">
+        <i class="fas fa-filter text-[10px]"></i>
+        <select name="status" class="bar-select">
+          <option value="">Semua Status</option>
+          <option value="draft"     {% if request.GET.status == 'draft'     %}selected{% endif %}>Draft</option>
+          <option value="active"    {% if request.GET.status == 'active'    %}selected{% endif %}>Active</option>
+          <option value="paused"    {% if request.GET.status == 'paused'    %}selected{% endif %}>Paused</option>
+          <option value="completed" {% if request.GET.status == 'completed' %}selected{% endif %}>Completed</option>
+        </select>
+        <i class="fas fa-chevron-down text-[9px] text-slate-300 pointer-events-none"></i>
+      </div>
+
+      <!-- Type filter -->
+      <div class="bar-input-wrap flex-shrink-0">
+        <i class="fas fa-tag text-[10px]"></i>
+        <select name="type" class="bar-select">
+          <option value="">Semua Tipe</option>
+          <option value="discount"  {% if request.GET.type == 'discount'  %}selected{% endif %}>Diskon</option>
+          <option value="bogo"      {% if request.GET.type == 'bogo'      %}selected{% endif %}>Buy X Get Y</option>
+          <option value="bundle"    {% if request.GET.type == 'bundle'    %}selected{% endif %}>Bundle</option>
+          <option value="tiered"    {% if request.GET.type == 'tiered'    %}selected{% endif %}>Tiered</option>
+          <option value="loyalty"   {% if request.GET.type == 'loyalty'   %}selected{% endif %}>Loyalty</option>
+        </select>
+        <i class="fas fa-chevron-down text-[9px] text-slate-300 pointer-events-none"></i>
+      </div>
+
+      <button type="submit"
+              class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-500 text-white text-[11px] font-bold hover:bg-emerald-600 transition shadow-sm flex-shrink-0">
+        <i class="fas fa-arrow-right text-[10px]"></i> Terapkan
+      </button>
+
+      {% if query or request.GET.status or request.GET.type %}
+      <a href="{{ request.path }}" class="text-[11px] font-semibold text-slate-400 hover:text-rose-500 transition flex-shrink-0">Reset</a>
+      {% endif %}
+
+    </div>
+  </form>
+
+  <!-- TABLE -->
+  <div class="reveal table-card">
+
+    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100/60 bg-white/30">
+      <div class="flex items-center gap-3">
+        <div class="w-1.5 h-6 bg-emerald-500 rounded-full"></div>
+        <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">
+          {% if page_obj %}
+            Menampilkan <span class="text-slate-800">{{ page_obj.start_index }}–{{ page_obj.end_index }}</span> dari {{ page_obj.paginator.count }} Campaign
+          {% else %}
+            <span class="text-slate-800">{{ campaigns|length }}</span> Campaign
+          {% endif %}
+        </p>
+      </div>
+      <div class="flex items-center gap-2 px-3 py-1.5 bg-slate-100/50 rounded-full border border-slate-200/40 text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+        <i class="fas fa-clock text-emerald-500/60"></i>
+        <span>{% now "H:i, j M Y" %}</span>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto custom-scrollbar">
+      <table class="min-w-full border-separate border-spacing-0" aria-label="Campaign Directory">
+        <thead>
+          <tr class="bg-slate-50/50 sticky top-0 z-10 backdrop-blur-md border-b border-slate-100">
+            <th class="px-5 py-4 text-left"><span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Campaign</span></th>
+            <th class="px-5 py-4 text-center"><span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tipe</span></th>
+            <th class="px-5 py-4 text-center"><span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</span></th>
+            <th class="px-5 py-4 text-center"><span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Target</span></th>
+            <th class="px-5 py-4 text-right"><span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Budget</span></th>
+            <th class="px-5 py-4 text-left"><span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Periode</span></th>
+            <th class="px-5 py-4 text-left"><span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Progress</span></th>
+            <th class="px-5 py-4 text-center"><span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Aksi</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for campaign in campaigns %}
+          <tr class="data-row group {% if forloop.counter|divisibleby:2 %}bg-slate-50/30{% endif %}">
+
+            <!-- Campaign name + description -->
+            <td class="px-5 py-4 border-b border-slate-100/60 group-hover:border-emerald-100/60" style="max-width:220px;">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 text-[12px]
+                  {% if campaign.type == 'discount' %}bg-emerald-50 text-emerald-600
+                  {% elif campaign.type == 'bogo' %}bg-violet-50 text-violet-600
+                  {% elif campaign.type == 'bundle' %}bg-sky-50 text-sky-600
+                  {% elif campaign.type == 'tiered' %}bg-amber-50 text-amber-600
+                  {% else %}bg-rose-50 text-rose-500{% endif %}">
+                  {% if campaign.type == 'discount' %}<i class="fas fa-percent"></i>
+                  {% elif campaign.type == 'bogo' %}<i class="fas fa-gift"></i>
+                  {% elif campaign.type == 'bundle' %}<i class="fas fa-layer-group"></i>
+                  {% elif campaign.type == 'tiered' %}<i class="fas fa-stairs"></i>
+                  {% else %}<i class="fas fa-star"></i>{% endif %}
+                </div>
+                <div class="min-w-0">
+                  <a href="{% url 'edit_campaign' campaign.id %}"
+                     class="text-[12px] font-bold text-slate-700 hover:text-emerald-600 transition-colors truncate block">
+                    {{ campaign.name }}
+                  </a>
+                  {% if campaign.description %}
+                  <p class="text-[10px] text-slate-400 truncate mt-0.5">{{ campaign.description|truncatechars:50 }}</p>
+                  {% endif %}
+                  <!-- Customer tier restriction -->
+                  {% if campaign.customer_tier %}
+                  <span class="tier-chip tier-{{ campaign.customer_tier }} mt-1 inline-flex">
+                    {% if campaign.customer_tier == 'gold' %}⭐{% elif campaign.customer_tier == 'vip' %}👑{% elif campaign.customer_tier == 'silver' %}🥈{% elif campaign.customer_tier == 'platinum' %}💎{% else %}👤{% endif %}
+                    {{ campaign.customer_tier|capfirst }} only
+                  </span>
+                  {% else %}
+                  <span class="tier-chip tier-all mt-1 inline-flex">👥 Semua member</span>
+                  {% endif %}
+                </div>
+              </div>
+            </td>
+
+            <!-- Type -->
+            <td class="px-5 py-4 border-b border-slate-100/60 text-center">
+              <span class="type-badge type-{{ campaign.type|default:'discount' }}">
+                {% if campaign.type == 'discount' %}% Diskon
+                {% elif campaign.type == 'bogo' %}Buy X Get Y
+                {% elif campaign.type == 'bundle' %}Bundle
+                {% elif campaign.type == 'tiered' %}Tiered
+                {% elif campaign.type == 'loyalty' %}Loyalty
+                {% else %}{{ campaign.type|default:"—" }}{% endif %}
+              </span>
+            </td>
+
+            <!-- Status -->
+            <td class="px-5 py-4 border-b border-slate-100/60 text-center">
+              <span class="status-badge status-{{ campaign.status|default:'draft' }}">
+                {% if campaign.status == 'active' %}▶ Active
+                {% elif campaign.status == 'paused' %}⏸ Paused
+                {% elif campaign.status == 'completed' %}✓ Done
+                {% else %}✎ Draft{% endif %}
+              </span>
+            </td>
+
+            <!-- Target scope -->
+            <td class="px-5 py-4 border-b border-slate-100/60 text-center">
+              <span class="text-[10px] font-semibold text-slate-500">
+                {% if campaign.target_scope == 'all' %}
+                  <span class="flex items-center justify-center gap-1"><i class="fas fa-globe-asia text-[9px] text-emerald-400"></i> Semua Produk</span>
+                {% elif campaign.target_scope == 'category' %}
+                  <span class="flex items-center justify-center gap-1"><i class="fas fa-folder text-[9px] text-amber-400"></i> {{ campaign.target_category|default:"Kategori" }}</span>
+                {% elif campaign.target_scope == 'sku' %}
+                  <span class="flex items-center justify-center gap-1"><i class="fas fa-barcode text-[9px] text-violet-400"></i> SKU Spesifik</span>
+                {% else %}—{% endif %}
+              </span>
+            </td>
+
+            <!-- Budget -->
+            <td class="px-5 py-4 border-b border-slate-100/60 text-right">
+              <span class="text-[12px] font-black text-slate-700 group-hover:text-emerald-700 transition-colors">
+                Rp {{ campaign.budget|default:0|floatformat:0 }}
+              </span>
+              {% if campaign.usage_limit %}
+              <p class="text-[9px] text-slate-400 mt-0.5 flex items-center justify-end gap-1">
+                <i class="fas fa-ticket-alt text-[8px]"></i>
+                {{ campaign.usage_count|default:0 }}/{{ campaign.usage_limit }} used
+              </p>
+              {% endif %}
+            </td>
+
+            <!-- Periode -->
+            <td class="px-5 py-4 border-b border-slate-100/60">
+              <p class="text-[11px] text-slate-600 font-semibold">{{ campaign.start_date|date:"d M Y" }}</p>
+              <p class="text-[10px] text-slate-400 flex items-center gap-1">
+                <i class="fas fa-arrow-right text-[8px]"></i>
+                {{ campaign.end_date|date:"d M Y" }}
+              </p>
+            </td>
+
+            <!-- Progress bar (usage) -->
+            <td class="px-5 py-4 border-b border-slate-100/60">
+              {% if campaign.usage_limit and campaign.usage_limit > 0 %}
+              <div class="prog-track">
+                <div class="prog-fill {% if campaign.usage_count >= campaign.usage_limit %}bg-rose-400{% elif campaign.usage_count >= campaign.usage_limit|add:-10 %}bg-amber-400{% else %}bg-emerald-500{% endif %}"
+                     style="width:{% widthratio campaign.usage_count|default:0 campaign.usage_limit 100 %}%;max-width:100%;"></div>
+              </div>
+              <p class="text-[9px] text-slate-400 mt-1">{{ campaign.usage_count|default:0 }} / {{ campaign.usage_limit }}</p>
+              {% else %}
+              <span class="text-[10px] text-slate-300 italic">Unlimited</span>
+              {% endif %}
+            </td>
+
+            <!-- Actions -->
+            <td class="px-5 py-4 border-b border-slate-100/60 text-center">
+              <div class="flex items-center justify-center gap-1.5">
+                <a href="{% url 'edit_campaign' campaign.id %}"
+                   class="action-btn bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 text-slate-400"
+                   title="Edit">
+                  <i class="fas fa-pencil-alt"></i>
+                </a>
+                <button @click="confirmDelete({{ campaign.id }}, '{{ campaign.name|escapejs }}')"
+                        class="action-btn bg-slate-50 hover:bg-rose-50 hover:text-rose-500 text-slate-400"
+                        title="Hapus">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </td>
+
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="8" class="px-6 py-16 text-center">
+              <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center mx-auto mb-3">
+                <i class="fas fa-bullhorn text-slate-200 text-xl"></i>
+              </div>
+              <p class="text-sm font-semibold text-slate-500">Belum ada campaign</p>
+              <p class="text-xs text-slate-400 mt-0.5">Buat campaign pertama untuk mulai promosi</p>
+              <a href="{% url 'add_campaign' %}"
+                 class="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-xl bg-emerald-500 text-white text-xs font-bold hover:bg-emerald-600 transition-colors">
+                <i class="fas fa-plus"></i> Buat Campaign
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PAGINATION -->
+  {% if page_obj.has_other_pages %}
+  <nav class="flex justify-center" aria-label="Pagination">
+    <div class="flex items-center gap-1.5">
+      {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+         class="w-8 h-8 rounded-lg border border-slate-200/70 bg-white/70 text-slate-400 flex items-center justify-center text-[10px] hover:bg-white hover:border-emerald-300 hover:text-emerald-600 transition">
+        <i class="fas fa-chevron-left"></i>
+      </a>
+      {% endif %}
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <span class="w-8 h-8 rounded-lg flex items-center justify-center text-[11px] font-black bg-emerald-500 text-white shadow-sm">{{ num }}</span>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a href="?page={{ num }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+           class="w-8 h-8 rounded-lg border border-slate-200/70 bg-white/70 text-slate-500 flex items-center justify-center text-[11px] font-bold hover:bg-white hover:border-emerald-300 hover:text-emerald-600 transition">{{ num }}</a>
+        {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}
+        <span class="w-8 h-8 flex items-center justify-center text-slate-300 text-[11px]">…</span>
+        {% endif %}
+      {% endfor %}
+      {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+         class="w-8 h-8 rounded-lg border border-slate-200/70 bg-white/70 text-slate-400 flex items-center justify-center text-[10px] hover:bg-white hover:border-emerald-300 hover:text-emerald-600 transition">
+        <i class="fas fa-chevron-right"></i>
+      </a>
+      {% endif %}
+    </div>
+  </nav>
+  {% endif %}
+
+  <!-- Toast -->
+  <div id="toastEl" class="fixed top-5 right-5 z-[100] flex flex-col gap-2"></div>
+
+  <!-- DELETE CONFIRM MODAL -->
+  <div x-show="showDeleteModal"
+       x-transition:enter="transition ease-out duration-200"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       @click.self="showDeleteModal=false"
+       class="fixed inset-0 z-50 flex items-center justify-center p-4"
+       style="background:rgba(15,23,42,.4);backdrop-filter:blur(14px);display:none;">
+    <div class="modal-box glass w-full max-w-sm p-6 text-center">
+      <div class="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-trash text-rose-400 text-lg"></i>
+      </div>
+      <p class="text-[14px] font-black text-slate-800">Hapus Campaign?</p>
+      <p class="text-[12px] text-slate-400 mt-2 leading-relaxed">
+        Campaign <strong class="text-slate-600" x-text="deleteName"></strong> akan dihapus permanen.
+      </p>
+      <div class="flex gap-2 mt-5">
+        <button @click="showDeleteModal=false"
+                class="flex-1 py-2.5 rounded-xl border border-slate-200/70 text-slate-500 text-[11px] font-semibold hover:bg-slate-50 transition">
+          Batal
+        </button>
+        <a :href="deleteUrl"
+           class="flex-1 py-2.5 rounded-xl bg-rose-500 text-white text-[11px] font-bold hover:bg-rose-600 transition flex items-center justify-center gap-1.5">
+          <i class="fas fa-trash text-[10px]"></i> Ya, Hapus
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function campaignList() {
+  return {
+    showDeleteModal: false,
+    deleteUrl: '',
+    deleteName: '',
+
+    init() {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i * 60);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: .06 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    },
+
+    confirmDelete(id, name) {
+      this.deleteName = name;
+      this.deleteUrl  = `/campaigns/${id}/delete/`;
+      this.showDeleteModal = true;
+    },
+  };
+}
+</script>
+{% endblock %}

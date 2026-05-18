@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Cetak Dokumen — CoffeeShop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- PRINT ENGINE STYLES --- */
+        @page {
+            size: A4;
+            margin: 0;
+            @bottom-right {
+                content: counter(page) " / " counter(pages);
+            }
+        }
+
+        body {
+            background: #f1f5f9; /* Light gray for screen preview to see 'paper' */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Paper Simulation for A4 (210mm x 297mm) */
+        .page {
+            background: white;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm; /* Standard margin */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Drop shadow for visual depth on screen */
+            position: relative;
+            page-break-after: always;
+        }
+
+        /* Reset for printing */
+        @media print {
+            body { background: white; padding: 0; display: block; }
+            .page { box-shadow: none; margin: 0; width: 100%; height: 100%; min-height: auto; padding: 0; }
+            .no-print { display: none !important; } /* Hide UI elements */
+        }
+
+        /* Common Print Typography */
+        .text-sm { font-size: 12px; color: #64748b; }
+        .text-xs { font-size: 10px; color: #94a3b8; }
+        .font-bold { font-weight: 700; color: #1e293b; }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mt-4 { margin-top: 1rem; }
+        .border-b { border-bottom: 1px solid #e2e8f0; }
+        .border-double { border-bottom: 3px double #e2e8f0; }
+        .table-w-full { width: 100%; border-collapse: collapse; }
+        .table-w-full th, .table-w-full td {
+            padding: 8px 4px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 12px;
+            color: #334155;
+        }
+        .table-w-full th { font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.05em; color: #64748b; }
+        .text-slate-400 { color: #94a3b8; }
+        .text-slate-600 { color: #475569; }
+        .text-emerald-600 { color: #059669; }
+        .text-rose-600 { color: #dc2626; }
+    </style>
+</head>
+<body>
+
+    <!-- Page Wrapper (Simulasi Kertas) -->
+    <div class="page">
+        
+        <!-- Content Blocks akan di-inject di sini -->
+        {% block content %}{% endblock %}
+
+    </div>
+
+</body>
+</html>

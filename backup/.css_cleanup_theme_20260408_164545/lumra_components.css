@@ -1,0 +1,1512 @@
+/*
+ * ============================================================
+ *  LUMRA ERP — EMERALD ODYSSEY
+ *  components.css · UI Component Library
+ *  Blueprint v3.0 · 2026
+ *
+ *  DEPENDENSI: lumra_token.css harus di-import SEBELUM file ini.
+ *  @import 'lumra_token.css';
+ *  @import 'components.css';
+ *
+ *  INDEX KOMPONEN:
+ *  01. Glass Protocol   — .kpi-glass, .panel-glass
+ *  02. KPI Card         — .kpi-glass dengan varian
+ *  03. Sidebar          — .sidebar-glass, nav items
+ *  04. Navbar           — .nav-glass, .cmd-input
+ *  05. Table            — .tbl-odyssey
+ *  06. Badges & Status  — .badge-*, .tier-*
+ *  07. Buttons          — .btn-*
+ *  08. Forms & Input    — .input-odyssey, .form-card
+ *  09. Modals           — .modal-overlay, .modal-card
+ *  10. Drawers          — .activity-drawer
+ *  11. Alerts           — .alert-*
+ *  12. Shimmer & Loading — .shimmer, .skeleton-*
+ *  13. Micro-interactions — .reveal-item, transitions
+ *  14. Utilities        — helpers, layout classes
+ * ============================================================ */
+
+
+/* ═══════════════════════════════════════════════════════════
+ *  01. GLASS PROTOCOL
+ *  Frosted edge + natural shadow 4 lapis + backdrop blur.
+ *  TIDAK ADA versi sederhana. Ketiganya WAJIB hadir bersama.
+ * ═══════════════════════════════════════════════════════════ */
+
+.glass {
+  background:       var(--glass-bg-emerald);
+  border:           var(--glass-border);
+  border-top-color: var(--glass-border-top);
+  border-left-color: var(--glass-border-left);
+  backdrop-filter:  var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow:       var(--shadow-natural);
+  border-radius:    var(--radius-xl);
+}
+
+.glass-gold {
+  background:       var(--glass-bg-gold);
+  border:           var(--glass-border);
+  border-top-color: var(--glass-border-top);
+  border-left-color: var(--glass-border-left);
+  backdrop-filter:  var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow:       var(--shadow-natural);
+  border-radius:    var(--radius-xl);
+}
+
+.glass-navy {
+  background:       var(--glass-bg-navy);
+  border:           var(--glass-border);
+  border-top-color: var(--glass-border-top);
+  border-left-color: var(--glass-border-left);
+  backdrop-filter:  var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow:       var(--shadow-natural);
+  border-radius:    var(--radius-xl);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+ *  02. KPI CARD — .kpi-glass
+ *  Komponen inti dashboard. Glass Protocol required.
+ *  Tidak ada KPI card tanpa glass + shadow 4 lapis.
+ * ═══════════════════════════════════════════════════════════ */
+
+.kpi-glass {
+  position:         relative;
+  background:       var(--glass-bg-emerald);
+  border:           var(--glass-border);
+  border-top-color: var(--glass-border-top);
+  border-left-color: var(--glass-border-left);
+  backdrop-filter:  var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow:       var(--shadow-natural);
+  border-radius:    var(--radius-xl);
+  padding:          var(--sp-4);
+  min-height:       var(--height-kpi-card);
+  transition:
+    transform    var(--transition-base),
+    box-shadow   var(--transition-base);
+  overflow:         hidden;
+}
+
+.kpi-glass:hover {
+  transform:   translateY(-2px);
+  box-shadow:  var(--shadow-hover);
+}
+
+/* KPI Gold — untuk metrik tertinggi / premium */
+.kpi-glass--gold {
+  background:       var(--glass-bg-gold);
+  box-shadow:       var(--shadow-natural), var(--shadow-gold);
+}
+
+.kpi-glass--gold::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-accent), rgba(239, 191, 4, 0));
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+/* KPI Navy — untuk Tier Platinum / authority */
+.kpi-glass--navy {
+  background: var(--glass-bg-navy);
+}
+
+/* KPI Label */
+.kpi-label {
+  font-size:      var(--text-label);
+  font-weight:    var(--weight-medium);
+  color:          var(--color-primary);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  margin-bottom:  var(--sp-2);
+}
+
+/* KPI Value — angka metrik besar */
+.kpi-value {
+  font-size:      var(--text-kpi-sm);
+  font-weight:    var(--weight-semibold);
+  color:          #1A1A1A;
+  line-height:    var(--leading-tight);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  margin-bottom:  var(--sp-1);
+}
+
+.kpi-value--lg {
+  font-size: var(--text-kpi-lg);
+}
+
+/* KPI Trend / sub-info */
+.kpi-meta {
+  font-size:   var(--text-table);
+  color:       #666;
+  margin-top:  var(--sp-2);
+  display:     flex;
+  align-items: center;
+  gap:         var(--sp-1);
+}
+
+/* Loading state */
+.kpi-glass.is-loading .kpi-value,
+.kpi-glass.is-loading .kpi-label,
+.kpi-glass.is-loading .kpi-meta {
+  color:          transparent;
+  pointer-events: none;
+  user-select:    none;
+}
+
+.kpi-glass.is-loaded {
+  animation: reveal var(--duration-reveal) ease forwards;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+ *  03. SIDEBAR — .sidebar-glass
+ *  Glass Protocol dengan backdrop-filter blur(16px).
+ *  Collapse: width 64px, transition 300ms ease.
+ * ═══════════════════════════════════════════════════════════ */
+
+.sidebar-glass {
+  position:         fixed;
+  top:              0;
+  left:             0;
+  height:           100vh;
+  width:            var(--width-sidebar);
+  background:       var(--glass-bg-emerald);
+  border-right:     var(--glass-border);
+  backdrop-filter:  var(--glass-blur-heavy);
+  -webkit-backdrop-filter: var(--glass-blur-heavy);
+  box-shadow:       4px 0 24px rgba(0, 103, 79, 0.08);
+  transition:       width var(--transition-sidebar);
+  overflow:         hidden;
+  z-index:          var(--z-sticky);
+  display:          flex;
+  flex-direction:   column;
+}
+
+.sidebar-glass.collapsed {
+  width: var(--width-sidebar-collapsed);
+}
+
+/* Sidebar brand/logo area */
+.sidebar-brand {
+  padding:        var(--sp-4) var(--sp-4);
+  height:         var(--height-navbar);
+  display:        flex;
+  align-items:    center;
+  gap:            var(--sp-3);
+  border-bottom:  0.5px solid var(--color-primary-a10);
+  flex-shrink:    0;
+}
+
+.sidebar-brand-mark {
+  width:           32px;
+  height:          32px;
+  background:      var(--color-primary);
+  border-radius:   var(--radius-sm);
+  flex-shrink:     0;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+}
+
+.sidebar-brand-name {
+  font-size:      16px;
+  font-weight:    var(--weight-semibold);
+  color:          var(--color-primary);
+  letter-spacing: var(--tracking-tight);
+  white-space:    nowrap;
+  opacity:        1;
+  transition:     opacity var(--transition-slow);
+}
+
+.sidebar-glass.collapsed .sidebar-brand-name {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Sidebar nav sections */
+.sidebar-nav {
+  flex:       1;
+  overflow-y: auto;
+  padding:    var(--sp-2) 0;
+  scrollbar-width: none;
+}
+
+.sidebar-nav::-webkit-scrollbar { display: none; }
+
+.sidebar-section-label {
+  font-size:      var(--text-label);
+  font-weight:    var(--weight-medium);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color:          var(--color-primary);
+  opacity:        0.6;
+  padding:        var(--sp-3) var(--sp-4) var(--sp-1);
+  white-space:    nowrap;
+  overflow:       hidden;
+  transition:     opacity var(--transition-slow);
+}
+
+.sidebar-glass.collapsed .sidebar-section-label {
+  opacity: 0;
+}
+
+/* Nav Item — base */
+.nav-item {
+  display:         flex;
+  align-items:     center;
+  gap:             var(--sp-3);
+  padding:         0 var(--sp-4);
+  height:          var(--height-nav-item);
+  color:           #444;
+  text-decoration: none;
+  font-size:       var(--text-body);
+  font-weight:     var(--weight-regular);
+  white-space:     nowrap;
+  transition:      background-color var(--transition-fast),
+                   color            var(--transition-fast);
+  border-left:     3px solid transparent;
+  cursor:          pointer;
+  user-select:     none;
+}
+
+.nav-item:hover {
+  background-color: var(--color-primary-a08);
+  color:            var(--color-primary);
+  /* TIDAK ADA border kiri saat hover */
+}
+
+.nav-item.active {
+  background-color: var(--color-secondary-a15);
+  border-left-color: var(--color-secondary);
+  color:             var(--color-primary);
+  font-weight:       var(--weight-medium);
+}
+
+.nav-item-icon {
+  width:      20px;
+  height:     20px;
+  flex-shrink: 0;
+  opacity:    0.7;
+  transition: opacity var(--transition-fast);
+}
+
+.nav-item:hover .nav-item-icon,
+.nav-item.active .nav-item-icon {
+  opacity: 1;
+}
+
+.nav-item-label {
+  opacity:    1;
+  transition: opacity var(--transition-slow);
+}
+
+.sidebar-glass.collapsed .nav-item-label {
+  opacity:        0;
+  pointer-events: none;
+}
+
+/* Sidebar footer */
+.sidebar-footer {
+  padding:    var(--sp-3) 0;
+  border-top: 0.5px solid var(--color-primary-a10);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+ *  04. NAVBAR — .nav-glass
+ *  backdrop-blur 12px, border-bottom emerald tipis.
+ * ═══════════════════════════════════════════════════════════ */
+
+.nav-glass {
+  position:         sticky;
+  top:              0;
+  height:           var(--height-navbar);
+  background:       var(--glass-bg-white);
+  border-bottom:    0.5px solid var(--color-primary-a10);
+  backdrop-filter:  var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow:       0 1px 8px rgba(0, 103, 79, 0.06);
+  display:          flex;
+  align-items:      center;
+  gap:              var(--sp-4);
+  padding:          0 var(--sp-6);
+  z-index:          var(--z-sticky);
+}
+
+/* Command / Search Input */
+.cmd-input-wrap {
+  flex:        1;
+  max-width:   480px;
+  position:    relative;
+}
+
+.cmd-input {
+  width:            100%;
+  height:           var(--height-btn-md);
+  padding:          0 var(--sp-4);
+  background:       var(--color-primary-a06);
+  border:           0.5px solid var(--color-primary-a15);
+  border-radius:    var(--radius-pill);
+  font-family:      var(--font-body);
+  font-size:        var(--text-table);
+  color:            #1A1A1A;
+  outline:          none;
+  transition:       box-shadow var(--transition-base),
+                    border-color var(--transition-base),
+                    background  var(--transition-base);
+}
+
+.cmd-input::placeholder {
+  color:  #999;
+}
+
+.cmd-input:focus {
+  background:   rgba(255, 255, 255, 0.9);
+  border-color: var(--color-secondary);
+  box-shadow:   var(--shadow-focus);
+}
+
+/* Token pills dalam command bar */
+.cmd-token {
+  display:       inline-flex;
+  align-items:   center;
+  gap:           var(--sp-1);
+  padding:       2px var(--sp-2);
+  background:    var(--color-secondary-a10);
+  border:        0.5px solid var(--color-secondary-a30);
+  border-radius: var(--radius-pill);
+  font-size:     var(--text-label);
+  font-weight:   var(--weight-medium);
+  color:         var(--color-primary);
+  cursor:        pointer;
+  transition:    background var(--transition-fast);
+}
+
+.cmd-token:hover {
+  background: var(--color-secondary-a15);
+}
+
+/* Navbar actions area */
+.nav-actions {
+  display:     flex;
+  align-items: center;
+  gap:         var(--sp-2);
+  margin-left: auto;
+}
+
+.nav-icon-btn {
+  width:           var(--height-btn-md);
+  height:          var(--height-btn-md);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  border-radius:   var(--radius-md);
+  background:      transparent;
+  border:          none;
+  color:           #666;
+  cursor:          pointer;
+  transition:      background var(--transition-fast),
+                   color       var(--transition-fast);
+}
+
+.nav-icon-btn:hover {
+  background: var(--color-primary-a08);
+  color:      var(--color-primary);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+ *  05. TABLE — .tbl-odyssey
+ *  Header emerald, zebra tint, row hover, border konsisten.
+ *  Setiap tabel WAJIB menggunakan kelas ini.
+ * ═══════════════════════════════════════════════════════════ */
+
+.tbl-odyssey {
+  width:           100%;
+  border-collapse: collapse;
+  font-size:       var(--text-table);
+}
+
+/* Table wrapper untuk scroll horizontal */
+.tbl-wrapper {
+  width:          100%;
+  overflow-x:     auto;
+  border-radius:  var(--radius-xl);
+  box-shadow:     var(--shadow-natural);
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Table Header */
+.tbl-odyssey thead tr,
+.tbl-head {
+  background: var(--table-header-bg);
+}
+
+.tbl-odyssey thead th {
+  padding:        var(--sp-3) var(--sp-3);
+  text-align:     left;
+  font-size:      var(--table-header-size);
+  font-weight:    var(--weight-medium);
+  letter-spacing: var(--table-header-tracking);
+  text-transform: uppercase;
+  color:          var(--table-header-text);
+  white-space:    nowrap;
+  border:         none;
+}
+
+.tbl-odyssey thead th:first-child { border-radius: var(--radius-xl) 0 0 0; }
+.tbl-odyssey thead th:last-child  { border-radius: 0 var(--radius-xl) 0 0; }
+
+/* Table Body */
+.tbl-odyssey tbody tr {
+  transition: background-color var(--transition-fast);
+}
+
+/* Zebra — odd: emerald tint */
+.tbl-odyssey tbody tr:nth-child(odd) td {
+  background: var(--table-zebra-odd);
+}
+
+/* Zebra — even: white */
+.tbl-odyssey tbody tr:nth-child(even) td {
+  background: var(--table-zebra-even);
+}
+
+/* Row hover — lebih gelap dari zebra odd */
+.tbl-odyssey tbody tr:hover td {
+  background: var(--table-row-hover);
+}
+
+/* Table Cells */
+.tbl-odyssey tbody td {
+  padding:     var(--sp-2) var(--sp-3);
+  height:      var(--height-table-row);
+  border-bottom: 0.5px solid var(--table-border);
+  vertical-align: middle;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sortable header */
+.tbl-sort {
+  cursor:  pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+}
+
+.tbl-sort:hover { color: var(--color-neutral); }
+
+/* Stok kritis row — JANGAN merah biasa */
+.tbl-odyssey tbody tr.row-critical td {
+  background: var(--color-danger-bg) !important;
+}
+
+/* Tabel footer */
+.tbl-odyssey tfoot td {
+  padding:     var(--sp-3);
+  background:  var(--color-primary-a04);
+  font-weight: var(--weight-medium);
+  font-size:   var(--text-table);
+  border-top:  1px solid var(--table-border);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+ *  06. BADGES & STATUS SYSTEM
+ *  Semua badge WAJIB aligned ke Odyssey palette.
+ *  JANGAN gunakan warna Bootstrap default.
+ * ═══════════════════════════════════════════════════════════ */
+
+.badge {
+  display:       inline-flex;
+  align-items:   center;
+  gap:           var(--sp-1);
+  padding:       2px var(--sp-3);
+  height:        var(--height-badge);
+  border-radius: var(--radius-pill);
+  font-size:     var(--text-label);
+  font-weight:   var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  white-space:   nowrap;
+  line-height:   1;
+}
+
+/* Sukses — stok aman, order selesai, user aktif */
+.badge-success {
+  background:   var(--color-success-bg);
+  border:       0.5px solid var(--color-success-border);
+  color:        var(--color-success-text);
+}
+
+/* Warning — stok menengah, draft, pending approval */
+.badge-warning {
+  background:   var(--color-warning-bg);
+  border:       0.5px solid var(--color-warning-border);
+  color:        var(--color-warning-text);
+}
+
+/* Kritis — stok kritis, error, overdue
+   WAJIB gradient ke navy — JANGAN merah polos */
+.badge-critical {
+  background:   linear-gradient(135deg, rgba(163, 45, 45, 0.12), rgba(0, 0, 128, 0.08));
+  border:       0.5px solid var(--color-danger-border);
+  color:        var(--color-danger-text);
+  animation:    badge-pulse var(--duration-pulse) ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.7; }
+}
+
+/* Info — draft status, informasi netral */
+.badge-info {
+  background:   var(--color-info-bg);
+  border:       0.5px solid var(--color-info-border);
+  color:        var(--color-info-text);
+}
+
+/* Tier Badges */
+.tier-platinum {
+  background:    var(--tier-platinum-bg);
+  color:         var(--tier-platinum-text);
+  border:        none;
+  font-weight:   var(--weight-semibold);
+}
+
+.tier-gold {
+  background:    var(--tier-gold-bg);
+  color:         var(--tier-gold-text);
+  border:        none;
+  font-weight:   var(--weight-semibold);
+}
+
+.tier-silver {
+  background:    var(--tier-silver-bg);
+  color:         var(--tier-silver-text);
+  border:        none;
+}
+
+.tier-verified {
+  background:    var(--tier-verified-bg);
+  color:         var(--tier-verified-text);
+  border:        none;
+}
+
+/* Dot indicator */
+.status-dot {
+  width:         8px;
+  height:        8px;
+  border-radius: 50%;
+  flex-shrink:   0;
+}
+
+.status-dot--success  { background: var(--color-secondary); }
+.status-dot--warning  { background: var(--color-accent);    }
+.status-dot--critical { background: var(--color-danger-from); }
+.status-dot--info     { background: var(--color-contrast);  }
+.status-dot--transit  { background: #F59E0B; }    /* amber — perpindahan */
+
+
+/* ═══════════════════════════════════════════════════════════
+ *  07. BUTTONS — .btn-*
+ *  Min touch target 40px. Semua dimensi dari token.
+ * ═══════════════════════════════════════════════════════════ */
+
+.btn {
+  display:          inline-flex;
+  align-items:      center;
+  justify-content:  center;
+  gap:              var(--sp-2);
+  padding:          0 var(--sp-6);
+  height:           var(--height-btn-md);
+  border-radius:    var(--radius-md);
+  font-family:      var(--font-body);
+  font-size:        var(--text-body);
+  font-weight:      var(--weight-medium);
+  text-decoration:  none;
+  cursor:           pointer;
+  border:           none;
+  outline:          none;
+  white-space:      nowrap;
+  transition:       background-color var(--transition-base),
+                    box-shadow       var(--transition-base),
+                    transform        var(--transition-fast),
+                    color            var(--transition-base);
+  user-select:      none;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+/* Primary — emerald solid */
+.btn-primary {
+  background: var(--color-primary);
+  color:      #FFFFFF;
+  box-shadow: 0 2px 8px var(--color-primary-a20);
+}
+
+.btn-primary:hover {
+  background: #005540;
+  box-shadow: 0 4px 16px var(--color-primary-a30);
+}
+
+/* Secondary — jade accent */
+.btn-secondary {
+  background: var(--color-secondary);
+  color:      #FFFFFF;
+  box-shadow: 0 2px 8px var(--color-secondary-a20);
+}
+
+.btn-secondary:hover {
+  background: #009560;
+  box-shadow: 0 4px 16px var(--color-secondary-a30);
+}
+
+/* Ghost — outline emerald */
+.btn-ghost {
+  background:  transparent;
+  border:      1px solid var(--color-primary-a30);
+  color:       var(--color-primary);
+}
+
+.btn-ghost:hover {
+  background:  var(--color-primary-a08);
+  border-color: var(--color-primary);
+}
+
+/* Danger — gradient red-navy */
+.btn-danger {
+  background: linear-gradient(135deg, #A32D2D, #000080);
+  color:      #FFFFFF;
+}
+
+.btn-danger:hover {
+  box-shadow: 0 4px 16px rgba(163, 45, 45, 0.30);
+}
+
+/* Gold — accent premium */
+.btn-gold {
+  background: var(--color-accent);
+  color:      #000000;
+  font-weight: var(--weight-semibold);
+}
+
+.btn-gold:hover {
+  background:  #D4A800;
+  box-shadow:  var(--shadow-gold);
+}
+
+/* Size variants */
+.btn-sm {
+  height:    var(--height-btn-sm);
+  padding:   0 var(--sp-4);
+  font-size: var(--text-table);
+}
+
+.btn-lg {
+  height:    var(--height-btn-lg);
+  padding:   0 var(--sp-8);
+  font-size: 15px;
+}
+
+/* Loading state */
+.btn.is-loading {
+  pointer-events: none;
+  opacity:        0.85;
+}
+
+.btn-icon {
+  width:         14px;
+  height:        14px;
+  border:        2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation:     lumra-spin var(--duration-spinner) linear infinite;
+  flex-shrink:   0;
+}
+
+/* Btn icon only */
+.btn-icon-only {
+  width:   var(--height-btn-md);
+  padding: 0;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+ *  08. FORMS & INPUTS
+ * ═══════════════════════════════════════════════════════════ */
+
+/* Form card container */
+.form-card {
+  background:       var(--glass-bg-emerald);
+  border:           var(--glass-border);
+  border-top-color: var(--glass-border-top);
+  border-left-color: var(--glass-border-left);
+  backdrop-filter:  var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow:       var(--shadow-natural);
+  border-radius:    var(--radius-xl);
+  padding:          var(--sp-6);
+}
+
+/* Field group */
+.field-group {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--sp-1);
+  margin-bottom:  var(--sp-4);
+}
+
+/* Label */
+.field-label {
+  font-size:      var(--text-label);
+  font-weight:    var(--weight-medium);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color:          var(--color-primary);
+}
+
+/* Input standar */
+.input-odyssey {
+  width:        100%;
+  height:       var(--height-input);
+  padding:      0 var(--sp-4);
+  background:   rgba(255, 255, 255, 0.7);
+  border:       1px solid var(--color-primary-a15);
+  border-radius: var(--radius-md);
+  font-family:  var(--font-body);
+  font-size:    var(--text-body);
+  color:        #1A1A1A;
+  outline:      none;
+  transition:   border-color var(--transition-base),
+                box-shadow   var(--transition-base),
+                background   var(--transition-base);
+}
+
+.input-odyssey::placeholder {
+  color: #999;
+}
+
+.input-odyssey:focus {
+  background:   rgba(255, 255, 255, 0.95);
+  border-color: var(--color-secondary);
+  box-shadow:   var(--shadow-focus);
+}
+
+.input-odyssey:disabled {
+  background: var(--color-primary-a04);
+  opacity:    0.6;
+  cursor:     not-allowed;
+}
+
+/* Select */
+.select-odyssey {
+  appearance:     none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300674F' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat:   no-repeat;
+  background-position: right var(--sp-4) center;
+  padding-right:       var(--sp-10);
+}
+
+/* Textarea */
+.textarea-odyssey {
+  height:     auto;
+  min-height: 96px;
+  padding:    var(--sp-3) var(--sp-4);
+  resize:     vertical;
+}
+
+/* Error state */
+.input-odyssey.is-error {
+  border-color: var(--color-danger-from);
+  box-shadow:   0 0 0 3px rgba(163, 45, 45, 0.15);
+}
+
+.field-error {
+  font-size: var(--text-label);
+  color:     var(--color-danger-from);
+  margin-top: var(--sp-1);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+ *  09. MODALS — .modal-overlay, .modal-card
+ * ═══════════════════════════════════════════════════════════ */
+
+.modal-overlay {
+  position:         fixed;
+  inset:            0;
+  background:       rgba(0, 0, 0, 0.45);
+  backdrop-filter:  blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display:          flex;
+  align-items:      center;
+  justify-content:  center;
+  z-index:          var(--z-modal);
+  padding:          var(--sp-4);
+  opacity:          0;
+  transition:       opacity var(--transition-modal);
+}
+
+.modal-overlay.is-open {
+  opacity: 1;
+}
+
+.modal-card {
+  background:       rgba(255, 255, 255, 0.96);
+  border:           var(--glass-border);
+  border-top-color: var(--glass-border-top);
+  border-left-color: var(--glass-border-left);
+  backdrop-filter:  var(--glass-blur-heavy);
+  -webkit-backdrop-filter: var(--glass-blur-heavy);
+  box-shadow:       var(--shadow-elevated);
+  border-radius:    var(--radius-xl);
+  width:            100%;
+  max-width:        520px;
+  transform:        scale(0.97);
+  transition:       transform var(--transition-modal);
+  overflow:         hidden;
+}
+
+.modal-overlay.is-open .modal-card {
+  transform: scale(1);
+}
+
+/* Modal stripe — visual identifier di top */
+.modal-stripe {
+  height:     4px;
+  background: var(--color-primary);
+}
+
+.modal-stripe--success { background: var(--color-secondary); }
+.modal-stripe--warning { background: var(--color-accent);    }
+.modal-stripe--danger  { background: linear-gradient(90deg, var(--color-danger-from), var(--color-danger-to)); }
+
+/* Modal header */
+.modal-header {
+  display:       flex;
+  align-items:   center;
+  justify-content: space-between;
+  padding:       var(--sp-6) var(--sp-6) var(--sp-4);
+}
+
+.modal-title {
+  font-size:   var(--text-h3);
+  font-weight: var(--weight-semibold);
+  color:       #1A1A1A;
+}
+
+.modal-close {
+  width:           32px;
+  height:          32px;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  border-radius:   var(--radius-md);
+  background:      transparent;
+  border:          none;
+  color:           #999;
+  cursor:          pointer;
+  transition:      background var(--transition-fast),
+                   color       var(--transition-fast);
+}
+
+.modal-close:hover {
+  background: var(--color-primary-a08);
+  color:      var(--color-primary);
+}
+
+/* Modal body */
+.modal-body {
+  padding: 0 var(--sp-6) var(--sp-6);
+}
+
+/* Modal footer */
+.modal-footer {
+  padding:      var(--sp-4) var(--sp-6);
+  border-top:   0.5px solid var(--color-primary-a08);
+  display:      flex;
+  justify-content: flex-end;
+  gap:          var(--sp-3);
+  background:   var(--color-primary-a04);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+ *  10. ACTIVITY DRAWER — .activity-drawer
+ *  Slide dari kanan, backdrop blur, activity log real-time.
+ * ═══════════════════════════════════════════════════════════ */
+
+.activity-drawer {
+  position:         fixed;
+  top:              0;
+  right:            0;
+  height:           100vh;
+  width:            360px;
+  background:       rgba(255, 255, 255, 0.95);
+  border-left:      var(--glass-border);
+  backdrop-filter:  var(--glass-blur-heavy);
+  -webkit-backdrop-filter: var(--glass-blur-heavy);
+  box-shadow:       -4px 0 32px rgba(0, 103, 79, 0.08);
+  z-index:          var(--z-drawer);
+  transform:        translateX(100%);
+  transition:       transform var(--transition-drawer);
+  display:          flex;
+  flex-direction:   column;
+}
+
+.activity-drawer.is-open {
+  transform: translateX(0);
+}
+
+.drawer-header {
+  padding:       var(--sp-4) var(--sp-4);
+  height:        var(--height-navbar);
+  border-bottom: 0.5px solid var(--color-primary-a10);
+  display:       flex;
+  align-items:   center;
+  justify-content: space-between;
+  flex-shrink:   0;
+}
+
+.drawer-title {
+  font-size:   var(--text-h3);
+  font-weight: var(--weight-semibold);
+  color:       var(--color-primary);
+}
+
+.drawer-body {
+  flex:        1;
+  overflow-y:  auto;
+  padding:     var(--sp-4);
+  display:     flex;
+  flex-direction: column;
+  gap:         var(--sp-2);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary-a15) transparent;
+}
+
+/* Activity item */
+.activity-item {
+  display:       flex;
+  gap:           var(--sp-3);
+  align-items:   flex-start;
+  padding:       var(--sp-3);
+  border-radius: var(--radius-md);
+  transition:    background var(--transition-fast);
+}
+
+.activity-item:hover {
+  background: var(--color-primary-a06);
+}
+
+.activity-dot {
+  width:         8px;
+  height:        8px;
+  border-radius: 50%;
+  flex-shrink:   0;
+  margin-top:    5px;
+}
+
+/* Dot warna konsisten */
+.activity-dot--new      { background: var(--color-secondary); }   /* emerald — baru */
+.activity-dot--transit  { background: #F59E0B; }                  /* amber — perpindahan */
+.activity-dot--critical { background: var(--color-danger-from); } /* merah — kritis */
+.activity-dot--info     { background: var(--color-contrast);   }  /* navy — info */
+
+.activity-content {
+  flex: 1;
+}
+
+.activity-title {
+  font-size:    var(--text-table);
+  font-weight:  var(--weight-medium);
+  color:        #1A1A1A;
+  line-height:  1.4;
+}
+
+.activity-time {
+  font-size:  var(--text-label);
+  color:      #999;
+  margin-top: 2px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+ *  11. ALERTS — .alert-*
+ *  Semantic color aligned Odyssey — BUKAN warna Bootstrap.
+ * ═══════════════════════════════════════════════════════════ */
+
+.alert {
+  display:       flex;
+  gap:           var(--sp-3);
+  padding:       var(--sp-4);
+  border-radius: var(--radius-md);
+  border-left:   4px solid;
+  font-size:     var(--text-body);
+}
+
+.alert-success {
+  background:   var(--color-success-bg);
+  border-color: var(--color-secondary);
+  color:        var(--color-success-text);
+}
+
+.alert-warning {
+  background:   var(--color-warning-bg);
+  border-color: var(--color-accent);
+  color:        var(--color-warning-text);
+}
+
+.alert-danger {
+  background:   rgba(163, 45, 45, 0.08);
+  border-color: var(--color-danger-from);
+  border-image: linear-gradient(180deg, var(--color-danger-from), var(--color-danger-to)) 1;
+  color:        var(--color-danger-text);
+}
+
+.alert-info {
+  background:   var(--color-info-bg);
+  border-color: var(--color-contrast);
+  color:        var(--color-info-text);
+}
+
+.alert-title {
+  font-weight:  var(--weight-semibold);
+  margin-bottom: var(--sp-1);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+ *  12. SHIMMER & LOADING STATES
+ *  Pengguna tidak mengukur kecepatan dalam milidetik.
+ *  Shimmer mengubah "menunggu" menjadi "sedang diproses".
+ * ═══════════════════════════════════════════════════════════ */
+
+/* ── Shimmer Emerald dengan Gold Glint ── */
+@keyframes lumra-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 103, 79, 0.06)  0%,
+    rgba(0, 168, 107, 0.14) 40%,  /* emerald peak */
+    rgba(239, 191, 4, 0.08) 60%,  /* gold glint — karakter Odyssey */
+    rgba(0, 103, 79, 0.06)  100%
+  );
+  background-size: 200% auto;
+  animation:       lumra-shimmer var(--duration-shimmer) ease-in-out infinite;
+  border-radius:   var(--radius-md);
+}
+
+/* KPI Card shimmer overlay */
+.kpi-glass.is-loading::after {
+  content:       '';
+  position:      absolute;
+  inset:         0;
+  border-radius: inherit;
+  background:    linear-gradient(
+    90deg,
+    rgba(0, 103, 79, 0.04)  0%,
+    rgba(0, 168, 107, 0.12) 40%,
+    rgba(239, 191, 4, 0.06) 60%,
+    rgba(0, 103, 79, 0.04)  100%
+  );
+  background-size: 200% auto;
+  animation:     lumra-shimmer var(--duration-shimmer) ease-in-out infinite;
+}
+
+/* ── Skeleton Screen ── */
+.skeleton-cell {
+  height:        12px;
+  border-radius: var(--radius-sm);
+  background:    rgba(0, 103, 79, 0.06);
+}
+
+/* Skeleton row dalam tabel */
+.skeleton-row td {
+  padding: var(--sp-2) var(--sp-3);
+}
+
+/* ── Inline Button Spinner ── */
+@keyframes lumra-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Progress Bar (top loader) ── */
+.progress-bar-wrap {
+  position: fixed;
+  top:      0;
+  left:     0;
+  right:    0;
+  height:   3px;
+  z-index:  var(--z-toast);
+}
+
+.progress-bar {
+  height:     100%;
+  background: linear-gradient(90deg, var(--color-secondary), var(--color-accent));
+  width:      0%;
+  transition: width 0.3s ease-out;
+}
+
+/* Fade-in setelah loaded */
+@keyframes fade-in-loaded {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.is-loaded {
+  animation: fade-in-loaded 300ms ease forwards;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+ *  13. MICRO-INTERACTIONS & ANIMATIONS
+ *  Produk yang indah tapi lambat terasa murah.
+ *  Micro-interactions menjembatani kecepatan dan keindahan.
+ * ═══════════════════════════════════════════════════════════ */
+
+/* ── Progressive Reveal ── */
+@keyframes reveal {
+  from {
+    opacity:   0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity:   1;
+    transform: translateY(0);
+  }
+}
+
+.reveal-item {
+  opacity:   0;
+  transform: translateY(8px);
+  animation: reveal var(--duration-reveal) ease forwards;
+}
+
+.reveal-item:nth-child(1) { animation-delay: var(--delay-reveal-1); }
+.reveal-item:nth-child(2) { animation-delay: var(--delay-reveal-2); }
+.reveal-item:nth-child(3) { animation-delay: var(--delay-reveal-3); }
+.reveal-item:nth-child(4) { animation-delay: var(--delay-reveal-4); }
+.reveal-item:nth-child(5) { animation-delay: var(--delay-reveal-5); }
+
+/* ── Toast / Alert animasi ── */
+@keyframes toast-in {
+  from {
+    opacity:   0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity:   1;
+    transform: translateY(0);
+  }
+}
+
+.toast {
+  animation: toast-in var(--transition-modal) ease-out forwards;
+}
+
+/* ── Auth page blob emerald animated ── */
+@keyframes blob-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(20px, -20px) scale(1.05); }
+  66%       { transform: translate(-10px, 10px) scale(0.95); }
+}
+
+.auth-blob {
+  position:      absolute;
+  border-radius: 50%;
+  filter:        blur(60px);
+  opacity:       0.4;
+  animation:     blob-float 8s ease-in-out infinite;
+}
+
+.auth-blob--primary {
+  width:      320px;
+  height:     320px;
+  background: var(--color-primary);
+  top:        -80px;
+  right:      -80px;
+  animation-delay: 0s;
+}
+
+.auth-blob--secondary {
+  width:      240px;
+  height:     240px;
+  background: var(--color-secondary);
+  bottom:     -60px;
+  left:       -60px;
+  animation-delay: 3s;
+}
+
+.auth-blob--gold {
+  width:      180px;
+  height:     180px;
+  background: var(--color-accent);
+  top:        50%;
+  left:       30%;
+  animation-delay: 5s;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+ *  14. UTILITIES & HELPERS
+ * ═══════════════════════════════════════════════════════════ */
+
+/* Stat card — sidebar summary, panel kecil */
+.stat-card {
+  background:       var(--glass-bg-emerald);
+  border:           var(--glass-border);
+  border-top-color: var(--glass-border-top);
+  border-left-color: var(--glass-border-left);
+  backdrop-filter:  var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow:       var(--shadow-natural);
+  border-radius:    var(--radius-lg);
+  padding:          var(--sp-3) var(--sp-4);
+  transition:       transform var(--transition-base),
+                    box-shadow var(--transition-base);
+}
+
+.stat-card:hover {
+  transform:  translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Perf strip — aksen kiri berwarna */
+.perf-strip {
+  border-left: 3px solid var(--color-secondary);
+  padding-left: var(--sp-3);
+}
+
+.perf-strip--gold   { border-left-color: var(--color-accent);   }
+.perf-strip--navy   { border-left-color: var(--color-contrast);  }
+.perf-strip--danger { border-left-color: var(--color-danger-from); }
+
+/* Date pill */
+.date-pill {
+  display:       inline-flex;
+  align-items:   center;
+  gap:           var(--sp-1);
+  padding:       var(--sp-1) var(--sp-3);
+  background:    var(--color-secondary-a10);
+  border:        0.5px solid var(--color-secondary-a30);
+  border-radius: var(--radius-pill);
+  font-size:     var(--text-label);
+  font-weight:   var(--weight-medium);
+  color:         var(--color-primary);
+}
+
+/* Filter bar glass */
+.filter-bar {
+  display:          flex;
+  align-items:      center;
+  gap:              var(--sp-2);
+  padding:          var(--sp-2) var(--sp-4);
+  background:       var(--glass-bg-emerald);
+  border:           var(--glass-border);
+  border-top-color: var(--glass-border-top);
+  border-left-color: var(--glass-border-left);
+  backdrop-filter:  var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius:    var(--radius-xl);
+  box-shadow:       var(--shadow-natural);
+  flex-wrap:        wrap;
+}
+
+/* Section card — wrapper konten di halaman */
+.section-card {
+  background:       var(--glass-bg-emerald);
+  border:           var(--glass-border);
+  border-top-color: var(--glass-border-top);
+  border-left-color: var(--glass-border-left);
+  backdrop-filter:  var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow:       var(--shadow-natural);
+  border-radius:    var(--radius-xl);
+  padding:          var(--sp-6);
+}
+
+.section-card-header {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  margin-bottom:   var(--sp-4);
+  padding-bottom:  var(--sp-4);
+  border-bottom:   0.5px solid var(--color-primary-a08);
+}
+
+.section-card-title {
+  font-size:   var(--text-h3);
+  font-weight: var(--weight-semibold);
+  color:       var(--color-primary);
+}
+
+/* Divider */
+.divider {
+  height:     0.5px;
+  background: var(--color-primary-a10);
+  border:     none;
+  margin:     var(--sp-4) 0;
+}
+
+/* Empty state */
+.empty-state {
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  justify-content: center;
+  padding:         var(--sp-16) var(--sp-8);
+  text-align:      center;
+  gap:             var(--sp-4);
+}
+
+.empty-state-icon {
+  width:        64px;
+  height:       64px;
+  background:   var(--color-primary-a08);
+  border-radius: var(--radius-pill);
+  display:       flex;
+  align-items:   center;
+  justify-content: center;
+  color:         var(--color-primary);
+  opacity:       0.6;
+}
+
+.empty-state-title {
+  font-size:   var(--text-h3);
+  font-weight: var(--weight-semibold);
+  color:       #666;
+}
+
+.empty-state-desc {
+  font-size: var(--text-body);
+  color:     #999;
+  max-width: 320px;
+}
+
+/* Grid layouts */
+.kpi-grid {
+  display:               grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap:                   var(--sp-4);
+}
+
+.kpi-grid--4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.kpi-grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.kpi-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Page layout */
+.page-wrapper {
+  margin-left:    var(--width-sidebar);
+  padding-top:    var(--height-navbar);
+  min-height:     100vh;
+  transition:     margin-left var(--transition-sidebar);
+}
+
+.page-wrapper--collapsed {
+  margin-left: var(--width-sidebar-collapsed);
+}
+
+.page-content {
+  padding: var(--sp-6);
+}
+
+.page-header {
+  margin-bottom: var(--sp-6);
+}
+
+.page-title {
+  font-size:   var(--text-h1);
+  font-weight: var(--weight-semibold);
+  color:       #1A1A1A;
+}
+
+.page-subtitle {
+  font-size:  var(--text-body);
+  color:      #666;
+  margin-top: var(--sp-1);
+}
+
+/* Monospace / code values — SKU, ID teknis */
+.val-mono {
+  font-family: var(--font-mono);
+  font-size:   var(--text-mono);
+  color:       var(--color-primary);
+}
+
+/* Truncate */
+.truncate {
+  overflow:      hidden;
+  text-overflow: ellipsis;
+  white-space:   nowrap;
+}
+
+/* Visually hidden (accessibility) */
+.sr-only {
+  position: absolute;
+  width:    1px;
+  height:   1px;
+  padding:  0;
+  margin:   -1px;
+  overflow: hidden;
+  clip:     rect(0, 0, 0, 0);
+  border:   0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .sidebar-glass {
+    transform: translateX(-100%);
+    transition: transform var(--transition-sidebar);
+  }
+
+  .sidebar-glass.is-mobile-open {
+    transform: translateX(0);
+  }
+
+  .page-wrapper {
+    margin-left: 0;
+  }
+
+  .kpi-grid--4,
+  .kpi-grid--3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .kpi-grid--2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .kpi-grid--4,
+  .kpi-grid--3,
+  .kpi-grid--2 {
+    grid-template-columns: 1fr;
+  }
+
+  .activity-drawer {
+    width: 100%;
+  }
+}

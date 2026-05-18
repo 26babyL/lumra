@@ -1,0 +1,188 @@
+{% extends 'base/base.html' %}
+{% block title %}Arus Kas — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-card { background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border: 1px solid white; border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+  
+  .cf-table { width: 100%; border-collapse: collapse; }
+  .cf-table th { text-align: left; padding: 12px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; }
+  .cf-table td { padding: 10px 16px; border-bottom: 1px solid #f1f5f9; font-size: 13px; color: #334155; }
+  
+  .section-header { background: #f8fafc; font-weight: 700; color: #0f172a; letter-spacing: 0.05em; text-transform: uppercase; }
+  .subtotal-row { font-weight: 600; background: #f1f5f9; }
+  .net-row { font-weight: 800; background: #e2e8f0; color: #0f172a; }
+  
+  .val-pos { color: #10b981; } /* Green */
+  .val-neg { color: #ef4444; } /* Red */
+  .val-neu { color: #64748b; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="cfApp()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex items-end justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">Laporan Arus Kas (Cash Flow)</h1>
+      <p class="text-sm text-slate-400 mt-0.5">Analisis pergerakan kas masuk dan keluar.</p>
+    </div>
+    <div class="flex items-center gap-3 glass-card px-4 py-2">
+      <label class="text-xs font-bold text-slate-500 uppercase mr-2">Periode</label>
+      <input type="month" x-model="period" @change="window.location.href=`?period=${period}`" class="bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-sm font-bold text-slate-700 outline-none focus:border-slate-400">
+      <button class="text-slate-400 hover:text-slate-600"><i class="fas fa-download"></i></button>
+    </div>
+  </div>
+
+  <div class="glass-card overflow-hidden">
+    <div class="p-6 border-b border-slate-100 bg-slate-50/50">
+      <h2 class="font-bold text-slate-800 mb-1">Cash Flow untuk Periode Berakhir</h2>
+      <p class="text-sm text-slate-500 font-mono" x-text="periodText"></p>
+    </div>
+
+    <div class="p-6">
+      <table class="cf-table">
+        <tbody>
+          <!-- OPERATING ACTIVITIES -->
+          <tr>
+            <td colspan="2" class="section-header pt-4">Aktivitas Operasional</td>
+          </tr>
+          
+          <template x-for="item in operating" :key="item.name">
+            <tr>
+              <td class="pl-8 row-sub" x-text="item.name"></td>
+              <td class="text-right font-mono" :class="item.amount >= 0 ? 'val-pos' : 'val-neg'" x-text="formatCurrency(item.amount)"></td>
+            </tr>
+          </template>
+          
+          <tr class="subtotal-row">
+            <td class="pl-8">Arus Kas Bersih dari Aktivitas Operasional</td>
+            <td class="text-right font-mono font-bold" :class="netOperating >= 0 ? 'val-pos' : 'val-neg'" x-text="formatCurrency(netOperating)"></td>
+          </tr>
+
+          <!-- INVESTING ACTIVITIES -->
+          <tr>
+            <td colspan="2" class="section-header pt-6">Aktivitas Investasi</td>
+          </tr>
+          
+          <template x-for="item in investing" :key="item.name">
+            <tr>
+              <td class="pl-8 row-sub" x-text="item.name"></td>
+              <td class="text-right font-mono" :class="item.amount >= 0 ? 'val-pos' : 'val-neg'" x-text="formatCurrency(item.amount)"></td>
+            </tr>
+          </template>
+          
+          <tr class="subtotal-row">
+            <td class="pl-8">Arus Kas Bersih dari Aktivitas Investasi</td>
+            <td class="text-right font-mono font-bold" :class="netInvesting >= 0 ? 'val-pos' : 'val-neg'" x-text="formatCurrency(netInvesting)"></td>
+          </tr>
+
+          <!-- FINANCING ACTIVITIES -->
+          <tr>
+            <td colspan="2" class="section-header pt-6">Aktivitas Pendanaan</td>
+          </tr>
+          
+          <template x-for="item in financing" :key="item.name">
+            <tr>
+              <td class="pl-8 row-sub" x-text="item.name"></td>
+              <td class="text-right font-mono" :class="item.amount >= 0 ? 'val-pos' : 'val-neg'" x-text="formatCurrency(item.amount)"></td>
+            </tr>
+          </template>
+          
+          <tr class="subtotal-row">
+            <td class="pl-8">Arus Kas Bersih dari Aktivitas Pendanaan</td>
+            <td class="text-right font-mono font-bold" :class="netFinancing >= 0 ? 'val-pos' : 'val-neg'" x-text="formatCurrency(netFinancing)"></td>
+          </tr>
+
+          <!-- NET CHANGE -->
+          <tr class="net-row">
+            <td class="pl-8">KENAIKAN (PENURUNAN) KAS BERSIH</td>
+            <td class="text-right font-mono text-lg" :class="netChange >= 0 ? 'val-pos' : 'val-neg'" x-text="formatCurrency(netChange)"></td>
+          </tr>
+
+          <!-- BEGINNING & ENDING -->
+          <tr>
+            <td class="pl-8 pt-4">Saldo Kas Awal Periode</td>
+            <td class="text-right font-mono pt-4 text-slate-600" x-text="formatCurrency(beginningBalance)"></td>
+          </tr>
+          <tr>
+            <td class="pl-8 font-bold text-slate-900 text-lg">SALDO KAS AKHIR PERIODE</td>
+            <td class="text-right font-mono font-black text-xl font-bold" x-text="formatCurrency(endingBalance)"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script id="operating-data" type="application/json">
+{{ operating_json|safe }}
+</script>
+
+<script id="investing-data" type="application/json">
+{{ investing_json|safe }}
+</script>
+
+<script id="financing-data" type="application/json">
+{{ financing_json|safe }}
+</script>
+
+<script>
+function cfApp() {
+  return {
+    period: '{{ period|escapejs }}',
+    get periodText() {
+      if (!this.period) return '-';
+      const [year, month] = this.period.split('-');
+      return new Date(year, month - 1).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+    },
+    beginningBalance: {{ beginning_balance|default:0 }},
+    operating: [],
+    investing: [],
+    financing: [],
+
+    get netOperating() {
+      return this.operating.reduce((s, i) => s + i.amount, 0);
+    },
+    get netInvesting() {
+      return this.investing.reduce((s, i) => s + i.amount, 0);
+    },
+    get netFinancing() {
+      return this.financing.reduce((s, i) => s + i.amount, 0);
+    },
+    get netChange() {
+      return this.netOperating + this.netInvesting + this.netFinancing;
+    },
+    get endingBalance() {
+      return this.beginningBalance + this.netChange;
+    },
+
+    formatCurrency(num) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+    },
+
+    init(){
+      const _operatingRaw = document.getElementById('operating-data');
+      if (_operatingRaw) {
+        try { this.operating = JSON.parse(_operatingRaw.textContent); }
+        catch(e) { console.error('operating-data parse error:', e); }
+      }
+      const _investingRaw = document.getElementById('investing-data');
+      if (_investingRaw) {
+        try { this.investing = JSON.parse(_investingRaw.textContent); }
+        catch(e) { console.error('investing-data parse error:', e); }
+      }
+      const _financingRaw = document.getElementById('financing-data');
+      if (_financingRaw) {
+        try { this.financing = JSON.parse(_financingRaw.textContent); }
+        catch(e) { console.error('financing-data parse error:', e); }
+      }}
+  }
+}
+</script>
+{% endblock %}

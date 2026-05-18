@@ -1,0 +1,273 @@
+{
+  "_meta": {
+    "version": "3.0.0",
+    "description": "Lumra ERP Design System — Single Source of Truth",
+    "generated_files": [
+      "static/css/lumra_design_system.css",
+      "static/css/lumra_components.css"
+    ],
+    "do_not_edit": [
+      "Semua nilai di file ini adalah satu-satunya sumber kebenaran.",
+      "Edit di sini, jalankan generate_css.py, commit hasilnya.",
+      "JANGAN hardcode nilai di CSS atau Python secara manual."
+    ]
+  },
+
+  "brand": {
+    "primary":       "#00674F",
+    "primary_light": "#2E8C69",
+    "primary_subtle":"#E6F2EE",
+    "primary_dark":  "#003D2C",
+    "primary_glow":  "#5DA88A"
+  },
+
+  "glass": {
+    "bg":          "rgba(255, 255, 255, 0.82)",
+    "bg_strong":   "rgba(255, 255, 255, 0.96)",
+    "bg_subtle":   "rgba(255, 255, 255, 0.48)",
+    "border":      "rgba(255, 255, 255, 0.20)",
+    "border_em":   "rgba(0, 103, 79, 0.12)",
+    "blur":        "blur(14px) saturate(180%)",
+    "blur_sm":     "blur(8px) saturate(160%)",
+    "blur_lg":     "blur(28px) saturate(200%)",
+    "shadow":      "0 2px 12px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.04)",
+    "shadow_lg":   "0 8px 32px rgba(0,0,0,0.10), 0 0 0 0.5px rgba(0,0,0,0.04)",
+    "shadow_glow": "0 8px 32px rgba(0,0,0,0.08), 0 0 28px rgba(0,103,79,0.12)",
+    "dark_bg":     "rgba(15, 23, 42, 0.82)",
+    "dark_blur":   "blur(6px)",
+    "dark_border": "rgba(255, 255, 255, 0.06)"
+  },
+
+  "color": {
+    "bg":            "#F5F8F7",
+    "surface":       "rgba(255,255,255,0.92)",
+    "surface_strong":"rgba(255,255,255,0.99)",
+    "border":        "rgba(203,213,225,0.70)",
+    "border_focus":  "#00674F",
+    "text":          "#0F172A",
+    "text_muted":    "#475569",
+    "text_subtle":   "#94A3B8",
+    "text_inverse":  "#FFFFFF",
+
+    "success":        "#00674F",
+    "success_bg":     "rgba(230,242,238,0.80)",
+    "success_border": "rgba(93,168,138,0.40)",
+    "success_text":   "#003D2C",
+
+    "warning":        "#D97706",
+    "warning_bg":     "rgba(254,243,199,0.80)",
+    "warning_border": "rgba(251,191,36,0.40)",
+    "warning_text":   "#92400E",
+
+    "danger":        "#E11D48",
+    "danger_bg":     "rgba(255,228,230,0.80)",
+    "danger_border": "rgba(251,113,133,0.40)",
+    "danger_text":   "#9F1239",
+
+    "info":          "#0284C7",
+    "info_bg":       "rgba(224,242,254,0.80)",
+    "info_border":   "rgba(125,211,252,0.40)",
+    "info_text":     "#075985",
+
+    "accent":        "#4F46E5",
+    "accent_bg":     "rgba(238,242,255,0.80)",
+    "accent_border": "rgba(165,180,252,0.40)",
+    "accent_text":   "#3730A3"
+  },
+
+  "emerald_scale": {
+    "50":  "#E6F2EE",
+    "100": "#C0DFCF",
+    "200": "#90C4AC",
+    "300": "#5DA88A",
+    "400": "#2E8C69",
+    "500": "#00674F",
+    "600": "#005A44",
+    "700": "#004D39",
+    "800": "#003D2C",
+    "900": "#002D1F",
+    "950": "#001A12"
+  },
+
+  "slate_scale": {
+    "50":  "#F8FAFC",
+    "100": "#F1F5F9",
+    "200": "#E2E8F0",
+    "300": "#CBD5E1",
+    "400": "#94A3B8",
+    "500": "#64748B",
+    "600": "#475569",
+    "700": "#334155",
+    "800": "#1E293B",
+    "900": "#0F172A",
+    "950": "#020617"
+  },
+
+  "typography": {
+    "font_sans":    "'Inter', system-ui, -apple-system, sans-serif",
+    "font_display": "'DM Sans', 'Inter', system-ui, sans-serif",
+    "font_mono":    "'JetBrains Mono', 'Fira Code', ui-monospace, monospace",
+
+    "size": {
+      "xs":   "0.6875rem",
+      "sm":   "0.8125rem",
+      "base": "0.9375rem",
+      "md":   "1rem",
+      "lg":   "1.125rem",
+      "xl":   "1.25rem",
+      "2xl":  "1.5rem",
+      "3xl":  "1.875rem",
+      "4xl":  "2.25rem"
+    },
+
+    "weight": {
+      "light":   300,
+      "normal":  400,
+      "medium":  500,
+      "semibold":600,
+      "bold":    700
+    },
+
+    "leading": {
+      "tight":   1.2,
+      "snug":    1.35,
+      "normal":  1.6,
+      "relaxed": 1.75
+    },
+
+    "tracking": {
+      "tightest": "-0.03em",
+      "tight":    "-0.02em",
+      "normal":   "0em",
+      "wide":     "0.04em",
+      "widest":   "0.12em"
+    },
+
+    "google_fonts_url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap"
+  },
+
+  "radius": {
+    "xs":   "4px",
+    "sm":   "6px",
+    "md":   "10px",
+    "lg":   "14px",
+    "xl":   "18px",
+    "2xl":  "24px",
+    "3xl":  "32px",
+    "full": "9999px"
+  },
+
+  "shadow": {
+    "xs":   "0 1px 2px rgba(0,0,0,0.04)",
+    "sm":   "0 1px 4px rgba(0,0,0,0.05), 0 0 0 0.5px rgba(0,0,0,0.03)",
+    "md":   "0 2px 12px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.03)",
+    "lg":   "0 4px 24px rgba(0,0,0,0.08), 0 0 0 0.5px rgba(0,0,0,0.03)",
+    "xl":   "0 8px 40px rgba(0,0,0,0.10), 0 0 0 0.5px rgba(0,0,0,0.03)",
+    "2xl":  "0 20px 60px rgba(0,0,0,0.14), 0 0 0 0.5px rgba(0,0,0,0.02)",
+    "focus":       "0 0 0 3px rgba(0,103,79,0.25)",
+    "focus_danger":"0 0 0 3px rgba(225,29,72,0.20)",
+    "glow":        "0 0 28px rgba(0,103,79,0.22)",
+    "glow_sm":     "0 0 12px rgba(0,103,79,0.16)"
+  },
+
+  "spacing": {
+    "1":  "0.25rem",
+    "2":  "0.5rem",
+    "3":  "0.75rem",
+    "4":  "1rem",
+    "5":  "1.25rem",
+    "6":  "1.5rem",
+    "8":  "2rem",
+    "10": "2.5rem",
+    "12": "3rem",
+    "16": "4rem",
+    "20": "5rem"
+  },
+
+  "transition": {
+    "ease_out":    "cubic-bezier(0.16, 1, 0.3, 1)",
+    "ease_in_out": "cubic-bezier(0.45, 0, 0.55, 1)",
+    "ease_bounce": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+    "ease_smooth": "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+    "fast":  "120ms",
+    "base":  "200ms",
+    "slow":  "350ms"
+  },
+
+  "z_index": {
+    "base":     0,
+    "raised":   10,
+    "dropdown": 100,
+    "sticky":   200,
+    "navbar":   300,
+    "sidebar":  350,
+    "modal":    400,
+    "toast":    500,
+    "tooltip":  600
+  },
+
+  "layout": {
+    "sidebar_width":           "240px",
+    "sidebar_width_collapsed": "64px",
+    "navbar_height":           "56px",
+    "content_max_width":       "1280px"
+  },
+
+  "blob": {
+    "blur_px":       100,
+    "opacity":       0.10,
+    "animation_duration_s": 18,
+    "sizes": {
+      "1": {"w": 480, "h": 480, "top": -120, "left": -160, "delay_s": 0,  "color_token": "color.primary"},
+      "2": {"w": 320, "h": 320, "bottom": -80, "right": -80, "delay_s": -7, "color_token": "brand.primary_light"},
+      "3": {"w": 220, "h": 220, "top_pct": "40%", "left_pct": "55%", "delay_s": -3.5, "color": "#34d399"}
+    }
+  },
+
+  "kpi_card": {
+    "border_radius": "18px",
+    "padding":       "24px",
+    "accent_corner_size": "60px",
+    "accent_corner_opacity": 0.07,
+    "accents": {
+      "em":    "#059669",
+      "blue":  "#3b82f6",
+      "vio":   "#8b5cf6",
+      "rose":  "#f43f5e",
+      "amber": "#f59e0b"
+    }
+  },
+
+  "validator_rules": {
+    "forbidden_hardcodes": [
+      "rgba(255, 255, 255, 0.82)",
+      "rgba(255,255,255,0.82)",
+      "rgba(255, 255, 255, 0.72)",
+      "rgba(255,255,255,0.72)",
+      "rgba(15, 23, 42, 0.82)",
+      "#059669",
+      "#00674F"
+    ],
+    "required_base_extends": true,
+    "forbidden_font_imports": [
+      "fonts.googleapis.com/css2?family=Plus+Jakarta+Sans",
+      "fonts.googleapis.com/css2?family=Syne"
+    ],
+    "allowed_font_families": [
+      "Inter",
+      "DM Sans",
+      "JetBrains Mono",
+      "system-ui",
+      "-apple-system",
+      "sans-serif",
+      "monospace"
+    ],
+    "required_css_variables": [
+      "--glass-bg",
+      "--glass-blur",
+      "--glass-border",
+      "--glass-shadow",
+      "--color-primary"
+    ]
+  }
+}

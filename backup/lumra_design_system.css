@@ -1,0 +1,894 @@
+/* ============================================================
+   LUMRA DESIGN SYSTEM  v2.0  — Dual Aurora Edition
+   lumra_design_system.css
+   ============================================================
+   Arsitektur: CSS Custom Properties + data-theme toggle
+
+   Mode:
+     [data-theme="light"]  — Silk Aurora  : Art Gallery / Apple HQ
+     [data-theme="dark"]   — Deep Forest  : High-Tech Cockpit
+
+   Toggle:
+     document.documentElement.setAttribute('data-theme','dark')
+     Preferensi disimpan ke localStorage['lumra-theme']
+
+   Single source of truth:
+     Edit token di :root (light) atau [data-theme="dark"] saja.
+   ============================================================ */
+
+
+/* ============================================================
+   0. GOOGLE FONTS
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+
+
+/* ============================================================
+   1. LIGHT MODE TOKENS — :root (default)
+   ============================================================ */
+
+:root {
+
+  /* ── Font ─────────────────────────────────────────────── */
+  --font-sans    : 'Inter', 'DM Sans', system-ui, -apple-system, sans-serif;
+  --font-display : 'DM Sans', 'Inter', system-ui, sans-serif;
+  --font-mono    : 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+
+  --text-xs  : 0.6875rem;  --text-sm  : 0.8125rem;
+  --text-base: 0.9375rem;  --text-md  : 1rem;
+  --text-lg  : 1.125rem;   --text-xl  : 1.25rem;
+  --text-2xl : 1.5rem;     --text-3xl : 1.875rem;
+  --text-4xl : 2.25rem;
+
+  --leading-tight  : 1.25;   --leading-snug   : 1.375;
+  --leading-normal : 1.6;    --leading-relaxed: 1.75;
+  --tracking-tight : -0.02em; --tracking-normal: 0em;
+  --tracking-wide  : 0.04em;  --tracking-widest: 0.12em;
+  --font-light: 300; --font-normal: 400; --font-medium: 500;
+  --font-semibold: 600; --font-bold: 700;
+
+  /* ── Emerald palette ──────────────────────────────────── */
+  --color-emerald-50 : #ecfdf5; --color-emerald-100: #d1fae5;
+  --color-emerald-200: #a7f3d0; --color-emerald-300: #6ee7b7;
+  --color-emerald-400: #34d399; --color-emerald-500: #10b981;
+  --color-emerald-600: #059669; --color-emerald-700: #047857;
+  --color-emerald-800: #065f46; --color-emerald-900: #064e3b;
+  --color-emerald-950: #022c22;
+
+  /* ── Slate palette ────────────────────────────────────── */
+  --color-slate-50 : #f8fafc; --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0; --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8; --color-slate-500: #64748b;
+  --color-slate-600: #475569; --color-slate-700: #334155;
+  --color-slate-800: #1e293b; --color-slate-900: #0f172a;
+
+  /* ── LIGHT: Warna semantik ────────────────────────────── */
+  --color-bg           : #f8faf9;
+  --color-surface      : rgba(255,255,255,0.70);
+  --color-surface-strong: rgba(255,255,255,0.92);
+  --color-border       : rgba(16,185,129,0.12);
+  --color-border-subtle: rgba(0,0,0,0.06);
+  --color-border-focus : #059669;
+  --color-text         : #0f172a;
+  --color-text-muted   : #475569;
+  --color-text-subtle  : #94a3b8;
+  --color-text-inverse : #ffffff;
+
+  /* ── LIGHT: Primary ───────────────────────────────────── */
+  --color-primary        : #047857;
+  --color-primary-light  : #059669;
+  --color-primary-glow   : #34d399;
+  --color-primary-subtle : #d1fae5;
+  --color-primary-dark   : #022c22;
+
+  /* ── LIGHT: Status colors ─────────────────────────────── */
+  --color-success       : #059669;
+  --color-success-bg    : rgba(209,250,229,0.80);
+  --color-success-border: rgba(52,211,153,0.40);
+  --color-success-text  : #065f46;
+
+  --color-warning       : #d97706;
+  --color-warning-bg    : rgba(254,243,199,0.80);
+  --color-warning-border: rgba(251,191,36,0.40);
+  --color-warning-text  : #92400e;
+
+  --color-danger        : #e11d48;
+  --color-danger-bg     : rgba(255,228,230,0.80);
+  --color-danger-border : rgba(251,113,133,0.40);
+  --color-danger-text   : #9f1239;
+
+  --color-info          : #0284c7;
+  --color-info-bg       : rgba(224,242,254,0.80);
+  --color-info-border   : rgba(125,211,252,0.40);
+  --color-info-text     : #075985;
+
+  --color-accent        : #4f46e5;
+  --color-accent-bg     : rgba(238,242,255,0.80);
+  --color-accent-border : rgba(165,180,252,0.40);
+  --color-accent-text   : #3730a3;
+
+  /* ── LIGHT: rgba utilities ────────────────────────────── */
+  --color-black-a02 : rgba(0,0,0,0.02);  --color-black-a04: rgba(0,0,0,0.04);
+  --color-black-a06 : rgba(0,0,0,0.06);  --color-black-a10: rgba(0,0,0,0.10);
+  --color-black-a20 : rgba(0,0,0,0.20);
+  --color-white-a06 : rgba(255,255,255,0.06); --color-white-a20: rgba(255,255,255,0.20);
+  --color-white-a60 : rgba(255,255,255,0.60); --color-white-a72: rgba(255,255,255,0.72);
+  --color-white-a90 : rgba(255,255,255,0.90);
+  --color-primary-a05: rgba(5,150,105,0.05); --color-primary-a08: rgba(5,150,105,0.08);
+  --color-primary-a12: rgba(5,150,105,0.12); --color-primary-a25: rgba(5,150,105,0.25);
+  --color-primary-a50: rgba(5,150,105,0.50);
+
+  /* ── LIGHT: Aurora ────────────────────────────────────── */
+  --aurora-bg      : #f8faf9;
+  --aurora-gradient:
+    radial-gradient(ellipse at 10% 20%, rgba(16,185,129,0.06) 0%, transparent 45%),
+    radial-gradient(ellipse at 90% 80%, rgba(5,150,105,0.04)  0%, transparent 55%),
+    radial-gradient(ellipse at 50% 100%,rgba(209,250,229,0.30) 0%, transparent 60%);
+
+  /* ── LIGHT: Glass ─────────────────────────────────────── */
+  --glass-blur      : blur(24px) saturate(160%);
+  --glass-blur-sm   : blur(12px) saturate(140%);
+  --glass-blur-lg   : blur(40px) saturate(180%);
+  --glass-bg        : rgba(255,255,255,0.60);
+  --glass-bg-strong : rgba(255,255,255,0.88);
+  --glass-bg-subtle : rgba(255,255,255,0.36);
+  --glass-border    : rgba(255,255,255,0.80);
+  --glass-border-em : rgba(16,185,129,0.10);
+  --glass-shadow    : 0 2px 16px rgba(0,0,0,0.06), 0 0 0 1px rgba(255,255,255,0.80) inset;
+  --glass-shadow-lg : 0 8px 40px rgba(0,0,0,0.10), 0 0 0 1px rgba(255,255,255,0.80) inset;
+  --glass-shadow-glow: 0 0 0 1px rgba(255,255,255,0.80) inset, 0 8px 40px rgba(0,0,0,0.10), 0 0 20px rgba(5,150,105,0.08);
+
+  /* ── LIGHT: Shadow ────────────────────────────────────── */
+  --shadow-xs : 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm : 0 1px 4px rgba(0,0,0,0.05), 0 0 0 0.5px rgba(0,0,0,0.03);
+  --shadow-md : 0 2px 12px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.03);
+  --shadow-lg : 0 4px 24px rgba(0,0,0,0.08), 0 0 0 0.5px rgba(0,0,0,0.03);
+  --shadow-xl : 0 8px 40px rgba(0,0,0,0.10), 0 0 0 0.5px rgba(0,0,0,0.03);
+  --shadow-2xl: 0 20px 60px rgba(0,0,0,0.14);
+  --shadow-card    : var(--shadow-md);
+  --shadow-dropdown: var(--shadow-xl);
+  --shadow-sidebar : 1px 0 0 var(--color-border-subtle);
+  --shadow-navbar  : 0 1px 0 var(--color-border-subtle), 0 2px 8px rgba(0,0,0,0.03);
+  --shadow-focus   : 0 0 0 3px rgba(5,150,105,0.25);
+  --shadow-focus-danger: 0 0 0 3px rgba(225,29,72,0.20);
+  --shadow-glow    : 0 0 24px rgba(5,150,105,0.25);
+
+  /* ── Radius, Spacing, Easing, Z, Layout ──────────────── */
+  --radius-xs:4px; --radius-sm:6px; --radius-md:10px;
+  --radius-lg:14px; --radius-xl:18px; --radius-2xl:24px;
+  --radius-full:9999px;
+
+  --space-1:0.25rem; --space-2:0.5rem;  --space-3:0.75rem;
+  --space-4:1rem;    --space-5:1.25rem; --space-6:1.5rem;
+  --space-8:2rem;    --space-10:2.5rem; --space-12:3rem;
+  --space-16:4rem;   --space-20:5rem;
+
+  --ease-out   :cubic-bezier(0.16,1,0.3,1);
+  --ease-in-out:cubic-bezier(0.45,0,0.55,1);
+  --ease-bounce:cubic-bezier(0.34,1.56,0.64,1);
+  --ease-smooth:cubic-bezier(0.25,0.46,0.45,0.94);
+  --transition-fast : 120ms var(--ease-out);
+  --transition-base : 200ms var(--ease-out);
+  --transition-slow : 350ms var(--ease-out);
+  --transition-xslow: 500ms var(--ease-out);
+  --transition-color : color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+  --transition-shadow: box-shadow var(--transition-base), transform var(--transition-base);
+  --transition-all   : all var(--transition-base);
+
+  --z-base:0; --z-raised:10; --z-dropdown:100; --z-sticky:200;
+  --z-navbar:300; --z-sidebar:350; --z-modal:400;
+  --z-toast:500; --z-tooltip:600;
+
+  --sidebar-width:240px; --sidebar-width-collapsed:64px;
+  --navbar-height:56px;  --content-max-width:1280px;
+  --aurora-pulse-duration:20s;
+}
+
+
+/* ============================================================
+   2. DARK MODE TOKENS — [data-theme="dark"]
+   ============================================================
+   Deep Forest Aurora: Obsidian + Emerald pendaran.
+   Hanya override yang berbeda dari light.
+   ============================================================ */
+
+[data-theme="dark"] {
+  --color-bg           : #020617;
+  --color-surface      : rgba(15,23,42,0.60);
+  --color-surface-strong: rgba(15,23,42,0.88);
+  --color-border       : rgba(255,255,255,0.07);
+  --color-border-subtle: rgba(255,255,255,0.04);
+  --color-border-focus : #34d399;
+  --color-text         : #e2e8f0;
+  --color-text-muted   : #64748b;
+  --color-text-subtle  : #334155;
+  --color-text-inverse : #020617;
+
+  --color-primary        : #10b981;
+  --color-primary-light  : #34d399;
+  --color-primary-glow   : #6ee7b7;
+  --color-primary-subtle : rgba(5,150,105,0.15);
+  --color-primary-dark   : #022c22;
+
+  --color-success-bg    : rgba(6,95,70,0.30);
+  --color-success-border: rgba(52,211,153,0.20);
+  --color-success-text  : #6ee7b7;
+
+  --color-warning-bg    : rgba(120,53,15,0.30);
+  --color-warning-border: rgba(251,191,36,0.20);
+  --color-warning-text  : #fcd34d;
+
+  --color-danger-bg     : rgba(159,18,57,0.25);
+  --color-danger-border : rgba(251,113,133,0.20);
+  --color-danger-text   : #fda4af;
+
+  --color-info-bg       : rgba(7,89,133,0.30);
+  --color-info-border   : rgba(125,211,252,0.20);
+  --color-info-text     : #7dd3fc;
+
+  --color-accent-bg     : rgba(67,56,202,0.25);
+  --color-accent-border : rgba(165,180,252,0.20);
+  --color-accent-text   : #a5b4fc;
+
+  --color-black-a02:rgba(0,0,0,0.10); --color-black-a04:rgba(0,0,0,0.20);
+  --color-black-a06:rgba(0,0,0,0.30); --color-black-a10:rgba(0,0,0,0.40);
+  --color-black-a20:rgba(0,0,0,0.60);
+  --color-white-a06:rgba(255,255,255,0.04); --color-white-a20:rgba(255,255,255,0.08);
+  --color-white-a60:rgba(255,255,255,0.12); --color-white-a72:rgba(255,255,255,0.06);
+  --color-white-a90:rgba(255,255,255,0.10);
+  --color-primary-a05:rgba(5,150,105,0.08); --color-primary-a08:rgba(5,150,105,0.12);
+  --color-primary-a12:rgba(5,150,105,0.18); --color-primary-a25:rgba(5,150,105,0.30);
+  --color-primary-a50:rgba(16,185,129,0.50);
+
+  --aurora-bg      : #020617;
+  --aurora-gradient:
+    radial-gradient(ellipse at 0%  0%,  rgba(5,150,105,0.18) 0%, transparent 50%),
+    radial-gradient(ellipse at 100% 100%,rgba(6,95,70,0.22)  0%, transparent 50%),
+    radial-gradient(ellipse at 50%  50%, rgba(9,46,32,0.12)  0%, transparent 80%);
+
+  --glass-blur     : blur(24px) saturate(150%);
+  --glass-blur-sm  : blur(12px) saturate(130%);
+  --glass-blur-lg  : blur(40px) saturate(170%);
+  --glass-bg       : rgba(15,23,42,0.55);
+  --glass-bg-strong: rgba(15,23,42,0.80);
+  --glass-bg-subtle: rgba(15,23,42,0.30);
+  --glass-border   : rgba(255,255,255,0.07);
+  --glass-border-em: rgba(16,185,129,0.08);
+  --glass-shadow   : 0 2px 16px rgba(0,0,0,0.40), 0 0 0 1px rgba(255,255,255,0.06) inset;
+  --glass-shadow-lg: 0 8px 40px rgba(0,0,0,0.50), 0 0 0 1px rgba(255,255,255,0.06) inset;
+  --glass-shadow-glow: 0 0 0 1px rgba(255,255,255,0.06) inset, 0 8px 40px rgba(0,0,0,0.50), 0 0 32px rgba(5,150,105,0.15);
+
+  --shadow-xs : 0 1px 2px rgba(0,0,0,0.30);
+  --shadow-sm : 0 1px 4px rgba(0,0,0,0.40), 0 0 0 0.5px rgba(255,255,255,0.04);
+  --shadow-md : 0 2px 12px rgba(0,0,0,0.50), 0 0 0 0.5px rgba(255,255,255,0.04);
+  --shadow-lg : 0 4px 24px rgba(0,0,0,0.55), 0 0 0 0.5px rgba(255,255,255,0.04);
+  --shadow-xl : 0 8px 40px rgba(0,0,0,0.60), 0 0 0 0.5px rgba(255,255,255,0.04);
+  --shadow-2xl: 0 20px 60px rgba(0,0,0,0.70);
+  --shadow-sidebar: 1px 0 0 rgba(255,255,255,0.04);
+  --shadow-navbar : 0 1px 0 rgba(255,255,255,0.04), 0 2px 8px rgba(0,0,0,0.30);
+  --shadow-focus  : 0 0 0 3px rgba(16,185,129,0.30);
+  --shadow-glow   : 0 0 32px rgba(16,185,129,0.30);
+}
+
+
+/* ============================================================
+   3. RESET & BASE
+   ============================================================ */
+
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+html {
+  font-size:16px; -webkit-text-size-adjust:100%;
+  scroll-behavior:smooth; scrollbar-gutter:stable;
+}
+
+body {
+  font-family    : var(--font-sans);
+  font-size      : var(--text-base);
+  font-weight    : var(--font-normal);
+  line-height    : var(--leading-normal);
+  color          : var(--color-text);
+  background-color: var(--aurora-bg);
+  background-image: var(--aurora-gradient);
+  background-attachment: fixed;
+  min-height     : 100vh;
+  -webkit-font-smoothing : antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering : optimizeLegibility;
+  transition     : background-color var(--transition-slow), color var(--transition-base);
+}
+
+img, video { max-width:100%; height:auto; display:block; }
+a { color:var(--color-primary-light); text-decoration:none; transition:var(--transition-color); }
+a:hover { color:var(--color-primary); }
+button { cursor:pointer; font-family:inherit; font-size:inherit; }
+input, textarea, select { font-family:inherit; font-size:inherit; }
+code, pre, kbd { font-family:var(--font-mono); }
+hr { border:none; border-top:1px solid var(--color-border); margin:var(--space-4) 0; }
+
+
+/* ============================================================
+   4. AURORA ANIMATED LAYER
+   ============================================================
+   Tambahkan <div class="lumra-aurora-field" aria-hidden="true"></div>
+   sebagai elemen pertama dalam <body>.
+   ============================================================ */
+
+@keyframes aurora-drift {
+  0%,100% { transform:scale(1) translate(0,0);      opacity:1; }
+  33%      { transform:scale(1.08) translate(3%,-3%); opacity:0.8; }
+  66%      { transform:scale(0.96) translate(-2%,2%); opacity:0.9; }
+}
+
+.lumra-aurora-field {
+  position:fixed; inset:0; z-index:-1;
+  pointer-events:none; overflow:hidden;
+}
+.lumra-aurora-field::before,
+.lumra-aurora-field::after {
+  content:''; position:absolute; border-radius:50%;
+  filter:blur(80px);
+  animation:aurora-drift var(--aurora-pulse-duration) ease-in-out infinite;
+}
+/* Light orb kiri atas */
+.lumra-aurora-field::before {
+  width:65vw; height:65vw; top:-15%; left:-10%;
+  background:radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 70%);
+}
+/* Light orb kanan bawah */
+.lumra-aurora-field::after {
+  width:55vw; height:55vw; bottom:-12%; right:-8%;
+  background:radial-gradient(circle, rgba(5,150,105,0.05) 0%, transparent 70%);
+  animation-delay:calc(var(--aurora-pulse-duration) / -2);
+}
+/* Dark mode override */
+[data-theme="dark"] .lumra-aurora-field::before {
+  background:radial-gradient(circle, rgba(5,150,105,0.20) 0%, transparent 65%);
+}
+[data-theme="dark"] .lumra-aurora-field::after {
+  background:radial-gradient(circle, rgba(6,95,70,0.25) 0%, transparent 65%);
+}
+
+
+/* ============================================================
+   5. TIPOGRAFI
+   ============================================================ */
+
+h1,h2,h3,h4,h5,h6 {
+  font-family:var(--font-display); font-weight:var(--font-semibold);
+  line-height:var(--leading-tight); letter-spacing:var(--tracking-tight);
+  color:var(--color-text);
+}
+h1{font-size:var(--text-4xl);letter-spacing:-0.03em;}
+h2{font-size:var(--text-3xl);letter-spacing:-0.025em;}
+h3{font-size:var(--text-2xl);letter-spacing:-0.02em;}
+h4{font-size:var(--text-xl); letter-spacing:-0.01em;}
+h5{font-size:var(--text-lg);}
+h6{font-size:var(--text-base);font-weight:var(--font-medium);}
+p {line-height:var(--leading-normal);color:var(--color-text);}
+
+.text-xs{font-size:var(--text-xs);}   .text-sm  {font-size:var(--text-sm);}
+.text-base{font-size:var(--text-base);} .text-md{font-size:var(--text-md);}
+.text-lg{font-size:var(--text-lg);}   .text-xl  {font-size:var(--text-xl);}
+
+.font-light{font-weight:var(--font-light);}
+.font-normal{font-weight:var(--font-normal);}
+.font-medium{font-weight:var(--font-medium);}
+.font-semibold{font-weight:var(--font-semibold);}
+.font-bold{font-weight:var(--font-bold);}
+
+.text-muted  {color:var(--color-text-muted);}
+.text-subtle {color:var(--color-text-subtle);}
+.text-primary{color:var(--color-primary);}
+.text-success{color:var(--color-success);}
+.text-warning{color:var(--color-warning);}
+.text-danger {color:var(--color-danger);}
+.text-info   {color:var(--color-info);}
+
+.tracking-tight  {letter-spacing:var(--tracking-tight);}
+.tracking-wide   {letter-spacing:var(--tracking-wide);}
+.tracking-widest {letter-spacing:var(--tracking-widest);}
+
+.label-overline {
+  font-size:var(--text-xs); font-weight:var(--font-semibold);
+  letter-spacing:var(--tracking-widest); text-transform:uppercase;
+  color:var(--color-text-muted);
+}
+.text-numeric {
+  font-family:var(--font-mono);
+  font-variant-numeric:tabular-nums; letter-spacing:-0.01em;
+}
+
+
+/* ============================================================
+   6. GLASSMORPHISM UTILITIES
+   ============================================================ */
+
+.lumra-glass {
+  background:var(--glass-bg);
+  backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);
+  border:1px solid var(--glass-border); box-shadow:var(--glass-shadow);
+  transition:box-shadow var(--transition-base), transform var(--transition-base),
+             background var(--transition-slow);
+}
+.lumra-glass:hover { box-shadow:var(--glass-shadow-lg); transform:translateY(-2px); }
+
+.lumra-glass-strong {
+  background:var(--glass-bg-strong);
+  backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);
+  border:1px solid var(--glass-border); box-shadow:var(--glass-shadow);
+  transition:background var(--transition-slow);
+}
+
+.lumra-glass-subtle {
+  background:var(--glass-bg-subtle);
+  backdrop-filter:var(--glass-blur-sm); -webkit-backdrop-filter:var(--glass-blur-sm);
+  border:1px solid var(--glass-border);
+}
+
+.lumra-glass-glow {
+  background:var(--glass-bg);
+  backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);
+  border:1px solid var(--glass-border-em); box-shadow:var(--glass-shadow-glow);
+}
+
+.lumra-kpi-glass {
+  background:var(--glass-bg);
+  backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);
+  border:1px solid var(--glass-border); box-shadow:var(--glass-shadow);
+  border-radius:var(--radius-xl); padding:var(--space-6);
+  transition:box-shadow var(--transition-base), transform var(--transition-base),
+             background var(--transition-slow);
+  position:relative; overflow:hidden;
+}
+.lumra-kpi-glass:hover { box-shadow:var(--glass-shadow-glow); transform:translateY(-2px); }
+
+/* Accent gradient top border */
+.lumra-glass-accent { position:relative; }
+.lumra-glass-accent::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:1.5px;
+  background:linear-gradient(
+    90deg, transparent,
+    var(--color-primary-light), var(--color-primary-glow),
+    var(--color-primary-light), transparent
+  );
+  opacity:0.7;
+}
+
+
+/* ============================================================
+   7. CARD
+   ============================================================ */
+
+.lumra-card {
+  background:var(--glass-bg);
+  backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);
+  border:1px solid var(--glass-border); border-radius:var(--radius-lg);
+  box-shadow:var(--glass-shadow); overflow:hidden;
+  transition:box-shadow var(--transition-base), transform var(--transition-base),
+             background var(--transition-slow);
+}
+.lumra-card:hover { box-shadow:var(--glass-shadow-lg); transform:translateY(-1px); }
+
+.lumra-card-header {
+  padding:var(--space-5) var(--space-6);
+  border-bottom:1px solid var(--color-border);
+  display:flex; align-items:center; gap:var(--space-3);
+}
+.lumra-card-title {
+  font-family:var(--font-display); font-size:var(--text-md);
+  font-weight:var(--font-semibold); color:var(--color-text);
+  letter-spacing:var(--tracking-tight);
+}
+.lumra-card-body   { padding:var(--space-6); }
+.lumra-card-footer {
+  padding:var(--space-4) var(--space-6);
+  border-top:1px solid var(--color-border);
+  background:var(--color-black-a02);
+}
+
+
+/* ============================================================
+   8. BADGE
+   ============================================================
+   Filosofi warna:
+     success  → konfirmasi / approved / synced
+     warning  → amber — low stock, pending, review (bukan merah)
+     danger   → merah HANYA untuk critical / system down
+     accent   → ink blue — "Baru", notif standar
+     journey  → amethyst — "Perjalanan", in-transit
+   ============================================================ */
+
+.lumra-badge {
+  display:inline-flex; align-items:center; gap:var(--space-1);
+  padding:2px var(--space-2); font-size:var(--text-xs);
+  font-weight:var(--font-semibold); letter-spacing:var(--tracking-wide);
+  border-radius:var(--radius-full); line-height:1.5; white-space:nowrap;
+  border:1px solid transparent;
+}
+
+.lumra-badge-success {
+  background:var(--color-success-bg); border-color:var(--color-success-border);
+  color:var(--color-success-text);
+}
+.lumra-badge-warning {
+  background:var(--color-warning-bg); border-color:var(--color-warning-border);
+  color:var(--color-warning-text);
+}
+.lumra-badge-danger {
+  background:var(--color-danger-bg); border-color:var(--color-danger-border);
+  color:var(--color-danger-text);
+}
+.lumra-badge-info {
+  background:var(--color-info-bg); border-color:var(--color-info-border);
+  color:var(--color-info-text);
+}
+/* "Baru" — ink blue, bukan merah */
+.lumra-badge-new {
+  background:var(--color-accent-bg); border-color:var(--color-accent-border);
+  color:var(--color-accent-text);
+}
+.lumra-badge-neutral {
+  background:var(--color-black-a04); border-color:var(--color-border);
+  color:var(--color-text-muted);
+}
+.lumra-badge-primary {
+  background:var(--color-primary-subtle); border-color:var(--color-primary-a12);
+  color:var(--color-primary);
+}
+/* "Perjalanan" — amethyst */
+.lumra-badge-journey {
+  background:rgba(124,58,237,0.10); border-color:rgba(167,139,250,0.25);
+  color:#7c3aed;
+}
+[data-theme="dark"] .lumra-badge-journey {
+  background:rgba(124,58,237,0.20); color:#c4b5fd;
+}
+
+
+/* ============================================================
+   9. BUTTON
+   ============================================================ */
+
+.lumra-btn {
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:var(--space-2); padding:var(--space-2) var(--space-4);
+  font-family:var(--font-sans); font-size:var(--text-sm);
+  font-weight:var(--font-medium); line-height:1.5;
+  border-radius:var(--radius-md); border:1px solid transparent;
+  cursor:pointer; white-space:nowrap; text-decoration:none; user-select:none;
+  transition:var(--transition-color), box-shadow var(--transition-base),
+             transform var(--transition-fast);
+}
+.lumra-btn:active { transform:scale(0.97); }
+
+.lumra-btn-primary {
+  background:var(--color-primary); color:white; border-color:var(--color-primary);
+}
+.lumra-btn-primary:hover {
+  background:var(--color-primary-light); border-color:var(--color-primary-light);
+  box-shadow:var(--shadow-glow); color:white;
+}
+.lumra-btn-glass {
+  background:var(--glass-bg); color:var(--color-text); border-color:var(--glass-border);
+  backdrop-filter:var(--glass-blur-sm); -webkit-backdrop-filter:var(--glass-blur-sm);
+}
+.lumra-btn-glass:hover { background:var(--glass-bg-strong); box-shadow:var(--glass-shadow); }
+
+.lumra-btn-outline {
+  background:transparent; color:var(--color-primary); border-color:var(--color-primary-a25);
+}
+.lumra-btn-outline:hover { background:var(--color-primary-a08); }
+
+.lumra-btn-ghost {
+  background:transparent; color:var(--color-text-muted); border-color:transparent;
+}
+.lumra-btn-ghost:hover { background:var(--color-black-a04); color:var(--color-text); }
+
+.lumra-btn-danger {
+  background:var(--color-danger); color:white; border-color:var(--color-danger);
+}
+.lumra-btn-danger:hover { box-shadow:var(--shadow-focus-danger); }
+
+.lumra-btn-sm { padding:var(--space-1) var(--space-3); font-size:var(--text-xs); border-radius:var(--radius-sm); }
+.lumra-btn-lg { padding:var(--space-3) var(--space-6); font-size:var(--text-md);  border-radius:var(--radius-lg); }
+
+
+/* ============================================================
+   10. FORM
+   ============================================================ */
+
+.lumra-input {
+  display:block; width:100%; padding:var(--space-2) var(--space-3);
+  font-family:var(--font-sans); font-size:var(--text-sm);
+  color:var(--color-text); background:var(--glass-bg-subtle);
+  backdrop-filter:var(--glass-blur-sm); -webkit-backdrop-filter:var(--glass-blur-sm);
+  border:1px solid var(--color-border); border-radius:var(--radius-md);
+  box-shadow:var(--shadow-xs); appearance:none;
+  transition:border-color var(--transition-fast), box-shadow var(--transition-fast),
+             background var(--transition-fast);
+}
+.lumra-input:focus {
+  outline:none; border-color:var(--color-border-focus);
+  background:var(--glass-bg); box-shadow:var(--shadow-focus);
+}
+.lumra-input:disabled { opacity:0.5; cursor:not-allowed; }
+.lumra-input.is-invalid { border-color:var(--color-danger); }
+.lumra-input.is-invalid:focus { box-shadow:var(--shadow-focus-danger); }
+
+.lumra-label {
+  display:block; font-size:var(--text-sm); font-weight:var(--font-medium);
+  color:var(--color-text-muted); margin-bottom:var(--space-1);
+}
+.lumra-help-text  { font-size:var(--text-xs); color:var(--color-text-muted);  margin-top:var(--space-1); }
+.lumra-error-text { font-size:var(--text-xs); color:var(--color-danger); margin-top:var(--space-1); }
+
+
+/* ============================================================
+   11. TABLE
+   ============================================================ */
+
+.lumra-table { width:100%; border-collapse:collapse; font-size:var(--text-sm); }
+.lumra-table thead { background:var(--color-black-a02); }
+.lumra-table th {
+  padding:var(--space-3) var(--space-4); text-align:left;
+  font-size:var(--text-xs); font-weight:var(--font-semibold);
+  letter-spacing:var(--tracking-wide); text-transform:uppercase;
+  color:var(--color-text-muted); border-bottom:1px solid var(--color-border);
+  white-space:nowrap;
+}
+.lumra-table td {
+  padding:var(--space-3) var(--space-4);
+  border-bottom:1px solid var(--color-border);
+  color:var(--color-text); vertical-align:middle;
+}
+.lumra-table tbody tr { transition:background-color var(--transition-fast); }
+.lumra-table tbody tr:hover { background:var(--color-primary-a05); }
+.lumra-table tbody tr:last-child td { border-bottom:none; }
+
+
+/* ============================================================
+   12. ALERT
+   ============================================================ */
+
+.lumra-alert {
+  display:flex; align-items:flex-start; gap:var(--space-3);
+  padding:var(--space-4); border-radius:var(--radius-md);
+  border:1px solid transparent; font-size:var(--text-sm);
+  backdrop-filter:var(--glass-blur-sm); -webkit-backdrop-filter:var(--glass-blur-sm);
+}
+.lumra-alert-success { background:var(--color-success-bg); border-color:var(--color-success-border); color:var(--color-success-text); }
+.lumra-alert-warning { background:var(--color-warning-bg); border-color:var(--color-warning-border); color:var(--color-warning-text); }
+.lumra-alert-danger  { background:var(--color-danger-bg);  border-color:var(--color-danger-border);  color:var(--color-danger-text); }
+.lumra-alert-info    { background:var(--color-info-bg);    border-color:var(--color-info-border);    color:var(--color-info-text); }
+
+
+/* ============================================================
+   13. THEME TOGGLE WIDGET
+   ============================================================
+   Cara pakai di sidebar:
+   <button class="lumra-theme-toggle" onclick="lumraToggleTheme()" aria-label="Toggle theme">
+     <div class="lumra-theme-toggle-track"></div>
+     <span class="lumra-theme-toggle-label"></span>
+   </button>
+   ============================================================ */
+
+.lumra-theme-toggle {
+  display:inline-flex; align-items:center; gap:var(--space-2);
+  padding:var(--space-2) var(--space-3);
+  background:var(--glass-bg); backdrop-filter:var(--glass-blur-sm);
+  -webkit-backdrop-filter:var(--glass-blur-sm);
+  border:1px solid var(--glass-border); border-radius:var(--radius-full);
+  cursor:pointer; font-size:var(--text-xs); font-weight:var(--font-medium);
+  color:var(--color-text-muted); transition:var(--transition-all); user-select:none;
+  width:100%;
+}
+.lumra-theme-toggle:hover {
+  background:var(--glass-bg-strong); color:var(--color-text);
+  box-shadow:var(--glass-shadow);
+}
+.lumra-theme-toggle-track {
+  position:relative; width:36px; height:20px;
+  border-radius:var(--radius-full); background:var(--color-border);
+  transition:background var(--transition-base); flex-shrink:0;
+}
+[data-theme="dark"] .lumra-theme-toggle-track { background:var(--color-primary); }
+
+.lumra-theme-toggle-track::after {
+  content:''; position:absolute; top:2px; left:2px;
+  width:16px; height:16px; border-radius:50%;
+  background:white; box-shadow:var(--shadow-sm);
+  transition:transform var(--transition-base);
+}
+[data-theme="dark"] .lumra-theme-toggle-track::after { transform:translateX(16px); }
+
+.lumra-theme-toggle-label::before {
+  content: '☀️  Light';
+}
+[data-theme="dark"] .lumra-theme-toggle-label::before {
+  content: '🌙  Dark';
+}
+
+
+/* ============================================================
+   14. ANIMASI & KEYFRAMES
+   ============================================================ */
+
+@keyframes lumra-fade-up {
+  from{opacity:0;transform:translateY(12px);}
+  to  {opacity:1;transform:translateY(0);}
+}
+@keyframes lumra-fade-in  {from{opacity:0;}to{opacity:1;}}
+@keyframes lumra-scale-in {
+  from{opacity:0;transform:scale(0.94);}
+  to  {opacity:1;transform:scale(1);}
+}
+@keyframes lumra-slide-left {from{transform:translateX(-100%);}to{transform:translateX(0);}}
+@keyframes lumra-pulse      {0%,100%{opacity:1;}50%{opacity:0.5;}}
+@keyframes lumra-shimmer    {from{background-position:-400px 0;}to{background-position:400px 0;}}
+@keyframes lumra-glow-pulse {
+  0%,100%{box-shadow:var(--glass-shadow);}
+  50%    {box-shadow:var(--glass-shadow-glow);}
+}
+
+.animate-fade-up  {animation:lumra-fade-up  350ms var(--ease-out) both;}
+.animate-fade-in  {animation:lumra-fade-in  250ms var(--ease-out) both;}
+.animate-scale-in {animation:lumra-scale-in 200ms var(--ease-bounce) both;}
+.animate-pulse    {animation:lumra-pulse 1.5s ease-in-out infinite;}
+.animate-glow     {animation:lumra-glow-pulse 3s ease-in-out infinite;}
+
+.stagger>*:nth-child(1){animation-delay: 30ms;}
+.stagger>*:nth-child(2){animation-delay: 80ms;}
+.stagger>*:nth-child(3){animation-delay:130ms;}
+.stagger>*:nth-child(4){animation-delay:180ms;}
+.stagger>*:nth-child(5){animation-delay:230ms;}
+.stagger>*:nth-child(6){animation-delay:280ms;}
+
+.lumra-skeleton {
+  background:linear-gradient(90deg,
+    var(--color-black-a04) 25%, var(--color-black-a06) 50%, var(--color-black-a04) 75%
+  );
+  background-size:400px 100%;
+  animation:lumra-shimmer 1.4s ease-in-out infinite;
+  border-radius:var(--radius-sm);
+}
+
+
+/* ============================================================
+   15. SCROLLBAR
+   ============================================================ */
+
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--color-border);border-radius:var(--radius-full);}
+::-webkit-scrollbar-thumb:hover{background:var(--color-text-subtle);}
+.scrollbar-thin::-webkit-scrollbar{width:3px;}
+*{scrollbar-width:thin;scrollbar-color:var(--color-border) transparent;}
+
+
+/* ============================================================
+   16. SELECTION
+   ============================================================ */
+
+::selection      {background:var(--color-primary-a25);color:var(--color-text);}
+::-moz-selection {background:var(--color-primary-a25);color:var(--color-text);}
+
+
+/* ============================================================
+   17. FOCUS RING
+   ============================================================ */
+
+:focus{outline:none;}
+:focus-visible{outline:2px solid var(--color-primary);outline-offset:3px;border-radius:var(--radius-xs);}
+button:focus-visible,a:focus-visible,input:focus-visible,
+select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{
+  outline:2px solid var(--color-primary);outline-offset:2px;box-shadow:var(--shadow-focus);
+}
+.skip-link{
+  position:absolute;top:-100%;left:var(--space-4);
+  padding:var(--space-2) var(--space-4);background:var(--color-primary);
+  color:white;font-size:var(--text-sm);font-weight:var(--font-medium);
+  border-radius:var(--radius-md);z-index:var(--z-toast);transition:top var(--transition-fast);
+}
+.skip-link:focus{top:var(--space-4);}
+
+
+/* ============================================================
+   18. PLACEHOLDER
+   ============================================================ */
+
+::placeholder{color:var(--color-text-subtle);opacity:1;}
+:-ms-input-placeholder {color:var(--color-text-subtle);}
+::-ms-input-placeholder{color:var(--color-text-subtle);}
+input:focus::placeholder,textarea:focus::placeholder{opacity:0.4;transition:opacity var(--transition-fast);}
+
+
+/* ============================================================
+   19. LAYOUT
+   ============================================================ */
+
+.lumra-layout{display:flex;min-height:100vh;}
+.lumra-content{
+  flex:1;min-width:0;padding-top:var(--navbar-height);
+  transition:margin-left var(--transition-slow);
+}
+.lumra-page{padding:var(--space-6) var(--space-8);max-width:var(--content-max-width);}
+.lumra-page-header{margin-bottom:var(--space-6);}
+.lumra-page-title{
+  font-family:var(--font-display);font-size:var(--text-2xl);
+  font-weight:var(--font-bold);letter-spacing:var(--tracking-tight);color:var(--color-text);
+}
+.lumra-page-subtitle{font-size:var(--text-sm);color:var(--color-text-muted);margin-top:var(--space-1);}
+.lumra-divider{height:1px;background:var(--color-border);margin:var(--space-6) 0;}
+.lumra-divider-label{
+  display:flex;align-items:center;gap:var(--space-3);
+  color:var(--color-text-subtle);font-size:var(--text-xs);
+  font-weight:var(--font-medium);letter-spacing:var(--tracking-wide);text-transform:uppercase;
+}
+.lumra-divider-label::before,
+.lumra-divider-label::after{content:'';flex:1;height:1px;background:var(--color-border);}
+
+
+/* ============================================================
+   20. THEME TOGGLE — JavaScript snippet
+   ============================================================
+   Copy snippet ini ke base.html sebelum </body>:
+
+   <script>
+   (function(){
+     var THEME_KEY = 'lumra-theme';
+     var saved = localStorage.getItem(THEME_KEY);
+     // Terapkan sesegera mungkin untuk hindari flash
+     if(saved) document.documentElement.setAttribute('data-theme', saved);
+     window.lumraToggleTheme = function(){
+       var current = document.documentElement.getAttribute('data-theme') || 'light';
+       var next = current === 'dark' ? 'light' : 'dark';
+       document.documentElement.setAttribute('data-theme', next);
+       localStorage.setItem(THEME_KEY, next);
+     };
+   })();
+   </script>
+   ============================================================ */
+
+
+/* ============================================================
+   21. PRINT
+   ============================================================ */
+
+@media print{
+  .lumra-navbar,.lumra-sidebar,.lumra-btn,
+  .lumra-aurora-field,.skip-link,[aria-hidden="true"]{display:none !important;}
+  body{
+    font-family:Georgia,'Times New Roman',serif;font-size:11pt;
+    color:#000;background:#fff;background-image:none !important;
+  }
+  h1,h2,h3,h4,h5,h6{font-family:inherit;color:#000;page-break-after:avoid;}
+  .lumra-table{page-break-inside:avoid;border-collapse:collapse;}
+  .lumra-table th,.lumra-table td{
+    border:1px solid #ccc;padding:6pt 8pt;color:#000;background:transparent !important;
+  }
+  .lumra-card,.lumra-glass,.lumra-kpi-glass{
+    background:transparent !important;backdrop-filter:none !important;
+    border:1px solid #ccc !important;box-shadow:none !important;
+  }
+  a[href]::after{content:' (' attr(href) ')';font-size:9pt;color:#555;}
+  a[href^="#"]::after,a[href^="javascript:"]::after{content:'';}
+  @page{margin:20mm 15mm;}
+}
+
+
+/* ============================================================
+   22. RESPONSIVE
+   ============================================================ */
+
+@media(max-width:768px){
+  :root{--navbar-height:52px;}
+  .lumra-page{padding:var(--space-4);}
+  .lumra-page-title{font-size:var(--text-xl);}
+  .lumra-card-body{padding:var(--space-4);}
+}
+@media(max-width:480px){
+  h1{font-size:var(--text-3xl);}h2{font-size:var(--text-2xl);}h3{font-size:var(--text-xl);}
+  .lumra-kpi-glass{padding:var(--space-4);}
+}

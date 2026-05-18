@@ -1,0 +1,95 @@
+{
+  "filename": "base.html",
+  "title": "{% block title %}Dashboard{% endblock %}",
+  "components": [
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "app-shell flex h-screen",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "app-root",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "app-main-shell flex-1 flex flex-col h-screen overflow-hidden content-shift",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (column)",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "main",
+      "tag": "main",
+      "label": "[ MAIN CONTENT ]",
+      "depth": 3,
+      "path": "root/body/div/div/main",
+      "classes": "content-surface w-full flex-1 overflow-x-hidden overflow-y-auto px-4 py-6 sm:px-6 lg:px-8 pb-20 md:pb-16",
+      "text_preview": "{% block content %}{% endblock %}",
+      "has_scroll": true,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "main-content",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/main",
+      "type": "main",
+      "label": "[ MAIN CONTENT ]",
+      "text_preview": "{% block content %}{% endblock %}"
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 3,
+    "by_type": {
+      "layout": 2,
+      "main": 1
+    },
+    "interactive": 0,
+    "with_scroll": 1,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

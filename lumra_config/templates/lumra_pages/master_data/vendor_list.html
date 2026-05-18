@@ -1,0 +1,368 @@
+{% extends "base/base_hybrid.html" %}
+
+{% block title %}Daftar Vendor — LUMRA{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="vendorList()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-base-content">Daftar Vendor</h1>
+      <p class="text-base-content/60 text-sm">Manajemen master data vendor/supplier.</p>
+    </div>
+    <div class="flex gap-2">
+      <button class="btn btn-ghost" @click="importVendors()">
+        <i class="fas fa-upload mr-2"></i> Import
+      </button>
+      <a href="{% url 'master_data:vendor_form' %}" class="btn btn-primary">
+        <i class="fas fa-plus mr-2"></i> Tambah Vendor
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-primary">
+      <div class="card-body p-5">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-xs font-bold text-base-content/60 uppercase">Total Vendor</p>
+            <p class="text-2xl font-bold text-base-content" x-text="stats.total_vendors"></p>
+          </div>
+          <i class="fas fa-building text-primary/60 text-2xl"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-success">
+      <div class="card-body p-5">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-xs font-bold text-base-content/60 uppercase">Aktif</p>
+            <p class="text-2xl font-bold text-success" x-text="stats.active_vendors"></p>
+          </div>
+          <i class="fas fa-check-circle text-success/60 text-2xl"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-warning">
+      <div class="card-body p-5">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-xs font-bold text-base-content/60 uppercase">Tidak Aktif</p>
+            <p class="text-2xl font-bold text-warning" x-text="stats.inactive_vendors"></p>
+          </div>
+          <i class="fas fa-pause-circle text-warning/60 text-2xl"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-info">
+      <div class="card-body p-5">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-xs font-bold text-base-content/60 uppercase">Baru Bulan Ini</p>
+            <p class="text-2xl font-bold text-info" x-text="stats.new_vendors"></p>
+          </div>
+          <i class="fas fa-calendar-plus text-info/60 text-2xl"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card bg-base-100 shadow-lg border border-base-300">
+    <div class="card-body p-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Kategori</span>
+          </label>
+          <select x-model="filters.category" class="select select-bordered select-sm">
+            <option value="">Semua Kategori</option>
+            <option value="electronics">Elektronik</option>
+            <option value="food">Makanan</option>
+            <option value="clothing">Pakaian</option>
+            <option value="other">Lainnya</option>
+          </select>
+        </div>
+        
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Status</span>
+          </label>
+          <select x-model="filters.status" class="select select-bordered select-sm">
+            <option value="">Semua Status</option>
+            <option value="active">Aktif</option>
+            <option value="inactive">Tidak Aktif</option>
+            <option value="suspended">Ditangguhkan</option>
+          </select>
+        </div>
+        
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Rating</span>
+          </label>
+          <select x-model="filters.rating" class="select select-bordered select-sm">
+            <option value="">Semua Rating</option>
+            <option value="5">5 Bintang</option>
+            <option value="4">4 Bintang</option>
+            <option value="3">3 Bintang</option>
+            <option value="2">2 Bintang</option>
+            <option value="1">1 Bintang</option>
+          </select>
+        </div>
+        
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Search</span>
+          </label>
+          <input 
+            type="text" 
+            x-model="filters.search" 
+            placeholder="Cari vendor..."
+            class="input input-bordered input-sm"
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vendor Table -->
+  <div class="card bg-base-100 shadow-lg border border-base-300">
+    <div class="card-body p-0">
+      <div class="overflow-x-auto">
+        <table class="table table-compact w-full">
+          <thead>
+            <tr class="bg-base-200">
+              <th class="text-left">Vendor</th>
+              <th class="text-left">Kontak</th>
+              <th class="text-left">Kategori</th>
+              <th class="text-left">Rating</th>
+              <th class="text-right">Total Pembelian</th>
+              <th class="text-left">Status</th>
+              <th class="text-center">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="vendor in filteredVendors" :key="vendor.id">
+              <tr class="hover:bg-base-200">
+                <td>
+                  <div class="flex items-center gap-3">
+                    <div class="avatar placeholder">
+                      <div class="bg-neutral text-neutral-content rounded-full w-12 h-12">
+                        <span class="text-lg" x-text="vendor.name.charAt(0)"></span>
+                      </div>
+                    </div>
+                    <div>
+                      <p class="font-semibold" x-text="vendor.name"></p>
+                      <p class="text-xs text-base-content/60" x-text="vendor.code"></p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <p class="text-sm" x-text="vendor.contact_person"></p>
+                    <p class="text-xs text-base-content/60" x-text="vendor.phone"></p>
+                    <p class="text-xs text-base-content/60" x-text="vendor.email"></p>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge badge-sm badge-outline" x-text="vendor.category"></span>
+                </td>
+                <td>
+                  <div class="flex items-center gap-1">
+                    <template x-for="i in 5" :key="i">
+                      <i class="fas fa-star text-xs" :class="i <= vendor.rating ? 'text-warning' : 'text-base-300'"></i>
+                    </template>
+                    <span class="text-xs text-base-content/60 ml-1" x-text="`(${vendor.rating})`"></span>
+                  </div>
+                </td>
+                <td class="text-right font-mono" x-text="formatCurrency(vendor.total_purchase)"></td>
+                <td>
+                  <span class="badge badge-sm" :class="getStatusClass(vendor.status)" x-text="getStatusText(vendor.status)"></span>
+                </td>
+                <td class="text-center">
+                  <div class="flex gap-2 justify-center">
+                    <button class="btn btn-ghost btn-xs" @click="viewVendor(vendor.id)">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn btn-ghost btn-xs" @click="editVendor(vendor.id)">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-ghost btn-xs" @click="purchaseOrders(vendor.id)">
+                      <i class="fas fa-shopping-cart"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function vendorList() {
+  return {
+    vendors: [],
+    filters: {
+      category: '',
+      status: '',
+      rating: '',
+      search: ''
+    },
+    filteredVendors: [],
+    stats: {
+      total_vendors: 0,
+      active_vendors: 0,
+      inactive_vendors: 0,
+      new_vendors: 0
+    },
+    
+    init() {
+      this.loadVendors();
+    },
+    
+    loadVendors() {
+      // Mock data - replace with actual API call
+      this.vendors = [
+        {
+          id: 1,
+          name: 'PT. Teknologi Maju',
+          code: 'VENDOR-001',
+          contact_person: 'Budi Santoso',
+          phone: '+62 21 1234 5678',
+          email: 'budi@teknologimaju.com',
+          category: 'Elektronik',
+          rating: 5,
+          total_purchase: 150000000,
+          status: 'active'
+        },
+        {
+          id: 2,
+          name: 'CV. Makanan Sehat',
+          code: 'VENDOR-002',
+          contact_person: 'Siti Nurhaliza',
+          phone: '+62 21 8765 4321',
+          email: 'siti@makanansehat.com',
+          category: 'Makanan',
+          rating: 4,
+          total_purchase: 75000000,
+          status: 'active'
+        },
+        {
+          id: 3,
+          name: 'UD. Pakaian Trendi',
+          code: 'VENDOR-003',
+          contact_person: 'Ahmad Fauzi',
+          phone: '+62 21 9876 5432',
+          email: 'ahmad@pakaiantrendi.com',
+          category: 'Pakaian',
+          rating: 3,
+          total_purchase: 50000000,
+          status: 'inactive'
+        }
+      ];
+      
+      this.calculateStats();
+      this.applyFilters();
+    },
+    
+    calculateStats() {
+      this.stats.total_vendors = this.vendors.length;
+      this.stats.active_vendors = this.vendors.filter(v => v.status === 'active').length;
+      this.stats.inactive_vendors = this.vendors.filter(v => v.status === 'inactive').length;
+      this.stats.new_vendors = this.vendors.filter(v => {
+        const createdDate = new Date(v.created_date);
+        const now = new Date();
+        const monthDiff = (now.getFullYear() - createdDate.getFullYear()) * 12 + (now.getMonth() - createdDate.getMonth());
+        return monthDiff <= 1;
+      }).length;
+    },
+    
+    applyFilters() {
+      this.filteredVendors = this.vendors.filter(vendor => {
+        let matches = true;
+        
+        if (this.filters.search) {
+          const search = this.filters.search.toLowerCase();
+          if (!vendor.name.toLowerCase().includes(search) &&
+              !vendor.code.toLowerCase().includes(search) &&
+              !vendor.contact_person.toLowerCase().includes(search) &&
+              !vendor.email.toLowerCase().includes(search)) {
+            matches = false;
+          }
+        }
+        
+        if (this.filters.status && vendor.status !== this.filters.status) {
+          matches = false;
+        }
+        
+        if (this.filters.rating && vendor.rating !== parseInt(this.filters.rating)) {
+          matches = false;
+        }
+        
+        return matches;
+      });
+    },
+    
+    getStatusClass(status) {
+      switch(status) {
+        case 'active': return 'badge-success';
+        case 'inactive': return 'badge-neutral';
+        case 'suspended': return 'badge-error';
+        default: return 'badge-neutral';
+      }
+    },
+    
+    getStatusText(status) {
+      switch(status) {
+        case 'active': return 'Aktif';
+        case 'inactive': return 'Tidak Aktif';
+        case 'suspended': return 'Ditangguhkan';
+        default: return 'Tidak Diketahui';
+      }
+    },
+    
+    formatCurrency(amount) {
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0
+      }).format(amount);
+    },
+    
+    viewVendor(id) {
+      console.log('View vendor:', id);
+      // Navigate to vendor detail
+    },
+    
+    editVendor(id) {
+      console.log('Edit vendor:', id);
+      // Navigate to vendor edit
+    },
+    
+    purchaseOrders(id) {
+      console.log('View purchase orders:', id);
+      // Navigate to purchase orders
+    },
+    
+    importVendors() {
+      console.log('Import vendors');
+      // Open import modal
+    }
+  }
+}
+</script>
+{% endblock %}

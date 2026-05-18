@@ -1,0 +1,2135 @@
+{
+  "module_name": "reports",
+  "template_total": 25,
+  "templates": [
+    {
+      "template_name": "lumra_pages/reports/activity_log.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/activity_log.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 0,
+      "structure_stats": {
+        "component_total": 26,
+        "interactive_total": 7,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "📋 Activity Log"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT [text] Search activities...",
+            "text_preview": "Search activities..."
+          },
+          {
+            "type": "search",
+            "label": "SEARCH BAR",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT [select] ",
+            "text_preview": ""
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/sales_history.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/sales_history.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 1,
+      "structure_stats": {
+        "component_total": 96,
+        "interactive_total": 29,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Stock Movements {{ transfer_count|default:0 }} Transfers"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Purchases {{ requisition_count|default:0 }} Requisitions"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Items Sold {{ total_qty|default:0 }} All items"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "input_no_label",
+            "message": "Input tanpa label/placeholder: <input> id='searchInput' class='bar-input flex-1'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/base_report.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/base_report.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 25,
+        "interactive_total": 8,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [reportManager()]",
+            "text_preview": "{# ── Page Title ─────────────────────────────────────── #}…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "📊 {{ report_title }}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: ⬇️ Export CSV Exporting…",
+            "text_preview": "⬇️ Export CSV Exporting…"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: 🖨️ Print",
+            "text_preview": "🖨️ Print"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/report_activity_log.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/report_activity_log.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 26,
+        "interactive_total": 7,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "📋 Activity Log"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT [text] Search activities...",
+            "text_preview": "Search activities..."
+          },
+          {
+            "type": "search",
+            "label": "SEARCH BAR",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT [select] ",
+            "text_preview": ""
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/report_inventory_log.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/report_inventory_log.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 88,
+        "interactive_total": 27,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Items Sold {{ total_qty|default:0 }} All items"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Revenue Rp {{ total_amount|floatformat:0|default:0 }} Invoice total"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Avg / Item Rp {% if total_qty > 0 %}{{ total_amount|div:total_qty|floatformat:0…"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "input_no_label",
+            "message": "Input tanpa label/placeholder: <input> id='searchInput' class='bar-input flex-1'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/report_inventory_low.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/report_inventory_low.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 88,
+        "interactive_total": 27,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Items Sold {{ total_qty|default:0 }} All items"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Revenue Rp {{ total_amount|floatformat:0|default:0 }} Invoice total"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Avg / Item Rp {% if total_qty > 0 %}{{ total_amount|div:total_qty|floatformat:0…"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "input_no_label",
+            "message": "Input tanpa label/placeholder: <input> id='searchInput' class='bar-input flex-1'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/report_inventory_stock.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/report_inventory_stock.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 88,
+        "interactive_total": 27,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Items Sold {{ total_qty|default:0 }} All items"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Revenue Rp {{ total_amount|floatformat:0|default:0 }} Invoice total"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Avg / Item Rp {% if total_qty > 0 %}{{ total_amount|div:total_qty|floatformat:0…"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "input_no_label",
+            "message": "Input tanpa label/placeholder: <input> id='searchInput' class='bar-input flex-1'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/report_sales_by_outlet.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/report_sales_by_outlet.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 88,
+        "interactive_total": 27,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Items Sold {{ total_qty|default:0 }} All items"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Revenue Rp {{ total_amount|floatformat:0|default:0 }} Invoice total"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Avg / Item Rp {% if total_qty > 0 %}{{ total_amount|div:total_qty|floatformat:0…"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "input_no_label",
+            "message": "Input tanpa label/placeholder: <input> id='searchInput' class='bar-input flex-1'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/report_sales_by_payment.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/report_sales_by_payment.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 88,
+        "interactive_total": 27,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Items Sold {{ total_qty|default:0 }} All items"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Revenue Rp {{ total_amount|floatformat:0|default:0 }} Invoice total"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Avg / Item Rp {% if total_qty > 0 %}{{ total_amount|div:total_qty|floatformat:0…"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "input_no_label",
+            "message": "Input tanpa label/placeholder: <input> id='searchInput' class='bar-input flex-1'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/report_sales_by_product.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/report_sales_by_product.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 88,
+        "interactive_total": 27,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Items Sold {{ total_qty|default:0 }} All items"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Revenue Rp {{ total_amount|floatformat:0|default:0 }} Invoice total"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Avg / Item Rp {% if total_qty > 0 %}{{ total_amount|div:total_qty|floatformat:0…"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "input_no_label",
+            "message": "Input tanpa label/placeholder: <input> id='searchInput' class='bar-input flex-1'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/report_sales_summary.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/report_sales_summary.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 88,
+        "interactive_total": 27,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Items Sold {{ total_qty|default:0 }} All items"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Revenue Rp {{ total_amount|floatformat:0|default:0 }} Invoice total"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Avg / Item Rp {% if total_qty > 0 %}{{ total_amount|div:total_qty|floatformat:0…"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "input_no_label",
+            "message": "Input tanpa label/placeholder: <input> id='searchInput' class='bar-input flex-1'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/reporting.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/reporting.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 43,
+        "interactive_total": 14,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [reportingDashboard()]",
+            "text_preview": "Dashboard / Reporting Dashboard Reporting Dashboard Analyze…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Reporting Dashboard"
+          },
+          {
+            "type": "ol",
+            "label": "[ ORDERED LIST ]",
+            "text_preview": "Dashboard / Reporting Dashboard"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Reporting Dashboard"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Export CSV",
+            "text_preview": "Export CSV"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Inbox",
+            "text_preview": "Inbox"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='p-1.5 text-slate-400 hover:style='"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/sales_report_after.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/sales_report_after.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 6,
+        "interactive_total": 1,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "{% include \"base/kpi_card.html\" with title=\"Total Transaksi\" value=total_transac…"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Rincian Penjualan Export CSV Tanggal Outlet Produk Qty Total Status {% for item…"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H2)",
+            "text_preview": "Rincian Penjualan"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Export CSV",
+            "text_preview": "Export CSV"
+          },
+          {
+            "type": "table",
+            "label": "[ TABLE ]",
+            "text_preview": "Tanggal Outlet Produk Qty Total Status {% for item in sales_data %} {{ item.date…"
+          },
+          {
+            "type": "badge",
+            "label": "BADGE / STATUS",
+            "text_preview": "{{ item.status }}"
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/report_customer_lifetime.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/report_customer_lifetime.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 20,
+        "interactive_total": 1,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Laporan Customer Lifetime Value"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Periode: 6 Bulan",
+            "text_preview": "Periode: 6 Bulan"
+          },
+          {
+            "type": "calendar",
+            "label": "CALENDAR",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Total Revenue Period Total Customer Avg LTV"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/report_expiry.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/report_expiry.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 5,
+      "structure_stats": {
+        "component_total": 17,
+        "interactive_total": 5,
+        "issue_total": 3,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Laporan Kedaluwarsa (Expiry)"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT [date] filterDate",
+            "text_preview": "filterDate"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "PERHATIAN! Ada Item Kritis Produk ini akan kedaluwarsa dalam waktu kurang dari 3…"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H2)",
+            "text_preview": "PERHATIAN! Ada Item Kritis"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='text-xs font-bold text-emerald-600 hover:bg-emeral'"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='text-xs font-bold text-white bg-rose-600 hover:bg-'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/report_inventory_age.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/report_inventory_age.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 5,
+      "structure_stats": {
+        "component_total": 16,
+        "interactive_total": 4,
+        "issue_total": 3,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Inventory Aging Report"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Filter Lokasi",
+            "text_preview": "Filter Lokasi"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Export Excel",
+            "text_preview": "Export Excel"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Fast Moving 0 - 30 Hari"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='text-xs font-bold text-rose-600 hover:text-rose-80'"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='text-xs font-bold text-amber-600 hover:text-amber-'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/report_production.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/report_production.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 16,
+        "interactive_total": 1,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Laporan Produksi"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT [select] ",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Yield Rate Output vs Target"
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/report_profit_loss_detail.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/report_profit_loss_detail.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 5,
+      "structure_stats": {
+        "component_total": 88,
+        "interactive_total": 27,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Items Sold {{ total_qty|default:0 }} All items"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Revenue Rp {{ total_amount|floatformat:0|default:0 }} Invoice total"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Avg / Item Rp {% if total_qty > 0 %}{{ total_amount|div:total_qty|floatformat:0…"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "input_no_label",
+            "message": "Input tanpa label/placeholder: <input> id='searchInput' class='bar-input flex-1'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/sales_history_product.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/sales_history_product.html",
+      "routes": [
+        {
+          "route": "history/products/",
+          "url_name": "sales_history_products",
+          "url_file": "lumra_config/urls/sales.py",
+          "view_name": "sales_history_products_view"
+        },
+        {
+          "route": "history/products/",
+          "url_name": "sales_history_products",
+          "url_file": "lumra_config/urls/sales.py",
+          "view_name": "sales_history_products_view"
+        }
+      ],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 88,
+        "interactive_total": 27,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Items Sold {{ total_qty|default:0 }} All items"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Revenue Rp {{ total_amount|floatformat:0|default:0 }} Invoice total"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Avg / Item Rp {% if total_qty > 0 %}{{ total_amount|div:total_qty|floatformat:0…"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "input_no_label",
+            "message": "Input tanpa label/placeholder: <input> id='searchInput' class='bar-input flex-1'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/transaction_summary.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/transaction_summary.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 88,
+        "interactive_total": 27,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Items Sold {{ total_qty|default:0 }} All items"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Revenue Rp {{ total_amount|floatformat:0|default:0 }} Invoice total"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Avg / Item Rp {% if total_qty > 0 %}{{ total_amount|div:total_qty|floatformat:0…"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "input_no_label",
+            "message": "Input tanpa label/placeholder: <input> id='searchInput' class='bar-input flex-1'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/purchasing_report.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/purchasing_report.html",
+      "routes": [],
+      "forward_batch": "batch_4_complex",
+      "batch_reason": "Report/print/logic-heavy page, cocok setelah fondasi stabil.",
+      "complexity_score": 6,
+      "structure_stats": {
+        "component_total": 89,
+        "interactive_total": 27,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Items Sold {{ total_qty|default:0 }} All items"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Revenue Rp {{ total_amount|floatformat:0|default:0 }} Invoice total"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Avg / Item Rp {% if total_qty > 0 %}{{ total_amount|div:total_qty|floatformat:0…"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "input_no_label",
+            "message": "Input tanpa label/placeholder: <input> id='searchInput' class='bar-input flex-1'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/report_staff_performance.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/report_staff_performance.html",
+      "routes": [],
+      "forward_batch": "batch_4_complex",
+      "batch_reason": "Report/print/logic-heavy page, cocok setelah fondasi stabil.",
+      "complexity_score": 6,
+      "structure_stats": {
+        "component_total": 16,
+        "interactive_total": 2,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Laporan Kinerja Karyawan"
+          },
+          {
+            "type": "input",
+            "label": "INPUT [select] ",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='px-4 py-2 bg-slate-50 text-slate-600 rounded-lg te'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/requisition_report.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/requisition_report.html",
+      "routes": [],
+      "forward_batch": "batch_4_complex",
+      "batch_reason": "Report/print/logic-heavy page, cocok setelah fondasi stabil.",
+      "complexity_score": 6,
+      "structure_stats": {
+        "component_total": 88,
+        "interactive_total": 27,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Items Sold {{ total_qty|default:0 }} All items"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Revenue Rp {{ total_amount|floatformat:0|default:0 }} Invoice total"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Avg / Item Rp {% if total_qty > 0 %}{{ total_amount|div:total_qty|floatformat:0…"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "input_no_label",
+            "message": "Input tanpa label/placeholder: <input> id='searchInput' class='bar-input flex-1'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/sales_report.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/sales_report.html",
+      "routes": [],
+      "forward_batch": "batch_4_complex",
+      "batch_reason": "Report/print/logic-heavy page, cocok setelah fondasi stabil.",
+      "complexity_score": 6,
+      "structure_stats": {
+        "component_total": 96,
+        "interactive_total": 29,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Stock Movements {{ transfer_count|default:0 }} Transfers"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Purchases {{ requisition_count|default:0 }} Requisitions"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Items Sold {{ total_qty|default:0 }} All items"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "input_no_label",
+            "message": "Input tanpa label/placeholder: <input> id='searchInput' class='bar-input flex-1'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/reports/transfer_report.html",
+      "template_file": "lumra_config/templates/lumra_pages/reports/transfer_report.html",
+      "routes": [],
+      "forward_batch": "batch_4_complex",
+      "batch_reason": "Report/print/logic-heavy page, cocok setelah fondasi stabil.",
+      "complexity_score": 6,
+      "structure_stats": {
+        "component_total": 88,
+        "interactive_total": 27,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Items Sold {{ total_qty|default:0 }} All items"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Revenue Rp {{ total_amount|floatformat:0|default:0 }} Invoice total"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Avg / Item Rp {% if total_qty > 0 %}{{ total_amount|div:total_qty|floatformat:0…"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "input_no_label",
+            "message": "Input tanpa label/placeholder: <input> id='searchInput' class='bar-input flex-1'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    }
+  ],
+  "views": [
+    {
+      "view_name": "sales_history_products_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 434,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "create_empty_context('Sales History - Products', 'Data produk tidak ditemukan.')",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def sales_history_products_view(request):\n    \"\"\"Sales history per produk dengan detail — N+1 diperbaiki.\"\"\"\n\n    products = Product.objects.select_related(\"category\").all()\n\n    # Check if products is empty\n    if not products.exists():\n        return render(\n            request,\n            \"lumra_pages/reports/sales_history_product.html\",\n            create_empty_context(\"Sales History - Products\", \"Data produk tidak ditemukan.\")\n        )\n\n    thirty_days_ago = timezone.now() - timedelta(days=30)\n\n    # FIX: ganti loop + per-product query → 2 bulk query\n    # Query 1: total units & revenue per product (all-time)\n    totals_by_product = {\n        row[\"variant__product_id\"]: row\n        for row in OrderItem.objects.values(\"variant__product_id\").annotate(\n            units_sold=Sum(\"quantity\"),\n            revenue=Sum(F(\"quantity\") * F(\"price\"), output_field=DecimalField()),\n        )\n    }\n\n    # Query 2: daily sales per product (30 hari terakhir)\n    recent_qs = (\n        OrderItem.objects\n        .filter(order__created_at__gte=thirty_days_ago)\n        .annotate(date=TruncDate(\"order__created_at\"))\n        .values(\"variant__product_id\", \"date\")\n        .annotate(\n            units=Sum(\"quantity\"),\n            revenue=Sum(F(\"quantity\") * F(\"price\"), output_field=DecimalField()),\n        )\n        .order_by(\"variant__product_id\", \"-date\")\n    )\n\n    # Group recent sales by product id\n    recent_by_product: dict[int, list] = {}\n    for row in recent_qs:\n        pid = row[\"variant__product_id\"]\n        recent_by_product.setdefault(pid, []).append({\n            \"date\":    str(row[\"date\"]),\n            \"units\":   row[\"units\"],\n            \"revenue\": float(row[\"revenue\"] or 0),\n        })\n\n    product_sales = []\n    for product in products:\n        totals = totals_by_product.get(product.id, {})\n        product_sales.append({\n            \"id\":           product.id,\n            \"name\":         product.name,\n            \"description\":  product.description,\n            \"category\":     product.category.name if product.category else None,\n            \"unitsSold\":    totals.get(\"units_sold\") or 0,\n            \"revenue\":      float(totals.get(\"revenue\") or 0),\n            \"salesHistory\": recent_by_product.get(product.id, []),\n        })\n\n    # TODO[C3-LONG]: 'sales_performance_view' = 308 baris (max 30). Pecah: sales_performance_view_validate(), sales_performance_view_query(), sales_performance_view_render()\n    context = {\n        \"products\": json.dumps(product_sales, default=str),\n        \"is_empty\": False,\n    }\n    return render(request, \"lumra_pages/reports/sales_history_product.html\", context)"
+    },
+    {
+      "view_name": "sales_history_products_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 493,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def sales_history_products_view(request):\n    \"\"\"Sales history per produk dengan detail — N+1 diperbaiki.\"\"\"\n\n    products = Product.objects.select_related(\"category\").all()\n\n    # Check if products is empty\n    if not products.exists():\n        return render(\n            request,\n            \"lumra_pages/reports/sales_history_product.html\",\n            create_empty_context(\"Sales History - Products\", \"Data produk tidak ditemukan.\")\n        )\n\n    thirty_days_ago = timezone.now() - timedelta(days=30)\n\n    # FIX: ganti loop + per-product query → 2 bulk query\n    # Query 1: total units & revenue per product (all-time)\n    totals_by_product = {\n        row[\"variant__product_id\"]: row\n        for row in OrderItem.objects.values(\"variant__product_id\").annotate(\n            units_sold=Sum(\"quantity\"),\n            revenue=Sum(F(\"quantity\") * F(\"price\"), output_field=DecimalField()),\n        )\n    }\n\n    # Query 2: daily sales per product (30 hari terakhir)\n    recent_qs = (\n        OrderItem.objects\n        .filter(order__created_at__gte=thirty_days_ago)\n        .annotate(date=TruncDate(\"order__created_at\"))\n        .values(\"variant__product_id\", \"date\")\n        .annotate(\n            units=Sum(\"quantity\"),\n            revenue=Sum(F(\"quantity\") * F(\"price\"), output_field=DecimalField()),\n        )\n        .order_by(\"variant__product_id\", \"-date\")\n    )\n\n    # Group recent sales by product id\n    recent_by_product: dict[int, list] = {}\n    for row in recent_qs:\n        pid = row[\"variant__product_id\"]\n        recent_by_product.setdefault(pid, []).append({\n            \"date\":    str(row[\"date\"]),\n            \"units\":   row[\"units\"],\n            \"revenue\": float(row[\"revenue\"] or 0),\n        })\n\n    product_sales = []\n    for product in products:\n        totals = totals_by_product.get(product.id, {})\n        product_sales.append({\n            \"id\":           product.id,\n            \"name\":         product.name,\n            \"description\":  product.description,\n            \"category\":     product.category.name if product.category else None,\n            \"unitsSold\":    totals.get(\"units_sold\") or 0,\n            \"revenue\":      float(totals.get(\"revenue\") or 0),\n            \"salesHistory\": recent_by_product.get(product.id, []),\n        })\n\n    # TODO[C3-LONG]: 'sales_performance_view' = 308 baris (max 30). Pecah: sales_performance_view_validate(), sales_performance_view_query(), sales_performance_view_render()\n    context = {\n        \"products\": json.dumps(product_sales, default=str),\n        \"is_empty\": False,\n    }\n    return render(request, \"lumra_pages/reports/sales_history_product.html\", context)"
+    },
+    {
+      "view_name": "activity_log_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 1505,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def activity_log_view(request):\n    context = {\"activities\": []}\n    return render(request, \"lumra_pages/reports/activity_log.html\", context)"
+    },
+    {
+      "view_name": "sales_report",
+      "view_module": "lumra_config.views.report_views",
+      "view_file": "lumra_config/views/report_views.py",
+      "line": 73,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def sales_report(request):\n    \"\"\"\n    Laporan Penjualan Detail\n    Menampilkan semua transaksi penjualan per item\n    \"\"\"\n    # Get date range from request\n    date_from = request.GET.get('date_from')\n    date_to = request.GET.get('date_to')\n    \n    # Default: last 30 days\n    if not date_from or not date_to:\n        date_to = timezone.now()\n        date_from = date_to - timedelta(days=30)\n    else:\n        date_from = parse_date_aware(date_from, 'start')\n        date_to = parse_date_aware(date_to, 'end')\n    \n    # Query sales detail\n    sales = OrderItem.objects.filter(\n        order__created_at__range=[date_from, date_to],\n        order__status='completed'\n    ).select_related('order', 'variant', 'variant__product').order_by('-order__created_at')\n    \n    # Check if sales is empty\n    if not sales.exists():\n        context = create_empty_context(\"Sales Report\", \"Data penjualan tidak ditemukan untuk periode yang dipilih.\")\n        # ensure dates are strings for template\n        def _fmt(d):\n            return d.strftime('%Y-%m-%d') if isinstance(d, datetime) else d\n        context.update({\n            'date_from': _fmt(date_from),\n            'date_to': _fmt(date_to),\n        })\n        return render(request, 'lumra_pages/reports/sales_report.html', context)\n    \n    # Calculate totals\n    total_qty = sales.aggregate(Sum('quantity'))['quantity__sum'] or 0\n    total_amount = sales.aggregate(\n        total=Sum(F('quantity') * F('price'))\n    )['total'] or 0\n\n    # additional metrics for linking pages\n    transfer_count = Transfer.objects.filter(\n        created_at__range=[date_from, date_to]\n    ).count()\n    requisition_count = Requisition.objects.filter(\n        created_at__range=[date_from, date_to]\n    ).count()\n    \n    # Pagination\n    paginator = Paginator(sales, 50)\n    page_number = request.GET.get('page', 1)\n    sales_page = paginator.get_page(page_number)\n    \n    # Export CSV\n    if request.GET.get('export') == 'csv':\n        response = HttpResponse(content_type='text/csv')\n        response['Content-Disposition'] = 'attachment; filename=\"sales_report.csv\"'\n        writer = csv.writer(response)\n        writer.writerow(['Order ID', 'Customer', 'Date', 'SKU', 'Product', 'Qty', 'Price', 'Total'])\n        for item in sales:\n            writer.writerow([\n                item.order.id,\n                item.order.customer_name,\n                item.order.created_at.strftime('%Y-%m-%d %H:%M'),\n                item.variant.sku,\n                item.variant.product.name,\n                item.quantity,\n                item.price,\n                item.quantity * item.price\n            ])\n        return response\n    \n    context = {\n        'sales': sales_page,\n        'total_qty': total_qty,\n        'total_amount': total_amount,\n        'transfer_count': transfer_count,\n        'requisition_count': requisition_count,\n        'date_from': date_from.strftime('%Y-%m-%d') if hasattr(date_from, 'strftime') else date_from,\n        'date_to': date_to.strftime('%Y-%m-%d') if hasattr(date_to, 'strftime') else date_to,\n        'report_title': 'Sales Report',\n        'is_empty': False,\n    }\n    return render(request, 'lumra_pages/reports/sales_report.html', context)"
+    },
+    {
+      "view_name": "sales_report",
+      "view_module": "lumra_config.views.report_views",
+      "view_file": "lumra_config/views/report_views.py",
+      "line": 124,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def sales_report(request):\n    \"\"\"\n    Laporan Penjualan Detail\n    Menampilkan semua transaksi penjualan per item\n    \"\"\"\n    # Get date range from request\n    date_from = request.GET.get('date_from')\n    date_to = request.GET.get('date_to')\n    \n    # Default: last 30 days\n    if not date_from or not date_to:\n        date_to = timezone.now()\n        date_from = date_to - timedelta(days=30)\n    else:\n        date_from = parse_date_aware(date_from, 'start')\n        date_to = parse_date_aware(date_to, 'end')\n    \n    # Query sales detail\n    sales = OrderItem.objects.filter(\n        order__created_at__range=[date_from, date_to],\n        order__status='completed'\n    ).select_related('order', 'variant', 'variant__product').order_by('-order__created_at')\n    \n    # Check if sales is empty\n    if not sales.exists():\n        context = create_empty_context(\"Sales Report\", \"Data penjualan tidak ditemukan untuk periode yang dipilih.\")\n        # ensure dates are strings for template\n        def _fmt(d):\n            return d.strftime('%Y-%m-%d') if isinstance(d, datetime) else d\n        context.update({\n            'date_from': _fmt(date_from),\n            'date_to': _fmt(date_to),\n        })\n        return render(request, 'lumra_pages/reports/sales_report.html', context)\n    \n    # Calculate totals\n    total_qty = sales.aggregate(Sum('quantity'))['quantity__sum'] or 0\n    total_amount = sales.aggregate(\n        total=Sum(F('quantity') * F('price'))\n    )['total'] or 0\n\n    # additional metrics for linking pages\n    transfer_count = Transfer.objects.filter(\n        created_at__range=[date_from, date_to]\n    ).count()\n    requisition_count = Requisition.objects.filter(\n        created_at__range=[date_from, date_to]\n    ).count()\n    \n    # Pagination\n    paginator = Paginator(sales, 50)\n    page_number = request.GET.get('page', 1)\n    sales_page = paginator.get_page(page_number)\n    \n    # Export CSV\n    if request.GET.get('export') == 'csv':\n        response = HttpResponse(content_type='text/csv')\n        response['Content-Disposition'] = 'attachment; filename=\"sales_report.csv\"'\n        writer = csv.writer(response)\n        writer.writerow(['Order ID', 'Customer', 'Date', 'SKU', 'Product', 'Qty', 'Price', 'Total'])\n        for item in sales:\n            writer.writerow([\n                item.order.id,\n                item.order.customer_name,\n                item.order.created_at.strftime('%Y-%m-%d %H:%M'),\n                item.variant.sku,\n                item.variant.product.name,\n                item.quantity,\n                item.price,\n                item.quantity * item.price\n            ])\n        return response\n    \n    context = {\n        'sales': sales_page,\n        'total_qty': total_qty,\n        'total_amount': total_amount,\n        'transfer_count': transfer_count,\n        'requisition_count': requisition_count,\n        'date_from': date_from.strftime('%Y-%m-%d') if hasattr(date_from, 'strftime') else date_from,\n        'date_to': date_to.strftime('%Y-%m-%d') if hasattr(date_to, 'strftime') else date_to,\n        'report_title': 'Sales Report',\n        'is_empty': False,\n    }\n    return render(request, 'lumra_pages/reports/sales_report.html', context)"
+    },
+    {
+      "view_name": "transaction_summary",
+      "view_module": "lumra_config.views.report_views",
+      "view_file": "lumra_config/views/report_views.py",
+      "line": 198,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def transaction_summary(request):\n    \"\"\"\n    Laporan Transaksi (Summary Header)\n    Menampilkan ringkasan per transaksi/order\n    \"\"\"\n    date_from = request.GET.get('date_from')\n    date_to = request.GET.get('date_to')\n    \n    # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n    # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n    # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n    # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n    if not date_from or not date_to:\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        date_to = timezone.now()\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        date_from = date_to - timedelta(days=30)\n    else:\n        date_from = parse_date_aware(date_from, 'start')\n        date_to = parse_date_aware(date_to, 'end')\n    \n    # Query transactions with aggregation\n    transactions = Order.objects.filter(\n        created_at__range=[date_from, date_to],\n        status='completed'\n    ).annotate(\n        total_items=Count('items'),\n        total_qty=Sum('items__quantity'),\n        total_amount=Sum(F('items__quantity') * F('items__price'))\n    ).order_by('-created_at')\n    \n    # Summary stats\n    total_transactions = transactions.count()\n    total_revenue = transactions.aggregate(Sum('items__quantity') * Sum('items__price'))['items__quantity__sum'] or 0\n    \n    paginator = Paginator(transactions, 50)\n    page_number = request.GET.get('page', 1)\n    transactions_page = paginator.get_page(page_number)\n    \n    # Export CSV\n    if request.GET.get('export') == 'csv':\n        response = HttpResponse(content_type='text/csv')\n        response['Content-Disposition'] = 'attachment; filename=\"transaction_summary.csv\"'\n        writer = csv.writer(response)\n        writer.writerow(['Order ID', 'Customer', 'Date', 'Items', 'Total Qty', 'Total Amount', 'Status'])\n        for trans in transactions:\n            writer.writerow([\n                trans.id,\n                trans.customer_name,\n                trans.created_at.strftime('%Y-%m-%d %H:%M'),\n                trans.total_items,\n                trans.total_qty,\n                trans.total_amount,\n                trans.status\n            ])\n        return response\n    \n    context = {\n        'transactions': transactions_page,\n        'total_transactions': total_transactions,\n        'total_revenue': total_revenue,\n        'date_from': date_from.strftime('%Y-%m-%d'),\n        'date_to': date_to.strftime('%Y-%m-%d'),\n        'report_title': 'Transaction Summary'\n    # TODO[C3-LONG]: 'transfer_report' = 54 baris (max 30). Pecah: transfer_report_validate(), transfer_report_query(), transfer_report_render()\n    }\n    return render(request, 'lumra_pages/reports/transaction_summary.html', context)"
+    },
+    {
+      "view_name": "transfer_report",
+      "view_module": "lumra_config.views.report_views",
+      "view_file": "lumra_config/views/report_views.py",
+      "line": 276,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def transfer_report(request):\n    \"\"\"\n    Laporan Transfer (Stock Movement Detail)\n    # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n    \"\"\"\n    date_from = request.GET.get('date_from')\n    date_to = request.GET.get('date_to')\n    \n    # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n    # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n    # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n    if not date_from or not date_to:\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        date_to = timezone.now()\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        date_from = date_to - timedelta(days=30)\n    else:\n        date_from = parse_date_aware(date_from, 'start')\n        date_to = parse_date_aware(date_to, 'end')\n    \n    transfers = TransferItem.objects.filter(\n        transfer__created_at__range=[date_from, date_to]\n    ).select_related('transfer', 'variant', 'variant__product', 'transfer__source_location', 'transfer__destination_location').order_by('-transfer__created_at')\n    \n    total_items = transfers.count()\n    total_qty_sent = transfers.aggregate(Sum('quantity_sent'))['quantity_sent__sum'] or 0\n    \n    paginator = Paginator(transfers, 50)\n    page_number = request.GET.get('page', 1)\n    transfers_page = paginator.get_page(page_number)\n    \n    # Export CSV\n    if request.GET.get('export') == 'csv':\n        response = HttpResponse(content_type='text/csv')\n        response['Content-Disposition'] = 'attachment; filename=\"transfer_report.csv\"'\n        writer = csv.writer(response)\n        writer.writerow(['Transfer ID', 'From', 'To', 'Date', 'SKU', 'Product', 'Qty Sent', 'Qty Received', 'Status'])\n        for item in transfers:\n            writer.writerow([\n                item.transfer.id,\n                item.transfer.source_location.name,\n                item.transfer.destination_location.name,\n                item.transfer.created_at.strftime('%Y-%m-%d %H:%M'),\n                item.variant.sku,\n                item.variant.product.name,\n                item.quantity_sent,\n                item.quantity_received or '-',\n                item.transfer.status\n            ])\n        return response\n     # TODO[C3-LONG]: 'requisition_report' = 60 baris (max 30). Pecah: requisition_report_validate(), requisition_report_query(), requisition_report_render()\n    \n    context = {\n        'transfers': transfers_page,\n        'total_items': total_items,\n        'total_qty_sent': total_qty_sent,\n        'date_from': date_from.strftime('%Y-%m-%d'),\n        'date_to': date_to.strftime('%Y-%m-%d'),\n        'report_title': 'Transfer Report'\n    }\n    # TODO[C3-LONG]: 'requisition_report' terlalu panjang (65 baris). Pecah: requisition_report_validate(), requisition_report_build_context(), requisition_report_render()\n    return render(request, 'lumra_pages/reports/transfer_report.html', context)"
+    },
+    {
+      "view_name": "requisition_report",
+      "view_module": "lumra_config.views.report_views",
+      "view_file": "lumra_config/views/report_views.py",
+      "line": 359,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def requisition_report(request):\n    \"\"\"\n    Laporan Requisition (Permintaan Barang)\n    \"\"\"\n    date_from = request.GET.get('date_from')\n    date_to = request.GET.get('date_to')\n    status_filter = request.GET.get('status')\n     # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n     # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n    \n    # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n    # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n    # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n    if not date_from or not date_to:\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        date_to = timezone.now()\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        date_from = date_to - timedelta(days=30)\n    else:\n        date_from = parse_date_aware(date_from, 'start')\n        date_to = parse_date_aware(date_to, 'end')\n    \n    requisitions = RequisitionItem.objects.filter(\n        requisition__created_at__range=[date_from, date_to]\n    ).select_related('requisition', 'variant', 'variant__product', 'requisition__from_location', 'requisition__to_location').order_by('-requisition__created_at')\n    \n    if status_filter:\n        requisitions = requisitions.filter(requisition__status=status_filter)\n    \n    total_items = requisitions.count()\n    total_qty = requisitions.aggregate(Sum('quantity'))['quantity__sum'] or 0\n    \n    paginator = Paginator(requisitions, 50)\n    page_number = request.GET.get('page', 1)\n    requisitions_page = paginator.get_page(page_number)\n    \n    # Export CSV\n    if request.GET.get('export') == 'csv':\n        response = HttpResponse(content_type='text/csv')\n        response['Content-Disposition'] = 'attachment; filename=\"requisition_report.csv\"'\n        writer = csv.writer(response)\n        writer.writerow(['Req ID', 'From', 'To', 'Date', 'SKU', 'Product', 'Qty', 'Status', 'Requested By'])\n        for item in requisitions:\n            writer.writerow([\n                item.requisition.id,\n                item.requisition.from_location.name,\n                item.requisition.to_location.name,\n                item.requisition.created_at.strftime('%Y-%m-%d %H:%M'),\n                item.variant.sku,\n                item.variant.product.name,\n                item.quantity,\n                item.requisition.status,\n                item.requisition.requested_by.username\n            ])\n        # TODO[C3-LONG]: 'purchasing_report' = 73 baris (max 30). Pecah: purchasing_report_validate(), purchasing_report_query(), purchasing_report_render()\n        return response\n    \n    context = {\n        'requisitions': requisitions_page,\n        'total_items': total_items,\n        'total_qty': total_qty,\n        'date_from': date_from.strftime('%Y-%m-%d'),\n        'date_to': date_to.strftime('%Y-%m-%d'),\n        'status_filter': status_filter,\n        'status_choices': Requisition.STATUS_CHOICES,\n        # TODO[C3-LONG]: 'purchasing_report' terlalu panjang (75 baris). Pecah: purchasing_report_validate(), purchasing_report_build_context(), purchasing_report_render()\n        'report_title': 'Requisition Report'\n    # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n    # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n    # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n    # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n    }\n    return render(request, 'lumra_pages/reports/requisition_report.html', context)"
+    },
+    {
+      "view_name": "purchasing_report",
+      "view_module": "lumra_config.views.report_views",
+      "view_file": "lumra_config/views/report_views.py",
+      "line": 450,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def purchasing_report(request):\n    \"\"\"\n    Laporan Purchasing (Pembelian dari Vendor)\n    \"\"\"\n    date_from = request.GET.get('date_from')\n    date_to = request.GET.get('date_to')\n    vendor_filter = request.GET.get('vendor')\n     # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n     # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n     # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n    \n    # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n    # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n    # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n    if not date_from or not date_to:\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        date_to = timezone.now()\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        date_from = date_to - timedelta(days=30)\n    else:\n        date_from = parse_date_aware(date_from, 'start')\n        date_to = parse_date_aware(date_to, 'end')\n    \n    purchasing = RequisitionItem.objects.filter(\n        requisition__created_at__range=[date_from, date_to],\n        requisition__status__in=['approved', 'completed']\n    ).select_related('requisition', 'variant', 'variant__product').order_by('-requisition__created_at')\n    \n    if vendor_filter:\n        purchasing = purchasing.filter(variant__product__vendor_id=vendor_filter)\n    \n    # Calculate costs\n    purchasing = purchasing.annotate(\n        total_cost=F('quantity') * F('variant__price_buy')\n    )\n    \n    total_items = purchasing.count()\n    total_qty = purchasing.aggregate(Sum('quantity'))['quantity__sum'] or 0\n    total_cost = purchasing.aggregate(Sum('total_cost'))['total_cost__sum'] or 0\n    \n    paginator = Paginator(purchasing, 50)\n    page_number = request.GET.get('page', 1)\n    purchasing_page = paginator.get_page(page_number)\n    \n    # Get vendor list for filter\n    from .models import Vendor\n    vendors = Vendor.objects.filter(is_active=True).order_by('name')\n    \n    # Export CSV\n    if request.GET.get('export') == 'csv':\n        response = HttpResponse(content_type='text/csv')\n        response['Content-Disposition'] = 'attachment; filename=\"purchasing_report.csv\"'\n        writer = csv.writer(response)\n        writer.writerow(['Req ID', 'Date', 'Vendor', 'SKU', 'Product', 'Qty', 'Price', 'Total Cost', 'Status'])\n        for item in purchasing:\n            vendor_name = item.variant.product.vendor.name if item.variant.product.vendor else '-'\n            writer.writerow([\n                item.requisition.id,\n                item.requisition.created_at.strftime('%Y-%m-%d %H:%M'),\n                vendor_name,\n                item.variant.sku,\n                item.variant.product.name,\n                item.quantity,\n                item.variant.price_buy,\n                item.quantity * item.variant.price_buy,\n                item.requisition.status\n            ])\n        return response\n    \n    context = {\n        'purchasing': purchasing_page,\n        'total_items': total_items,\n        'total_qty': total_qty,\n        'total_cost': total_cost,\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        'date_from': date_from.strftime('%Y-%m-%d'),\n        'date_to': date_to.strftime('%Y-%m-%d'),\n        'vendor_filter': vendor_filter,\n        'vendors': vendors,\n        'report_title': 'Purchasing Report'\n    }\n    return render(request, 'lumra_pages/reports/purchasing_report.html', context)"
+    },
+    {
+      "view_name": "report_inventory_log",
+      "view_module": "lumra_config.views.report_views",
+      "view_file": "lumra_config/views/report_views.py",
+      "line": 482,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "ctx",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def report_inventory_log(request):\n    \"\"\"Riwayat keluar masuk barang per SKU.\"\"\"\n    date_from, date_to, df_str, dt_str = _parse_dates(request)\n    ctx = create_empty_context(\"Inventory Log\",\n                               \"Belum ada data masuk/keluar untuk periode tersebut.\")\n    ctx.update({'date_from': df_str, 'date_to': dt_str})\n    return render(request, 'lumra_pages/reports/report_inventory_log.html', ctx)"
+    },
+    {
+      "view_name": "report_inventory_low",
+      "view_module": "lumra_config.views.report_views",
+      "view_file": "lumra_config/views/report_views.py",
+      "line": 493,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "ctx",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def report_inventory_low(request):\n    \"\"\"Daftar barang yang harus segera fulfillment.\"\"\"\n    date_from, date_to, df_str, dt_str = _parse_dates(request)\n    ctx = create_empty_context(\"Low Stock Items\",\n                               \"Tidak ada barang yang perlu dipenuhi saat ini.\")\n    ctx.update({'date_from': df_str, 'date_to': dt_str})\n    return render(request, 'lumra_pages/reports/report_inventory_low.html', ctx)"
+    },
+    {
+      "view_name": "report_inventory_stock",
+      "view_module": "lumra_config.views.report_views",
+      "view_file": "lumra_config/views/report_views.py",
+      "line": 504,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "ctx",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def report_inventory_stock(request):\n    \"\"\"Posisi stok terakhir dan nilai rupiah aset yang ada di gudang.\"\"\"\n    date_from, date_to, df_str, dt_str = _parse_dates(request)\n    ctx = create_empty_context(\"Inventory Stock\",\n                               \"Data stok tidak tersedia.\")\n    ctx.update({'date_from': df_str, 'date_to': dt_str})\n    return render(request, 'lumra_pages/reports/report_inventory_stock.html', ctx)"
+    },
+    {
+      "view_name": "report_profit_loss_detail",
+      "view_module": "lumra_config.views.report_views",
+      "view_file": "lumra_config/views/report_views.py",
+      "line": 515,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "ctx",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def report_profit_loss_detail(request):\n    \"\"\"Detail laba/rugi.\"\"\"\n    date_from, date_to, df_str, dt_str = _parse_dates(request)\n    ctx = create_empty_context(\"Profit & Loss Detail\",\n                               \"Belum ada data laba/rugi untuk periode ini.\")\n    ctx.update({'date_from': df_str, 'date_to': dt_str})\n    return render(request, 'lumra_pages/reports/report_profit_loss_detail.html', ctx)"
+    },
+    {
+      "view_name": "report_sales_by_outlet",
+      "view_module": "lumra_config.views.report_views",
+      "view_file": "lumra_config/views/report_views.py",
+      "line": 526,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "ctx",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def report_sales_by_outlet(request):\n    \"\"\"Membandingkan performa antar cabang.\"\"\"\n    date_from, date_to, df_str, dt_str = _parse_dates(request)\n    ctx = create_empty_context(\"Sales by Outlet\",\n                               \"Tidak ada penjualan per outlet untuk periode ini.\")\n    ctx.update({'date_from': df_str, 'date_to': dt_str})\n    return render(request, 'lumra_pages/reports/report_sales_by_outlet.html', ctx)"
+    },
+    {
+      "view_name": "report_sales_by_payment",
+      "view_module": "lumra_config.views.report_views",
+      "view_file": "lumra_config/views/report_views.py",
+      "line": 537,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "ctx",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def report_sales_by_payment(request):\n    \"\"\"Detail transaksi via QRIS, Cash, atau Transfer.\"\"\"\n    date_from, date_to, df_str, dt_str = _parse_dates(request)\n    ctx = create_empty_context(\"Sales by Payment\",\n                               \"Tidak ada transaksi pembayaran untuk periode ini.\")\n    ctx.update({'date_from': df_str, 'date_to': dt_str})\n    return render(request, 'lumra_pages/reports/report_sales_by_payment.html', ctx)"
+    },
+    {
+      "view_name": "report_sales_by_product",
+      "view_module": "lumra_config.views.report_views",
+      "view_file": "lumra_config/views/report_views.py",
+      "line": 548,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "ctx",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def report_sales_by_product(request):\n    \"\"\"Produk mana yang paling laris.\"\"\"\n    date_from, date_to, df_str, dt_str = _parse_dates(request)\n    ctx = create_empty_context(\"Sales by Product\",\n                               \"Tidak ada data penjualan produk untuk periode ini.\")\n    ctx.update({'date_from': df_str, 'date_to': dt_str})\n    return render(request, 'lumra_pages/reports/report_sales_by_product.html', ctx)"
+    },
+    {
+      "view_name": "report_sales_summary",
+      "view_module": "lumra_config.views.report_views",
+      "view_file": "lumra_config/views/report_views.py",
+      "line": 559,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "ctx",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def report_sales_summary(request):\n    \"\"\"Ringkasan total penjualan, pajak, dan diskon.\"\"\"\n    date_from, date_to, df_str, dt_str = _parse_dates(request)\n    ctx = create_empty_context(\"Sales Summary\",\n                               \"Tidak ada ringkasan penjualan untuk periode ini.\")\n    ctx.update({'date_from': df_str, 'date_to': dt_str})\n    return render(request, 'lumra_pages/reports/report_sales_summary.html', ctx)"
+    },
+    {
+      "view_name": "report_expiry",
+      "view_module": "lumra_config.views.report_views",
+      "view_file": "lumra_config/views/report_views.py",
+      "line": 606,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def report_expiry(request):\n    today = timezone.localdate()\n    warning_days = int(request.GET.get(\"warning_days\", 30) or 30)\n    expiry_items = (\n        InventoryBatch.objects.filter(expiry_date__isnull=False)\n        .select_related(\"variant\", \"variant__product\", \"location\")\n        .order_by(\"expiry_date\", \"variant__sku\")\n    )\n\n    items = []\n    critical_count = 0\n    expired_count = 0\n    total_at_risk_qty = 0\n    for batch in expiry_items:\n        days_left = (batch.expiry_date - today).days\n        if days_left <= warning_days:\n            total_at_risk_qty += batch.quantity_on_hand\n            if days_left < 0:\n                expired_count += 1\n            if 0 <= days_left <= 3:\n                critical_count += 1\n            items.append(\n                {\n                    \"id\": batch.id,\n                    \"name\": batch.variant.product.name,\n                    \"batch\": batch.code,\n                    \"location\": batch.location.name,\n                    \"exp_date\": batch.expiry_date,\n                    \"days_left\": days_left,\n                    \"quantity\": batch.quantity_on_hand,\n                }\n            )\n\n    context = {\n        \"report_title\": \"Laporan Kedaluwarsa\",\n        \"expiry_items\": items,\n        \"critical_count\": critical_count,\n        \"expired_count\": expired_count,\n        \"total_at_risk_qty\": total_at_risk_qty,\n        \"warning_days\": warning_days,\n        \"today\": today,\n        \"is_empty\": not items,\n    }\n    return render(request, \"lumra_pages/reports/report_expiry.html\", context)"
+    },
+    {
+      "view_name": "report_inventory_age",
+      "view_module": "lumra_config.views.report_views",
+      "view_file": "lumra_config/views/report_views.py",
+      "line": 678,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def report_inventory_age(request):\n    today = timezone.localdate()\n    batches = (\n        InventoryBatch.objects.filter(quantity_on_hand__gt=0)\n        .select_related(\"variant\", \"variant__product\", \"location\")\n        .order_by(\"variant__product__name\", \"created_at\")\n    )\n    grouped = {}\n    for batch in batches:\n        bucket = grouped.setdefault(\n            batch.variant_id,\n            {\n                \"id\": batch.variant_id,\n                \"name\": batch.variant.product.name,\n                \"sku\": batch.variant.sku,\n                \"total_qty\": 0,\n                \"value\": 0,\n                \"aged_30_qty\": 0,\n                \"aged_60_qty\": 0,\n                \"aged_90_qty\": 0,\n                \"aged_120_qty\": 0,\n            },\n        )\n        age_days = (today - batch.created_at.date()).days\n        qty = batch.quantity_on_hand\n        bucket[\"total_qty\"] += qty\n        bucket[\"value\"] += float(qty * batch.variant.price_buy)\n        if age_days <= 30:\n            bucket[\"aged_30_qty\"] += qty\n        elif age_days <= 60:\n            bucket[\"aged_60_qty\"] += qty\n        elif age_days <= 90:\n            bucket[\"aged_90_qty\"] += qty\n        else:\n            bucket[\"aged_120_qty\"] += qty\n\n    inventory = []\n    value_at_risk = 0\n    for item in grouped.values():\n        total_qty = item[\"total_qty\"] or 1\n        aged_120_pct = round((item[\"aged_120_qty\"] / total_qty) * 100)\n        aged_90_pct = round(((item[\"aged_90_qty\"] + item[\"aged_120_qty\"]) / total_qty) * 100)\n        aged_60_pct = round(((item[\"aged_60_qty\"] + item[\"aged_90_qty\"] + item[\"aged_120_qty\"]) / total_qty) * 100)\n        aged_30_pct = round((item[\"aged_30_qty\"] / total_qty) * 100)\n        item.update(\n            {\n                \"aged_30\": aged_30_pct,\n                \"aged_60\": aged_60_pct,\n                \"aged_90\": aged_90_pct,\n                \"aged_120\": aged_120_pct,\n            }\n        )\n        value_at_risk += item[\"value\"] if aged_120_pct > 0 else 0\n        inventory.append(item)\n\n    stats = {\n        \"fast\": sum(1 for item in inventory if item[\"aged_30\"] >= 50),\n        \"slow\": sum(1 for item in inventory if 0 < item[\"aged_90\"] < 100),\n        \"dead\": sum(1 for item in inventory if item[\"aged_120\"] > 0),\n        \"value_at_risk\": value_at_risk,\n    }\n    context = {\n        \"report_title\": \"Inventory Aging Report\",\n        \"inventory\": sorted(inventory, key=lambda item: (-item[\"aged_120\"], item[\"name\"])),\n        \"stats\": stats,\n        \"today\": today,\n        \"is_empty\": not inventory,\n    }\n    return render(request, \"lumra_pages/reports/report_inventory_age.html\", context)"
+    },
+    {
+      "view_name": "report_production",
+      "view_module": "lumra_config.views.report_views",
+      "view_file": "lumra_config/views/report_views.py",
+      "line": 725,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def report_production(request):\n    date_from, date_to, df_str, dt_str = _parse_dates(request)\n    orders = (\n        ProductionOrder.objects.filter(created_at__range=[date_from, date_to])\n        .select_related(\"bom\", \"bom__finished_variant\", \"bom__finished_variant__product\")\n        .order_by(\"-created_at\")\n    )\n    wastes = ProductionWasteRecord.objects.filter(recorded_at__range=[date_from, date_to])\n    total_target = sum(float(order.target_quantity or 0) for order in orders)\n    total_produced = sum(float(order.produced_quantity or 0) for order in orders)\n    total_waste = float(wastes.aggregate(total=Sum(\"quantity\"))[\"total\"] or 0)\n    yield_pct = round((total_produced / total_target) * 100, 1) if total_target else 0\n    waste_pct = round((total_waste / total_target) * 100, 1) if total_target else 0\n    product_rows = []\n    for order in orders[:20]:\n        target = float(order.target_quantity or 0)\n        actual = float(order.produced_quantity or 0)\n        product_rows.append(\n            {\n                \"id\": order.id,\n                \"name\": order.bom.finished_variant.product.name,\n                \"target\": target,\n                \"actual\": actual,\n                \"yield\": round((actual / target) * 100, 1) if target else 0,\n                \"waste\": round(total_waste / max(orders.count(), 1), 2),\n                \"status\": \"Good\" if actual >= target * 0.9 else \"Warning\",\n            }\n        )\n\n    context = {\n        \"report_title\": \"Laporan Produksi\",\n        \"date_from\": df_str,\n        \"date_to\": dt_str,\n        \"kpi\": {\n            \"yield\": yield_pct,\n            \"waste\": waste_pct,\n            \"total_output\": total_produced,\n            \"growth\": 0,\n            \"variance\": total_produced - total_target,\n        },\n        \"products\": product_rows,\n        \"is_empty\": not product_rows,\n    }\n    return render(request, \"lumra_pages/reports/report_production.html\", context)"
+    },
+    {
+      "view_name": "report_customer_lifetime",
+      "view_module": "lumra_config.views.report_views",
+      "view_file": "lumra_config/views/report_views.py",
+      "line": 758,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def report_customer_lifetime(request):\n    customers = Customer.objects.filter(is_active=True).order_by(\"-total_spent\", \"-total_orders\")[:20]\n    top_customers = []\n    total_revenue = 0\n    total_customers = Customer.objects.filter(is_active=True).count()\n    for customer in customers:\n        spent = float(customer.total_spent or 0)\n        total_revenue += spent\n        initials = \"\".join(part[0] for part in customer.name.split()[:2]).upper()\n        top_customers.append(\n            {\n                \"id\": customer.id,\n                \"name\": customer.name,\n                \"initials\": initials or customer.name[:2].upper(),\n                \"last_order\": customer.last_order_date,\n                \"spent\": spent,\n                \"freq\": customer.total_orders,\n                \"ltv\": float(customer.lifetime_value or 0),\n            }\n        )\n    avg_ltv = round(total_revenue / total_customers, 2) if total_customers else 0\n    context = {\n        \"report_title\": \"Laporan Customer Lifetime Value\",\n        \"top_customers\": top_customers,\n        \"total_revenue\": total_revenue,\n        \"total_customers\": total_customers,\n        \"avg_ltv\": avg_ltv,\n        \"is_empty\": not top_customers,\n    }\n    return render(request, \"lumra_pages/reports/report_customer_lifetime.html\", context)"
+    },
+    {
+      "view_name": "report_staff_performance",
+      "view_module": "lumra_config.views.report_views",
+      "view_file": "lumra_config/views/report_views.py",
+      "line": 798,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def report_staff_performance(request):\n    date_from, date_to, df_str, dt_str = _parse_dates(request)\n    order_counts = (\n        Order.objects.filter(created_at__range=[date_from, date_to], status=\"completed\")\n        .values(\"customer_name\")\n        .annotate(total_revenue=Sum(F(\"items__quantity\") * F(\"items__price\")), total_orders=Count(\"id\"))\n    )\n    users = User.objects.order_by(\"username\")[:20]\n    rows = []\n    revenue_pool = [float(item[\"total_revenue\"] or 0) for item in order_counts] or [0]\n    for index, user in enumerate(users):\n        revenue = revenue_pool[index % len(revenue_pool)]\n        target = max(revenue * 0.95, 1)\n        attendance = 92 + (index % 9)\n        rows.append(\n            {\n                \"id\": user.id,\n                \"name\": user.get_full_name() or user.username,\n                \"initials\": \"\".join(part[0] for part in (user.get_full_name() or user.username).split()[:2]).upper(),\n                \"role\": user.is_superuser and \"Admin\" or \"Staff\",\n                \"branch\": \"Operasional\",\n                \"target\": round(target, 2),\n                \"actual\": round(revenue, 2),\n                \"achievement_pct\": round((revenue / target) * 100, 1) if target else 0,\n                \"attendance\": attendance,\n                \"days_present\": min(26, 18 + (index % 8)),\n                \"score\": \"A\" if revenue >= target else \"B\",\n            }\n        )\n    context = {\n        \"report_title\": \"Laporan Kinerja Karyawan\",\n        \"staff_rows\": rows,\n        \"date_from\": df_str,\n        \"date_to\": dt_str,\n        \"is_empty\": not rows,\n    }\n    return render(request, \"lumra_pages/reports/report_staff_performance.html\", context)"
+    }
+  ]
+}

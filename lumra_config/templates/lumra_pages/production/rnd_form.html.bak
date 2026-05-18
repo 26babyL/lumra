@@ -1,0 +1,489 @@
+{% extends 'base/base.html' %}
+{% block title %}Formula Baru - Lab RnD CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-panel {
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+    border: 1px solid white;
+    padding: 28px;
+  }
+  .form-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.5);
+    transition: 0.2s;
+    font-size: 14px;
+    color: #0f172a;
+  }
+  .form-input:focus { background: white; border-color: #0f172a; outline: none; }
+  .ing-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+  .ing-table th {
+    text-align: left;
+    padding: 8px;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #94a3b8;
+    letter-spacing: 0.05em;
+  }
+  .ing-row { background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: 0.2s; }
+  .ing-row:hover { transform: translateX(4px); }
+  .ing-row td {
+    padding: 11px 12px;
+    border-top: 1px solid #f8fafc;
+    border-bottom: 1px solid #f8fafc;
+  }
+  .ing-row td:first-child { border-radius: 10px 0 0 10px; border-left: 1px solid #f8fafc; }
+  .ing-row td:last-child { border-radius: 0 10px 10px 0; border-right: 1px solid #f8fafc; }
+  .dim-card { background: #f8fafc; border-radius: 10px; padding: 12px; }
+  .dim-card input[type=range] { width: 100%; accent-color: #10b981; cursor: pointer; }
+  .prob-track { width: 100%; accent-color: #10b981; cursor: pointer; }
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #94a3b8;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 10px;
+    margin-bottom: 16px;
+  }
+  .tag-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-5xl mx-auto relative z-10 space-y-6" x-data="rndFormApp()" x-init="init()" x-cloak>
+  <div class="flex items-center justify-between">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+        <a href="{% url 'rnd_list' %}" class="hover:text-slate-800">Lab RnD</a>
+        <span>/</span>
+        <span class="text-slate-800 font-medium" x-text="isEdit ? 'Edit Formula' : 'Formula Baru'"></span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800" x-text="isEdit ? 'Edit Formula RnD' : 'Buat Formula RnD Baru'"></h1>
+    </div>
+    <div class="flex gap-2">
+      <button @click="saveRnD('idea')" :disabled="isSaving" class="px-4 py-2 bg-slate-100 text-slate-600 rounded-lg text-sm font-bold hover:bg-slate-200 disabled:opacity-60" type="button" x-text="isSaving ? 'Menyimpan...' : 'Simpan Idea'"></button>
+      <button @click="saveRnD('in_trial')" :disabled="isSaving" class="px-4 py-2 bg-slate-800 text-white rounded-lg text-sm font-bold shadow-lg hover:bg-slate-700 disabled:opacity-60" type="button">
+        <i class="fas fa-flask mr-1"></i> Mulai Trial
+      </button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 space-y-5">
+      <div class="glass-panel">
+        <div class="section-title">Identitas Formula</div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 mb-1">Nama Formula</label>
+            <input type="text" x-model="form.name" class="form-input" placeholder="cth: Dark Roast Honey Blend">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 mb-1">Target SKU Produk (opsional)</label>
+            <select x-model="form.target_sku" class="form-input">
+              <option value="">Belum ada target SKU...</option>
+              <template x-for="v in variants" :key="v.id">
+                <option :value="v.sku" x-text="v.sku + ' - ' + v.name"></option>
+              </template>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 mb-1">Kategori</label>
+            <select x-model="form.category" class="form-input">
+              <option value="beverage_hot">Minuman - Hot</option>
+              <option value="beverage_cold">Minuman - Cold</option>
+              <option value="food">Makanan</option>
+              <option value="other">Lainnya</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 mb-1">Dibuat oleh</label>
+            <input type="text" x-model="form.created_by" class="form-input" placeholder="Nama / tim RnD...">
+          </div>
+        </div>
+        <div class="mt-4">
+          <label class="block text-xs font-bold text-slate-500 mb-1">Deskripsi / Latar Belakang</label>
+          <textarea x-model="form.description" class="form-input" rows="2" placeholder="Apa yang ingin dicapai dari formula ini?"></textarea>
+        </div>
+        <div class="mt-4">
+          <label class="block text-xs font-bold text-slate-500 mb-2">Tag Eksperimen</label>
+          <div class="flex flex-wrap gap-2">
+            <template x-for="(tag, index) in form.tags" :key="index">
+              <span class="tag-pill bg-violet-100 text-violet-700">
+                <span x-text="tag"></span>
+                <button @click="removeTag(index)" class="text-violet-400 hover:text-violet-700 leading-none">&times;</button>
+              </span>
+            </template>
+            <input type="text" x-model="tagInput" @keydown.enter.prevent="addTag()" @keydown.comma.prevent="addTag()" class="text-xs bg-transparent border border-dashed border-slate-300 rounded-full px-3 py-1 outline-none focus:border-slate-500 w-28" placeholder="+ tambah tag">
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-panel">
+        <div class="flex justify-between items-end mb-4 border-b border-slate-100 pb-3">
+          <div class="section-title mb-0 border-0 pb-0">Komposisi Bahan (Simulasi)</div>
+          <button @click="addIngredient()" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
+            <i class="fas fa-plus-circle"></i> Tambah Bahan
+          </button>
+        </div>
+        <table class="ing-table">
+          <thead>
+            <tr>
+              <th style="width:34%">Bahan / Nama</th>
+              <th style="width:18%">SKU Sistem</th>
+              <th style="width:18%">Qty</th>
+              <th style="width:18%">Satuan</th>
+              <th style="width:12%">Est. Harga</th>
+              <th style="width:6%"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="(ing, index) in form.ingredients" :key="index">
+              <tr class="ing-row">
+                <td><input type="text" x-model="ing.name" class="w-full bg-transparent outline-none font-medium text-slate-700 text-sm" placeholder="Nama bahan baru / bahan trial..."></td>
+                <td><input type="text" x-model="ing.sku" @input="syncIngredientCost(index)" @blur="syncIngredientCost(index)" class="w-full bg-transparent outline-none font-medium text-slate-700 text-sm" placeholder="SKU jika sudah ada..."></td>
+                <td><input type="number" x-model.number="ing.qty" class="w-full bg-transparent outline-none text-slate-700 text-sm" placeholder="0" min="0" step="any"></td>
+                <td>
+                  <select x-model="ing.uom" class="w-full bg-transparent outline-none text-slate-500 text-xs">
+                    <template x-for="u in units" :key="u.id">
+                      <option :value="u.symbol" x-text="u.symbol"></option>
+                    </template>
+                  </select>
+                </td>
+                <td><input type="number" x-model.number="ing.estimated_cost" class="w-full bg-transparent outline-none text-right text-slate-700 text-sm font-mono" placeholder="0" min="0" step="any"></td>
+                <td class="text-center">
+                  <button @click="removeIngredient(index)" class="text-rose-400 hover:text-rose-600"><i class="fas fa-times"></i></button>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+        <p class="text-[11px] text-slate-400 mt-3"><i class="fas fa-info-circle mr-1"></i> SKU boleh kosong. Untuk bahan baru, isi nama bahan dan estimasi harga manual.</p>
+      </div>
+
+      <div class="glass-panel">
+        <div class="section-title">Hipotesis Profil Rasa</div>
+        <p class="text-xs text-slate-400 mb-4">Prediksi rasa sebelum uji coba. Akan dibandingkan dengan tasting notes aktual setelah trial.</p>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
+          <template x-for="dim in form.hypothesis" :key="dim.key">
+            <div class="dim-card">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-[11px] font-bold text-slate-500" x-text="dim.label"></span>
+                <span class="text-sm font-bold text-slate-800" x-text="dim.value + '/10'"></span>
+              </div>
+              <input type="range" min="0" max="10" x-model.number="dim.value">
+            </div>
+          </template>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 mb-1">Catatan Hipotesis</label>
+          <textarea x-model="form.hypothesis_notes" class="form-input" rows="2" placeholder="Ekspektasi aroma, tekstur, atau karakter unik yang ingin dicapai..."></textarea>
+        </div>
+      </div>
+
+      <div class="glass-panel">
+        <div class="section-title">Referensi & Inspirasi</div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 mb-1">Dimodifikasi dari Formula</label>
+            <input type="text" x-model="form.based_on" class="form-input" placeholder="Cari formula RnD sebelumnya...">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 mb-1">Rencana Jumlah Trial</label>
+            <input type="number" x-model.number="form.planned_trials" class="form-input" min="1" max="20">
+          </div>
+        </div>
+        <div class="mt-4">
+          <label class="block text-xs font-bold text-slate-500 mb-1">Catatan Tambahan</label>
+          <textarea x-model="form.notes" class="form-input" rows="2" placeholder="Hal teknis atau kondisi uji yang perlu diperhatikan..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-5">
+      <div class="glass-panel">
+        <div class="section-title">Estimasi Keberhasilan</div>
+        <div class="text-center py-4 mb-3 rounded-xl" :class="probabilityBgClass">
+          <p class="text-4xl font-bold" :class="probabilityTextClass" x-text="form.success_probability + '%'"></p>
+          <p class="text-xs mt-1" :class="probabilitySubClass">Kemungkinan berhasil</p>
+        </div>
+        <input type="range" class="prob-track w-full mb-3" min="0" max="100" step="5" x-model.number="form.success_probability">
+        <div class="text-xs text-slate-400 flex justify-between mb-4"><span>Tidak yakin</span><span>Sangat yakin</span></div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 mb-1">Alasan estimasi</label>
+          <textarea x-model="form.probability_reason" class="form-input text-sm" rows="3" placeholder="Kenapa tim yakin / ragu formula ini berhasil?"></textarea>
+        </div>
+      </div>
+
+      <div class="glass-panel bg-slate-800 text-white" style="background:#1e293b !important;">
+        <div class="section-title" style="color:#94a3b8; border-color:#334155">Ringkasan Biaya Simulasi</div>
+        <div class="space-y-3">
+          <div class="flex justify-between text-sm">
+            <span class="text-slate-400">Total Bahan</span>
+            <span class="font-bold" x-text="formatCurrency(totalMaterialCost)"></span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-slate-400">Rencana Trial</span>
+            <span class="font-bold" x-text="form.planned_trials + 'x'"></span>
+          </div>
+          <div class="border-t border-slate-700 my-1 pt-1">
+            <div class="flex justify-between">
+              <span class="text-slate-400 text-sm">Est. Total Spend</span>
+              <span class="font-bold text-emerald-400 text-lg" x-text="formatCurrency(totalMaterialCost * form.planned_trials)"></span>
+            </div>
+          </div>
+          <div x-show="totalMaterialCost > 0" class="p-3 bg-emerald-900/40 rounded-xl border border-emerald-700/40 mt-2">
+            <p class="text-[10px] font-bold text-emerald-400 uppercase mb-1">Target Harga Jual (60% margin)</p>
+            <p class="text-sm font-bold text-emerald-300" x-text="formatCurrency(suggestedPrice)"></p>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-2">* Estimasi kasar dengan asumsi komposisi trial relatif sama.</p>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <button @click="saveRnD('in_trial')" :disabled="isSaving" class="w-full px-4 py-3 bg-slate-800 text-white rounded-xl text-sm font-bold shadow-lg hover:bg-slate-700 disabled:opacity-60">
+          <i class="fas fa-flask mr-2"></i> <span x-text="isSaving ? 'Menyimpan...' : 'Mulai Trial Sekarang'"></span>
+        </button>
+        <button @click="saveRnD('idea')" :disabled="isSaving" class="w-full px-4 py-3 border border-slate-200 text-slate-600 rounded-xl text-sm font-bold hover:bg-slate-50 disabled:opacity-60">
+          Simpan sebagai Idea
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+{{ variants_data|json_script:"variants-data" }}
+{{ units_data|json_script:"units-data" }}
+{{ rnd_data|json_script:"rnd-data" }}
+<script>
+function rndFormApp() {
+  return {
+    isEdit: false,
+    isSaving: false,
+    tagInput: '',
+    variants: [],
+    units: [],
+    form: {
+      name: '',
+      target_sku: '',
+      category: 'beverage_hot',
+      created_by: '',
+      description: '',
+      tags: [],
+      based_on: '',
+      planned_trials: 3,
+      notes: '',
+      hypothesis_notes: '',
+      probability_reason: '',
+      success_probability: 60,
+      ingredients: [
+        { name: '', sku: '', qty: 0, uom: 'gr', estimated_cost: 0 },
+        { name: '', sku: '', qty: 0, uom: 'ml', estimated_cost: 0 },
+      ],
+      hypothesis: [
+        { key: 'acidity', label: 'Acidity', value: 5 },
+        { key: 'body', label: 'Body / Kepekatan', value: 5 },
+        { key: 'sweetness', label: 'Sweetness', value: 5 },
+        { key: 'bitterness', label: 'Bitterness', value: 5 },
+        { key: 'aftertaste', label: 'Aftertaste', value: 5 },
+        { key: 'aroma', label: 'Aroma', value: 5 },
+      ],
+    },
+    get totalMaterialCost() {
+      return this.form.ingredients.reduce((sum, item) => sum + Number(item.estimated_cost || 0), 0);
+    },
+    get suggestedPrice() {
+      return this.totalMaterialCost > 0 ? this.totalMaterialCost / 0.4 : 0;
+    },
+    get probabilityBgClass() {
+      const p = this.form.success_probability;
+      if (p >= 70) return 'bg-emerald-50';
+      if (p >= 40) return 'bg-amber-50';
+      return 'bg-rose-50';
+    },
+    get probabilityTextClass() {
+      const p = this.form.success_probability;
+      if (p >= 70) return 'text-emerald-600';
+      if (p >= 40) return 'text-amber-600';
+      return 'text-rose-500';
+    },
+    get probabilitySubClass() {
+      const p = this.form.success_probability;
+      if (p >= 70) return 'text-emerald-500';
+      if (p >= 40) return 'text-amber-500';
+      return 'text-rose-400';
+    },
+    addIngredient() {
+      const defaultUom = (this.units[0] && this.units[0].symbol) ? this.units[0].symbol : 'gr';
+      this.form.ingredients.push({ name: '', sku: '', qty: 0, uom: defaultUom, estimated_cost: 0 });
+    },
+    removeIngredient(index) {
+      if (this.form.ingredients.length > 1) this.form.ingredients.splice(index, 1);
+    },
+    addTag() {
+      const tag = this.tagInput.trim().replace(/,$/, '');
+      if (tag && !this.form.tags.includes(tag)) this.form.tags.push(tag);
+      this.tagInput = '';
+    },
+    removeTag(index) {
+      this.form.tags.splice(index, 1);
+    },
+    syncIngredientCost(index) {
+      const ingredient = this.form.ingredients[index];
+      if (!ingredient) return;
+      const sku = String(ingredient.sku || '').trim().toLowerCase();
+      if (!sku) return;
+      const found = this.variants.find((variant) => String(variant.sku || '').toLowerCase() === sku);
+      if (!found) return;
+      if (!ingredient.name) ingredient.name = found.name || found.sku || '';
+      if (!ingredient.estimated_cost) ingredient.estimated_cost = Number(found.price_buy || 0);
+    },
+    formatCurrency(num) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(Number(num || 0));
+    },
+    saveRnD(statusOverride) {
+      const finalStatus = statusOverride === 'draft' ? 'idea' : (statusOverride || 'idea');
+      if (!this.form.name.trim()) {
+        alert('Mohon isi nama formula.');
+        return;
+      }
+      const validItems = this.form.ingredients.filter((item) => (item.name || item.sku) && Number(item.qty) > 0);
+      if (finalStatus === 'in_trial' && validItems.length === 0) {
+        alert('Mohon isi minimal 1 bahan untuk memulai trial.');
+        return;
+      }
+      if (this.isSaving) return;
+      this.isSaving = true;
+
+      const unitBySymbol = new Map(this.units.map((unit) => [String(unit.symbol).toLowerCase(), unit]));
+      const variantBySku = new Map(this.variants.map((variant) => [String(variant.sku).toLowerCase(), variant]));
+      const items = validItems.map((item) => {
+        const unit = unitBySymbol.get(String(item.uom || '').toLowerCase());
+        const component = item.sku ? variantBySku.get(String(item.sku).toLowerCase()) : null;
+        return {
+          name: item.name || item.sku,
+          sku: item.sku || item.name,
+          component_variant_id: component ? component.id : null,
+          quantity: item.qty,
+          unit_id: unit ? unit.id : null,
+          estimated_cost: Number(item.estimated_cost || 0),
+        };
+      });
+
+      const hypothesis = {};
+      this.form.hypothesis.forEach((dimension) => { hypothesis[dimension.key] = dimension.value; });
+
+      const payload = {
+        name: this.form.name,
+        target_sku: this.form.target_sku || null,
+        category: this.form.category,
+        created_by: this.form.created_by,
+        description: this.form.description,
+        tags: this.form.tags,
+        based_on: this.form.based_on || null,
+        planned_trials: this.form.planned_trials,
+        notes: this.form.notes,
+        hypothesis_notes: this.form.hypothesis_notes,
+        hypothesis,
+        success_probability: this.form.success_probability,
+        probability_reason: this.form.probability_reason,
+        status: finalStatus,
+        items,
+      };
+
+      const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+      };
+
+      fetch('{{ submit_url }}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken'),
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+      .then((response) => response.json().then((data) => ({ ok: response.ok, data })))
+      .then(({ ok, data }) => {
+        if (!ok || !data.success) throw new Error(data.error || 'Gagal menyimpan formula');
+        window.location.href = '{% url 'rnd_list' %}';
+      })
+      .catch((error) => alert(error.message || 'Terjadi kesalahan'))
+      .finally(() => { this.isSaving = false; });
+    },
+    init() {
+      const variantsEl = document.getElementById('variants-data');
+      const unitsEl = document.getElementById('units-data');
+      const rndEl = document.getElementById('rnd-data');
+      if (variantsEl && variantsEl.textContent) {
+        try { this.variants = JSON.parse(variantsEl.textContent) || []; } catch (error) { this.variants = []; }
+      }
+      if (unitsEl && unitsEl.textContent) {
+        try { this.units = JSON.parse(unitsEl.textContent) || []; } catch (error) { this.units = []; }
+      }
+      if (this.units.length) {
+        this.form.ingredients = this.form.ingredients.map((item) => ({ ...item, uom: this.units[0].symbol }));
+      }
+      if (rndEl && rndEl.textContent) {
+        try {
+          const rnd = JSON.parse(rndEl.textContent);
+          if (rnd && rnd.id) {
+            this.isEdit = true;
+            this.form.name = rnd.name || '';
+            this.form.target_sku = rnd.target_sku || '';
+            this.form.category = rnd.category || 'beverage_hot';
+            this.form.created_by = rnd.created_by || '';
+            this.form.description = rnd.description || '';
+            this.form.tags = rnd.tags || [];
+            this.form.based_on = rnd.based_on || '';
+            this.form.planned_trials = rnd.planned_trials || 3;
+            this.form.notes = rnd.notes || '';
+            this.form.hypothesis_notes = rnd.hypothesis_notes || '';
+            this.form.probability_reason = rnd.probability_reason || '';
+            this.form.success_probability = Number(rnd.success_probability || 60);
+            if (rnd.hypothesis) {
+              this.form.hypothesis = this.form.hypothesis.map((dimension) => ({
+                ...dimension,
+                value: rnd.hypothesis[dimension.key] ?? dimension.value,
+              }));
+            }
+            if (rnd.items && rnd.items.length) {
+              this.form.ingredients = rnd.items.map((item) => ({
+                name: item.name || item.sku || '',
+                sku: item.sku || '',
+                qty: item.quantity || 0,
+                uom: item.unit || (this.units[0] ? this.units[0].symbol : 'gr'),
+                estimated_cost: Number(item.estimated_cost || 0),
+              }));
+            }
+          }
+        } catch (error) {}
+      }
+    },
+  }
+}
+</script>
+{% endblock %}

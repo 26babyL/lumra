@@ -1,0 +1,911 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}Purchasing — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  @keyframes drift {
+  from { transform: translate(0,0) scale(1); }
+  to   { transform: translate(20px,28px) scale(1.06); }
+}
+</style>
+
+<style>
+  [x-cloak] { display: none !important; }
+
+  @keyframes drift {
+    0%,100% { transform:translate(0,0) scale(1); }
+    50%      { transform:translate(28px,22px) scale(1.05); }
+  }
+
+  .stat-card {
+    background: var(--color-surface-mid);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    border-radius: 16px;
+    padding: 20px;
+    transition: box-shadow .2s, transform .2s;
+    position: relative; overflow: hidden;
+  }
+
+  .stat-card:hover { box-shadow:0 8px 28px var(--color-black-a009); transform:translateY(-2px); }
+
+  .stat-card::before {
+    content:''; position:absolute; top:0; right:0;
+    width:60px; height:60px; border-radius:0 16px 0 60px;
+    opacity:.06;
+  }
+
+  .stat-card.violet::before  { background:var(--color-6d28d9); }
+
+  .stat-card.green::before   { background:var(--color-2563eb); }
+
+  .stat-card.blue::before    { background:var(--color-2563eb); }
+
+  .stat-card.purple::before  { background:var(--color-7c3aed); }
+
+  .stat-icon {
+    width:40px; height:40px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; flex-shrink:0;
+  }
+
+  @keyframes pulse-glow {
+    0%,100% { box-shadow:0 0 0 0 var(--color-overlay-sm); }
+    50%      { box-shadow:0 0 0 6px var(--color-overlay-sm); }
+  }
+
+  .pulse-glow { animation: pulse-glow 2.4s ease-in-out infinite; }
+
+  .product-row {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:8px 14px; border-radius:14px;
+    background:var(--color-surface-mid);
+    backdrop-filter: var(--glass-blur);
+    border:1px solid var(--color-slate-200-a06);
+    cursor:pointer;
+    transition:all .18s;
+  }
+
+  .product-row:hover {
+    border-color:var(--color-overlay-sm);
+    background:rgba(255, 255, 255, 0.95);
+    box-shadow:0 4px 16px var(--color-overlay-sm);
+  }
+
+  .product-row.selected {
+    border-color:var(--color-6366f1);
+    background:var(--color-overlay-sm);
+    box-shadow:0 0 0 2px var(--color-overlay-sm), 0 4px 16px var(--color-overlay-sm);
+  }
+
+  .search-input {
+    background:var(--color-white-a6);
+    border:1px solid var(--color-slate-300-a5);
+    border-radius:12px;
+    transition:background .15s, border-color .15s, box-shadow .15s;
+  }
+
+  .search-input:focus {
+    background:#FFFFFF;
+    border-color:var(--color-overlay-sm);
+    box-shadow:0 0 0 3px var(--color-overlay-sm);
+    outline:var(--shadow-sm-16);
+  }
+
+  .btn-search {
+    background:linear-gradient(135deg,var(--color-4f46e5),var(--color-7c3aed));
+    border:var(--shadow-sm-16); border-radius:12px; color:#FFFFFF;
+    font-size:11px; font-weight:700; cursor:pointer;
+    transition:opacity .15s, transform .15s;
+    box-shadow:0 4px 14px var(--color-overlay-sm);
+  }
+
+  .btn-search:hover { opacity:.9; transform:translateY(-1px); }
+
+  @keyframes modalIn {
+    from { opacity:0; transform:scale(.93) translateY(14px); }
+    to   { opacity:1; transform: none; }
+  }
+
+  .modal-enter { animation:modalIn .22s cubic-bezier(.4,0,.2,1); }
+
+  .vendor-row {
+    display:flex; align-items:center; gap:8px;
+    padding:8px 12px; border-radius:12px;
+    background:var(--color-overlay-sm);
+    border:1px solid var(--color-overlay-sm);
+    transition:background .13s, border-color .13s;
+  }
+
+  .vendor-row:focus-within { background:var(--color-overlay-sm); border-color:var(--color-6366f1); }
+
+  .qty-input {
+    width:72px; padding:8px 8px; border-radius:9px;
+    border:1px solid var(--color-overlay-sm);
+    background:var(--color-white-a7);
+    font-size:13px; font-weight:700; color:var(--color-1e1b4b);
+    text-align:center;
+    transition:border-color .13s, box-shadow .13s;
+  }
+
+  .qty-input:focus { border-color:var(--color-6366f1); box-shadow:0 0 0 2px var(--color-overlay-sm); outline:var(--shadow-sm-16); }
+
+  .total-bar {
+    background:linear-gradient(135deg,var(--color-overlay-sm),var(--color-overlay-sm));
+    border:1px solid var(--color-overlay-sm);
+    border-radius:14px; padding:12px 16px;
+    transition:all .2s;
+  }
+
+  .total-bar.has-items {
+    background:linear-gradient(135deg,var(--color-overlay-sm),var(--color-overlay-sm));
+    border-color:var(--color-overlay-sm);
+  }
+
+  .btn-submit {
+    background:linear-gradient(135deg,var(--color-4f46e5) 0%,var(--color-7c3aed) 100%);
+    border:var(--shadow-sm-16); border-radius:14px; color:#FFFFFF;
+    font-weight:700; font-size:14px; cursor:pointer;
+    box-shadow:0 4px 18px var(--color-overlay-sm);
+    transition:transform .12s, box-shadow .12s;
+    width:100%; padding:12px 20px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+
+  .btn-submit:hover { transform:translateY(-1px); box-shadow:0 8px 28px var(--color-overlay-sm); }
+
+  .btn-submit:disabled { background:#DDDDDD; color:#999999; box-shadow:var(--shadow-sm-16); cursor:not-allowed; transform: none; }
+
+  .cart-item {
+    display:flex; align-items:center; gap:8px;
+    padding:8px 12px; border-radius:12px;
+    background:var(--color-overlay-sm);
+    border:1px solid var(--color-overlay-sm);
+    transition:background .12s;
+  }
+
+  .cart-item:hover { background:var(--color-overlay-sm); }
+
+  @keyframes slideIn { from{transform:translateX(100%)} to{transform:translateX(0)} }
+
+  @keyframes slideOut{ from{transform:translateX(0)} to{transform:translateX(100%)} }
+
+  .slide-in  { animation:slideIn .28s cubic-bezier(.22,1,.36,1); }
+
+  @keyframes toastIn  { from{opacity:0;transform:translateX(20px);} to{opacity:1;transform: none;} }
+
+  @keyframes toastOut { from{opacity:1;} to{opacity:0;pointer-events: none;} }
+
+  .kbd {
+    display:inline-block; padding:1px 5px;
+    background:#F0F0F0; border:1px solid #DDDDDD; border-bottom-width:2px;
+    border-radius:5px; font-size:10px; font-weight:700; color:#999999; font-family:monospace;
+  }
+
+  .custom-scroll::-webkit-scrollbar { width:4px; }
+
+  .custom-scroll::-webkit-scrollbar-track { background:transparent; }
+
+  .custom-scroll::-webkit-scrollbar-thumb { background:#DDDDDD; border-radius:99px; }
+</style>
+{% endblock %}
+
+
+{# BLUEPRINT D5: Tambahkan class is-loading saat data belum tersedia. #}
+{# Contoh: <div class="kpi-glass {% if not kpi_value %}is-loading{% endif %}"> #}
+{% block content %}
+
+
+  <!-- Ambient Blob Background -->
+  <div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+  <div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+  <div class="bg-blob bg-blob-3" aria-hidden="true"></div>
+
+<!--{# ── Ambient blobs ── #}-->
+<div class="blob blob-a"></div>
+<div class="blob blob-b"></div>
+<div class="blob blob-c"></div>
+
+<div class="w-full flex-1 space-y-5 relative z-10"
+     x-data="purchasing({{ purchase_count|default:0 }})"
+     x-init="init()"
+     x-cloak
+     @keydown.window="handleKey($event)">
+
+  <!--{# ══════════════════════════════════════════
+     HEADER
+  ══════════════════════════════════════════ #}-->
+  <div class="reveal flex items-end justify-between gap-3 flex-wrap">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-indigo-500 mb-1">
+        <a href="{% url 'dashboard' %}" class="hover:text-indigo-700 transition-colors">Dashboard</a>
+        <span class="text-slate-300">/</span>
+        <span class="text-slate-600 font-medium">Purchasing</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800">Purchasing <span class="text-indigo-600">Management</span></h1>
+      <p class="text-sm text-slate-400 mt-0.5">
+        Susun Purchase Order dari vendor ·
+        <span class="kbd">/</span> cari ·
+        <span class="kbd">F1</span> submit
+      </p>
+    </div>
+
+    <!--{# Cart button #}-->
+    <button @click="showCart=true"
+            class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-indigo-200 backdrop-blur-sm text-[12px] font-bold text-indigo-600 hover:bg-indigo-50 hover:border-indigo-400 transition-all" style="background:rgba(255, 255, 255, 0.92)">
+      <i class="fas fa-shopping-bag text-[11px]"></i>
+      Draft Order
+      <template x-if="purchaseList.length">
+        <span class="w-5 h-5 rounded-full bg-indigo-600 text-white text-[9px] font-black flex items-center justify-center"
+              x-text="purchaseList.length"></span>
+      </template>
+    </button>
+  </div>
+
+  <!--{# ══════════════════════════════════════════
+     STAT CARDS
+  ══════════════════════════════════════════ #}-->
+  <div class="reveal grid grid-cols-2 sm:grid-cols-4 gap-3">
+
+    <!--{# Total Request #}-->
+    <div class="stat-card violet flex items-center gap-3 kpi-glass">
+      <div class="stat-icon bg-indigo-50 text-indigo-600"><i class="fas fa-file-invoice"></i></div>
+      <div>
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Total Request</p>
+        <p class="text-2xl font-bold text-slate-800">{{ stats.total_req|default:0 }}</p>
+        <p class="text-[10px] text-slate-400 mt-0.5">Semua pengajuan</p>
+      </div>
+    </div>
+
+    <!--{# Approved — green pulse glow #}-->
+    <div class="stat-card green flex items-center gap-3 kpi-glass">
+      <div class="stat-icon bg-blue-50 text-blue-600 pulse-glow">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div>
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Approved</p>
+        <p class="text-2xl font-bold text-slate-800">{{ stats.approved|default:0 }}</p>
+        <p class="text-[10px] text-blue-500 mt-0.5 font-semibold">Siap diproses</p>
+      </div>
+    </div>
+
+    <!--{# Processing — slow spin icon #}-->
+    <div class="stat-card blue flex items-center gap-3 kpi-glass">
+      <div class="stat-icon bg-blue-50 text-blue-500">
+        <i class="fas fa-sync-alt" style="animation:spin 3s linear infinite;"></i>
+      </div>
+      <div>
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Processing</p>
+        <p class="text-2xl font-bold text-slate-800">{{ stats.processing|default:0 }}</p>
+        <p class="text-[10px] text-blue-400 mt-0.5 font-semibold">Dalam perjalanan</p>
+      </div>
+    </div>
+
+    <!--{# Selesai #}-->
+    <div class="stat-card purple flex items-center gap-3 kpi-glass">
+      <div class="stat-icon bg-purple-50 text-purple-600"><i class="fas fa-archive"></i></div>
+      <div>
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Selesai</p>
+        <p class="text-2xl font-bold text-slate-800">{{ stats.completed|default:0 }}</p>
+        <p class="text-[10px] text-slate-400 mt-0.5">Barang diterima</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!--{# slow-spin keyframe for processing icon #}-->
+  <style>@keyframes spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }</style>
+
+  <!--{# ══════════════════════════════════════════
+     SEARCH TOOLBAR
+  ══════════════════════════════════════════ #}-->
+  <div class="reveal glass px-5 py-4">
+    <form method="GET" action="" class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+
+      <!--{# Search field with / shortcut hint #}-->
+      <div class="relative flex-1 w-full">
+        <i class="fas fa-search absolute left-3.5 top-1 -translate-y-1 text-slate-300 text-[12px] pointer-events-none"></i>
+        <input
+          id="searchInput"
+          x-ref="searchInput"
+          type="text" name="search"
+          value="{{ request.GET.search|default:'' }}"
+          placeholder="Cari SKU atau nama produk…"
+          class="search-input w-full pl-10 pr-16 py-2.5 text-[13px] font-semibold text-slate-700 placeholder-slate-300"
+        >
+        <!--{# Keyboard hint badge #}-->
+        <span class="absolute right-3 top-1 -translate-y-1 kbd pointer-events-none">/</span>
+      </div>
+
+      <!--{# Category filter #}-->
+      <select aria-label="Kategori" name="category"
+              class="search-input px-3 py-2.5 text-[12px] font-semibold text-slate-600 pr-8 w-full sm:w-auto">
+        <option value="">Semua Kategori</option>
+        <option value="Coffee"     {% if request.GET.category == "Coffee"     %}selected{% endif %}>☕ Coffee</option>
+        <option value="Non-Coffee" {% if request.GET.category == "Non-Coffee" %}selected{% endif %}>🍵 Non-Coffee</option>
+        <option value="Pastry"     {% if request.GET.category == "Pastry"     %}selected{% endif %}>🥐 Pastry</option>
+      </select>
+
+      <button type="submit" class="btn-search flex items-center gap-2 px-5 py-2.5 w-full sm:w-auto justify-center">
+        <i class="fas fa-search text-[11px]"></i> Cari
+      </button>
+
+    </form>
+  </div>
+
+  <!--{# ══════════════════════════════════════════
+     PRODUCT LIST
+  ══════════════════════════════════════════ #}-->
+  <div class="reveal glass overflow-hidden">
+
+    <!--{# Header row #}-->
+    <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-white">
+      <div class="flex items-center gap-3">
+        <div class="w-1.5 h-6 bg-indigo-500 rounded-full"></div>
+        <div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.12em]">Available Products</p>
+          <p class="text-[12px] font-bold text-slate-700 mt-0.5">Klik produk → atur jumlah PO</p>
+        </div>
+      </div>
+      <span class="text-[10px] font-black text-slate-300 uppercase tracking-wider">
+        {{ page_obj.paginator.count|default:0 }} produk
+      </span>
+    </div>
+
+    <!--{# Product rows #}-->
+    <div class="p-4 space-y-2">
+      {% for v in page_obj %}
+      <div
+        @click="openPoModal('{{ v.sku|escapejs }}', '{{ v.product.name|escapejs }}', {{ v.price_buy|default:0 }}, {{ v.total_stock|default:0 }})"
+        class="product-row"
+        :class="{'selected': selectedSku === '{{ v.sku|escapejs }}'}"
+        role="button"
+        tabindex="0"
+        @keydown.enter="openPoModal('{{ v.sku|escapejs }}', '{{ v.product.name|escapejs }}', {{ v.price_buy|default:0 }}, {{ v.total_stock|default:0 }})"
+        :aria-pressed="(selectedSku==='{{ v.sku|escapejs }}').toString()"
+      >
+        <!--{# Left: icon + name + SKU #}-->
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-{% if v.product.category.name == 'Coffee' %}coffee{% elif v.product.category.name == 'Pastry' %}bread-slice{% else %}leaf{% endif %} text-indigo-400 text-[13px]"></i>
+          </div>
+          <div class="min-w-0">
+            <p class="text-[11px] font-black text-slate-700 uppercase tracking-tight truncate">{{ v.product.name }}</p>
+            <p class="text-[9px] font-bold text-slate-400 mt-0.5 font-mono">SKU: {{ v.sku }}</p>
+          </div>
+        </div>
+
+        <!--{# Right: stock + price + add btn #}-->
+        <div class="flex items-center gap-4 flex-shrink-0">
+          <!--{# Stock badge #}-->
+          <div class="text-right hidden sm:block">
+            <span class="text-[9px] font-black text-slate-300 uppercase tracking-wider block">Stok</span>
+            <span class="text-[11px] font-black
+              {% if v.total_stock|default:0 > 50 %}text-blue-600
+              {% elif v.total_stock|default:0 > 10 %}text-amber-500
+              {% else %}text-rose-500{% endif %}">
+              {{ v.total_stock|default:0 }}
+            </span>
+          </div>
+
+          <!--{# Price #}-->
+          <div class="text-right hidden md:block">
+            <span class="text-[9px] font-black text-slate-300 uppercase tracking-wider block">Harga</span>
+            <span class="text-[11px] font-black text-indigo-600">
+              {% if v.price_buy %}Rp {{ v.price_buy|floatformat:0 }}
+              {% elif v.product.sell_price %}Rp {{ v.product.sell_price|floatformat:0 }}
+              {% else %}<span class="text-slate-300 italic text-[10px]">—</span>{% endif %}
+            </span>
+          </div>
+
+          <!--{# Status chip #}-->
+          <div class="hidden sm:block">
+            {% if v.total_stock|default:0 > 50 %}
+              <span class="flex items-center gap-1 text-[9px] font-bold text-blue-600 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 inline-block"></span> Tersedia
+              </span>
+            {% elif v.total_stock|default:0 > 10 %}
+              <span class="flex items-center gap-1 text-[9px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block"></span> Terbatas
+              </span>
+            {% else %}
+              <span class="flex items-center gap-1 text-[9px] font-bold text-rose-500 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-rose-500 inline-block"></span> Habis
+              </span>
+            {% endif %}
+          </div>
+
+          <!--{# Add button #}-->
+          <button aria-label="Tambah"
+            @click.stop="openPoModal('{{ v.sku|escapejs }}', '{{ v.product.name|escapejs }}', {{ v.price_buy|default:0 }}, {{ v.total_stock|default:0 }})"
+            class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center
+                   shadow-lg shadow-indigo-200 hover:bg-indigo-700
+                   active:scale-90 transition-all"
+            title="Buat PO untuk produk ini"
+          >
+            <i class="fas fa-plus text-[10px]"></i>
+          </button>
+        </div>
+
+      </div>
+      {% empty %}
+
+      <!--{# ── Empty state ── #}-->
+      <div class="flex flex-col items-center justify-center py-16 text-center select-none">
+        <svg width="100" height="84" viewBox="0 0 100 84" fill="none" xmlns="http://www.w3.org/svg" class="mb-5 opacity-50">
+          <!--{# Box outline #}-->
+          <rect x="18" y="28" width="64" height="44" rx="8" stroke="#c7d2fe" stroke-width="2" fill="rgba(238,242,255,0.6)"/>
+          <!--{# Box flap #}-->
+          <path d="M18 36h64" stroke="#c7d2fe" stroke-width="2"/>
+          <path d="M38 28v8M62 28v8" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round"/>
+          <!--{# Search circle #}-->
+          <circle cx="72" cy="24" r="13" stroke="var(--color-indigo-light)" stroke-width="2" fill="rgba(238,242,255,0.8)"/>
+          <line x1="81" y1="33" x2="88" y2="40" stroke="var(--color-indigo-light)" stroke-width="2.5" stroke-linecap="round"/>
+          <!--{# X inside #}-->
+          <line x1="67" y1="19" x2="77" y2="29" stroke="#c7d2fe" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="77" y1="19" x2="67" y2="29" stroke="#c7d2fe" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <p class="text-[14px] font-black text-slate-400 tracking-tight">Produk Tidak Ditemukan</p>
+        <p class="text-[11px] text-slate-300 mt-1 max-w-xs leading-relaxed">
+          Coba ubah kata kunci pencarian atau pilih kategori yang berbeda.
+        </p>
+      </div>
+
+      {% endfor %}
+    </div>
+
+    <!--{# ── Pagination ── #}-->
+    {% if page_obj.has_other_pages %}
+    <nav class="flex justify-center px-5 py-4 border-t border-slate-100">
+      <div class="flex items-center gap-1.5">
+        {% if page_obj.has_previous %}
+        <a href="#"
+           @click.prevent="confirmNav('?page={{ page_obj.previous_page_number }}&search={{ request.GET.search }}&category={{ request.GET.category }}')"
+           class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:border-indigo-400 hover:text-indigo-600 transition text-[11px]" style="background:rgba(255, 255, 255, 0.92)">
+          <i class="fas fa-chevron-left text-[10px]"></i>
+        </a>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+          <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-600 text-white text-[11px] font-black">{{ num }}</span>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <a href="#"
+             @click.prevent="confirmNav('?page={{ num }}&search={{ request.GET.search }}&category={{ request.GET.category }}')"
+             class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:border-indigo-400 hover:text-indigo-600 transition text-[11px] font-semibold" style="background:rgba(255, 255, 255, 0.92)">{{ num }}</a>
+          {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <a href="#"
+           @click.prevent="confirmNav('?page={{ page_obj.next_page_number }}&search={{ request.GET.search }}&category={{ request.GET.category }}')"
+           class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:border-indigo-400 hover:text-indigo-600 transition text-[11px]" style="background:rgba(255, 255, 255, 0.92)">
+          <i class="fas fa-chevron-right text-[10px]"></i>
+        </a>
+        {% endif %}
+      </div>
+    </nav>
+    {% endif %}
+
+  </div>
+
+  <!--{# ══════════════════════════════════════════
+     DRAFT CART (shown when items exist)
+  ══════════════════════════════════════════ #}-->
+  <template x-if="purchaseList.length > 0">
+    <div class="reveal glass p-5">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-1.5 h-6 bg-purple-500 rounded-full"></div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.12em]">Draft Order</p>
+          <span class="w-5 h-5 rounded-full bg-indigo-600 text-white text-[9px] font-black flex items-center justify-center"
+                x-text="purchaseList.length"></span>
+        </div>
+        <button @click="showCart=true" class="text-[11px] font-bold text-indigo-500 hover:text-indigo-700 transition">
+          Lihat Detail →
+        </button>
+      </div>
+      <div class="space-y-2">
+        <template x-for="item in purchaseList" :key="item.sku">
+          <div class="cart-item">
+            <div class="w-7 h-7 rounded-xl bg-indigo-100 flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-box text-indigo-400 text-[10px]"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[12px] font-bold text-slate-700 truncate" x-text="item.name"></p>
+              <p class="text-[10px] text-slate-400 font-mono" x-text="'SKU: '+item.sku+'  ·  '+item.totalQty+' unit'"></p>
+            </div>
+            <button aria-label="Hapus" @click="removeDraft(item.sku)"
+                    class="w-6 h-6 flex items-center justify-center text-slate-200 hover:text-rose-400 transition flex-shrink-0">
+              <i class="fas fa-times text-[10px]"></i>
+            </button>
+          </div>
+        </template>
+      </div>
+      <button @click="submitAll()" :disabled="purchaseList.length===0"
+              class="btn-submit mt-4 disabled:opacity-40">
+        <i class="fas fa-paper-plane text-[13px]"></i>
+        Submit All Orders
+        <span class="kbd ml-auto" style="color:var(--color-surface-mid);border-color:rgba(255,255,255,.2);background:var(--color-black-a010);">F1</span>
+      </button>
+    </div>
+  </template>
+
+  <!--{# ══════════════════════════════════════════
+     EMPTY STATE (no selection, no cart)
+  ══════════════════════════════════════════ #}-->
+  <template x-if="!selectedSku && purchaseList.length===0">
+    <div class="reveal glass flex flex-col items-center justify-center py-16 text-center select-none">
+      <div class="w-20 h-20 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mb-5
+                  drop-shadow-xl" style="box-shadow:0 8px 30px var(--color-indigo-a12);">
+        <i class="fas fa-mug-hot text-3xl text-indigo-300"></i>
+      </div>
+      <p class="text-[15px] font-black text-slate-400 tracking-tight">Mulai Purchase Order</p>
+      <p class="text-[11px] text-slate-300 mt-2 max-w-xs leading-relaxed">
+        Pilih produk dari daftar di atas untuk mulai<br>menyusun Purchase Order ke vendor.
+      </p>
+      <div class="flex items-center gap-3 mt-5">
+        <span class="px-3 py-1 rounded-full border border-slate-200 text-[9px] font-black text-slate-300 uppercase tracking-wider" style="background:var(--color-bg)">Klik Produk</span>
+        <span class="text-slate-200">→</span>
+        <span class="px-3 py-1 rounded-full border border-slate-200 text-[9px] font-black text-slate-300 uppercase tracking-wider" style="background:var(--color-bg)">Atur Qty & Vendor</span>
+        <span class="text-slate-200">→</span>
+        <span class="px-3 py-1 rounded-full border border-indigo-200 bg-indigo-50 text-[9px] font-black text-indigo-400 uppercase tracking-wider">Submit PO</span>
+      </div>
+    </div>
+  </template>
+
+  <!--{# ══════════════════════════════════════════
+     MODAL — PO Entry (vendor qty + auto-calc)
+  ══════════════════════════════════════════ #}-->
+  <div
+    x-show="showPoModal"
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+    x-transition:leave="transition ease-in duration-150"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4"
+    style="background:var(--glass-dark-bg);backdrop-filter: var(--glass-blur);display:none;"
+    @click.self="showPoModal=false"
+    @keydown.escape.window="showPoModal=false"
+  >
+    <div class="modal-enter glass w-full max-w-md p-6">
+
+      <!--{# Modal header #}-->
+      <div class="flex items-start justify-between mb-5">
+        <div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.12em]">Purchase Order</p>
+          <p class="text-[15px] font-black text-slate-800 mt-0.5 leading-tight" x-text="poProduct.name"></p>
+          <p class="text-[10px] font-mono text-slate-400 mt-0.5" x-text="'SKU: '+poProduct.sku"></p>
+        </div>
+        <button aria-label="Tombol" @click="showPoModal=false"
+                class="w-7 h-7 rounded-xl flex items-center justify-center text-slate-400 hover:bg-slate-200 transition ml-3" style="background:var(--color-bg)">
+          <i class="fas fa-times text-[11px]"></i>
+        </button>
+      </div>
+
+      <!--{# Current stock info #}-->
+      <div class="flex items-center gap-3 px-3 py-2.5 rounded-xl border border-slate-100 mb-5" style="background:var(--color-bg)">
+        <i class="fas fa-warehouse text-slate-300 text-[13px]"></i>
+        <div>
+          <p class="text-[9px] font-black text-slate-300 uppercase tracking-wider">Stok Saat Ini</p>
+          <p class="text-[12px] font-black" :class="poProduct.stock>50?'text-blue-600':poProduct.stock>10?'text-amber-500':'text-rose-500'"
+             x-text="poProduct.stock+' unit'"></p>
+        </div>
+        <div class="ml-auto">
+          <p class="text-[9px] font-black text-slate-300 uppercase tracking-wider">Harga Ref</p>
+          <p class="text-[12px] font-black text-indigo-600" x-text="poProduct.price ? 'Rp '+formatNum(poProduct.price) : '—'"></p>
+        </div>
+      </div>
+
+      <!--{# Vendor rows #}-->
+      <div class="space-y-2.5 mb-5">
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.1em] mb-3">Pilih Vendor & Jumlah</p>
+        <template x-for="v in poVendors" :key="v.id">
+          <div class="vendor-row">
+            <!--{# Vendor avatar #}-->
+            <div class="w-8 h-8 rounded-xl bg-indigo-100 flex items-center justify-center flex-shrink-0 text-[10px] font-black text-indigo-600"
+                 x-text="v.name.charAt(0)"></div>
+            <!--{# Vendor info #}-->
+            <div class="flex-1 min-w-0">
+              <p class="text-[11px] font-bold text-slate-700 truncate" x-text="v.name"></p>
+              <p class="text-[9px] text-slate-400 font-mono" x-text="'Rp '+formatNum(v.price)+' / unit'"></p>
+            </div>
+            <!--{# Qty input #}-->
+            <input
+              type="number" min="0"
+              x-model="v.qty"
+              @input="v.qty=Math.max(0,parseInt(v.qty)||0)"
+              class="qty-input"
+              placeholder="0"
+              :aria-label="'Jumlah untuk '+v.name"
+            >
+            <!--{# Line subtotal #}-->
+            <div class="w-20 text-right flex-shrink-0">
+              <p class="text-[10px] font-black text-indigo-600"
+                 x-text="(parseInt(v.qty)||0)>0 ? 'Rp '+formatNum(v.price*(parseInt(v.qty)||0)) : '—'"></p>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!--{# ── Auto-calculate total bar ── #}-->
+      <div class="total-bar mb-5" :class="{'has-items': poTotalQty>0}">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Total Quantity</p>
+            <p class="text-[18px] font-black text-indigo-700 leading-tight" x-text="poTotalQty+' unit'"></p>
+          </div>
+          <div class="text-right">
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Estimasi Nilai PO</p>
+            <p class="text-[18px] font-black text-indigo-700 leading-tight" x-text="'Rp '+formatNum(poTotalValue)"></p>
+          </div>
+        </div>
+        <!--{# Per-vendor breakdown — only when has items #}-->
+        <template x-if="poTotalQty>0">
+          <div class="mt-3 pt-3 border-t border-indigo-100 space-y-1">
+            <template x-for="v in poVendors.filter(v=>(parseInt(v.qty)||0)>0)" :key="v.id">
+              <div class="flex justify-between text-[10px] text-slate-500">
+                <span x-text="v.name"></span>
+                <span class="font-bold" x-text="(parseInt(v.qty)||0)+' unit  ·  Rp '+formatNum(v.price*(parseInt(v.qty)||0))"></span>
+              </div>
+            </template>
+          </div>
+        </template>
+      </div>
+
+      <!--{# Action buttons #}-->
+      <div class="flex gap-2.5">
+        <button @click="showPoModal=false"
+                class="flex-1 py-2.5 rounded-xl border border-slate-200 text-[12px] font-bold text-slate-500 hover:bg-slate-50 transition">
+          Batal
+        </button>
+        <button
+          @click="addToCart()"
+          :disabled="poTotalQty===0"
+          class="btn-submit flex-1 py-2.5 text-[13px] disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none">
+          <i class="fas fa-plus text-[11px]"></i>
+          Tambah ke Draft
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!--{# ══════════════════════════════════════════
+     SLIDE-OVER — Draft Cart Detail
+  ══════════════════════════════════════════ #}-->
+  <div
+    x-show="showCart"
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+    class="fixed inset-0 z-50 overflow-hidden"
+    style="display:none;"
+  >
+    <div class="absolute inset-0 bg-black backdrop-blur-sm" @click="showCart=false"></div>
+    <div class="absolute inset-y-0 right-0 flex">
+      <div class="slide-in glass w-full max-w-sm flex flex-col h-full" style="border-radius:20px 0 0 20px;">
+
+        <!--{# Header #}-->
+        <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between flex-shrink-0">
+          <div>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.12em]">Draft Orders</p>
+            <p class="text-[14px] font-black text-slate-800 mt-0.5">Purchase Cart</p>
+          </div>
+          <button aria-label="Tombol" @click="showCart=false"
+                  class="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 hover:bg-slate-200 transition" style="background:var(--color-bg)">
+            <i class="fas fa-times text-[11px]"></i>
+          </button>
+        </div>
+
+        <!--{# Items #}-->
+        <div class="flex-1 -auto custom-scroll px-5 py-4 space-y-3">
+          <template x-if="purchaseList.length===0">
+            <div class="flex flex-col items-center justify-center h-full py-12 text-center opacity-50">
+              <i class="fas fa-shopping-bag text-3xl text-slate-200 mb-3"></i>
+              <p class="text-[12px] font-bold text-slate-400">Belum ada draft order</p>
+            </div>
+          </template>
+          <template x-for="item in purchaseList" :key="item.sku">
+            <div class="glass p-4" style="border-radius:14px;">
+              <div class="flex items-start justify-between mb-2">
+                <div>
+                  <p class="text-[12px] font-bold text-slate-700" x-text="item.name"></p>
+                  <p class="text-[9px] font-mono text-slate-400 mt-0.5" x-text="'SKU: '+item.sku"></p>
+                </div>
+                <span class="px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-[9px] font-black text-amber-600">Draft</span>
+              </div>
+              <div class="space-y-1 mb-3">
+                <template x-for="v in item.vendors" :key="v.id">
+                  <div class="flex justify-between text-[10px] text-slate-500">
+                    <span x-text="v.name"></span>
+                    <span class="font-bold" x-text="v.qty+' unit · Rp '+formatNum(v.price*v.qty)"></span>
+                  </div>
+                </template>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Total</span>
+                <span class="text-[12px] font-black text-indigo-600" x-text="item.totalQty+' unit'"></span>
+              </div>
+              <button @click="removeDraft(item.sku)"
+                      class="w-full mt-2 py-1.5 rounded-lg text-[10px] font-bold text-rose-400 hover:bg-rose-50 transition">
+                <i class="fas fa-trash-alt mr-1 text-[9px]"></i> Hapus
+              </button>
+            </div>
+          </template>
+        </div>
+
+        <!--{# Footer #}-->
+        <div class="px-5 py-4 border-t border-slate-100 flex-shrink-0">
+          <button @click="submitAll(); showCart=false" :disabled="purchaseList.length===0"
+                  class="btn-submit disabled:opacity-40">
+            <i class="fas fa-paper-plane text-[13px]"></i>
+            Submit All Orders
+          </button>
+          <button @click="showCart=false"
+                  class="w-full mt-2 py-2 text-[11px] font-bold text-slate-400 hover:text-slate-600 transition">
+            Tutup
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!--{# Toast container #}-->
+  <div class="fixed top-5 right-5 z-[100] flex flex-col gap-2" id="toastEl"></div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function purchasing(initialCount) {
+  return {
+
+    selectedSku : '',
+    purchaseList: [],
+    showPoModal : false,
+    showCart    : false,
+
+    poProduct: { sku:'', name:'', price:0, stock:0 },
+    poVendors: [],
+
+    /* ── Computed: real-time auto-calculate ── */
+    get poTotalQty() {
+      return this.poVendors.reduce((s,v)=>s+(parseInt(v.qty)||0), 0);
+    },
+    get poTotalValue() {
+      return this.poVendors.reduce((s,v)=>s+(v.price*(parseInt(v.qty)||0)), 0);
+    },
+
+    /* ── Init ── */
+    init() {
+      /* Scroll reveal */
+      const io = new IntersectionObserver(entries => {
+        entries.forEach((e,i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i * 60);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold:.08 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    },
+
+    /* ── Keyboard shortcuts ── */
+    handleKey(e) {
+      if (e.key==='/' && document.activeElement.tagName!=='INPUT') {
+        e.preventDefault(); this.$refs.searchInput?.focus();
+      }
+      if (e.key==='F1') { e.preventDefault(); this.submitAll(); }
+      if (e.key==='Escape') { this.showPoModal=false; this.showCart=false; }
+    },
+
+    /* ── Open PO modal ── */
+    openPoModal(sku, name, price, stock) {
+      this.selectedSku  = sku;
+      this.poProduct    = { sku, name, price, stock };
+
+      /* Check if already in cart — pre-fill quantities */
+      const existing = this.purchaseList.find(i=>i.sku===sku);
+
+      /* Load vendors from context — replace with real fetch if dynamic */
+      const baseVendors = {{ vendors_json|default:"[]"|safe }};
+      this.poVendors = baseVendors.map(v=>({...v, qty:0}));
+
+      if (existing) {
+        existing.vendors.forEach(ev => {
+          const v = this.poVendors.find(pv=>pv.id===ev.id);
+          if (v) v.qty = ev.qty;
+        });
+      }
+
+      this.showPoModal = true;
+    },
+
+    /* ── Add to cart from modal ── */
+    addToCart() {
+      if (this.poTotalQty === 0) {
+        this._toast('Total harus lebih dari 0', 'warn'); return;
+      }
+      const entry = {
+        sku     : this.poProduct.sku,
+        name    : this.poProduct.name,
+        totalQty: this.poTotalQty,
+        vendors : this.poVendors
+          .filter(v=>(parseInt(v.qty)||0)>0)
+          .map(v=>({ id:v.id, name:v.name, price:v.price, qty:parseInt(v.qty)||0 })),
+      };
+      const idx = this.purchaseList.findIndex(i=>i.sku===this.poProduct.sku);
+      if (idx !== -1) {
+        this.purchaseList[idx] = entry;
+        this._toast(entry.name+' diperbarui', 'info');
+      } else {
+        this.purchaseList.push(entry);
+        this._toast(entry.name+' ditambahkan ke draft');
+      }
+      this.showPoModal  = false;
+      this.selectedSku  = '';
+    },
+
+    /* ── Remove from draft ── */
+    removeDraft(sku) {
+      const item = this.purchaseList.find(i=>i.sku===sku);
+      this.purchaseList = this.purchaseList.filter(i=>i.sku!==sku);
+      if (item) this._toast(item.name+' dihapus dari draft', 'warn');
+    },
+
+    /* ── Submit all ── */
+    submitAll() {
+      if (!this.purchaseList.length) return;
+      fetch('/api/submit-purchases/', {
+        method : 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken' : document.cookie.match(/csrftoken=([^;]+)/)?.[1] || '',
+        },
+        body: JSON.stringify({ purchases: this.purchaseList }),
+      })
+      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+      .then(data => {
+        if (data.success) {
+          this._toast('Semua order berhasil dikirim! 🎉');
+          this.purchaseList = [];
+        } else {
+          this._toast(data.message || 'Gagal submit', 'error');
+        }
+      })
+      .catch(() => this._toast('Koneksi error', 'error'));
+    },
+
+    /* ── Pagination with cart warning ── */
+    confirmNav(url) {
+      if (this.purchaseList.length > 0) {
+        const ok = confirm(`${this.purchaseList.length} item di draft akan hilang. Lanjutkan?`);
+        if (!ok) return;
+      }
+      window.location.href = url;
+    },
+
+    /* ── Helpers ── */
+    formatNum(n) { return Math.round(n||0).toLocaleString('id-ID'); },
+
+    _toast(msg, type='success') {
+      const c = document.getElementById('toastEl');
+      if (!c) return;
+      const colors = { success:'border-blue-400', info:'border-sky-400', warn:'border-amber-400', error:'border-rose-400' };
+      const icons  = { success:'check-circle', info:'info-circle', warn:'exclamation-triangle', error:'times-circle' };
+      const el = document.createElement('div');
+      el.className = `toast flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl min-w-56 max-w-xs text-white text-[12px] font-semibold border-l-4 ${colors[type]||colors.success}`;
+      el.style.cssText = 'background:rgba(15,23,42,.92);backdrop-filter: var(--glass-blur);';
+      el.innerHTML = `<i class="fas fa-${icons[type]||icons.success} text-xs flex-shrink-0"></i><span>${msg}</span>`;
+      c.appendChild(el);
+      setTimeout(() => el.remove(), 3000);
+    },
+
+  };
+}
+</script>
+{% endblock %}

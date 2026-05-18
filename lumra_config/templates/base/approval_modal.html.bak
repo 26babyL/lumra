@@ -1,0 +1,443 @@
+{% load static %}
+
+{# ═══════════════════════════════════════════════════════════════════
+   APPROVAL MODAL — "The Quick Action"
+   Filosofi : Approve/Tolak tanpa pindah halaman · Sharp & transparent
+   Trigger  : window.dispatchEvent(new CustomEvent('open-approval', { detail: activity }))
+   Stack    : Alpine.js · CSS custom
+   ═══════════════════════════════════════════════════════════════════ #}
+
+<style>
+  /* ── Modal overlay — Emerald Odyssey Glass Protocol ── */
+  .approval-overlay {
+    position  : fixed;
+    inset     : 0;
+    z-index   : 50;
+    display   : flex;
+    align-items: center;
+    justify-content: center;
+    padding   : 1rem;
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  }
+
+  .approval-backdrop {
+    position  : absolute;
+    inset     : 0;
+    background: rgba(0, 0, 0, 0.32);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+  }
+
+  .approval-box {
+    position       : relative;
+    z-index        : 1;
+    width          : min(440px, 94vw);
+    background     : rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border         : 0.5px solid rgba(0, 103, 79, 0.1);
+    border-radius  : 14px;
+    box-shadow     : 0 8px 24px rgba(0,0,0,.08), 0 0 0 1px rgba(0,0,0,.04);
+    overflow       : hidden;
+  }
+
+  .approval-stripe {
+    height: 3px;
+    width : 100%;
+  }
+  .stripe-new      { background: linear-gradient(90deg, #00A86B, #34d399); }  /* Jade */
+  .stripe-critical { background: linear-gradient(90deg, #a32d2d, #dc2626); }  /* Critical */
+  .stripe-transit  { background: linear-gradient(90deg, #EFBF04, #fbbf24); }  /* Gold */
+
+  .product-card {
+    background   : rgba(0, 103, 79, 0.04);
+    border       : 0.5px solid rgba(0, 103, 79, 0.15);
+    border-radius: 8px;
+    padding      : 12px;
+  }
+
+  .qty-badge {
+    display      : inline-flex;
+    align-items  : center;
+    gap          : 4px;
+    padding      : 3px 8px;
+    border-radius: 100px;
+    font-size    : 10px;
+    font-weight  : 600;
+    background   : rgba(0, 168, 107, 0.12);
+    color        : #00674F;
+  }
+
+  .modal-btn-approve {
+    flex         : 1;
+    padding      : 10px 0;
+    border-radius: 8px;
+    background   : linear-gradient(135deg, #00A86B 0%, #00674F 100%);
+    color        : #fff;
+    font-size    : 12px;
+    font-weight  : 600;
+    letter-spacing: 0.03em;
+    border       : none;
+    cursor       : pointer;
+    box-shadow   : 0 4px 12px rgba(0, 168, 107, 0.3);
+    transition   : box-shadow .15s, transform .15s;
+  }
+  .modal-btn-approve:hover {
+    box-shadow: 0 8px 20px rgba(0, 168, 107, 0.4);
+    transform : translateY(-1px);
+  }
+  .modal-btn-approve:active { transform: translateY(0); }
+
+  .modal-btn-reject {
+    flex         : 1;
+    padding      : 10px 0;
+    border-radius: 8px;
+    background   : var(--color-overlay-sm);
+    color        : var(--color-be185d);
+    font-size    : 14px;
+    font-weight  : 700;
+    border       : 1.5px solid var(--color-overlay-sm);
+    cursor       : pointer;
+    transition   : background .15s, border-color .15s, transform .15s;
+  }
+  .modal-btn-reject:hover {
+    background  : var(--color-overlay-sm);
+    border-color: var(--color-overlay-sm);
+    transform   : translateY(-1px);
+  }
+
+  /* ── Confirm step ── */
+  .confirm-step {
+    animation: confirmIn .2s cubic-bezier(.4,0,.2,1);
+  }
+  @keyframes confirmIn {
+    from { opacity:0; transform: scale(.96); }
+    to   { opacity:1; transform: none; }
+  }
+</style>
+
+<div
+  id="approval-modal"
+  x-data="approvalModal()"
+  x-init="init()"
+  x-cloak>
+
+  <div
+    class="approval-overlay"
+    x-show="isOpen"
+    x-transition:enter="transition duration-200"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+    x-transition:leave="transition duration-180"
+    x-transition:leave-end="opacity-0"
+    @keydown.escape.window="close()">
+
+    {# Backdrop — klik untuk tutup #}
+    <div class="approval-backdrop" @click="close()"></div>
+
+    {# Modal box #}
+    <div
+      class="approval-box"
+      x-transition:enter="transition duration-200"
+      x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+      x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+      x-transition:leave="transition duration-150"
+      x-transition:leave-end="opacity-0 scale-96 translate-y-1"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="approval-title"
+      @click.stop>
+
+      {# Stripe severity #}
+      <div
+        class="approval-stripe"
+        :class="{
+          'stripe-new'     : activity?.status === 'new',
+          'stripe-critical': activity?.status === 'critical',
+          'stripe-transit' : activity?.status === 'transit',
+        }">
+      </div>
+
+      {# ── STEP 1: Konfirmasi awal ── #}
+      <div x-show="step === 1" class="px-6 pt-5 pb-6">
+
+        {# Header #}
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5"
+               x-text="activity?.status === 'critical' ? 'Tindakan Kritis' : 'Permintaan Approval'">
+            </p>
+            <h2 id="approval-title"
+                class="text-[15px] font-bold text-slate-800 leading-snug pr-4"
+                x-text="activity?.title">
+            </h2>
+          </div>
+          <button
+            @click="close()"
+            class="flex-shrink-0 w-7 h-7 rounded-full text-slate-400 hover:bg-slate-200 hover:text-slate-600 transition-all flex items-center justify-center" style="background:var(--color-bg)"
+            aria-label="Tutup">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        {# Product summary card #}
+        <div class="product-card mb-5">
+          <div class="flex items-start gap-3">
+            <div
+              class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 font-bold text-sm"
+              :class="{
+                'bg-emerald-100 text-emerald-600': activity?.status === 'new',
+                'bg-rose-100 text-rose-500'      : activity?.status === 'critical',
+                'bg-amber-100 text-amber-600'    : activity?.status === 'transit',
+              }">
+              <svg x-show="activity?.status === 'new'" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0v10l-8 4m0-14L4 17m8-10v14"/>
+              </svg>
+              <svg x-show="activity?.status === 'critical'" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+              </svg>
+              <svg x-show="activity?.status === 'transit'" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+              </svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[13px] font-bold text-slate-800" x-text="activity?.product || activity?.title"></p>
+              <p class="text-[11px] text-slate-400 mt-0.5" x-text="activity?.subtitle"></p>
+              <div class="flex items-center gap-2 mt-2 flex-wrap">
+                <span class="qty-badge" x-text="activity?.qty ? activity.qty + ' Kg' : '—'"></span>
+                <span x-show="activity?.value"
+                      class="text-[11px] font-semibold text-slate-500"
+                      x-text="activity?.value">
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {# Key info rows #}
+          <div class="mt-3 pt-3 border-t border-slate-200/60 space-y-2">
+            <template x-for="row in modalDetails" :key="row.label">
+              <div class="flex justify-between text-[12px]">
+                <span class="text-slate-400" x-text="row.label"></span>
+                <span class="font-semibold text-slate-700" x-text="row.value"></span>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        {# Warning untuk critical #}
+        <div x-show="activity?.status === 'critical'"
+             class="mb-4 flex items-start gap-2 px-3 py-2.5 bg-rose-50 border border-rose-100 rounded-xl">
+          <svg class="w-4 h-4 text-rose-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+          <p class="text-[11px] text-rose-700 font-medium leading-snug" x-text="activity?.notes || 'Stok di bawah threshold. Tindakan segera diperlukan.'"></p>
+        </div>
+
+        {# Action buttons #}
+        <div class="flex gap-3">
+          <template x-if="activity?.status !== 'critical'">
+            <button class="modal-btn-reject" @click="confirmAction('reject')">
+              ✕ Tolak
+            </button>
+          </template>
+          <template x-if="activity?.status === 'critical'">
+            <button class="modal-btn-reject" @click="close()">
+              Abaikan
+            </button>
+          </template>
+          <button
+            class="modal-btn-approve"
+            @click="confirmAction(activity?.status === 'critical' ? 'restock' : 'approve')">
+            <span x-text="activity?.status === 'critical' ? '+ Buat PO Restock' : '✓ Approve'"></span>
+          </button>
+        </div>
+
+        {# Lihat detail lengkap #}
+        <div class="mt-3 text-center">
+          <button
+            @click="openDrawer()"
+            class="text-[11px] text-emerald-600 hover:text-emerald-800 font-semibold transition-colors">
+            Lihat detail lengkap →
+          </button>
+        </div>
+
+      </div>
+
+      {# ── STEP 2: Konfirmasi final ── #}
+      <div x-show="step === 2" class="confirm-step px-6 pt-5 pb-6">
+        <div class="text-center mb-5">
+          <div
+            class="w-14 h-14 rounded-full mx-auto mb-3 flex items-center justify-center"
+            :class="pendingAction === 'approve' || pendingAction === 'restock' ? 'bg-emerald-100' : 'bg-rose-100'">
+            <svg x-show="pendingAction === 'approve' || pendingAction === 'restock'"
+                 class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+            <svg x-show="pendingAction === 'reject'"
+                 class="w-7 h-7 text-rose-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </div>
+          <h3 class="text-[15px] font-bold text-slate-800 mb-1"
+              x-text="pendingAction === 'approve' ? 'Konfirmasi Approval' : pendingAction === 'restock' ? 'Buat PO Restock?' : 'Konfirmasi Penolakan'">
+          </h3>
+          <p class="text-[12px] text-slate-500 leading-relaxed" x-text="confirmMessage"></p>
+        </div>
+
+        <div class="flex gap-3">
+          <button class="modal-btn-reject" @click="step = 1">
+            Kembali
+          </button>
+          <button
+            class="modal-btn-approve"
+            :class="isSubmitting ? 'opacity-70 cursor-wait' : ''"
+            @click="submitAction()"
+            :disabled="isSubmitting">
+            <span x-show="!isSubmitting">Ya, Lanjutkan</span>
+            <span x-show="isSubmitting" class="flex items-center justify-center gap-2">
+              <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+              </svg>
+              Memproses...
+            </span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function approvalModal() {
+  return {
+    isOpen       : false,
+    step         : 1,            /* 1 = main, 2 = confirm */
+    pendingAction: null,
+    isSubmitting : false,
+    activity     : null,
+
+    get modalDetails() {
+      if (!this.activity) return [];
+      const a = this.activity;
+      if (a.status === 'new') return [
+        { label: 'Supplier',    value: a.supplier || '—' },
+        { label: 'Gudang',      value: a.location || '—' },
+        { label: 'Estimasi',    value: a.eta || '2-3 hari kerja' },
+      ];
+      if (a.status === 'critical') return [
+        { label: 'Stok Saat Ini', value: a.currentStock || '—' },
+        { label: 'Threshold',     value: a.threshold || '20 Kg' },
+        { label: 'Gudang',        value: a.location || '—' },
+      ];
+      if (a.status === 'transit') return [
+        { label: 'No. Resi', value: a.ref || '—' },
+        { label: 'ETA',      value: a.eta || 'Hari ini' },
+        { label: 'Tujuan',   value: a.location || '—' },
+      ];
+      return [];
+    },
+
+    get confirmMessage() {
+      const title = this.activity?.product || this.activity?.title || 'item ini';
+      if (this.pendingAction === 'approve')  return `PO untuk ${title} akan disetujui dan diteruskan ke supplier.`;
+      if (this.pendingAction === 'reject')   return `PO untuk ${title} akan ditolak. Tindakan ini tidak dapat dibatalkan.`;
+      if (this.pendingAction === 'restock')  return `PO restock untuk ${title} akan dibuat secara otomatis.`;
+      return 'Tindakan ini akan segera diproses.';
+    },
+
+    init() {
+      window.addEventListener('open-approval', (e) => {
+        this.activity = e.detail;
+        this.step     = 1;
+        this.isOpen   = true;
+        this.$nextTick(() => {
+          document.querySelector('.approval-box button')?.focus();
+        });
+      });
+    },
+
+    close() {
+      this.isOpen        = false;
+      this.pendingAction = null;
+      this.isSubmitting  = false;
+      setTimeout(() => { this.step = 1; this.activity = null; }, 200);
+    },
+
+    confirmAction(action) {
+      this.pendingAction = action;
+      this.step = 2;
+    },
+
+    openDrawer() {
+      this.close();
+      /* Buka drawer dengan data yang sama */
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('open-drawer', { detail: this.activity }));
+      }, 220);
+    },
+
+    async submitAction() {
+      if (this.isSubmitting) return;
+      this.isSubmitting = true;
+
+      try {
+        /* ── MOCK — ganti fetch saat endpoint siap ── */
+        await new Promise(r => setTimeout(r, 700));
+
+        if (this.pendingAction === 'restock') {
+          window.location.href = "{% url 'purchasing' %}";
+          return;
+        }
+
+        /* Emit ke parent untuk sync Activity Pulse */
+        window.dispatchEvent(new CustomEvent('drawer-action', {
+          detail: {
+            action    : this.pendingAction,
+            activityId: this.activity?.id,
+          }
+        }));
+
+        const messages = {
+          approve: 'PO berhasil disetujui',
+          reject : 'PO ditolak',
+        };
+
+        window.dispatchEvent(new CustomEvent('show-toast', {
+          detail: {
+            message: messages[this.pendingAction] || 'Tindakan berhasil',
+            type   : this.pendingAction === 'reject' ? 'warning' : 'success',
+          }
+        }));
+
+        /*
+         * ── REAL FETCH ──
+         * const res = await fetch('/api/activity/action/', {
+         *   method : 'POST',
+         *   headers: {
+         *     'Content-Type': 'application/json',
+         *     'X-CSRFToken' : getCsrf(),
+         *   },
+         *   body: JSON.stringify({
+         *     activity_id: this.activity.id,
+         *     action     : this.pendingAction,
+         *   }),
+         * });
+         * if (!res.ok) throw new Error(res.status);
+         */
+
+        this.close();
+      } catch (err) {
+        console.error('Approval error:', err);
+        window.dispatchEvent(new CustomEvent('show-toast', {
+          detail: { message: 'Terjadi kesalahan. Coba lagi.', type: 'error' }
+        }));
+        this.isSubmitting = false;
+      }
+    },
+  };
+}
+</script>

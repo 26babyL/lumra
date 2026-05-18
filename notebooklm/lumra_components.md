@@ -1,0 +1,1302 @@
+/* ============================================================
+   LUMRA COMPONENTS — lumra_components.css
+   Emerald Odyssey Blueprint v1.1
+   ============================================================
+   
+   Load order:
+     1. lumra_tokens.css       ← :root variables
+     2. lumra_base.css         ← reset + typography
+     3. lumra_components.css   ← ini (komponen UI)
+
+   Sections:
+     §01  KPI Card Glass
+     §02  Glass Card (General)
+     §03  Table — Odyssey Standard
+     §04  Badges & Status Chips
+     §05  Tier Badges + Delta
+     §06  Buttons
+     §07  Form Inputs
+     §08  Pagination
+     §09  Modal & Drawer
+     §10  Toolbar / Tabs / Progress
+     §11  Metric Row & Section Label
+     §12  Toast & Alert
+     §13  Shimmer & Loading States
+     §14  Reveal Animations
+     §15  Background Blobs
+     §16  Keyframes (shared)
+     §17  Sidebar Glass
+     §18  Navbar Glass
+     §19  Print
+
+   Blueprint Reference: Bab 04, 06, 07, 10
+   ============================================================ */
+
+
+/* ══════════════════════════════════════════════════════════════
+   §01. KPI CARD GLASS — Blueprint Bab 04 & 07
+   Glass Protocol wajib: frosted edge + natural shadow 4 lapis
+   ══════════════════════════════════════════════════════════════ */
+.kpi-glass,
+.kpi-card,
+.lumra-kpi {
+  background             : var(--glass-bg-emerald);
+  backdrop-filter        : var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border                 : 0.5px solid rgba(255, 255, 255, 0.10);
+  border-top-color       : var(--glass-border-top);
+  border-left-color      : var(--glass-border-left);
+  border-radius          : var(--radius-xl);
+  box-shadow             : var(--shadow-natural);
+  padding                : var(--sp-4);
+  position               : relative;
+  overflow               : hidden;
+  transition             : transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.kpi-glass:hover,
+.kpi-card:hover,
+.lumra-kpi:hover {
+  transform : translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Frosted top edge highlight */
+.kpi-glass::before,
+.kpi-card::before {
+  content      : '';
+  position     : absolute;
+  top: 0; left: 0; right: 0;
+  height       : 1px;
+  background   : linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  pointer-events: none;
+  z-index      : 1;
+}
+
+/* Corner accent tint — color variants */
+.kpi-glass::after,
+.kpi-card::after {
+  content      : '';
+  position     : absolute;
+  top: 0; right: 0;
+  width        : 64px;
+  height       : 64px;
+  border-radius: 0 var(--radius-xl) 0 100%;
+  opacity      : 0.07;
+  pointer-events: none;
+}
+
+.kpi-glass.emerald::after, .kpi-card.emerald::after { background: var(--color-primary); }
+.kpi-glass.gold::after,    .kpi-card.gold::after    { background: var(--color-accent); }
+.kpi-glass.navy::after,    .kpi-card.navy::after    { background: var(--color-contrast); }
+.kpi-glass.jade::after,    .kpi-card.jade::after    { background: var(--color-secondary); }
+.kpi-glass.violet::after,  .kpi-card.violet::after  { background: var(--color-violet); }
+.kpi-glass.rose::after,    .kpi-card.rose::after    { background: var(--color-danger); }
+
+/* KPI Typography */
+.kpi-label,
+.kpi-label-text {
+  font-family   : var(--font-body);
+  font-size     : var(--text-label);
+  font-weight   : var(--font-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-widest);
+  color         : var(--color-text-subtle);
+  margin-bottom : var(--sp-1);
+  display       : block;
+}
+
+.kpi-value,
+.kpi-val {
+  font-family          : var(--font-mono);
+  font-size            : var(--text-kpi);
+  font-weight          : var(--font-semibold);
+  font-variant-numeric : tabular-nums;
+  line-height          : 1.15;
+  letter-spacing       : -0.01em;
+  color                : var(--color-text);
+}
+
+.kpi-sub,
+.kpi-subtitle {
+  font-size : var(--text-label);
+  color     : var(--color-text-subtle);
+  margin-top: var(--sp-1);
+}
+
+/* Loading state — shimmer override */
+.kpi-glass.is-loading .kpi-value,
+.kpi-glass.is-loading .kpi-label,
+.kpi-card.is-loading  .kpi-value,
+.kpi-card.is-loading  .kpi-label {
+  color         : transparent;
+  pointer-events: none;
+}
+.kpi-glass.is-loading::after,
+.kpi-card.is-loading::after { background: none; }
+
+
+/* ══════════════════════════════════════════════════════════════
+   §02. GLASS CARD — General content card
+   ══════════════════════════════════════════════════════════════ */
+.glass-card,
+.lumra-card,
+.glass,
+.loc-card {
+  background             : var(--glass-bg);
+  backdrop-filter        : var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border                 : 1px solid var(--border-ui);
+  border-radius          : var(--radius-xl);
+  box-shadow             : var(--shadow-natural);
+  overflow               : hidden;
+  transition             : transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.glass-card:hover,
+.lumra-card:hover,
+.loc-card:hover {
+  transform   : translateY(-2px);
+  box-shadow  : var(--shadow-hover);
+  border-color: var(--color-primary-a25);
+}
+
+.lumra-card-header {
+  padding      : var(--sp-5) var(--sp-6);
+  border-bottom: 1px solid var(--border-ui);
+  display      : flex;
+  align-items  : center;
+  gap          : var(--sp-3);
+}
+
+.lumra-card-title {
+  font-size     : var(--text-card-title);
+  font-weight   : var(--font-semibold);
+  color         : var(--color-text);
+  letter-spacing: var(--tracking-tight);
+}
+
+.lumra-card-body   { padding: var(--sp-6); }
+
+.lumra-card-footer {
+  padding   : var(--sp-4) var(--sp-6);
+  border-top: 1px solid var(--border-ui);
+  background: var(--color-black-a002);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §03. TABLE — Odyssey Standard — Blueprint Bab 04
+   ══════════════════════════════════════════════════════════════ */
+.lumra-table,
+.tbl-odyssey {
+  width          : 100%;
+  border-collapse: collapse;
+  font-size      : var(--text-table);
+}
+
+/* Header — Emerald bg, white text, uppercase */
+.lumra-table thead th,
+.tbl-odyssey thead th {
+  background    : var(--color-primary);
+  color         : white;
+  padding       : var(--sp-2) var(--sp-4);
+  text-align    : left;
+  font-size     : var(--text-label);
+  font-weight   : var(--font-semibold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  white-space   : nowrap;
+}
+
+.lumra-table thead th:first-child,
+.tbl-odyssey thead th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+.lumra-table thead th:last-child,
+.tbl-odyssey thead th:last-child  { border-radius: 0 var(--radius-sm) 0 0; }
+
+/* Sortable header */
+.lumra-table thead th.sortable,
+.tbl-odyssey thead th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+.lumra-table thead th.sortable:hover,
+.tbl-odyssey thead th.sortable:hover { background: var(--color-primary-light); }
+
+/* Zebra — odd row: Ivory Cream Emerald tipis */
+.lumra-table tbody tr:nth-child(odd) td,
+.tbl-odyssey tbody tr:nth-child(odd) td { background: rgba(0, 103, 79, 0.035); }
+
+/* Even row: putih bersih */
+.lumra-table tbody tr:nth-child(even) td,
+.tbl-odyssey tbody tr:nth-child(even) td { background: white; }
+
+/* Cell */
+.lumra-table td,
+.tbl-odyssey td {
+  padding      : var(--sp-2) var(--sp-4);    /* 8px 16px — grid compliant */
+  border-bottom: 1px solid var(--border-ui-subtle);
+  color        : var(--color-text);
+  vertical-align: middle;
+  line-height  : var(--leading-snug);
+}
+
+/* Row hover — emerald tipis */
+.lumra-table tbody tr:hover td,
+.tbl-odyssey tbody tr:hover td {
+  background: rgba(0, 103, 79, 0.055) !important;
+  transition: background var(--transition-fast);
+}
+
+.lumra-table tbody tr:last-child td,
+.tbl-odyssey tbody tr:last-child td { border-bottom: none; }
+
+/* Table wrapper — rounded + glass */
+.tbl-wrapper {
+  background             : var(--glass-bg);
+  backdrop-filter        : var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border                 : 1px solid var(--border-ui);
+  border-radius          : var(--radius-xl);
+  box-shadow             : var(--shadow-natural);
+  overflow               : hidden;
+}
+
+.tbl-container {
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §04. BADGES & STATUS CHIPS — Blueprint Bab 04
+   ══════════════════════════════════════════════════════════════ */
+.badge,
+.lumra-badge,
+.status-badge,
+.status-chip {
+  display       : inline-flex;
+  align-items   : center;
+  gap           : var(--sp-1);
+  padding       : 2px var(--sp-2);        /* 2px 8px */
+  border-radius : var(--radius-pill);
+  font-size     : var(--text-label);
+  font-weight   : var(--font-semibold);
+  letter-spacing: var(--tracking-wide);
+  white-space   : nowrap;
+  border        : 1px solid transparent;
+  line-height   : 1.4;
+}
+
+/* Sukses — Jade/Emerald (stok aman, order selesai) */
+.badge-success,
+.badge-active,
+.chip-emerald,
+.chip-success {
+  background  : var(--color-secondary-a12);
+  border-color: rgba(0, 168, 107, 0.25);
+  color       : var(--color-primary);
+}
+
+/* Warning — Gold (stok menengah, draft, pending) */
+.badge-warning,
+.chip-amber,
+.chip-warning {
+  background  : var(--color-accent-a15);
+  border-color: rgba(239, 191, 4, 0.30);
+  color       : var(--color-warning-text);
+}
+
+/* Kritis — Red → Navy gradient (JANGAN merah polos) */
+.badge-critical,
+.badge-danger,
+.chip-rose,
+.chip-critical,
+.chip-danger {
+  background  : linear-gradient(135deg, rgba(163, 45, 45, 0.14), rgba(0, 0, 128, 0.10));
+  border-color: rgba(163, 45, 45, 0.22);
+  color       : var(--color-danger);
+  animation   : pulse-critical 2s ease-in-out infinite;
+}
+
+@keyframes pulse-critical {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.72; }
+}
+
+/* Info — Navy (draft, informasi netral) */
+.badge-info,
+.chip-sky,
+.chip-info,
+.chip-new,
+.chip-transit {
+  background  : var(--color-contrast-a08);
+  border-color: rgba(0, 0, 128, 0.15);
+  color       : var(--color-contrast);
+}
+
+/* Neutral — abu (tidak aktif) */
+.badge-neutral,
+.chip-neutral {
+  background  : var(--color-black-a004);
+  border-color: var(--color-border);
+  color       : var(--color-text-muted);
+}
+
+/* Inactive */
+.badge-inactive {
+  background  : var(--color-danger-bg);
+  border-color: var(--color-danger-border);
+  color       : var(--color-danger-text);
+}
+
+/* Badge dot indicator */
+.badge-dot {
+  width        : 6px;
+  height       : 6px;
+  border-radius: 50%;
+  background   : currentColor;
+  flex-shrink  : 0;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §05. TIER BADGES + STATUS PILL + DELTA
+   ══════════════════════════════════════════════════════════════ */
+
+/* Tier — Blueprint Bab 04 Badge System */
+.tier-platinum {
+  background : var(--tier-platinum-bg);
+  color      : var(--tier-platinum-text);
+  border     : none;
+  font-weight: var(--font-bold);
+}
+.tier-gold {
+  background : var(--tier-gold-bg);
+  color      : var(--tier-gold-text);
+  border     : none;
+  font-weight: var(--font-bold);
+}
+.tier-silver {
+  background : var(--tier-silver-bg);
+  color      : var(--tier-silver-text);
+  border     : none;
+}
+.tier-verified {
+  background : var(--tier-verified-bg);
+  color      : var(--tier-verified-text);
+  border     : none;
+}
+.tier-preferred {
+  background  : var(--color-accent-a15);
+  border-color: rgba(239, 191, 4, 0.30);
+  color       : var(--color-warning-text);
+}
+
+/* Status pill */
+.status-pill {
+  display    : inline-flex;
+  align-items: center;
+  gap        : 4px;
+  padding    : 3px var(--sp-2);     /* 3px 8px */
+  border-radius: var(--radius-pill);
+  font-size  : var(--text-label);
+  font-weight: var(--font-semibold);
+}
+.status-pill.achieved  { background: var(--color-success-bg);  color: var(--color-success-text);  border: 1px solid var(--color-success-border); }
+.status-pill.on_track  { background: var(--color-warning-bg);  color: var(--color-warning-text);  border: 1px solid var(--color-warning-border); }
+.status-pill.behind    { background: var(--color-danger-bg);   color: var(--color-danger-text);   border: 1px solid var(--color-danger-border); }
+.status-pill.no_target { background: var(--color-black-a004);  color: var(--color-text-subtle);   border: 1px solid var(--color-border); }
+
+/* Delta (trend indicator) */
+.delta {
+  display    : inline-flex;
+  align-items: center;
+  gap        : var(--sp-1);         /* 4px */
+  padding    : 2px var(--sp-2);     /* 2px 8px */
+  border-radius: var(--radius-pill);
+  font-size  : var(--text-label);
+  font-weight: var(--font-semibold);
+  margin-top : var(--sp-1);
+}
+.delta.up   { background: var(--color-success-bg);  color: var(--color-success-text); }
+.delta.down { background: var(--color-danger-bg);   color: var(--color-danger-text); }
+.delta.flat { background: var(--color-black-a004);  color: var(--color-text-subtle); }
+
+
+/* ══════════════════════════════════════════════════════════════
+   §06. BUTTONS — Blueprint Bab 09 (Grid 8px)
+   Tinggi: sm=32px, normal=40px, lg=48px (semua kelipatan 8)
+   ══════════════════════════════════════════════════════════════ */
+.btn,
+.lumra-btn {
+  display        : inline-flex;
+  align-items    : center;
+  justify-content: center;
+  gap            : var(--sp-2);         /* 8px */
+  padding        : var(--sp-2) var(--sp-4);  /* 8px 16px */
+  font-family    : var(--font-body);
+  font-size      : var(--text-table);
+  font-weight    : var(--font-medium);
+  border-radius  : var(--radius-md);
+  border         : 1px solid transparent;
+  cursor         : pointer;
+  white-space    : nowrap;
+  text-decoration: none;
+  transition     : all var(--transition-fast);
+  height         : 40px;               /* 5×8px — wajib */
+  line-height    : 1;
+}
+
+.btn:active,
+.lumra-btn:active { transform: scale(0.97); }
+
+/* Primary — Emerald gradient */
+.btn-primary,
+.btn-add,
+.lumra-btn-primary {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color     : white;
+  box-shadow: 0 3px 12px var(--color-primary-a20);
+}
+.btn-primary:hover,
+.btn-add:hover,
+.lumra-btn-primary:hover {
+  box-shadow: 0 6px 22px var(--color-primary-a25);
+  transform : translateY(-1px);
+  color     : white;
+}
+
+/* Apply — Jade to Emerald gradient */
+.btn-apply {
+  background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+  color     : white;
+  box-shadow: 0 3px 10px var(--color-primary-a20);
+}
+.btn-apply:hover {
+  box-shadow: 0 5px 16px var(--color-primary-a25);
+  transform : translateY(-1px);
+  color     : white;
+}
+
+/* Outline */
+.btn-outline {
+  background  : transparent;
+  border-color: var(--color-primary-a25);
+  color       : var(--color-primary);
+}
+.btn-outline:hover {
+  background  : var(--color-primary-a08);
+  border-color: var(--color-primary);
+}
+
+/* Ghost */
+.btn-ghost,
+.lumra-btn-ghost { background: transparent; color: var(--color-text-muted); border-color: transparent; }
+.btn-ghost:hover              { background: var(--color-primary-a06); color: var(--color-primary); }
+
+/* Danger */
+.btn-danger,
+.lumra-btn-danger { background: var(--color-danger); color: white; }
+.btn-danger:hover             { background: var(--color-danger-dark); color: white; }
+
+/* Sizes */
+.btn-sm { height: 32px; padding: var(--sp-1) var(--sp-3); font-size: var(--text-label); }  /* 4×8px */
+.btn-lg { height: 48px; padding: var(--sp-3) var(--sp-8); font-size: var(--text-card-title); } /* 6×8px */
+
+/* Icon button */
+.icon-btn {
+  width        : 32px;               /* 4×8px */
+  height       : 32px;
+  border-radius: var(--radius-sm);
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  border       : none;
+  background   : transparent;
+  cursor       : pointer;
+  color        : var(--color-text-subtle);
+  transition   : background var(--transition-fast), color var(--transition-fast);
+  flex-shrink  : 0;
+}
+.icon-btn:hover            { background: var(--color-primary-a06); color: var(--color-primary); }
+.icon-btn.edit:hover       { background: var(--color-contrast-a06); color: var(--color-info); }
+.icon-btn.trash:hover      { background: var(--color-danger-bg);   color: var(--color-danger); }
+
+
+/* ══════════════════════════════════════════════════════════════
+   §07. FORM INPUTS — Blueprint Bab 09 (h=40px, 5×8)
+   ══════════════════════════════════════════════════════════════ */
+.input,
+.lumra-input,
+.form-input,
+.loc-search,
+.f-input,
+.inp {
+  width                  : 100%;
+  height                 : 40px;        /* 5×8px — wajib */
+  padding                : var(--sp-2) var(--sp-3);  /* 8px 12px */
+  font-family            : var(--font-body);
+  font-size              : var(--text-table);
+  color                  : var(--color-text);
+  background             : var(--glass-bg-subtle);
+  backdrop-filter        : var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border                 : 1px solid var(--border-ui);
+  border-radius          : var(--radius-md);
+  transition             : border-color var(--transition-fast), box-shadow var(--transition-fast);
+  appearance             : none;
+}
+
+.input:focus,
+.lumra-input:focus,
+.form-input:focus,
+.loc-search:focus,
+.f-input:focus,
+.inp:focus {
+  outline     : none;
+  border-color: var(--color-primary);
+  box-shadow  : var(--shadow-focus);
+}
+
+.input:disabled,
+.lumra-input:disabled {
+  opacity       : 0.5;
+  cursor        : not-allowed;
+  pointer-events: none;
+}
+
+.input.is-invalid,
+.f-input.err,
+.inp.err {
+  border-color: var(--color-danger);
+  box-shadow  : 0 0 0 3px var(--color-danger-bg);
+}
+
+.search-input { padding-left: var(--sp-6); }
+
+/* Textarea */
+textarea.input,
+textarea.lumra-input {
+  height    : auto;
+  min-height: 96px;      /* 12×8px */
+  resize    : vertical;
+  padding   : var(--sp-2) var(--sp-3);
+}
+
+/* Select */
+select.input,
+select.lumra-input {
+  background-image   : url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748B' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat  : no-repeat;
+  background-position: right var(--sp-3) center;
+  padding-right      : var(--sp-8);
+}
+
+/* Form field group */
+.form-label,
+.lumra-label,
+.f-label {
+  display       : block;
+  font-size     : var(--text-label);
+  font-weight   : var(--font-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color         : var(--color-text-muted);
+  margin-bottom : var(--sp-1);
+}
+
+.f-help,
+.lumra-help-text { font-size: var(--text-label); color: var(--color-text-subtle); margin-top: var(--sp-1); }
+
+.f-error,
+.err-msg { font-size: var(--text-label); color: var(--color-danger); margin-top: var(--sp-1); }
+
+.f-field  { margin-bottom: var(--sp-4); }
+.f-required { color: var(--color-danger); margin-left: 2px; }
+
+
+/* ══════════════════════════════════════════════════════════════
+   §08. PAGINATION
+   ══════════════════════════════════════════════════════════════ */
+.page-btn {
+  width        : 32px;              /* 4×8px */
+  height       : 32px;
+  border-radius: var(--radius-sm);
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  font-size    : var(--text-table);
+  font-weight  : var(--font-semibold);
+  cursor       : pointer;
+  border       : 1px solid var(--border-ui);
+  background   : var(--glass-bg-subtle);
+  color        : var(--color-text-muted);
+  transition   : all var(--transition-fast);
+}
+.page-btn:hover:not(:disabled) {
+  background  : var(--glass-bg);
+  border-color: var(--color-primary-a25);
+  color       : var(--color-primary);
+}
+.page-btn.active {
+  background  : var(--color-primary-a10);
+  border-color: var(--color-primary-a25);
+  color       : var(--color-primary);
+}
+.page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+
+/* ══════════════════════════════════════════════════════════════
+   §09. MODAL & DRAWER — Blueprint Bab 06
+   ══════════════════════════════════════════════════════════════ */
+.modal-overlay {
+  position               : fixed;
+  inset                  : 0;
+  background             : rgba(0, 0, 0, 0.44);
+  backdrop-filter        : var(--glass-dark-blur);
+  -webkit-backdrop-filter: var(--glass-dark-blur);
+  z-index                : var(--z-modal);
+  display                : flex;
+  align-items            : center;
+  justify-content        : center;
+  padding                : var(--sp-4);
+  animation              : lumra-fade-in 200ms var(--ease-out);
+}
+
+.modal-glass,
+.panel-glass {
+  background             : var(--glass-bg-strong);
+  backdrop-filter        : var(--glass-blur-heavy);
+  -webkit-backdrop-filter: var(--glass-blur-heavy);
+  border                 : 1px solid var(--border-ui);
+  border-radius          : var(--radius-2xl);
+  box-shadow             : var(--shadow-modal);
+  overflow               : hidden;
+  animation              : lumra-scale-in 220ms var(--ease-bounce);
+}
+
+/* Stripe accents untuk modal approval */
+.modal-stripe-new      { border-top: 3px solid var(--color-primary); }
+.modal-stripe-critical { border-top: 3px solid transparent; border-image: var(--color-danger-odyssey) 1; }
+
+/* Drawer — slide dari kanan */
+.drawer-overlay {
+  position  : fixed;
+  inset     : 0;
+  background: rgba(0, 0, 0, 0.28);
+  z-index   : var(--z-modal);
+  animation : lumra-fade-in 200ms var(--ease-out);
+}
+
+.drawer-panel {
+  position               : fixed;
+  top: 0; right: 0; bottom: 0;
+  width                  : 400px;       /* 50×8px */
+  background             : var(--glass-bg-strong);
+  backdrop-filter        : var(--glass-blur-heavy);
+  -webkit-backdrop-filter: var(--glass-blur-heavy);
+  border-left            : 1px solid var(--border-ui);
+  box-shadow             : var(--shadow-modal);
+  z-index                : var(--z-modal);
+  transform              : translateX(100%);
+  transition             : transform var(--transition-drawer);
+  overflow-y             : auto;
+}
+
+.drawer-panel.open { transform: translateX(0); }
+
+
+/* ══════════════════════════════════════════════════════════════
+   §10. TOOLBAR / TABS / PROGRESS
+   ══════════════════════════════════════════════════════════════ */
+.action-bar,
+.glass-toolbar {
+  background             : var(--glass-bg);
+  backdrop-filter        : var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border                 : 1px solid var(--border-ui);
+  border-radius          : var(--radius-xl);
+  box-shadow             : var(--shadow-natural);
+}
+
+.tab-container {
+  background             : var(--glass-bg);
+  backdrop-filter        : var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border                 : 1px solid var(--border-ui);
+  border-radius          : var(--radius-xl);
+  padding                : var(--sp-1);    /* 4px */
+  width                  : fit-content;
+  box-shadow             : var(--shadow-natural);
+}
+
+.nav-tab {
+  font-size  : var(--text-table);
+  font-weight: var(--font-semibold);
+  padding    : var(--sp-2) var(--sp-4);   /* 8px 16px */
+  border-radius: var(--radius-md);
+  border     : none;
+  background : transparent;
+  color      : var(--color-text-subtle);
+  cursor     : pointer;
+  transition : all var(--transition-fast);
+}
+.nav-tab.active           { background: var(--color-primary-a10); color: var(--color-primary); }
+.nav-tab:hover:not(.active) { color: var(--color-text-muted); background: var(--color-black-a004); }
+
+/* View toggle */
+.view-toggle {
+  background   : var(--color-black-a004);
+  border-radius: var(--radius-md);
+  padding      : var(--sp-1);
+  display      : flex;
+  gap          : 2px;
+  border       : 1px solid var(--border-ui);
+}
+.view-btn {
+  font-size  : var(--text-table);
+  font-weight: var(--font-semibold);
+  padding    : var(--sp-1) var(--sp-4);   /* 4px 16px */
+  border-radius: var(--radius-sm);
+  color      : var(--color-text-muted);
+  border     : none;
+  background : transparent;
+  cursor     : pointer;
+  display    : flex;
+  align-items: center;
+  gap        : var(--sp-1);
+  transition : all var(--transition-fast);
+}
+.view-btn.active { background: var(--glass-bg-strong); color: var(--color-primary); box-shadow: var(--shadow-xs); }
+
+/* Progress */
+.progress-track {
+  height       : 8px;
+  border-radius: var(--radius-pill);
+  background   : var(--color-black-a006);
+  overflow     : hidden;
+}
+.progress-fill {
+  height       : 100%;
+  border-radius: var(--radius-pill);
+  transition   : width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.progress-fill.emerald { background: linear-gradient(90deg, var(--color-primary), var(--color-secondary)); }
+.progress-fill.gold    { background: var(--color-accent); }
+.progress-fill.danger  { background: var(--color-danger); }
+
+
+/* ══════════════════════════════════════════════════════════════
+   §11. METRIC ROW & SECTION LABEL
+   ══════════════════════════════════════════════════════════════ */
+.metric-row {
+  display        : flex;
+  justify-content: space-between;
+  align-items    : center;
+  padding        : var(--sp-2) 0;        /* 8px 0 */
+  border-bottom  : 1px solid var(--border-ui-subtle);
+}
+.metric-row:last-child { border-bottom: none; }
+
+.metric-name {
+  font-size  : var(--text-table);
+  font-weight: var(--font-semibold);
+  color      : var(--color-text-muted);
+}
+.metric-val {
+  font-family         : var(--font-mono);
+  font-size           : var(--text-table);
+  font-weight         : var(--font-medium);
+  color               : var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.section-label {
+  font-size     : var(--text-label);
+  font-weight   : var(--font-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-widest);
+  color         : var(--color-text-subtle);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §12. TOAST & ALERT
+   ══════════════════════════════════════════════════════════════ */
+.toast {
+  font-size : var(--text-table);
+  background: var(--glass-bg-strong);
+  border    : 1px solid var(--border-ui);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-modal);
+  padding   : var(--sp-3) var(--sp-4);   /* 12px 16px */
+  animation : tIn .25s var(--ease-out), tOut .25s ease 2.5s forwards;
+}
+
+@keyframes tIn  { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: none; } }
+@keyframes tOut { from { opacity: 1; } to { opacity: 0; pointer-events: none; } }
+
+/* Alert — semantic versions */
+.alert {
+  display      : flex;
+  align-items  : flex-start;
+  gap          : var(--sp-3);
+  padding      : var(--sp-4);
+  border-radius: var(--radius-lg);
+  border       : 1px solid transparent;
+  font-size    : var(--text-table);
+}
+.alert-success { background: var(--color-success-bg);  border-color: var(--color-success-border); color: var(--color-success-text); }
+.alert-warning { background: var(--color-warning-bg);  border-color: var(--color-warning-border); color: var(--color-warning-text); }
+.alert-danger  { background: var(--color-danger-bg);   border-color: var(--color-danger-border);  color: var(--color-danger-text); }
+.alert-info    { background: var(--color-info-bg);     border-color: var(--color-info-border);    color: var(--color-info-text); }
+
+
+/* ══════════════════════════════════════════════════════════════
+   §13. SHIMMER & LOADING STATES — Blueprint Bab 10
+   Semua shimmer: duration 1.5s — satu nilai, berlaku global
+   ══════════════════════════════════════════════════════════════ */
+@keyframes lumra-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.shimmer,
+.loading-shimmer,
+.lumra-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-primary-a06)   0%,
+    var(--color-secondary-a15) 40%,   /* emerald peak */
+    var(--color-accent-a10)    60%,   /* gold glint */
+    var(--color-primary-a06)   100%
+  );
+  background-size: 200% auto;
+  animation      : lumra-shimmer 1.5s ease-in-out infinite;
+  border-radius  : var(--radius-md);
+  color          : transparent !important;
+}
+
+/* Skeleton cells */
+.skeleton-cell {
+  height       : 12px;
+  border-radius: var(--radius-sm);
+}
+.skeleton-row td { padding: var(--sp-2) var(--sp-3); }
+
+/* Inline button spinner */
+@keyframes lumra-spin { to { transform: rotate(360deg); } }
+.btn-loading .btn-icon,
+.btn-spinner {
+  width        : 16px;
+  height       : 16px;
+  border       : 2px solid rgba(255, 255, 255, 0.30);
+  border-top-color: white;
+  border-radius: 50%;
+  animation    : lumra-spin 0.6s linear infinite;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §14. REVEAL ANIMATION — Blueprint Bab 06
+   ══════════════════════════════════════════════════════════════ */
+.reveal {
+  opacity  : 0;
+  transform: translateY(16px);
+  transition:
+    opacity   500ms var(--ease-out),
+    transform 500ms var(--ease-out);
+}
+.reveal.visible {
+  opacity  : 1;
+  transform: none;
+}
+
+/* Progressive reveal dengan stagger */
+.stagger > *:nth-child(1)  { transition-delay:   0ms; }
+.stagger > *:nth-child(2)  { transition-delay:  50ms; }
+.stagger > *:nth-child(3)  { transition-delay: 100ms; }
+.stagger > *:nth-child(4)  { transition-delay: 150ms; }
+.stagger > *:nth-child(5)  { transition-delay: 200ms; }
+.stagger > *:nth-child(6)  { transition-delay: 250ms; }
+.stagger > *:nth-child(7)  { transition-delay: 300ms; }
+.stagger > *:nth-child(8)  { transition-delay: 350ms; }
+
+
+/* ══════════════════════════════════════════════════════════════
+   §15. BACKGROUND BLOBS — Animated ambient depth
+   ══════════════════════════════════════════════════════════════ */
+@keyframes lumra-blob {
+  0%, 100% { transform: scale(1) translate(0, 0); }
+  33%      { transform: scale(1.08) translate(20px, -20px); }
+  66%      { transform: scale(0.96) translate(-15px, 10px); }
+}
+
+.bg-blob,
+.orb,
+.blob {
+  position      : fixed;
+  border-radius : 50%;
+  filter        : blur(80px);
+  opacity       : 0.08;
+  pointer-events: none;
+  z-index       : 0;
+  animation     : lumra-blob 14s ease-in-out infinite;
+}
+
+.bg-blob-1 { width: 480px; height: 480px; background: var(--color-primary);   top: -120px; left: -160px; }
+.bg-blob-2 { width: 320px; height: 320px; background: var(--color-secondary); bottom: -80px; right: -80px; animation-delay: -7s; }
+.bg-blob-3 { width: 220px; height: 220px; background: var(--color-accent);    top: 40%; left: 55%; animation-delay: -3.5s; opacity: 0.05; }
+
+
+/* ══════════════════════════════════════════════════════════════
+   §16. KEYFRAMES — Shared animations — Blueprint Bab 06
+   ══════════════════════════════════════════════════════════════ */
+@keyframes lumra-fade-in  {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes lumra-scale-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes lumra-fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes lumra-spin { to { transform: rotate(360deg); } }
+
+@keyframes lumra-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+/* Amber pulse untuk stok kritis di inventory */
+@keyframes amber-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 191, 4, 0); }
+  50%      { box-shadow: 0 0 0 4px rgba(239, 191, 4, 0.22); }
+}
+.amber-pulse { animation: amber-pulse 2.5s ease-in-out infinite; }
+
+
+/* ══════════════════════════════════════════════════════════════
+   §17. SIDEBAR GLASS — Blueprint Bab 04
+   Token-driven: semua nilai dari --sb-* di lumra_tokens.css
+   ══════════════════════════════════════════════════════════════ */
+.sidebar-glass {
+  background             : var(--sb-bg);
+  backdrop-filter        : blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-right           : 1px solid var(--border-ui);
+  box-shadow:
+    1px 0 0 rgba(255, 255, 255, 0.55),
+    2px 0 8px rgba(0, 0, 0, 0.06),
+    4px 0 16px rgba(0, 0, 0, 0.04),
+    0 0 0 0.5px rgba(0, 0, 0, 0.04);
+  transition:
+    background    var(--transition-slow),
+    border-color  var(--transition-slow),
+    box-shadow    var(--transition-slow);
+}
+
+[data-theme="dark"] .sidebar-glass {
+  box-shadow:
+    1px 0 0 rgba(255, 255, 255, 0.04),
+    2px 0 8px rgba(0, 0, 0, 0.30),
+    4px 0 16px rgba(0, 0, 0, 0.20),
+    0 0 0 0.5px rgba(0, 0, 0, 0.20);
+}
+
+/* Nav Item — Blueprint Bab 09 (h=40px, 5×8px) */
+.nav-item {
+  position       : relative;
+  display        : flex;
+  align-items    : center;
+  gap            : 10px;
+  padding        : 8px 10px;
+  border-radius  : 10px;
+  font-size      : 14px;
+  font-weight    : var(--font-medium);
+  color          : var(--sb-text);
+  cursor         : pointer;
+  transition     : background var(--transition-fast), color var(--transition-fast);
+  white-space    : nowrap;
+  overflow       : hidden;
+  width          : 100%;
+  text-align     : left;
+  border         : none;
+  background     : transparent;
+  text-decoration: none;
+}
+
+.nav-item.collapsed {
+  justify-content: center;
+  padding        : var(--sp-2) 0;
+  gap            : 0;
+}
+
+.nav-item:hover { background: var(--sb-hover-bg); color: var(--sb-hover-text); }
+
+/* Active — emerald glow bar kiri */
+.nav-item.active {
+  background : var(--sb-active-bg);
+  color      : var(--sb-active-text);
+  font-weight: var(--font-semibold);
+}
+.nav-item.active::before {
+  content      : '';
+  position     : absolute;
+  left         : 0;
+  top          : 20%;
+  bottom       : 20%;
+  width        : 3px;
+  border-radius: 0 3px 3px 0;
+  background   : var(--color-primary);
+  box-shadow   : 0 0 8px var(--color-primary-a25);
+}
+
+.nav-item.parent-active {
+  background : var(--sb-parent-bg);
+  color      : var(--sb-active-text);
+  font-weight: var(--font-semibold);
+}
+
+/* Icon wrapper */
+.nav-icon-wrap {
+  width          : 32px;                 /* 4×8px */
+  height         : 32px;
+  display        : flex;
+  align-items    : center;
+  justify-content: center;
+  flex-shrink    : 0;
+}
+.nav-item.collapsed .nav-icon-wrap { width: 32px; height: 32px; }
+
+.nav-icon {
+  width     : 18px;
+  height    : 18px;
+  min-width : 18px;
+  flex-shrink: 0;
+  opacity   : 0.50;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  color     : var(--sb-icon-color);
+}
+.nav-item:hover .nav-icon,
+.nav-item.active .nav-icon,
+.nav-item.parent-active .nav-icon { opacity: 1; }
+.nav-item:hover .nav-icon         { transform: scale(1.08); }
+
+/* Sub-item */
+.sub-item {
+  display        : flex;
+  align-items    : center;
+  gap            : 8px;
+  padding        : 6px 10px 6px 14px;
+  border-radius  : 8px;
+  font-size      : 13.5px;
+  font-weight    : 450;
+  color          : var(--sb-sub-text);
+  text-decoration: none;
+  transition     : background var(--transition-fast), color var(--transition-fast);
+  white-space    : nowrap;
+}
+.sub-item::before {
+  content      : '';
+  width        : 5px;
+  height       : 5px;
+  border-radius: 50%;
+  background   : currentColor;
+  opacity      : 0.35;
+  flex-shrink  : 0;
+  transition   : opacity var(--transition-fast);
+}
+.sub-item:hover         { background: var(--sb-sub-hover-bg); color: var(--sb-hover-text); }
+.sub-item:hover::before { opacity: 1; }
+.sub-item.active        { color: var(--color-primary); font-weight: var(--font-semibold); background: var(--sb-active-bg); }
+.sub-item.active::before { background: var(--color-primary); opacity: 1; box-shadow: 0 0 4px var(--color-primary-a25); }
+
+/* Section label */
+.nav-section {
+  font-size     : var(--text-label);
+  font-weight   : var(--font-bold);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color         : var(--sb-section-color);
+  padding       : var(--sp-3) var(--sp-3) var(--sp-1);  /* 12px 12px 4px */
+  white-space   : nowrap;
+  overflow      : hidden;
+  max-height    : 40px;
+  transition    : opacity 200ms ease, max-height 200ms ease, padding 200ms ease;
+}
+.nav-section.opacity-0 { max-height: 0; padding: 0; opacity: 0; }
+
+/* Tooltip (collapsed mode) */
+.nav-tooltip {
+  position      : absolute;
+  left          : calc(100% + 12px);
+  top           : 50%;
+  transform     : translateY(-50%);
+  background    : var(--sb-tooltip-bg);
+  color         : var(--sb-tooltip-text);
+  border        : 1px solid var(--sb-tooltip-border);
+  font-size     : var(--text-table);
+  font-weight   : var(--font-medium);
+  padding       : 5px var(--sp-3);
+  border-radius : var(--radius-sm);
+  white-space   : nowrap;
+  pointer-events: none;
+  opacity       : 0;
+  box-shadow    : var(--shadow-natural);
+  transition    : opacity 150ms ease 100ms;
+  z-index       : var(--z-tooltip);
+}
+.nav-tooltip::before {
+  content      : '';
+  position     : absolute;
+  right        : 100%;
+  top          : 50%;
+  transform    : translateY(-50%);
+  border       : 5px solid transparent;
+  border-right-color: var(--sb-tooltip-bg);
+}
+.nav-item:hover .nav-tooltip { opacity: 1; }
+
+/* Collapse button */
+.collapse-btn {
+  width        : 24px;
+  height       : 24px;
+  border-radius: var(--radius-sm);
+  border       : 1px solid var(--sb-btn-border);
+  background   : var(--sb-btn-bg);
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  cursor       : pointer;
+  transition   : background var(--transition-fast), border-color var(--transition-fast);
+  flex-shrink  : 0;
+  color        : var(--sb-text);
+  z-index      : 40;
+}
+.collapse-btn:hover {
+  background  : var(--sb-btn-hover-bg);
+  border-color: var(--color-primary);
+  color       : var(--color-primary);
+}
+
+/* Logo */
+.logo-icon {
+  width        : 32px;
+  height       : 32px;
+  border-radius: var(--radius-md);
+  background   : linear-gradient(135deg, var(--color-emerald-600) 0%, var(--color-emerald-700) 100%);
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  flex-shrink  : 0;
+  box-shadow   : 0 2px 8px var(--color-primary-a25);
+}
+
+/* Chevron */
+.chevron { transition: transform var(--transition-base); flex-shrink: 0; }
+.chevron.open { transform: rotate(180deg); }
+
+/* Online indicator */
+.online-dot {
+  width        : 8px;
+  height       : 8px;
+  background   : var(--color-success);
+  border-radius: 50%;
+  border       : 1.5px solid var(--sb-bg);
+  position     : absolute;
+  bottom       : 0;
+  right        : 0;
+}
+
+/* Footer */
+.sb-footer-border { border-top: 1px solid var(--border-ui); }
+.sb-username      { color: var(--color-text); }
+.sb-role          { color: var(--color-text-muted); }
+.submenu-container { overflow: hidden; }
+
+/* Sidebar blob drift — Blueprint Bab 15 */
+@keyframes sb-blob-drift {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(12px, 18px) scale(1.05); }
+}
+
+.sb-blob {
+  position      : absolute;
+  border-radius : 50%;
+  filter        : blur(60px);
+  pointer-events: none;
+  z-index       : 0;
+  animation     : sb-blob-drift 20s ease-in-out infinite alternate;
+}
+.sb-blob-1 { width: 160px; height: 160px; background: var(--color-primary);   opacity: 0.06; top: -40px; left: -60px; }
+.sb-blob-2 { width: 120px; height: 120px; background: var(--color-secondary); opacity: 0.05; bottom: 64px; left: -20px; animation-delay: -8s; }
+
+/* Ensure content sits above blobs */
+#sidebar > *:not(.sb-blob) { position: relative; z-index: 1; }
+
+/* Sidebar scrollbar */
+.nav-scroll::-webkit-scrollbar       { width: 3px; }
+.nav-scroll::-webkit-scrollbar-track { background: transparent; }
+.nav-scroll::-webkit-scrollbar-thumb { background: var(--border-ui); border-radius: 3px; }
+
+
+/* ══════════════════════════════════════════════════════════════
+   §18. NAVBAR GLASS — Blueprint Bab 04
+   ══════════════════════════════════════════════════════════════ */
+.nav-glass {
+  background             : rgba(255, 255, 255, 0.85);
+  backdrop-filter        : var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom          : 0.5px solid rgba(0, 103, 79, 0.10);
+  height                 : var(--navbar-height);   /* 56px = 7×8px */
+  position               : sticky;
+  top                    : 0;
+  z-index                : var(--z-navbar);
+  box-shadow             : var(--shadow-xs);
+}
+
+[data-theme="dark"] .nav-glass {
+  background  : rgba(10, 18, 36, 0.85);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+/* Command input — Blueprint Bab 04 */
+.cmd-input {
+  border-radius: var(--radius-pill);
+  border       : 1px solid var(--border-ui);
+  background   : var(--glass-bg-subtle);
+  transition   : border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.cmd-input:focus {
+  outline     : none;
+  border-color: var(--color-secondary);
+  box-shadow  : 0 0 0 3px rgba(0, 168, 107, 0.20);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §19. PRINT — Graceful degradation
+   ══════════════════════════════════════════════════════════════ */
+@media print {
+  .bg-blob, .orb, .blob, .btn, .modal-overlay,
+  .action-bar, .tab-container, .view-toggle, .page-btn,
+  .sidebar-glass, .nav-glass { display: none !important; }
+
+  .kpi-glass, .kpi-card, .glass-card, .lumra-card,
+  .modal-glass, .panel-glass, .tbl-wrapper {
+    background   : white !important;
+    backdrop-filter: none !important;
+    box-shadow   : 0 0 0 1px var(--color-border-print) !important;
+    border       : 1px solid var(--color-border-print) !important;
+  }
+
+  body { color: var(--color-slate-900); }
+}

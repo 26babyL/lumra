@@ -1,0 +1,549 @@
+{% extends "base/base_hybrid.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% if is_edit %}Edit{% else %}Buat{% endif %} BOM — Lumra{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root { --card-radius:12px; --card-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04); --card-border:rgba(0,0,0,.06); }
+
+    .bom-form-page { padding:1.25rem; display:flex; flex-direction:column; gap:1rem; max-width:1200px; margin:0 auto; }
+
+    .section-card { background:oklch(var(--b1)); border:.5px solid var(--card-border); border-radius:var(--card-radius); box-shadow:var(--card-shadow); overflow:hidden; }
+    .section-card-header { padding:1rem 1.25rem; border-bottom:.5px solid oklch(var(--bc)/.06); display:flex; align-items:center; justify-content:space-between; gap:.5rem; }
+    .section-card-title { font-size:.85rem; font-weight:700; color:oklch(var(--bc)); text-transform:uppercase; letter-spacing:.07em; }
+    .section-card-body  { padding:1.25rem; }
+
+    /* Form inputs */
+    .form-group { display:flex; flex-direction:column; gap:.375rem; }
+    .form-label { font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:oklch(var(--bc)/.5); }
+    .form-input { background:oklch(var(--b2)); border:.5px solid oklch(var(--bc)/.12); border-radius:8px; padding:.6rem .875rem; font-size:.85rem; color:oklch(var(--bc)); width:100%; outline:none; transition:border-color 150ms,box-shadow 150ms; }
+    .form-input:focus { border-color:var(--jade,#00a86b); box-shadow:0 0 0 3px rgba(0,168,107,.12); }
+    .form-input::placeholder { color:oklch(var(--bc)/.3); }
+    .form-input.invalid { border-color:#ef4444; box-shadow:0 0 0 3px rgba(239,68,68,.1); }
+    textarea.form-input { resize:vertical; }
+
+    /* 2-col layout */
+    .bom-layout { display:grid; grid-template-columns:1fr 340px; gap:1rem; align-items:start; }
+    @media(max-width:900px){ .bom-layout{grid-template-columns:1fr} }
+
+    /* Ingredient table */
+    .ing-wrap { overflow-x:auto; }
+    .ing-table { width:100%; border-collapse:collapse; font-size:.82rem; min-width:580px; }
+    .ing-table th { padding:.5rem .875rem; text-align:left; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:oklch(var(--bc)/.4); border-bottom:.5px solid oklch(var(--bc)/.07); }
+    .ing-table td { padding:.5rem .875rem; border-bottom:.5px solid oklch(var(--bc)/.05); vertical-align:middle; }
+    .ing-table tr:last-child td { border-bottom:none; }
+    .ing-table tr:hover td { background:oklch(var(--b2)); }
+    .ing-input { background:transparent; border:none; outline:none; width:100%; font-size:.82rem; color:oklch(var(--bc)); }
+    .ing-input::placeholder { color:oklch(var(--bc)/.3); }
+    .ing-input:focus { background:oklch(var(--b3)); border-radius:5px; padding:2px 6px; }
+
+    /* AI Sidebar */
+    .ai-sidebar { position:sticky; top:1.25rem; display:flex; flex-direction:column; gap:1rem; }
+
+    .ai-panel { background:oklch(var(--b1)); border:.5px solid var(--card-border); border-radius:var(--card-radius); box-shadow:var(--card-shadow); overflow:hidden; }
+    .ai-panel-header { padding:.875rem 1.125rem; background:oklch(var(--b2)); border-bottom:.5px solid oklch(var(--bc)/.06); display:flex; align-items:center; gap:.625rem; }
+    .ai-orb { width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg,#00a86b,#3b82f6); display:flex; align-items:center; justify-content:center; font-size:.75rem; flex-shrink:0; box-shadow:0 2px 8px rgba(0,168,107,.3); }
+
+    /* Margin gauge */
+    .margin-gauge { position:relative; width:100px; height:100px; flex-shrink:0; }
+    .margin-gauge svg { position:absolute; inset:0; transform:rotate(-90deg); }
+    .margin-gauge-val { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; }
+
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+    .ai-cursor { display:inline-block; width:2px; height:.85em; background:currentColor; margin-left:1px; vertical-align:text-bottom; animation:blink .8s ease infinite; }
+
+    .ai-insight { display:flex; gap:.625rem; padding:.5rem 0; border-bottom:.5px solid oklch(var(--bc)/.05); font-size:.78rem; line-height:1.5; }
+    .ai-insight:last-child { border-bottom:none; padding-bottom:0; }
+
+    /* Cost dark panel */
+    .cost-dark { background:oklch(20% .02 240); border-radius:var(--card-radius); overflow:hidden; color:#e2e8f0; }
+    [data-theme="dark"] .cost-dark { background:oklch(12% .02 240); }
+    .cost-row { display:flex; justify-content:space-between; align-items:center; padding:.5rem 1.125rem; font-size:.82rem; border-bottom:.5px solid rgba(255,255,255,.07); }
+    .cost-row:last-child { border-bottom:none; }
+    .cost-row-label { color:rgba(255,255,255,.45); }
+
+    /* Version banner */
+    .version-banner { padding:.875rem 1rem; border-radius:9px; background:rgba(245,158,11,.08); border:.5px solid rgba(245,158,11,.25); }
+
+    /* SKU match tag */
+    .sku-match { font-size:.67rem; font-weight:700; padding:2px 7px; border-radius:20px; background:rgba(0,168,107,.1); color:#065f46; }
+    .sku-invalid { font-size:.67rem; font-weight:700; padding:2px 7px; border-radius:20px; background:rgba(239,68,68,.1); color:#991b1b; }
+
+    /* Spin */
+    .spin-anim { animation:spin 1s linear infinite; }
+    @keyframes spin{to{transform:rotate(360deg)}}
+</style>
+{% endblock %}
+
+{% block content %}
+{{ variants_data|json_script:"variants-data" }}
+{{ units_data|json_script:"units-data" }}
+{{ bom_data|json_script:"bom-data" }}
+
+<div class="bom-form-page" x-data="bomFormApp()" x-init="init()" x-cloak>
+
+    <!-- ── Header ── -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;">
+        <div>
+            <nav style="display:flex;align-items:center;gap:.5rem;font-size:.75rem;color:oklch(var(--bc)/.5);margin-bottom:.375rem;">
+                <a href="{% url 'bom_list' %}" style="color:inherit;text-decoration:none;">BOM</a>
+                <span>/</span>
+                <span style="color:oklch(var(--bc));font-weight:600;" x-text="isEdit ? 'Edit BOM' : 'Buat BOM Baru'"></span>
+            </nav>
+            <h1 style="font-size:1.3rem;font-weight:800;color:oklch(var(--bc));margin:0;" x-text="isEdit ? 'Edit Bill of Materials' : 'Buat BOM Baru'"></h1>
+        </div>
+        <div style="display:flex;gap:.625rem;">
+            <a href="{% url 'bom_list' %}" style="height:34px;padding:0 14px;border-radius:9px;border:.5px solid oklch(var(--bc)/.15);background:oklch(var(--b2));font-size:.8rem;font-weight:600;color:oklch(var(--bc)/.6);display:inline-flex;align-items:center;text-decoration:none;">Kembali</a>
+            <button @click="saveBOM()" :disabled="isSaving"
+                    style="height:34px;padding:0 14px;border-radius:9px;background:var(--jade,#00a86b);border:none;color:#fff;font-size:.8rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+                <svg x-show="isSaving" class="spin-anim" style="width:13px;height:13px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                <span x-text="isSaving ? 'Menyimpan...' : (isEdit ? 'Simpan BOM' : 'Publikasikan BOM')"></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ── 2-col layout ── -->
+    <div class="bom-layout">
+
+        <!-- ════ LEFT ════ -->
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+
+            <!-- Info dasar -->
+            <div class="section-card">
+                <div class="section-card-header"><span class="section-card-title">Informasi BOM</span></div>
+                <div class="section-card-body">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.875rem;margin-bottom:.875rem;">
+                        <div class="form-group">
+                            <label class="form-label">Nama BOM</label>
+                            <input type="text" class="form-input" placeholder="cth. Base Syrup Series A" x-model.trim="form.name" @input="triggerAI()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">SKU Produk Jadi *</label>
+                            <select class="form-input" x-model="form.finished_sku" @change="triggerAI()">
+                                <option value="">— Pilih SKU —</option>
+                                <template x-for="v in variants" :key="v.id">
+                                    <option :value="v.sku" x-text="v.sku + ' · ' + v.name"></option>
+                                </template>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Mode revisi (edit only) -->
+                    <div x-show="isEdit" class="version-banner" style="margin-bottom:.875rem;">
+                        <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#78350f;margin-bottom:.625rem;">Mode Revisi — BOM v<span x-text="form.version"></span></p>
+                        <div style="display:flex;flex-direction:column;gap:.5rem;">
+                            <label style="display:flex;align-items:center;gap:.625rem;font-size:.82rem;color:#78350f;cursor:pointer;">
+                                <input type="radio" x-model="changeType" value="minor" style="accent-color:#f59e0b;">
+                                Koreksi minor — tetap v<span x-text="form.version"></span>
+                            </label>
+                            <label style="display:flex;align-items:center;gap:.625rem;font-size:.82rem;color:#78350f;cursor:pointer;">
+                                <input type="radio" x-model="changeType" value="major" style="accent-color:#f59e0b;">
+                                Revisi mayor — naik ke v<span x-text="nextVersion"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Catatan BOM</label>
+                        <textarea class="form-input" rows="2" placeholder="Catatan versi, toleransi proses, atau instruksi singkat" x-model="form.notes"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Komposisi Bahan -->
+            <div class="section-card">
+                <div class="section-card-header">
+                    <span class="section-card-title">Komposisi Bahan</span>
+                    <button @click="addIngredient()"
+                            style="font-size:.75rem;font-weight:700;color:var(--jade,#00a86b);background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:.375rem;">
+                        <svg style="width:13px;height:13px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                        Tambah Baris
+                    </button>
+                </div>
+                <div class="ing-wrap">
+                    <table class="ing-table">
+                        <thead>
+                            <tr>
+                                <th style="width:20%;">SKU Bahan</th>
+                                <th style="width:24%;">Nama</th>
+                                <th style="width:13%;">Qty</th>
+                                <th style="width:12%;">Satuan</th>
+                                <th style="width:16%;">Harga Satuan</th>
+                                <th style="width:12%;">Subtotal</th>
+                                <th style="width:3%;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template x-for="(ing, i) in form.ingredients" :key="ing._key">
+                                <tr>
+                                    <td>
+                                        <div style="display:flex;flex-direction:column;gap:.25rem;">
+                                            <input type="text" class="ing-input" placeholder="SKU..." x-model.trim="ing.sku" @input="syncCost(i)" @blur="syncCost(i)">
+                                            <span x-show="ing.sku && !ing.invalid" class="sku-match" x-text="'✓ ' + (ing.name || 'Cocok')"></span>
+                                            <span x-show="ing.sku && ing.invalid" class="sku-invalid">✗ Tidak ditemukan</span>
+                                        </div>
+                                    </td>
+                                    <td style="color:oklch(var(--bc)/.7);font-size:.8rem;" x-text="ing.name || '—'"></td>
+                                    <td><input type="number" class="ing-input" style="text-align:right;" min="0" step="0.01" placeholder="0" x-model.number="ing.qty" @input="triggerAI()"></td>
+                                    <td>
+                                        <select class="ing-input" style="font-size:.78rem;" x-model="ing.uom">
+                                            <template x-for="u in units" :key="u.id"><option :value="u.symbol" x-text="u.symbol"></option></template>
+                                        </select>
+                                    </td>
+                                    <td style="text-align:right;color:oklch(var(--bc)/.6);font-size:.8rem;font-family:ui-monospace,monospace;" x-text="formatCurrency(ing.estimated_cost)"></td>
+                                    <td style="text-align:right;font-weight:700;color:oklch(var(--bc));font-family:ui-monospace,monospace;" x-text="formatCurrency(ing.qty * ing.estimated_cost)"></td>
+                                    <td style="text-align:center;">
+                                        <button @click="removeIngredient(i)" style="background:none;border:none;cursor:pointer;color:oklch(var(--bc)/.3);" title="Hapus">
+                                            <svg style="width:13px;height:13px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Subtotal bar -->
+                <div style="padding:.75rem 1.25rem;border-top:.5px solid oklch(var(--bc)/.05);display:flex;justify-content:space-between;align-items:center;">
+                    <span style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:oklch(var(--bc)/.4);">Total Biaya Bahan</span>
+                    <span style="font-size:1rem;font-weight:800;color:#00a86b;" x-text="formatCurrency(totalCost)"></span>
+                </div>
+            </div>
+
+        </div><!-- end left -->
+
+        <!-- ════ RIGHT: AI Sidebar ════ -->
+        <div class="ai-sidebar">
+
+            <!-- Lumra AI Cost Panel -->
+            <div class="ai-panel">
+                <div class="ai-panel-header">
+                    <div class="ai-orb">✦</div>
+                    <div>
+                        <div style="font-size:.82rem;font-weight:800;color:oklch(var(--bc));">Lumra AI</div>
+                        <div style="font-size:.68rem;color:oklch(var(--bc)/.45);">Analisis biaya &amp; margin</div>
+                    </div>
+                    <div x-show="ai.thinking" style="margin-left:auto;display:flex;align-items:center;gap:.375rem;font-size:.68rem;color:oklch(var(--bc)/.4);">
+                        <svg class="spin-anim" style="width:11px;height:11px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                        Menganalisis...
+                    </div>
+                </div>
+
+                <!-- Margin gauge + score -->
+                <div style="padding:1rem 1.125rem .75rem;display:flex;align-items:center;gap:1rem;">
+                    <!-- SVG ring gauge -->
+                    <div class="margin-gauge">
+                        <svg viewBox="0 0 100 100" width="100" height="100">
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="oklch(var(--b3))" stroke-width="8"/>
+                            <circle cx="50" cy="50" r="40" fill="none"
+                                    :stroke="marginColor(ai.marginPct)"
+                                    stroke-width="8" stroke-linecap="round"
+                                    :stroke-dasharray="`${(ai.marginPct/100)*251.2} 251.2`"
+                                    style="transition:stroke-dasharray 600ms ease,stroke 400ms ease;"/>
+                        </svg>
+                        <div class="margin-gauge-val">
+                            <span style="font-size:1.1rem;font-weight:800;" :style="`color:${marginColor(ai.marginPct)}`" x-text="ai.marginPct + '%'"></span>
+                            <span style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:oklch(var(--bc)/.4);">Margin</span>
+                        </div>
+                    </div>
+
+                    <!-- Key metrics -->
+                    <div style="flex:1;display:flex;flex-direction:column;gap:.5rem;">
+                        <div style="display:flex;justify-content:space-between;font-size:.75rem;">
+                            <span style="color:oklch(var(--bc)/.5);">HPP</span>
+                            <span style="font-weight:700;" x-text="formatCurrency(totalCost)"></span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:.75rem;">
+                            <span style="color:oklch(var(--bc)/.5);">Saran Jual</span>
+                            <span style="font-weight:700;color:#00a86b;" x-text="formatCurrency(ai.suggestedPrice)"></span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:.75rem;">
+                            <span style="color:oklch(var(--bc)/.5);">Versi</span>
+                            <span style="font-weight:700;font-family:ui-monospace,monospace;" x-text="'v' + displayVersion"></span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;font-size:.75rem;">
+                            <span style="color:oklch(var(--bc)/.5);">Bahan Valid</span>
+                            <span style="font-weight:700;" x-text="validCount + '/' + form.ingredients.length"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="border-top:.5px solid oklch(var(--bc)/.06);padding:.75rem 1.125rem;min-height:90px;">
+                    <template x-for="(insight,i) in ai.insights" :key="i">
+                        <div class="ai-insight">
+                            <span style="flex-shrink:0;font-size:.8rem;" x-text="insight.icon"></span>
+                            <span style="color:oklch(var(--bc)/.75);">
+                                <span x-text="insight.text"></span>
+                                <span class="ai-cursor" x-show="i===ai.insights.length-1 && ai.typing"></span>
+                            </span>
+                        </div>
+                    </template>
+                    <div x-show="ai.insights.length===0" style="font-size:.78rem;color:oklch(var(--bc)/.3);text-align:center;padding:.75rem 0;">
+                        Isi SKU produk jadi dan bahan untuk mulai analisis...
+                    </div>
+                </div>
+
+                <!-- Margin slider -->
+                <div style="padding:.75rem 1.125rem;border-top:.5px solid oklch(var(--bc)/.06);">
+                    <div style="display:flex;justify-content:space-between;font-size:.72rem;color:oklch(var(--bc)/.5);margin-bottom:.375rem;">
+                        <span>Target Margin</span>
+                        <span style="font-weight:700;color:oklch(var(--bc));" x-text="ai.targetMargin + '%'"></span>
+                    </div>
+                    <input type="range" min="10" max="85" step="5" x-model.number="ai.targetMargin" @input="recalcMargin()"
+                           style="width:100%;accent-color:var(--jade,#00a86b);cursor:pointer;">
+                    <div style="display:flex;justify-content:space-between;font-size:.68rem;color:oklch(var(--bc)/.3);margin-top:.25rem;">
+                        <span>10%</span><span>85%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Biaya dark summary -->
+            <div class="cost-dark">
+                <div style="padding:.75rem 1.125rem;border-bottom:.5px solid rgba(255,255,255,.07);">
+                    <span style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.4);">Simulasi Harga Jual</span>
+                </div>
+                <div class="cost-row"><span class="cost-row-label">Biaya Bahan</span><span style="font-weight:700;" x-text="formatCurrency(totalCost)"></span></div>
+                <div class="cost-row">
+                    <span class="cost-row-label">Tenaga / Packing</span>
+                    <input type="number" min="0" step="100" x-model.number="ai.laborCost" @input="recalcMargin()"
+                           style="width:90px;background:rgba(255,255,255,.08);border:.5px solid rgba(255,255,255,.15);border-radius:6px;padding:3px 8px;text-align:right;font-size:.78rem;color:#e2e8f0;outline:none;">
+                </div>
+                <div class="cost-row" style="border-top:.5px solid rgba(255,255,255,.12);">
+                    <span class="cost-row-label">Total HPP</span>
+                    <span style="font-weight:800;font-size:.95rem;" x-text="formatCurrency(ai.totalHPP)"></span>
+                </div>
+                <div style="padding:.875rem 1.125rem;background:rgba(0,168,107,.12);border-top:.5px solid rgba(0,168,107,.2);">
+                    <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#34d399;margin-bottom:.25rem;">Harga Jual Disarankan (<span x-text="ai.targetMargin"></span>% margin)</div>
+                    <div style="font-size:1.1rem;font-weight:800;color:#34d399;" x-text="formatCurrency(ai.suggestedPrice)"></div>
+                </div>
+            </div>
+
+            <!-- Save buttons -->
+            <div style="display:flex;flex-direction:column;gap:.5rem;">
+                <button @click="saveBOM()" :disabled="isSaving"
+                        style="width:100%;padding:.75rem;border-radius:9px;background:var(--jade,#00a86b);border:none;color:#fff;font-size:.85rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;">
+                    <svg x-show="isSaving" class="spin-anim" style="width:14px;height:14px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    <span x-text="isSaving ? 'Menyimpan...' : (isEdit ? 'Simpan BOM' : 'Publikasikan BOM')"></span>
+                </button>
+            </div>
+
+        </div><!-- end ai-sidebar -->
+    </div><!-- end bom-layout -->
+
+</div>
+
+<script>
+/* ══════════════════════════════════════
+   Lumra AI — BOM Cost Analyzer
+   Rule-based, feels intelligent
+══════════════════════════════════════ */
+const BomAI = {
+    analyze(form, ingredients, totalCost, totalHPP, targetMargin) {
+        const hasFinishedSku = !!form.finished_sku;
+        const validItems     = ingredients.filter(i => i.sku && !i.invalid && Number(i.qty||0) > 0);
+        const invalidItems   = ingredients.filter(i => i.sku && i.invalid);
+        const emptyQty       = ingredients.filter(i => i.sku && !i.invalid && !Number(i.qty||0));
+        const insights = [], warnings = [], tips = [];
+
+        // 1. SKU produk jadi
+        if (!hasFinishedSku) { warnings.push({icon:'⚠️', text:'Pilih SKU produk jadi — wajib sebelum BOM bisa dipublikasikan.'}); }
+
+        // 2. Invalid SKUs
+        if (invalidItems.length > 0) { warnings.push({icon:'❌', text:`${invalidItems.length} SKU bahan tidak ditemukan di sistem. Periksa kembali sebelum menyimpan.`}); }
+
+        // 3. Empty qty
+        if (emptyQty.length > 0) { tips.push({icon:'💡', text:`${emptyQty.length} bahan memiliki qty 0. Isi qty atau hapus baris kosong.`}); }
+
+        // 4. Ingredient count
+        if (validItems.length === 0) { warnings.push({icon:'⚠️', text:'Belum ada bahan valid. Tambahkan minimal 1 bahan dengan SKU dan qty yang benar.'}); }
+        else if (validItems.length >= 2 && validItems.length <= 8) { insights.push({icon:'✅', text:`${validItems.length} bahan valid terdeteksi — komposisi dalam rentang yang mudah dikelola.`}); }
+        else if (validItems.length > 8) { tips.push({icon:'💡', text:`${validItems.length} bahan — cukup kompleks. Pertimbangkan sub-BOM untuk memisahkan komponen besar.`}); }
+
+        // 5. Margin health
+        const actualMargin = totalHPP > 0 ? Math.round(((targetMargin/100)*totalHPP / totalHPP) * 100) : 0;
+        if (totalHPP > 0) {
+            const suggestedPrice = totalHPP / (1 - targetMargin/100);
+            if (targetMargin < 30) { warnings.push({icon:'📉', text:`Margin ${targetMargin}% terlalu tipis. Biaya operasional biasanya membutuhkan margin minimal 35–40%.`}); }
+            else if (targetMargin >= 30 && targetMargin < 50) { tips.push({icon:'📊', text:`Margin ${targetMargin}% masuk akal untuk produk massal. Harga jual disarankan ${new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',minimumFractionDigits:0}).format(suggestedPrice)}.`}); }
+            else if (targetMargin >= 50) { insights.push({icon:'💰', text:`Margin ${targetMargin}% sangat sehat untuk specialty product. Posisikan sebagai produk premium.`}); }
+        }
+
+        // 6. Cost concentration risk
+        if (validItems.length >= 2) {
+            const costs = validItems.map(i => Number(i.qty||0)*Number(i.estimated_cost||0));
+            const maxCost = Math.max(...costs);
+            const concentration = totalCost > 0 ? (maxCost/totalCost)*100 : 0;
+            if (concentration > 60) { tips.push({icon:'⚖️', text:`Satu bahan mendominasi ${Math.round(concentration)}% biaya total. Pertimbangkan alternatif sourcing untuk mitigasi risiko.`}); }
+            else if (concentration < 60 && concentration > 0) { insights.push({icon:'✅', text:`Distribusi biaya antar bahan cukup merata — risiko fluktuasi harga relatif rendah.`}); }
+        }
+
+        // 7. Zero cost items
+        const zeroCostValid = validItems.filter(i => !Number(i.estimated_cost||0));
+        if (zeroCostValid.length > 0) { tips.push({icon:'💡', text:`${zeroCostValid.length} bahan valid tidak memiliki data harga — HPP belum akurat.`}); }
+
+        // Merge, prioritize warnings, max 4
+        const all = [...warnings, ...insights, ...tips].slice(0,4);
+        if (all.length === 0) all.push({icon:'✦', text:'Pilih SKU dan tambahkan bahan untuk mulai analisis biaya.'});
+
+        return { insights: all };
+    },
+
+    marginColor(pct) {
+        if (pct >= 50) return '#00a86b';
+        if (pct >= 30) return '#f59e0b';
+        return '#ef4444';
+    },
+};
+
+/* ══════════════════════════════════════
+   Alpine component
+══════════════════════════════════════ */
+function bomFormApp() {
+    return {
+        isEdit   : false,
+        isSaving : false,
+        changeType: 'minor',
+        variants : [],
+        units    : [],
+        form     : { name:'', finished_sku:'', version:1, notes:'', ingredients:[] },
+        ai: {
+            thinking    : false,
+            typing      : false,
+            insights    : [],
+            targetMargin: 55,
+            laborCost   : 2000,
+            marginPct   : 0,
+            suggestedPrice: 0,
+            totalHPP    : 0,
+            _timer      : null,
+            _typeTimer  : null,
+        },
+
+        /* Computed */
+        get totalCost() {
+            return this.form.ingredients.reduce((s,i)=>s+Number(i.qty||0)*Number(i.estimated_cost||0),0);
+        },
+        get validCount() {
+            return this.form.ingredients.filter(i=>i.sku&&!i.invalid&&Number(i.qty||0)>0).length;
+        },
+        get nextVersion() { return Number(this.form.version||1)+1; },
+        get displayVersion() {
+            return this.isEdit && this.changeType==='major' ? this.nextVersion : this.form.version;
+        },
+
+        /* Margin recalc */
+        recalcMargin() {
+            const hpp = this.totalCost + Number(this.ai.laborCost||0);
+            this.ai.totalHPP = hpp;
+            this.ai.suggestedPrice = hpp > 0 ? hpp / (1 - this.ai.targetMargin/100) : 0;
+            this.ai.marginPct = this.ai.targetMargin;
+        },
+
+        /* AI trigger */
+        triggerAI() {
+            this.recalcMargin();
+            clearTimeout(this.ai._timer);
+            this.ai.thinking = true;
+            this.ai._timer = setTimeout(() => {
+                const result = BomAI.analyze(this.form, this.form.ingredients, this.totalCost, this.ai.totalHPP, this.ai.targetMargin);
+                this.ai.insights = result.insights.slice(0,-1);
+                this.ai.thinking = false;
+                this.ai.typing   = true;
+                const last = result.insights[result.insights.length-1];
+                if (last) {
+                    clearTimeout(this.ai._typeTimer);
+                    this.ai._typeTimer = setTimeout(()=>{
+                        this.ai.insights = result.insights;
+                        setTimeout(()=>{ this.ai.typing=false; },600);
+                    }, 350);
+                } else { this.ai.typing=false; }
+            }, 600);
+        },
+
+        marginColor(pct) { return BomAI.marginColor(pct); },
+
+        /* Ingredient ops */
+        addIngredient() {
+            const uom = this.units[0]?.symbol || '';
+            this.form.ingredients.push({ _key:Date.now()+Math.random(), sku:'', name:'', qty:0, uom, estimated_cost:0, invalid:false });
+        },
+        removeIngredient(i) {
+            if (this.form.ingredients.length > 1) { this.form.ingredients.splice(i,1); this.triggerAI(); }
+        },
+        syncCost(i) {
+            const ing = this.form.ingredients[i];
+            if (!ing) return;
+            if (!ing.sku) { ing.name=''; ing.invalid=false; ing.estimated_cost=0; this.triggerAI(); return; }
+            const found = this.variants.find(v=>String(v.sku||'').toLowerCase()===ing.sku.toLowerCase());
+            ing.invalid = !found;
+            ing.name    = found ? (found.name||found.sku) : '';
+            if (found) { ing.estimated_cost = Number(found.price_buy||0); if (!ing.uom) ing.uom=this.units[0]?.symbol||''; }
+            this.triggerAI();
+        },
+
+        /* Save */
+        async saveBOM() {
+            if (this.isSaving) return;
+            if (!this.form.finished_sku) { alert('Pilih SKU produk jadi terlebih dahulu.'); return; }
+            const finished = this.variants.find(v=>String(v.sku||'').toLowerCase()===this.form.finished_sku.toLowerCase());
+            if (!finished) { alert('SKU produk jadi tidak ditemukan di sistem.'); return; }
+
+            const variantMap = new Map(this.variants.map(v=>[String(v.sku).toLowerCase(),v]));
+            const unitMap    = new Map(this.units.map(u=>[String(u.symbol).toLowerCase(),u]));
+            const invalidList = this.form.ingredients.filter(i=>i.sku&&Number(i.qty||0)>0&&!variantMap.has(i.sku.toLowerCase()));
+            if (invalidList.length) { alert(`SKU tidak ditemukan: ${invalidList.map(x=>x.sku).join(', ')}`); return; }
+
+            const items = this.form.ingredients
+                .filter(i=>i.sku&&Number(i.qty||0)>0)
+                .map(i=>({ component_variant_id:variantMap.get(i.sku.toLowerCase()).id, quantity:Number(i.qty), unit_id:unitMap.get(String(i.uom||'').toLowerCase())?.id||null, notes:'' }));
+            if (!items.length) { alert('Tambahkan minimal satu bahan yang valid.'); return; }
+
+            const buildCode = sku => `BOM-${sku}-${new Date().getFullYear()}`;
+            const payload = {
+                finished_variant_id: finished.id,
+                code   : this.form.code || buildCode(finished.sku),
+                version: this.isEdit&&this.changeType==='major' ? this.nextVersion : Number(this.form.version||1),
+                name   : this.form.name || finished.name,
+                notes  : this.form.notes || '',
+                is_active: true,
+                items,
+            };
+
+            this.isSaving = true;
+            try {
+                const csrf = document.cookie.split(';').map(c=>c.trim()).find(c=>c.startsWith('csrftoken='))?.split('=')[1]||'';
+                const r = await fetch('{{ submit_url }}',{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':csrf,'Accept':'application/json'},body:JSON.stringify(payload)});
+                const d = await r.json();
+                if (!r.ok||!d.success) throw new Error(d.error||'Gagal menyimpan BOM.');
+                window.location.href = `{% url 'bom_detail' 0 %}`.replace('/0/',`/${d.id}/`);
+            } catch(err) { alert(err.message||'Terjadi kesalahan.'); }
+            finally { this.isSaving=false; }
+        },
+
+        formatCurrency(n) { return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',minimumFractionDigits:0}).format(n||0); },
+
+        init() {
+            ['variants','units'].forEach(k=>{
+                const el=document.getElementById(k+'-data');
+                if(el?.textContent) try{this[k]=JSON.parse(el.textContent)||[];}catch(e){}
+            });
+            const bomEl = document.getElementById('bom-data');
+            if(bomEl?.textContent){
+                try{
+                    const b=JSON.parse(bomEl.textContent)||{};
+                    if(b?.id){
+                        this.isEdit=true;
+                        this.form.code=b.code||''; this.form.version=Number(b.version||1);
+                        this.form.name=b.name||''; this.form.finished_sku=b.finished_sku||''; this.form.notes=b.notes||'';
+                        this.form.ingredients=(b.items||[]).map((item,idx)=>({_key:Date.now()+idx,sku:item.sku||'',name:item.name||'',qty:Number(item.quantity||0),uom:item.unit||this.units[0]?.symbol||'',estimated_cost:Number(item.unit_price||0),invalid:false}));
+                    }
+                }catch(e){}
+            }
+            if(!this.form.ingredients.length) this.addIngredient();
+            setTimeout(()=>this.triggerAI(), 400);
+        },
+    };
+}
+</script>
+{% endblock %}

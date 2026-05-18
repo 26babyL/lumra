@@ -1,0 +1,48 @@
+{
+  "filename": "print_production_order.html",
+  "title": "print_production_order",
+  "components": [
+    {
+      "type": "table",
+      "tag": "table",
+      "label": "[ TABLE ]",
+      "depth": 1,
+      "path": "root/body/table",
+      "classes": "table-w-full",
+      "text_preview": "Komponen SKU Qty Unit Catatan {% for item in bom_items %} {{ item.component.prod…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/table",
+      "type": "table",
+      "label": "[ TABLE ]",
+      "text_preview": "Komponen SKU Qty Unit Catatan {% for item in bom_items %} {{ item.component.prod…"
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 1,
+    "by_type": {
+      "table": 1
+    },
+    "interactive": 0,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

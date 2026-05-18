@@ -1,0 +1,274 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Pembayaran — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  
+  .stat-card {
+    background     : rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border         : 1px solid rgba(255, 255, 255, 0.95);
+    border-radius  : 16px;
+    box-shadow     : 0 2px 10px rgba(0,0,0,0.05);
+    padding        : 16px 20px;
+    transition     : box-shadow .2s, transform .2s;
+  }
+  .stat-card:hover { box-shadow:0 6px 20px rgba(0,0,0,0.08); transform:translateY(-1px); }
+  .stat-icon {
+    width:36px; height:36px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; flex-shrink:0;
+  }
+
+  .filter-tab {
+    padding: 4px 12px; border-radius:8px;
+    font-size:11px; font-weight:600;
+    color:#666; border:1px solid transparent; background:transparent;
+    cursor:pointer; white-space:nowrap;
+    transition:background .12s, color .12s;
+  }
+  .filter-tab:hover { background:rgba(0,0,0,0.05); color:#333; }
+  .filter-tab.active { background:rgba(0, 184, 163, 0.1); color:#00B8A3; border-color:rgba(0, 184, 163, 0.2); }
+
+  .search-input {
+    background   : rgba(255, 255, 255, 0.85);
+    border       : 1px solid rgba(0,0,0,0.05);
+    border-radius: 10px;
+    transition   : background .15s, border-color .15s, box-shadow .15s;
+  }
+  .search-input:focus {
+    background  : #FFFFFF;
+    border-color: #00B8A3;
+    box-shadow  : 0 0 0 3px rgba(0, 184, 163, 0.1);
+    outline     : none;
+  }
+
+  .item-row {
+    background     : rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    border         : 1px solid rgba(255, 255, 255, 0.95);
+    border-radius  : 14px;
+    box-shadow     : 0 1px 6px rgba(0,0,0,0.04);
+    transition     : box-shadow .18s, transform .18s;
+    padding        : 16px;
+  }
+  .item-row:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    transform: translateY(-1px);
+  }
+  
+  .method-icon-box {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .status-chip {
+    display:inline-flex; align-items:center;
+    padding:2px 8px; border-radius:6px;
+    font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;
+  }
+  .chip-pending  { background:#FFF4E5; color:#FF9800; }
+  .chip-verified { background:#E6FFFA; color:#00B8A3; }
+  .chip-failed   { background:#FFF1F2; color:#E11D48; }
+
+  .fade-in { animation: fadeIn 0.3s ease-out; }
+  @keyframes fadeIn { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform: none;} }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-5 relative z-10"
+     x-data="paymentApp()"
+     x-init="init()"
+     x-cloak>
+
+  <!-- Header -->
+  <div class="flex items-end justify-between gap-3">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+        <a href="#" class="hover:text-slate-800">Dashboard</a>
+        <span>/</span>
+        <span class="text-slate-800 font-medium">Pembayaran</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800">Riwayat Pembayaran</h1>
+      <p class="text-sm text-slate-400 mt-0.5">Verifikasi dan catat pembayaran masuk</p>
+    </div>
+    <button class="bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-lg hover:bg-slate-700 transition">
+      <i class="fas fa-plus mr-2"></i> Catat Manual
+    </button>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div class="stat-card flex items-center gap-3">
+      <div class="stat-icon bg-slate-100 text-slate-600"><i class="fas fa-wallet"></i></div>
+      <div>
+        <p class="text-[10px] font-semibold text-slate-400 uppercase">Total Masuk</p>
+        <p class="text-xl font-bold text-slate-800" x-text="formatCurrency(stats.totalIncome)"></p>
+      </div>
+    </div>
+    <div class="stat-card flex items-center gap-3">
+      <div class="stat-icon" style="background:#FFF4E5; color:#FF9800"><i class="fas fa-hourglass-half"></i></div>
+      <div>
+        <p class="text-[10px] font-semibold text-slate-400 uppercase">Perlu Verifikasi</p>
+        <p class="text-xl font-bold text-slate-800" x-text="stats.pending"></p>
+      </div>
+    </div>
+    <div class="stat-card flex items-center gap-3">
+      <div class="stat-icon" style="background:#E6FFFA; color:#00B8A3"><i class="fas fa-check-circle"></i></div>
+      <div>
+        <p class="text-[10px] font-semibold text-slate-400 uppercase">Terverifikasi</p>
+        <p class="text-xl font-bold text-slate-800" x-text="stats.verified"></p>
+      </div>
+    </div>
+    <div class="stat-card flex items-center gap-3">
+      <div class="stat-icon" style="background:#F0F9FF; color:#0284C7"><i class="fas fa-mobile-alt"></i></div>
+      <div>
+        <p class="text-[10px] font-semibold text-slate-400 uppercase">Via QRIS</p>
+        <p class="text-sm font-bold text-slate-800" x-text="stats.qrisCount"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="bg-white/70 backdrop-blur-md px-4 py-3 rounded-2xl border border-white/80 shadow-sm">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div class="flex items-center gap-0.5 flex-wrap">
+        <button @click="filter='all'" class="filter-tab" :class="filter==='all' ? 'active' : ''">Semua</button>
+        <button @click="filter='transfer'" class="filter-tab" :class="filter==='transfer' ? 'active' : ''">Transfer</button>
+        <button @click="filter='qris'" class="filter-tab" :class="filter==='qris' ? 'active' : ''">QRIS/E-Wallet</button>
+        <button @click="filter='cash'" class="filter-tab" :class="filter==='cash' ? 'active' : ''">Tunai</button>
+      </div>
+      <div class="relative w-full sm:w-64">
+        <input type="text" x-model="search" placeholder="Cari ID / Invoice..." class="search-input w-full pl-8 pr-3 py-1.5 text-sm text-slate-700">
+        <i class="fas fa-search absolute left-2.5 top-2.5 text-slate-300 text-xs"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- List -->
+  <div class="space-y-2">
+    <template x-if="filteredPayments.length === 0">
+      <div class="text-center py-12 text-slate-400">
+        <i class="fas fa-money-bill-wave text-4xl mb-3 opacity-30"></i>
+        <p class="text-sm">Tidak ada data pembayaran ditemukan.</p>
+      </div>
+    </template>
+
+    <template x-for="item in filteredPayments" :key="item.id">
+      <div class="item-row fade-in group">
+        <div class="flex items-center gap-4">
+          
+          <!-- Method Icon -->
+          <div class="method-icon-box shrink-0" :class="getMethodStyle(item.method)">
+            <i :class="getMethodIcon(item.method)"></i>
+          </div>
+
+          <!-- Info -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="text-sm font-bold text-slate-800" x-text="item.id"></span>
+              <span class="status-chip" :class="'chip-' + item.status" x-text="item.status"></span>
+            </div>
+            <div class="flex items-center gap-2 text-sm text-slate-600">
+              <span class="text-xs bg-slate-100 px-1.5 py-0.5 rounded text-slate-500" x-text="item.invoice"></span>
+              <span class="text-slate-300">•</span>
+              <span class="truncate" x-text="item.customer"></span>
+            </div>
+          </div>
+
+          <!-- Amount & Action -->
+          <div class="flex items-center justify-between gap-4 pl-4 border-l border-slate-100">
+            <div class="text-right min-w-[100px]">
+              <p class="text-sm font-bold text-slate-800" x-text="formatCurrency(item.amount)"></p>
+              <p class="text-[10px] text-slate-400" x-text="item.date"></p>
+            </div>
+
+            <div>
+              <template x-if="item.status === 'pending'">
+                <button @click="verifyPayment(item.id)" class="px-3 py-1.5 bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white rounded-lg text-xs font-bold transition border border-emerald-100 hover:border-emerald-600">
+                  Verifikasi
+                </button>
+              </template>
+              <template x-if="item.status !== 'pending'">
+                <button class="w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center text-slate-400 transition">
+                  <i class="fas fa-ellipsis-v text-xs"></i>
+                </button>
+              </template>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </template>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function paymentApp() {
+  return {
+    payments: [
+      { id: 'PAY-8901', invoice: 'INV-2023001', customer: 'Budi Santoso', method: 'transfer', amount: 150000, date: '2023-10-24 09:30', status: 'pending' },
+      { id: 'PAY-8902', invoice: 'INV-2023002', customer: 'Siti Aminah', method: 'qris', amount: 75000, date: '2023-10-24 10:15', status: 'verified' },
+      { id: 'PAY-8903', invoice: 'INV-2023003', customer: 'Ahmad Dani', method: 'cash', amount: 50000, date: '2023-10-24 11:00', status: 'verified' },
+      { id: 'PAY-8904', invoice: 'INV-2023004', customer: 'Dewi Persik', method: 'transfer', amount: 200000, date: '2023-10-24 12:45', status: 'failed' },
+      { id: 'PAY-8905', invoice: 'INV-2023005', customer: 'Raffi Ahmad', method: 'qris', amount: 125000, date: '2023-10-24 13:20', status: 'pending' },
+    ],
+    filter: 'all',
+    search: '',
+
+    get filteredPayments() {
+      return this.payments.filter(item => {
+        const matchFilter = this.filter === 'all' || item.method === this.filter;
+        const matchSearch = item.customer.toLowerCase().includes(this.search.toLowerCase()) || 
+                          item.invoice.toLowerCase().includes(this.search.toLowerCase()) ||
+                          item.id.toLowerCase().includes(this.search.toLowerCase());
+        return matchFilter && matchSearch;
+      });
+    },
+
+    get stats() {
+      return {
+        totalIncome: this.payments.filter(i => i.status === 'verified').reduce((a,c) => a + c.amount, 0),
+        pending: this.payments.filter(i => i.status === 'pending').length,
+        verified: this.payments.filter(i => i.status === 'verified').length,
+        qrisCount: this.payments.filter(i => i.method === 'qris' && i.status === 'verified').length
+      };
+    },
+
+    init() { },
+
+    verifyPayment(id) {
+      const item = this.payments.find(i => i.id === id);
+      if(item) {
+        item.status = 'verified';
+        // Toast notification logic here
+      }
+    },
+
+    getMethodIcon(method) {
+      const map = { 'transfer': 'fas fa-university', 'qris': 'fas fa-qrcode', 'cash': 'fas fa-money-bill' };
+      return map[method] || 'fas fa-credit-card';
+    },
+
+    getMethodStyle(method) {
+      const map = { 
+        'transfer': 'bg-blue-50 text-blue-500', 
+        'qris': 'bg-purple-50 text-purple-500', 
+        'cash': 'bg-emerald-50 text-emerald-500' 
+      };
+      return map[method] || 'bg-slate-100 text-slate-500';
+    },
+
+    formatCurrency(num) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+    }
+  }
+}
+</script>
+{% endblock %}

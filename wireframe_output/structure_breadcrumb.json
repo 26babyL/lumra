@@ -1,0 +1,72 @@
+{
+  "filename": "breadcrumb.html",
+  "title": "breadcrumb",
+  "components": [
+    {
+      "type": "nav",
+      "tag": "nav",
+      "label": "[ NAVIGATION BAR ]",
+      "depth": 2,
+      "path": "root/body/p/nav",
+      "classes": "py-3 px-6 bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700",
+      "text_preview": "Home {% for item in breadcrumb_items %} {% if item.url %} {{ item.label }} {% el…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "ol",
+      "tag": "ol",
+      "label": "[ ORDERED LIST ]",
+      "depth": 3,
+      "path": "root/body/p/nav/ol",
+      "classes": "flex flex-wrap items-center gap-2 text-sm",
+      "text_preview": "Home {% for item in breadcrumb_items %} {% if item.url %} {{ item.label }} {% el…",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 4,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 2,
+      "path": "root/body/p/nav",
+      "type": "nav",
+      "label": "[ NAVIGATION BAR ]",
+      "text_preview": "Home {% for item in breadcrumb_items %} {% if item.url %} {{ item.label }} {% el…"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/p/nav/ol",
+      "type": "ol",
+      "label": "[ ORDERED LIST ]",
+      "text_preview": "Home {% for item in breadcrumb_items %} {% if item.url %} {{ item.label }} {% el…"
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 2,
+    "by_type": {
+      "nav": 1,
+      "ol": 1
+    },
+    "interactive": 0,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

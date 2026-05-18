@@ -1,0 +1,1101 @@
+{% extends 'base/base.html' %}
+{% load custom_filters_settings %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap');
+
+  [x-cloak] { display: var(--shadow-sm-16) !important; }
+
+  :root {
+    --em-500: var(--color-emerald-600);
+    --em-600: var(--color-emerald-700);
+    --em-900: var(--color-011f17);
+    --glass-bg: var(--color-white-a072);
+    --glass-border: var(--color-white-a085);
+    --glass-shadow: 0 2px 16px var(--color-black-a006), 0 0 0 0.5px var(--color-black-a003);
+    --blur: var(--backdrop-blur-20px-saturate-160);
+  }
+
+  .sh-bg-orb {
+    position: fixed; border-radius: 50%;
+    pointer-events: var(--shadow-sm-16); z-index: 0;
+    filter: blur(120px); opacity: .07;
+    animation: orb-drift 20s ease-in-out infinite alternate;
+  }
+
+  .sh-bg-orb-1 { width:500px;height:500px;background:radial-gradient(var(--color-emerald-600),var(--color-emerald-700));top:-150px;left:-180px; }
+
+  .sh-bg-orb-2 { width:340px;height:340px;background:radial-gradient(var(--color-34d399),var(--color-emerald-600));bottom:-80px;right:-100px;animation-delay:-9s; }
+
+  .sh-bg-orb-3 { width:200px;height:200px;background:var(--color-emerald-300);top:40%;left:55%;animation-delay:-14s;opacity:.04; }
+
+  @keyframes orb-drift { from{transform:translate(0,0) scale(1);} to{transform:translate(24px,32px) scale(1.08);} }
+
+  .summary-band {
+    background: var(--glass-bg);
+    backdrop-filter: var(--backdrop-var-blur);
+    -webkit-backdrop-filter: var(--backdrop-var-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm-4);
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 2fr;
+    gap: 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .summary-band::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--em-500), var(--em-600), transparent);
+    opacity: .5;
+  }
+
+  .stat-cell {
+    padding: 4px 20px 4px 0;
+    border-right: 1px solid var(--color-slate-300-a03);
+    margin-right: 20px;
+  }
+
+  .stat-cell:last-child { border-right: var(--shadow-sm-16); margin-right: 0; padding-right: 0; }
+
+  .stat-label {
+    font-size: 9px; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--color-slate-400); margin-bottom: 4px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .stat-value {
+    font-size: 22px; font-weight: 800; color: var(--color-slate-900);
+    font-family: 'Syne', sans-serif; line-height: 1;
+  }
+
+  .stat-value.mono { font-family: 'DM Mono', monospace; font-size: 18px; }
+
+  .stat-delta {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 10px; font-weight: 700; margin-top: 4px;
+    padding: 2px 7px; border-radius: 99px;
+  }
+
+  .stat-delta.up   { background: var(--color-emerald-600-a1); color: var(--color-emerald-700); }
+
+  .stat-delta.down { background: var(--color-rgba-239-68-68-a08); color: var(--color-dc2626); }
+
+  .stat-delta.flat { background: var(--color-slate-400-a1); color: var(--color-slate-500); }
+
+  .sparkline-wrap {
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding-left: 20px;
+  }
+
+  .sparkline-wrap canvas { height: 52px !important; width: 100% !important; }
+
+  .bar-divider { width:1px; height:24px; background:var(--color-slate-300-a45); flex-shrink:0; }
+
+  .bar-input {
+    background: transparent; border: var(--shadow-sm-16);
+    font-size: 13px; color: var(--color-slate-800);
+    padding: 4px 0; outline: var(--shadow-sm-16); min-width: 0;
+  }
+
+  .bar-input::placeholder { color: var(--color-slate-400); }
+
+  .bar-input-wrap {
+    display: flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: 9px; transition: background .12s;
+  }
+
+  .bar-input-wrap:focus-within { background: var(--color-emerald-600-a07); }
+
+  .bar-input-wrap i { color: var(--color-slate-400); font-size: 11px; flex-shrink:0; }
+
+  .bar-select {
+    background: transparent; border: var(--shadow-sm-16);
+    font-size: 13px; color: var(--color-slate-800);
+    padding: 4px 20px 4px 0; outline: var(--shadow-sm-16);
+    appearance: var(--shadow-sm-16); cursor: pointer;
+    min-width: 80px; max-width: 140px;
+  }
+
+  .date-pill {
+    display: flex; align-items: center; gap: 6px;
+    padding: 5px 12px; border-radius: 99px;
+    background: var(--color-emerald-600-a08);
+    border: 1px solid var(--color-emerald-600-a2);
+    font-size: 12px; font-weight: 600; color: var(--color-emerald-700);
+    cursor: pointer; white-space: nowrap;
+    transition: background .15s, box-shadow .15s;
+  }
+
+  .date-pill:hover { background: var(--color-emerald-600-a14); }
+
+  .date-pill.has-range { background: var(--color-emerald-600-a14); border-color: var(--color-emerald-600-a4); }
+
+  .btn-reset {
+    font-size: 11px; font-weight: 600; color: var(--color-slate-400);
+    background: var(--shadow-sm-16); border: var(--shadow-sm-16); cursor: pointer;
+    padding: 4px 6px; transition: color .12s; white-space: nowrap; flex-shrink: 0;
+  }
+
+  .btn-reset:hover { color: var(--color-slate-600); }
+
+  .perf-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 10px;
+    background: var(--color-emerald-600-a08);
+    border: 1px solid var(--color-emerald-600-a2);
+    font-size: 11px; font-weight: 700; color: var(--color-emerald-700);
+    text-decoration: var(--shadow-sm-16); transition: all .15s; flex-shrink: 0;
+  }
+
+  .perf-link:hover {
+    background: var(--color-emerald-600-a14);
+    box-shadow: 0 0 0 3px var(--color-emerald-600-a1);
+  }
+
+  .date-group-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0 6px;
+    position: sticky; top: 0; z-index: 5;
+  }
+
+  .date-group-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: var(--color-slate-600); letter-spacing: .06em; text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .date-group-line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--color-slate-300-a6), transparent);
+  }
+
+  .date-group-badge {
+    font-size: 10px; font-weight: 700; font-family: 'DM Mono', monospace;
+    color: var(--color-slate-500); background: var(--color-slate-100-a8);
+    border: 1px solid var(--color-slate-300-a5);
+    padding: 2px 8px; border-radius: 99px; white-space: nowrap;
+    backdrop-filter: var(--backdrop-blur-8px);
+  }
+
+  .table-card {
+    background: var(--glass-bg);
+    backdrop-filter: var(--backdrop-var-blur);
+    -webkit-backdrop-filter: var(--backdrop-var-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm-4);
+    overflow: hidden;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar { height: 4px; }
+
+  .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--color-slate-200); border-radius: 99px; }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--color-slate-300); }
+
+  tr.data-row { transition: background .12s; cursor: pointer; }
+
+  tr.data-row:hover td { background: var(--color-rgba-240-253-244-a6) !important; }
+
+  tr.data-row.expanded td { background: var(--color-rgba-240-253-244-a4) !important; }
+
+  .anomaly-badge {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 9px; font-weight: 800; letter-spacing: .06em;
+    padding: 2px 7px; border-radius: 99px;
+    background: var(--color-rgba-245-158-11-a1); color: var(--color-d97706);
+    border: 1px solid var(--color-rgba-245-158-11-a25);
+    text-transform: uppercase;
+  }
+
+  tr.drill-row td {
+    padding: 0 !important;
+    border-bottom: 1px solid var(--color-emerald-600-a1) !important;
+  }
+
+  .drill-panel {
+    background: linear-gradient(135deg, var(--color-rgba-240-253-244-a8), var(--color-white-a6));
+    border-top: 1px solid var(--color-emerald-600-a1);
+    overflow: hidden;
+    transition: max-height .3s cubic-bezier(.4,0,.2,1), opacity .25s ease;
+  }
+
+  .drill-panel.collapsed { max-height: 0; opacity: 0; }
+
+  .drill-panel.expanded  { max-height: 300px; opacity: 1; }
+
+  .drill-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 12px; border-radius: 8px;
+    font-size: 11px; color: var(--color-slate-600);
+    transition: background .1s;
+  }
+
+  .drill-item:hover { background: var(--color-emerald-600-a06-2); }
+
+  .drill-item-label { font-weight: 600; color: var(--color-slate-800); }
+
+  .drill-item-val { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--color-emerald-700); font-weight: 600; }
+
+  .c-avatar {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--color-emerald-600), var(--color-emerald-700));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800; color: var(--color-fff);
+    flex-shrink: 0; font-family: 'Syne', sans-serif;
+    box-shadow: 0 2px 6px var(--color-emerald-600-a25);
+  }
+
+  .sku-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    background: var(--color-slate-100-a9);
+    color: var(--color-slate-500); padding: 2px 8px;
+    border-radius: 6px; border: 1px solid var(--color-slate-300-a5);
+    transition: all .12s; white-space: nowrap;
+  }
+
+  tr.data-row:hover .sku-tag {
+    background: var(--color-emerald-100-a8); color: var(--color-emerald-700);
+    border-color: var(--color-emerald-600-a3);
+  }
+
+  .amount-cell {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px; font-weight: 600; color: var(--color-slate-800);
+  }
+
+  .amount-cell.anomaly { color: var(--color-d97706); }
+
+  tr.data-row:hover .amount-cell { color: var(--color-emerald-700); }
+
+  .filter-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px; border-radius: 99px;
+    font-size: 11px; font-weight: 600;
+    background: var(--color-emerald-600-a1); color: var(--color-emerald-700);
+    border: 1px solid var(--color-emerald-600-a2);
+  }
+
+  .filter-chip button { background: var(--shadow-sm-16); border: var(--shadow-sm-16); cursor: pointer; color: inherit; opacity: .6; }
+
+  .filter-chip button:hover { opacity: 1; }
+
+  .flatpickr-calendar { border-radius: 14px !important; box-shadow: 0 12px 40px var(--color-black-a12) !important; }
+
+  #loadingIndicator { background: var(--color-white-a7); backdrop-filter: var(--backdrop-blur-8px); }
+
+  @keyframes tIn  { from{opacity:0;transform:translateX(16px);} to{opacity:1;transform:var(--shadow-sm-16);} }
+
+  @keyframes tOut { from{opacity:1;} to{opacity:0;pointer-events:var(--shadow-sm-16);} }
+
+  .micro-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--color-slate-400); }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="w-full flex-1 space-y-4 relative z-10"
+     x-data="salesHistory()"
+     x-init="init()"
+     x-cloak>
+
+  <!--{# ── Header ── #}-->
+  <div class="reveal flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-emerald-600 mb-1">
+        <a href="{% url 'dashboard' %}" class="hover:text-emerald-800 transition-colors">Dashboard</a>
+        <span class="text-slate-300">/</span>
+        <span class="text-slate-400">Sales & Insights</span>
+        <span class="text-slate-300">/</span>
+        <span class="text-slate-700 font-semibold">Sales History</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800" style="font-family:'Syne',sans-serif;">
+        Sales History
+      </h1>
+      <div class="flex items-center gap-2 mt-1">
+        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+        <span class="text-xs text-slate-400 font-mono">{% now "H:i" %} WIB</span>
+        {% if anomaly_count > 0 %}
+        <span class="anomaly-badge ml-2">
+          <i class="fas fa-exclamation text-[8px]"></i>
+          {{ anomaly_count }} anomali
+        </span>
+        {% endif %}
+      </div>
+    </div>
+
+    <!--{# Export dropdown #}-->
+    <div class="relative flex-shrink-0" x-data="{ open: false }">
+      <button @click="open=!open" @click.away="open=false"
+              class="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 backdrop-blur text-slate-600 text-xs font-semibold hover:border-emerald-300 hover:text-emerald-700 transition-all" style="background:var(--color-surface)">
+        <i class="fas fa-file-export text-[10px]"></i>
+        Export
+        <i class="fas fa-chevron-down text-[9px] opacity-50 transition-transform" :class="open?'rotate-180':''"></i>
+      </button>
+      <div x-show="open"
+           x-transition:enter="transition duration-150"
+           x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
+           x-transition:enter-end="opacity-100 scale-100"
+           x-transition:leave="transition duration-100"
+           x-transition:leave-end="opacity-0 scale-95"
+           class="absolute right-0 mt-2 w-44 z-50 p-1.5 rounded-2xl
+                  bg-white/95 backdrop-blur border border-white/90
+                  shadow-[0_12px_40px_rgba(0,0,0,0.12)]">
+        {% for fmt, icon, label, color in export_formats|default:"" %}
+        <a href="?export={{ fmt }}{% for k,v in request.GET.items %}{% if k != 'export' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+           class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold text-slate-600
+                  hover:bg-emerald-50/60 hover:text-emerald-700 transition-colors export-link">
+          <div class="w-7 h-7 rounded-lg {{ color }} flex items-center justify-center text-[11px]">
+            <i class="{{ icon }}"></i>
+          </div>
+          {{ label }}
+        </a>
+        {% empty %}
+        <a href="?export=csv{% for k,v in request.GET.items %}{% if k != 'export' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+           class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition-colors export-link">
+          <div class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-[11px]">
+            <i class="fas fa-file-csv"></i></div>CSV
+        </a>
+        <a href="?export=excel{% for k,v in request.GET.items %}{% if k != 'export' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+           class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition-colors export-link">
+          <div class="w-7 h-7 rounded-lg bg-green-50 text-green-600 flex items-center justify-center text-[11px]">
+            <i class="fas fa-file-excel"></i></div>Excel
+        </a>
+        <a href="?export=pdf{% for k,v in request.GET.items %}{% if k != 'export' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+           class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-emerald-50 hover:text-emerald-700 transition-colors export-link">
+          <div class="w-7 h-7 rounded-lg bg-red-50 text-red-500 flex items-center justify-center text-[11px]">
+            <i class="fas fa-file-pdf"></i></div>PDF
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% block summary_stats %}
+<!--{# Summary band with sparkline — replaces plain KPI cards #}-->
+<div class="reveal summary-band">
+
+  <!--{# Stat: Orders #}-->
+  <div class="stat-cell">
+    <div class="stat-label">Transaksi</div>
+    <div class="stat-value">{{ total_orders|default:0 }}</div>
+    <div>
+      <span class="stat-delta {% if daily_growth >= 0 %}up{% else %}down{% endif %}">
+        <i class="fas fa-arrow-{% if daily_growth >= 0 %}up{% else %}down{% endif %} text-[8px]"></i>
+        {{ daily_growth|default:0 }}% hari ini
+      </span>
+    </div>
+  </div>
+
+  <!--{# Stat: Revenue #}-->
+  <div class="stat-cell">
+    <div class="stat-label">Revenue</div>
+    <div class="stat-value mono">{{ total_amount|rupiah_short|default:"Rp 0" }}</div>
+    <div class="micro-label mt-1">{{ total_amount|rupiah|default:"Rp 0" }}</div>
+  </div>
+
+  <!--{# Stat: Items Sold #}-->
+  <div class="stat-cell">
+    <div class="stat-label">Items Terjual</div>
+    <div class="stat-value">{{ total_qty|default:0 }}</div>
+    <div class="micro-label mt-1">
+      avg {{ total_qty|default:0|floatformat:0 }} / hari
+    </div>
+  </div>
+
+  <!--{# Stat: Avg / order #}-->
+  <div class="stat-cell">
+    <div class="stat-label">Avg / Order</div>
+    <div class="stat-value mono">
+      {% if total_orders > 0 %}
+        {{ total_amount|div:total_orders|rupiah_short }}
+      {% else %}Rp 0{% endif %}
+    </div>
+    <div>
+      <span class="stat-delta flat">
+        <i class="fas fa-minus text-[8px]"></i>
+        per transaksi
+      </span>
+    </div>
+  </div>
+
+  <!--{# Sparkline #}-->
+  <div class="sparkline-wrap">
+    <div class="flex items-center justify-between mb-1">
+      <span class="micro-label">Revenue 7 hari terakhir</span>
+      <a href="{% url 'sales_performance' %}" class="perf-link">
+        <i class="fas fa-chart-line text-[9px]"></i>
+        Lihat analisis →
+      </a>
+    </div>
+    <canvas id="sparklineChart"></canvas>
+    <div class="flex justify-between mt-1">
+      <span class="text-[9px] text-slate-300 font-mono">7 hari lalu</span>
+      <span class="text-[9px] text-slate-300 font-mono">hari ini</span>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+
+<!--{# Background orbs #}-->
+<div class="sh-bg-orb sh-bg-orb-1" aria-hidden="true"></div>
+<div class="sh-bg-orb sh-bg-orb-2" aria-hidden="true"></div>
+<div class="sh-bg-orb sh-bg-orb-3" aria-hidden="true"></div>
+
+  <!--{# ── Action Bar ── #}-->
+  <form method="get" id="filterForm" @submit="onSubmit($event)">
+    <div class="reveal action-bar">
+
+      <!--{# Search #}-->
+      <div class="bar-input-wrap flex-1" style="min-width:140px;">
+        <i class="fas fa-search"></i>
+        <input type="text" name="search" id="searchInput"
+               value="{{ request.GET.search }}"
+               placeholder="Cari customer, produk, SKU..."
+               class="bar-input flex-1" style="min-width:0;">
+      </div>
+
+      <div class="bar-divider hidden sm:block"></div>
+
+      <!--{# Store #}-->
+      <div class="bar-input-wrap flex-shrink-0">
+        <i class="fas fa-store"></i>
+        <select name="store" class="bar-select">
+          <option value="">Semua Toko</option>
+          {% for store in stores %}
+          <option value="{{ store.id }}" {% if request.GET.store == store.id|stringformat:"i" %}selected{% endif %}>
+            {{ store.name }}
+          </option>
+          {% endfor %}
+        </select>
+        <i class="fas fa-chevron-down text-[9px] text-slate-300 pointer-events-none"></i>
+      </div>
+
+      <div class="bar-divider hidden sm:block"></div>
+
+      <!--{# Date pill #}-->
+      <div class="relative flex-shrink-0">
+        <button type="button" @click="toggleDatePicker()"
+                class="date-pill" :class="dateLabel !== 'Pilih Tanggal' ? 'has-range' : ''">
+          <i class="fas fa-calendar-alt text-[10px]"></i>
+          <span x-text="dateLabel">Pilih Tanggal</span>
+          <i x-show="dateLabel !== 'Pilih Tanggal'" @click.stop="clearDates()"
+             class="fas fa-times text-[9px] opacity-60 hover:opacity-100"></i>
+        </button>
+        <input type="text" id="fpAnchor" style="position:absolute;top:100%;left:0;width:0;height:0;opacity:0;pointer-events:none;">
+        <input type="hidden" name="date_start" id="date_start" value="{{ request.GET.date_start }}">
+        <input type="hidden" name="date_end"   id="date_end"   value="{{ request.GET.date_end }}">
+      </div>
+
+      <div class="bar-divider hidden sm:block"></div>
+
+      <!--{# View toggle: grouped / flat #}-->
+      <div class="view-toggle">
+        <button type="button" class="view-btn" :class="viewMode==='grouped'?'on':''" @click="viewMode='grouped'">
+          <i class="fas fa-layer-group text-[10px]"></i>
+        </button>
+        <button type="button" class="view-btn" :class="viewMode==='flat'?'on':''" @click="viewMode='flat'">
+          <i class="fas fa-list text-[10px]"></i>
+        </button>
+      </div>
+
+      <!--{# Anomaly filter toggle #}-->
+      <button type="button" @click="showAnomalyOnly=!showAnomalyOnly"
+              class="view-btn border border-slate-200 rounded-lg px-3 flex-shrink-0"
+              :class="showAnomalyOnly ? 'bg-amber-50 border-amber-200 text-amber-600' : 'text-slate-400'">
+        <i class="fas fa-exclamation-triangle text-[10px] mr-1"></i>
+        <span class="text-[10px] font-bold">Anomali</span>
+      </button>
+
+      <!--{# Apply & Reset #}-->
+      <button type="submit" class="btn-apply">
+        <i class="fas fa-arrow-right text-[10px] mr-1.5"></i>Terapkan
+      </button>
+      <button type="button" @click="resetAll()" class="btn-reset">Reset</button>
+
+      <input type="hidden" name="sort_by" value="{{ sort_by }}">
+      <input type="hidden" name="order"   value="{{ order }}">
+    </div>
+  </form>
+
+  <!--{# ── Active filter chips ── #}-->
+  <div x-show="hasActiveFilters"
+       x-transition:enter="transition duration-150"
+       x-transition:enter-start="opacity-0 -translate-y-1"
+       x-transition:enter-end="opacity-100"
+       class="flex flex-wrap items-center gap-2">
+    <span class="micro-label">Filter aktif:</span>
+    {% if request.GET.search %}
+    <span class="filter-chip">
+      <i class="fas fa-search text-[9px]"></i>{{ request.GET.search }}
+      <button onclick="window.location='{{ request.path }}{% querystring request.GET search=None %}'">×</button>
+    </span>
+    {% endif %}
+    {% if request.GET.store %}
+    <span class="filter-chip">
+      <i class="fas fa-store text-[9px]"></i>
+      {% for s in stores %}{% if s.id|stringformat:"i" == request.GET.store %}{{ s.name }}{% endif %}{% endfor %}
+      <button onclick="window.location='{{ request.path }}{% querystring request.GET store=None %}'">×</button>
+    </span>
+    {% endif %}
+    {% if request.GET.date_start %}
+    <span class="filter-chip">
+      <i class="fas fa-calendar text-[9px]"></i>
+      {{ request.GET.date_start }}{% if request.GET.date_end %} → {{ request.GET.date_end }}{% endif %}
+      <button onclick="window.location='{{ request.path }}{% querystring request.GET date_start=None date_end=None %}'">×</button>
+    </span>
+    {% endif %}
+    <a href="{{ request.path }}" class="text-[10px] text-slate-400 hover:text-rose-500 font-semibold ml-auto">Hapus semua ×</a>
+  </div>
+
+  <!--{# ══════════════════════════════════════════
+     MAIN TABLE CARD
+  ══════════════════════════════════════════ #}-->
+  <div class="reveal table-card">
+
+    <!--{# Toolbar #}-->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100/60 bg-white/30">
+      <div class="flex items-center gap-3">
+        <div class="w-1 h-6 bg-gradient-to-b from-emerald-400 to-emerald-600 rounded-full"></div>
+        <p class="text-[10px] font-black text-slate-500 uppercase tracking-[.14em]">
+          {% if page_obj %}
+            <span class="text-slate-800">{{ page_obj.start_index }}–{{ page_obj.end_index }}</span>
+            dari {{ page_obj.paginator.count }} Transaksi
+          {% else %}
+            <span class="text-slate-800">{{ sales|length }}</span> Total Transaksi
+          {% endif %}
+        </p>
+      </div>
+      <div class="flex items-center gap-2 text-[9px] font-mono font-bold text-slate-400
+                  bg-slate-50/60 border border-slate-200/40 px-3 py-1.5 rounded-full">
+        <i class="fas fa-clock text-emerald-400/60 text-[9px]"></i>
+        {% now "H:i, j M Y" %}
+      </div>
+    </div>
+
+    <div class="overflow-x-auto custom-scrollbar" id="tableContainer">
+      <table class="min-w-full border-separate border-spacing-0" aria-label="Sales History">
+
+        <!--{# Table header #}-->
+        <thead>
+          <tr class="sticky top-0 z-10 backdrop-blur-md border-b border-slate-100" style="background:var(--color-bg)">
+            {% with sb=sort_by o=order %}
+            <th class="px-4 py-4 text-left w-8">
+              <span class="text-[9px] font-black text-slate-300 uppercase tracking-wider">#</span>
+            </th>
+            <th class="px-4 py-4 text-left">
+              <a href="?sort_by=order.id&order={% if sb == 'order.id' and o == 'asc' %}desc{% else %}asc{% endif %}{% for k,v in request.GET.items %}{% if k not in 'sort_by,order' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+                 class="flex items-center gap-1.5 text-[9px] font-black text-slate-400 uppercase tracking-wider hover:text-emerald-600">
+                Order <i class="fas fa-{% if sb == 'order.id' %}{% if o == 'asc' %}sort-up text-emerald-500{% else %}sort-down text-emerald-500{% endif %}{% else %}sort opacity-20{% endif %} text-[8px]"></i>
+              </a>
+            </th>
+            <th class="px-4 py-4 text-left">
+              <a href="?sort_by=order.customer_name&order={% if sb == 'order.customer_name' and o == 'asc' %}desc{% else %}asc{% endif %}{% for k,v in request.GET.items %}{% if k not in 'sort_by,order' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+                 class="flex items-center gap-1.5 text-[9px] font-black text-slate-400 uppercase tracking-wider hover:text-emerald-600">
+                Customer <i class="fas fa-{% if sb == 'order.customer_name' %}{% if o == 'asc' %}sort-up text-emerald-500{% else %}sort-down text-emerald-500{% endif %}{% else %}sort opacity-20{% endif %} text-[8px]"></i>
+              </a>
+            </th>
+            <th class="px-4 py-4 text-left">
+              <a href="?sort_by=order.created_at&order={% if sb == 'order.created_at' and o == 'asc' %}desc{% else %}asc{% endif %}{% for k,v in request.GET.items %}{% if k not in 'sort_by,order' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+                 class="flex items-center gap-1.5 text-[9px] font-black text-slate-400 uppercase tracking-wider hover:text-emerald-600">
+                Waktu <i class="fas fa-{% if sb == 'order.created_at' %}{% if o == 'asc' %}sort-up text-emerald-500{% else %}sort-down text-emerald-500{% endif %}{% else %}sort opacity-20{% endif %} text-[8px]"></i>
+              </a>
+            </th>
+            <th class="px-4 py-4 text-left">
+              <span class="text-[9px] font-black text-slate-400 uppercase tracking-wider">SKU</span>
+            </th>
+            <th class="px-4 py-4 text-left">
+              <a href="?sort_by=variant.product.name&order={% if sb == 'variant.product.name' and o == 'asc' %}desc{% else %}asc{% endif %}{% for k,v in request.GET.items %}{% if k not in 'sort_by,order' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+                 class="flex items-center gap-1.5 text-[9px] font-black text-slate-400 uppercase tracking-wider hover:text-emerald-600">
+                Produk <i class="fas fa-{% if sb == 'variant.product.name' %}{% if o == 'asc' %}sort-up text-emerald-500{% else %}sort-down text-emerald-500{% endif %}{% else %}sort opacity-20{% endif %} text-[8px]"></i>
+              </a>
+            </th>
+            <th class="px-4 py-4 text-right">
+              <a href="?sort_by=quantity&order={% if sb == 'quantity' and o == 'asc' %}desc{% else %}asc{% endif %}{% for k,v in request.GET.items %}{% if k not in 'sort_by,order' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+                 class="flex items-center justify-end gap-1.5 text-[9px] font-black text-slate-400 uppercase tracking-wider hover:text-emerald-600">
+                Qty <i class="fas fa-{% if sb == 'quantity' %}{% if o == 'asc' %}sort-up text-emerald-500{% else %}sort-down text-emerald-500{% endif %}{% else %}sort opacity-20{% endif %} text-[8px]"></i>
+              </a>
+            </th>
+            <th class="px-4 py-4 text-right">
+              <a href="?sort_by=total&order={% if sb == 'total' and o == 'asc' %}desc{% else %}asc{% endif %}{% for k,v in request.GET.items %}{% if k not in 'sort_by,order' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+                 class="flex items-center justify-end gap-1.5 text-[9px] font-black text-slate-400 uppercase tracking-wider hover:text-emerald-600">
+                Total <i class="fas fa-{% if sb == 'total' %}{% if o == 'asc' %}sort-up text-emerald-500{% else %}sort-down text-emerald-500{% endif %}{% else %}sort opacity-20{% endif %} text-[8px]"></i>
+              </a>
+            </th>
+            <th class="px-4 py-4 w-8"></th>
+            {% endwith %}
+          </tr>
+        </thead>
+
+        <!--{# Table body #}-->
+        <tbody id="tableBody">
+
+          <!--{# Grouped by date view #}-->
+          {% regroup sales by order.created_at|date:"Y-m-d" as sales_by_date %}
+
+          {% for date_group in sales_by_date %}
+
+            <!--{# Date group header row #}-->
+            <tr class="date-header-row" data-date="{{ date_group.grouper }}">
+              <td colspan="9" class="px-6 pt-3 pb-0 bg-transparent">
+                <div class="date-group-header">
+                  <span class="date-group-label">
+                    {% if date_group.grouper == today_str %}Hari Ini
+                    {% elif date_group.grouper == yesterday_str %}Kemarin
+                    {% else %}{{ date_group.grouper|date:"l, j F Y" }}{% endif %}
+                  </span>
+                  <div class="date-group-line"></div>
+                  <span class="date-group-badge">
+                    {{ date_group.list|length }} transaksi ·
+                    Rp {% for item in date_group.list %}{% if forloop.last %}{{ date_group.list|length }}{% endif %}{% endfor %}
+                  </span>
+                </div>
+              </td>
+            </tr>
+
+            <!--{# Rows for this date #}-->
+            {% for item in date_group.list %}
+            {% with item_total=item.quantity|mul:item.price is_anomaly=item.is_anomaly %}
+            <tr class="data-row group {% if forloop.counter|divisibleby:2 %}bg-slate-50/20{% endif %} {% if is_anomaly %}anomaly-row{% endif %}"
+                data-id="{{ item.order.id }}"
+                @click="toggleDrill({{ item.order.id }})"
+                :class="{ 'hidden': showAnomalyOnly && !isAnomaly({{ item.order.id }}) }">
+
+              <!--{# Row number #}-->
+              <td class="px-4 py-3.5 border-b border-slate-100/50 group-hover:border-emerald-100/60">
+                <span class="text-[10px] font-mono text-slate-300">{{ forloop.counter }}</span>
+              </td>
+
+              <!--{# Order ID #}-->
+              <td class="px-4 py-3.5 border-b border-slate-100/50 group-hover:border-emerald-100/60">
+                <span class="text-[11px] font-black text-slate-400 group-hover:text-emerald-600 transition-colors font-mono">
+                  #{{ item.order.id }}
+                </span>
+              </td>
+
+              <!--{# Customer #}-->
+              <td class="px-4 py-3.5 border-b border-slate-100/50 group-hover:border-emerald-100/60">
+                <div class="flex items-center gap-2">
+                  <div class="c-avatar">{{ item.order.customer_name|slice:":1"|upper }}</div>
+                  <div>
+                    <span class="text-[12px] font-semibold text-slate-700 group-hover:text-slate-900">
+                      {{ item.order.customer_name }}
+                    </span>
+                    {% if item.order.store %}
+                    <span class="block text-[9px] text-slate-300 font-mono">{{ item.order.store.name }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </td>
+
+              <!--{# Date/Time #}-->
+              <td class="px-4 py-3.5 border-b border-slate-100/50 group-hover:border-emerald-100/60">
+                <span class="text-[11px] text-slate-500 font-mono">{{ item.order.created_at|date:"H:i" }}</span>
+                <span class="block text-[9px] text-slate-300 font-mono">{{ item.order.created_at|date:"d M" }}</span>
+              </td>
+
+              <!--{# SKU #}-->
+              <td class="px-4 py-3.5 border-b border-slate-100/50 group-hover:border-emerald-100/60">
+                <span class="sku-tag">{{ item.variant.sku }}</span>
+              </td>
+
+              <!--{# Product #}-->
+              <td class="px-4 py-3.5 border-b border-slate-100/50 group-hover:border-emerald-100/60">
+                <span class="text-[12px] text-slate-600 group-hover:text-slate-800">
+                  {{ item.variant.product.name }}
+                </span>
+                {% if item.variant.name %}
+                <span class="block text-[9px] text-slate-300">{{ item.variant.name }}</span>
+                {% endif %}
+              </td>
+
+              <!--{# Qty #}-->
+              <td class="px-4 py-3.5 border-b border-slate-100/50 group-hover:border-emerald-100/60 text-right">
+                <span class="text-[12px] font-bold text-slate-600 group-hover:text-slate-800 font-mono">
+                  {{ item.quantity }}
+                </span>
+              </td>
+
+              <!--{# Total + anomaly badge #}-->
+              <td class="px-4 py-3.5 border-b border-slate-100/50 group-hover:border-emerald-100/60 text-right">
+                <div class="flex items-center justify-end gap-2">
+                  {% if is_anomaly %}
+                  <span class="anomaly-badge">
+                    <i class="fas fa-fire text-[8px]"></i>HIGH
+                  </span>
+                  {% endif %}
+                  <span class="amount-cell {% if is_anomaly %}anomaly{% endif %}">
+                    Rp {{ item_total|floatformat:0 }}
+                  </span>
+                </div>
+              </td>
+
+              <!--{# Expand chevron #}-->
+              <td class="px-4 py-3.5 border-b border-slate-100/50 group-hover:border-emerald-100/60 text-center">
+                <i class="fas fa-chevron-right text-[9px] text-slate-300 group-hover:text-emerald-500
+                          transition-all duration-200"
+                   :class="openDrill === {{ item.order.id }} ? 'rotate-90 !text-emerald-500' : ''"></i>
+              </td>
+
+            </tr>
+
+            <!--{# Drill-down row #}-->
+<tr class="drill-row" x-show="openDrill === {{ item.order.id }}" x-cloak>
+  <td colspan="9">
+    <div class="drill-panel px-6 py-4"
+         :class="openDrill === {{ item.order.id }} ? 'expanded' : 'collapsed'">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+ 
+        <div class="drill-item">
+          <span class="micro-label">Status Order</span>
+          <span class="drill-item-val">{{ item.order.status|default:"—"|capfirst }}</span>
+        </div>
+ 
+        <div class="drill-item">
+          <span class="micro-label">Harga Satuan</span>
+          <span class="drill-item-val">Rp {{ item.price|floatformat:0 }}</span>
+        </div>
+ 
+        <div class="drill-item">
+          <span class="micro-label">Metode Bayar</span>
+          <!--{# payment_method belum ada di model — tampilkan — kalau kosong #}-->
+          <span class="drill-item-val">{{ item.order.payment_method|default:"—" }}</span>
+        </div>
+ 
+        <div class="drill-item">
+          <span class="micro-label">Kasir</span>
+          <!--{# cashier belum ada di model — tampilkan — kalau kosong #}-->
+          <span class="drill-item-val">{{ item.order.cashier|default:"—" }}</span>
+        </div>
+ 
+        <div class="drill-item">
+          <span class="micro-label">Lokasi / Toko</span>
+          <!--{# location belum ada di model Order — tampilkan — kalau kosong #}-->
+          <span class="drill-item-val">
+            {% if item.order.location %}
+              {{ item.order.location.name }}
+            {% else %}—{% endif %}
+          </span>
+        </div>
+ 
+        <div class="drill-item">
+          <span class="micro-label">Diskon</span>
+          <span class="drill-item-val">
+            {% if item.order.discount_amount %}
+              Rp {{ item.order.discount_amount|floatformat:0 }}
+            {% else %}—{% endif %}
+          </span>
+        </div>
+ 
+        <div class="drill-item col-span-2 justify-end">
+          <a href="{% url 'sales_performance' %}?from={{ item.order.created_at|date:'Y-m-d' }}&to={{ item.order.created_at|date:'Y-m-d' }}"
+             class="perf-link text-[10px]">
+            <i class="fas fa-chart-line text-[9px]"></i>
+            Analisis hari ini
+          </a>
+        </div>
+ 
+      </div>
+    </div>
+  </td>
+</tr>
+
+            {% endwith %}
+            {% endfor %}
+
+          {% empty %}
+          <tr>
+            <td colspan="9" class="px-6 py-16 text-center">
+              <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 border border-slate-100" style="background:var(--color-bg)">
+                <i class="fas fa-chart-line text-slate-200 text-2xl"></i>
+              </div>
+              <p class="text-sm font-semibold text-slate-500" style="font-family:'Syne',sans-serif;">
+                Tidak ada data
+              </p>
+              <p class="text-xs text-slate-400 mt-0.5">Coba ubah filter atau rentang tanggal</p>
+            </td>
+          </tr>
+          {% endfor %}
+
+        </tbody>
+
+        <!--{# Grand total footer #}-->
+        <tfoot>
+          <tr class="bg-gradient-to-r from-emerald-50/40 to-slate-50/40">
+            <td colspan="6" class="px-6 py-4 text-right">
+              <span class="micro-label">Grand Total</span>
+            </td>
+            <td class="px-4 py-4 text-right">
+              <span class="text-[12px] font-black text-slate-700 font-mono">{{ total_qty|default:0 }}</span>
+              <span class="block text-[9px] text-slate-300 uppercase tracking-wider font-mono">items</span>
+            </td>
+            <td class="px-4 py-4 text-right" colspan="2">
+              <span class="inline-block text-[13px] font-black text-emerald-700
+                           bg-emerald-50 border border-emerald-100
+                           shadow-[0_0_0_1px_rgba(5,150,105,.12),0_4px_16px_rgba(5,150,105,.12)]
+                           px-3 py-1.5 rounded-xl font-mono">
+                Rp {{ total_amount|floatformat:0|default:0 }}
+              </span>
+            </td>
+          </tr>
+        </tfoot>
+
+      </table>
+    </div>
+  </div>
+
+
+  {% if stores %}
+<div class="bar-divider hidden sm:block"></div>
+<div class="bar-input-wrap flex-shrink-0">
+  <i class="fas fa-store"></i>
+  <select name="store" class="bar-select">
+    <option value="">Semua Toko</option>
+    {% for store in stores %}
+    <option value="{{ store.id }}"
+      {% if request.GET.store == store.id|stringformat:"i" %}selected{% endif %}>
+      {{ store.name }}
+    </option>
+    {% endfor %}
+  </select>
+  <i class="fas fa-chevron-down text-[9px] text-slate-300 pointer-events-none"></i>
+</div>
+{% endif %}
+
+  <!--{# Pagination #}-->
+  {% if page_obj.has_other_pages %}
+  <nav class="flex justify-center" aria-label="Pagination">
+    <div class="flex items-center gap-1.5">
+      {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+         class="page-btn"><i class="fas fa-chevron-left text-[10px]"></i></a>
+      {% else %}
+      <span class="page-btn disabled"><i class="fas fa-chevron-left text-[10px]"></i></span>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <span class="page-btn active">{{ num }}</span>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <a href="?page={{ num }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+             class="page-btn">{{ num }}</a>
+        {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}
+          <span class="page-btn disabled" style="border:none;background:none;">…</span>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+         class="page-btn"><i class="fas fa-chevron-right text-[10px]"></i></a>
+      {% else %}
+      <span class="page-btn disabled"><i class="fas fa-chevron-right text-[10px]"></i></span>
+      {% endif %}
+    </div>
+  </nav>
+  {% endif %}
+
+</div>
+
+<!--{# Loading overlay #}-->
+<div id="loadingIndicator" class="fixed inset-0 hidden z-50 flex items-center justify-center">
+  <div class="flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl border border-slate-100" style="background:var(--color-surface)">
+    <svg class="w-5 h-5 animate-spin text-emerald-500" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+    </svg>
+    <span class="text-sm font-semibold text-slate-600" style="font-family:'Syne',sans-serif;">Memuat...</span>
+  </div>
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+/* ──────────────────────────────────────────────
+   Sparkline Chart
+────────────────────────────────────────────── */
+(function() {
+  const ctx = document.getElementById('sparklineChart');
+  if (!ctx) return;
+
+  // Data dari Django context — fallback ke mock jika belum ada
+  const labels = {{ sparkline_labels|default:'["Sen","Sel","Rab","Kam","Jum","Sab","Min"]'|safe }};
+  const data   = {{ sparkline_data|default:'[0,0,0,0,0,0,0]'|safe }};
+
+  const maxVal = Math.max(...data);
+  const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 60);
+  gradient.addColorStop(0, 'rgba(5,150,105,0.3)');
+  gradient.addColorStop(1, 'rgba(5,150,105,0.0)');
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data,
+        borderColor: '#059669',
+        borderWidth: 2,
+        fill: true,
+        backgroundColor: gradient,
+        tension: 0.4,
+        pointRadius: data.map((v,i) => v === maxVal ? 4 : 0),
+        pointBackgroundColor: '#047857',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: {
+        callbacks: {
+          label: ctx => 'Rp ' + ctx.parsed.y.toLocaleString('id-ID'),
+        },
+        backgroundColor: 'rgba(15,23,42,0.85)',
+        titleFont: { family: 'DM Mono', size: 10 },
+        bodyFont: { family: 'DM Mono', size: 11 },
+        padding: 8, cornerRadius: 8,
+      }},
+      scales: {
+        x: { display: false },
+        y: { display: false, min: 0 },
+      },
+    }
+  });
+})();
+
+/* ──────────────────────────────────────────────
+   Alpine.js Component
+────────────────────────────────────────────── */
+function salesHistory() {
+  return {
+    viewMode         : 'grouped',
+    openDrill        : null,
+    showAnomalyOnly  : false,
+    _fp              : null,
+
+    /* Anomaly detection — transaksi di atas 2x rata-rata */
+    avgAmount : {{ avg_amount|default:0 }},
+    anomalyIds: new Set({{ anomaly_ids|default:'[]'|safe }}),
+
+    get hasActiveFilters() {
+      return !!(
+        '{{ request.GET.search }}' ||
+        '{{ request.GET.store }}' ||
+        '{{ request.GET.date_start }}'
+      );
+    },
+    get dateLabel() {
+      const s = document.getElementById('date_start')?.value;
+      const e = document.getElementById('date_end')?.value;
+      if (s && e && s !== e) return `${this._fmt(s)} → ${this._fmt(e)}`;
+      if (s) return this._fmt(s);
+      return 'Pilih Tanggal';
+    },
+
+    init() {
+      /* View mode: hide date headers if flat */
+      this.$watch('viewMode', v => {
+        document.querySelectorAll('.date-header-row').forEach(
+          row => row.style.display = v === 'flat' ? 'none' : ''
+        );
+      });
+
+      /* Store auto-submit */
+      document.querySelector('select[name="store"]')?.addEventListener('change', () => {
+        document.getElementById('filterForm').submit();
+      });
+
+      /* Export loading */
+      document.querySelectorAll('.export-link').forEach(a => {
+        a.addEventListener('click', () => {
+          document.getElementById('loadingIndicator').classList.remove('hidden');
+          setTimeout(() => document.getElementById('loadingIndicator').classList.add('hidden'), 3000);
+        });
+      });
+
+      /* Scroll reveal */
+      const io = new IntersectionObserver(entries => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i * 60);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: .06 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    },
+
+    toggleDrill(id) {
+      this.openDrill = this.openDrill === id ? null : id;
+    },
+
+    isAnomaly(id) {
+      return this.anomalyIds.has(id);
+    },
+
+    toggleDatePicker() {
+      if (!this._fp) {
+        this._fp = flatpickr('#fpAnchor', {
+          mode: 'range', dateFormat: 'Y-m-d',
+          defaultDate: [
+            document.getElementById('date_start').value,
+            document.getElementById('date_end').value,
+          ].filter(Boolean),
+          onClose: ([s, e]) => {
+            document.getElementById('date_start').value = s ? this._fmtISO(s) : '';
+            document.getElementById('date_end').value   = e ? this._fmtISO(e) : '';
+          },
+        });
+      }
+      this._fp.open();
+    },
+
+    clearDates() {
+      document.getElementById('date_start').value = '';
+      document.getElementById('date_end').value   = '';
+      if (this._fp) this._fp.clear();
+    },
+
+    onSubmit() {
+      document.getElementById('loadingIndicator').classList.remove('hidden');
+    },
+
+    resetAll() {
+      document.getElementById('searchInput').value = '';
+      document.querySelector('select[name="store"]').value = '';
+      this.clearDates();
+      this.showAnomalyOnly = false;
+      document.getElementById('filterForm').submit();
+    },
+
+    _fmtISO(d) {
+      if (!d) return '';
+      return [d.getFullYear(), String(d.getMonth()+1).padStart(2,'0'), String(d.getDate()).padStart(2,'0')].join('-');
+    },
+    _fmt(iso) {
+      if (!iso) return '';
+      const [y, m, d] = iso.split('-');
+      const mn = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+      return `${parseInt(d)} ${mn[parseInt(m)-1]}`;
+    },
+  };
+}
+</script>
+{% endblock %}

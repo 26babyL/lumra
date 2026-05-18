@@ -1,0 +1,281 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}Finished Goods Receipt - Lumra ERP{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-card { background: rgba(255,255,255,0.88); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.95); border-radius: 18px; box-shadow: 0 10px 30px rgba(15,23,42,0.08); }
+</style>
+{% endblock %}
+
+{% block content %}
+{{ receipts_data|json_script:"receipts-data" }}
+{{ completed_orders_data|json_script:"receipt-orders-data" }}
+{{ locations_data|json_script:"receipt-locations-data" }}
+
+<div class="max-w-7xl mx-auto space-y-6 relative z-10" x-data="receiptApp()" x-init="init()" x-cloak>
+  <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+        <a href="{% url 'production_order_list' %}" class="hover:text-slate-800">Production</a>
+        <span>/</span>
+        <span class="text-slate-800 font-medium">Finished Goods</span>
+      </nav>
+      <h1 class="text-3xl font-bold text-slate-800">Finished Goods Receipt</h1>
+      <p class="text-sm text-slate-500 mt-1">Verifikasi qty hasil produksi yang masuk ke stok dan lokasinya.</p>
+    </div>
+    <button @click="openForm()" class="rounded-xl bg-slate-800 px-5 py-3 text-sm font-semibold text-white shadow hover:bg-slate-700">+ Catat Receipt</button>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div class="glass-card px-4 py-3">
+      <p class="text-xs uppercase tracking-wide text-slate-400">Receipts</p>
+      <p class="text-2xl font-bold text-slate-800 mt-1" x-text="filteredItems.length"></p>
+    </div>
+    <div class="glass-card px-4 py-3">
+      <p class="text-xs uppercase tracking-wide text-slate-400">Qty Diterima</p>
+      <p class="text-2xl font-bold text-slate-800 mt-1" x-text="formatQty(totalReceived)"></p>
+    </div>
+    <div class="glass-card px-4 py-3">
+      <p class="text-xs uppercase tracking-wide text-slate-400">PO Selesai</p>
+      <p class="text-2xl font-bold text-slate-800 mt-1" x-text="completedOrders.length"></p>
+    </div>
+    <div class="glass-card px-4 py-3">
+      <p class="text-xs uppercase tracking-wide text-slate-400">Belum Receipt</p>
+      <p class="text-2xl font-bold text-amber-600 mt-1" x-text="pendingReceiptOrders.length"></p>
+    </div>
+  </div>
+
+  <div class="glass-card p-5">
+    <div class="flex flex-col lg:flex-row gap-3">
+      <input type="search" x-model="searchQuery" @input="applyFilter()" placeholder="Cari PO, produk, SKU, atau lokasi..." class="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-slate-400">
+      <select aria-label="Pilih opsi" x-model="locationFilter" @change="applyFilter()" class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-slate-400">
+        <option value="">Semua lokasi</option>
+        <template x-for="location in locationOptions" :key="location">
+          <option :value="location" x-text="location"></option>
+        </template>
+      </select>
+    </div>
+  </div>
+
+  <section class="glass-card overflow-hidden">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+      <h2 class="text-lg font-bold text-slate-800">Receipt Records</h2>
+      <p class="text-sm text-slate-500"><span x-text="filteredItems.length"></span> data tampil</p>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+          <tr>
+            <th class="px-6 py-3">PO</th>
+            <th class="px-6 py-3">Product</th>
+            <th class="px-6 py-3 text-right">PO Target</th>
+            <th class="px-6 py-3 text-right">Produced</th>
+            <th class="px-6 py-3 text-right">Received</th>
+            <th class="px-6 py-3 text-right">Variance</th>
+            <th class="px-6 py-3">Lokasi</th>
+            <th class="px-6 py-3">Received At</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 bg-white">
+          <template x-for="item in filteredItems" :key="item.id">
+            <tr class="hover:bg-slate-50 transition-colors">
+              <td class="px-6 py-4 font-semibold text-slate-800" x-text="item.po_code"></td>
+              <td class="px-6 py-4">
+                <div class="font-medium text-slate-800" x-text="item.product"></div>
+                <div class="text-xs font-mono text-slate-500" x-text="item.sku"></div>
+              </td>
+              <td class="px-6 py-4 text-right text-slate-600" x-text="formatQty(item.target_qty) + ' ' + (item.uom || '')"></td>
+              <td class="px-6 py-4 text-right text-slate-600" x-text="formatQty(item.produced_qty) + ' ' + (item.uom || '')"></td>
+              <td class="px-6 py-4 text-right font-semibold text-slate-800" x-text="formatQty(item.quantity) + ' ' + (item.uom || '')"></td>
+              <td class="px-6 py-4 text-right font-semibold" :class="item.variance < 0 ? 'text-rose-700' : item.variance > 0 ? 'text-emerald-700' : 'text-slate-700'" x-text="formatSignedQty(item.variance) + ' ' + (item.uom || '')"></td>
+              <td class="px-6 py-4 text-slate-500" x-text="item.location || '-'"></td>
+              <td class="px-6 py-4 text-slate-500" x-text="item.received_at"></td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div x-show="showForm" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4">
+    <div class="glass-card w-full max-w-2xl p-6">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h3 class="text-lg font-bold text-slate-800">Catat Finished Goods Receipt</h3>
+          <p class="mt-1 text-sm text-slate-500">Draft lokal ini membantu alur penerimaan tetap terbaca sambil menunggu endpoint backend final.</p>
+        </div>
+        <button @click="closeForm()" class="text-slate-400 hover:text-slate-700">Tutup</button>
+      </div>
+
+      <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="md:col-span-2">
+          <label class="block text-sm font-semibold text-slate-700 mb-2">Production Order</label>
+          <select aria-label="Pilih opsi" x-model="draft.po_id" @change="hydrateDraft()" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-slate-400">
+            <option value="">Pilih PO selesai...</option>
+            <template x-for="po in completedOrders" :key="po.id">
+              <option :value="String(po.id)" x-text="po.code + ' - ' + po.product + (po.receipt_recorded ? ' (sudah ada receipt)' : '')"></option>
+            </template>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">Qty Diterima</label>
+          <input aria-label="Qty Diterima" type="number" min="0" step="0.01" x-model.number="draft.quantity" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-slate-400">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">Lokasi</label>
+          <select aria-label="Pilih opsi" x-model="draft.location" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-slate-400">
+            <template x-for="location in locations" :key="location.id">
+              <option :value="location.name" x-text="location.name"></option>
+            </template>
+          </select>
+        </div>
+      </div>
+
+      <div x-show="selectedDraftPO" class="mt-5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+        Produced <span class="font-semibold text-slate-800" x-text="formatQty(selectedDraftPO?.produced_qty || 0)"></span>
+        <span x-text="selectedDraftPO?.uom || ''"></span>.
+        Variance draft:
+        <span class="font-semibold" :class="draftVariance < 0 ? 'text-rose-700' : draftVariance > 0 ? 'text-emerald-700' : 'text-slate-800'" x-text="formatSignedQty(draftVariance) + ' ' + (selectedDraftPO?.uom || '')"></span>
+      </div>
+
+      <div class="mt-6 flex gap-3">
+        <button @click="saveDraft()" class="flex-1 rounded-xl bg-slate-800 px-4 py-3 text-sm font-semibold text-white">Simpan Draft Lokal</button>
+        <button @click="closeForm()" class="flex-1 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-600">Batal</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function receiptApp() {
+  return {
+    allItems: [],
+    filteredItems: [],
+    completedOrders: [],
+    locations: [],
+    searchQuery: '',
+    locationFilter: '',
+    showForm: false,
+    draft: { po_id: '', quantity: 0, location: '' },
+
+    init() {
+      this.allItems = this.parseJson('receipts-data');
+      this.completedOrders = this.parseJson('receipt-orders-data');
+      this.locations = this.parseJson('receipt-locations-data');
+      if (this.locations.length) this.draft.location = this.locations[0].name;
+      this.rebuildRows();
+      this.applyFilter();
+    },
+
+    parseJson(id) {
+      const el = document.getElementById(id);
+      if (!el?.textContent) return [];
+      try { return JSON.parse(el.textContent) || []; } catch (error) { return []; }
+    },
+
+    rebuildRows() {
+      const poMap = new Map(this.completedOrders.map((po) => [po.code, po]));
+      this.allItems = this.allItems.map((item) => {
+        const po = poMap.get(item.po_code) || {};
+        const receivedQty = Number(item.quantity || 0);
+        return {
+          ...item,
+          target_qty: Number(po.target_qty || 0),
+          produced_qty: Number(po.produced_qty || 0),
+          uom: po.uom || item.uom || '',
+          variance: receivedQty - Number(po.produced_qty || 0),
+        };
+      });
+    },
+
+    get selectedDraftPO() {
+      return this.completedOrders.find((po) => String(po.id) === String(this.draft.po_id || '')) || null;
+    },
+
+    get draftVariance() {
+      return Number(this.draft.quantity || 0) - Number(this.selectedDraftPO?.produced_qty || 0);
+    },
+
+    get totalReceived() {
+      return this.filteredItems.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+    },
+
+    get locationOptions() {
+      return [...new Set(this.filteredItems.map((item) => item.location).filter(Boolean))];
+    },
+
+    get pendingReceiptOrders() {
+      return this.completedOrders.filter((po) => !po.receipt_recorded);
+    },
+
+    applyFilter() {
+      const query = this.searchQuery.toLowerCase().trim();
+      this.filteredItems = this.allItems.filter((item) => {
+        const matchesLocation = !this.locationFilter || item.location === this.locationFilter;
+        const matchesQuery = !query || [item.po_code, item.product, item.sku, item.location].some((value) => String(value || '').toLowerCase().includes(query));
+        return matchesLocation && matchesQuery;
+      });
+    },
+
+    openForm() {
+      this.showForm = true;
+      if (this.pendingReceiptOrders.length) {
+        this.draft.po_id = String(this.pendingReceiptOrders[0].id);
+        this.hydrateDraft();
+      }
+    },
+
+    hydrateDraft() {
+      const po = this.selectedDraftPO;
+      if (!po) return;
+      this.draft.quantity = Number(po.produced_qty || 0);
+      if (this.locations.length && !this.draft.location) this.draft.location = this.locations[0].name;
+    },
+
+    closeForm() {
+      this.showForm = false;
+      this.draft = { po_id: '', quantity: 0, location: this.locations[0]?.name || '' };
+    },
+
+    saveDraft() {
+      const po = this.selectedDraftPO;
+      if (!po || !(Number(this.draft.quantity || 0) >= 0) || !this.draft.location) {
+        alert('Lengkapi PO, quantity, dan lokasi penerimaan.');
+        return;
+      }
+      this.allItems.unshift({
+        id: Date.now(),
+        po_code: po.code,
+        product: po.product,
+        sku: po.sku,
+        location: this.draft.location,
+        quantity: Number(this.draft.quantity || 0),
+        received_at: 'draft lokal',
+        target_qty: Number(po.target_qty || 0),
+        produced_qty: Number(po.produced_qty || 0),
+        uom: po.uom || '',
+        variance: Number(this.draft.quantity || 0) - Number(po.produced_qty || 0),
+      });
+      po.receipt_recorded = true;
+      this.applyFilter();
+      this.closeForm();
+    },
+
+    formatQty(value) {
+      return Number(value || 0).toLocaleString('id-ID', { maximumFractionDigits: 2 });
+    },
+
+    formatSignedQty(value) {
+      const number = Number(value || 0);
+      const text = this.formatQty(Math.abs(number));
+      if (number > 0) return `+${text}`;
+      if (number < 0) return `-${text}`;
+      return text;
+    },
+  };
+}
+</script>
+{% endblock %}

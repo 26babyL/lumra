@@ -1,0 +1,97 @@
+{% extends 'base/base_hybrid.html' %}
+
+{% block title %}System Maintenance - Lumra ERP{% endblock %}
+
+{% block content %}
+
+<div class="min-h-screen py-12 px-6 lg:px-12 flex items-center justify-center bg-gradient-to-br from-info/10 to-warning/10">
+  <div class="max-w-md mx-auto text-center">
+    <div class="card bg-base-100 shadow-2xl border border-info/20">
+      <div class="card-body p-8">
+        <!-- Maintenance Icon -->
+        <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-info/10 flex items-center justify-center">
+          <i class="fas fa-tools text-info text-3xl"></i>
+        </div>
+        
+        <!-- Title -->
+        <h1 class="text-3xl font-bold text-base-content mb-4">System Under Maintenance</h1>
+        
+        <!-- Message -->
+        <p class="text-base-content/60 mb-8">We're currently performing scheduled maintenance to improve our services. We'll be back shortly.</p>
+        
+        <!-- Progress Bar -->
+        <div class="mb-8">
+          <div class="flex justify-between text-sm text-base-content/60 mb-2">
+            <span>Progress</span>
+            <span>75%</span>
+          </div>
+          <div class="w-full bg-base-200 rounded-full h-3">
+            <div class="bg-info h-3 rounded-full transition-all duration-500" style="width: 75%"></div>
+          </div>
+        </div>
+        
+        <!-- Estimated Time -->
+        <div class="mb-8 p-4 bg-base-200 rounded-lg">
+          <div class="flex items-center justify-center gap-3">
+            <i class="fas fa-clock text-info"></i>
+            <div class="text-left">
+              <p class="text-sm font-semibold text-base-content">Estimated completion</p>
+              <p class="text-lg font-bold text-info">2 hours 30 minutes</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Contact Info -->
+        <div class="mb-8 p-4 bg-warning/10 border border-warning/20 rounded-lg">
+          <h3 class="text-sm font-semibold text-base-content mb-3">
+            <i class="fas fa-phone-alt mr-2"></i>
+            Need immediate assistance?
+          </h3>
+          <div class="text-sm text-base-content/60 space-y-2">
+            <p>
+              <i class="fas fa-envelope mr-2"></i>
+              support@lumraerp.com
+            </p>
+            <p>
+              <i class="fas fa-phone mr-2"></i>
+              +62 123 456 789
+            </p>
+          </div>
+        </div>
+        
+        <!-- Updates Section -->
+        <div class="mb-8">
+          <h3 class="text-sm font-semibold text-base-content mb-3">
+            <i class="fas fa-bell mr-2"></i>
+            Get Updates
+          </h3>
+          <div class="flex gap-3 justify-center">
+            <button class="btn btn-ghost btn-sm">
+              <i class="fas fa-envelope mr-2"></i>
+              Email Notifications
+            </button>
+            <button class="btn btn-ghost btn-sm">
+              <i class="fas fa-mobile-alt mr-2"></i>
+              SMS Alerts
+            </button>
+          </div>
+        </div>
+        
+        <!-- Back Button -->
+        <button onclick="location.reload()" class="btn btn-primary">
+          <i class="fas fa-sync-alt mr-2"></i>
+          Check Status
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Auto-refresh script -->
+<script>
+  // Auto-refresh every 5 minutes
+  setTimeout(() => {
+    location.reload();
+  }, 300000);
+</script>
+{% endblock %}

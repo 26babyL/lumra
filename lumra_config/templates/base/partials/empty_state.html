@@ -1,0 +1,28 @@
+{# base/partials/empty_state.html - DaisyUI Version#}
+# Empty state placeholder when no data
+
+<div class="flex flex-col items-center justify-center py-12 px-6">
+  <div class="text-center">
+    <div class="mb-4">
+      {% if icon %}
+        <i class="fas {{ icon }} text-6xl text-base-content/30"></i>
+      {% else %}
+        <i class="fas fa-inbox text-6xl text-base-content/30"></i>
+      {% endif %}
+    </div>
+    
+    <h3 class="text-xl font-bold text-base-content/60 mb-2">
+      {{ title|default:"Tidak ada data" }}
+    </h3>
+    
+    <p class="text-base-content/40 mb-6 max-w-sm">
+      {{ message|default:"Mulai dengan membuat item baru atau mencari data yang tersedia." }}
+    </p>
+    
+    {% if button_text and button_url %}
+      <a href="{{ button_url }}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> {{ button_text }}
+      </a>
+    {% endif %}
+  </div>
+</div>

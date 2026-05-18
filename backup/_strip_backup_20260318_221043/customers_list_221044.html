@@ -1,0 +1,603 @@
+{% extends 'lumra_pages/reports/base_report.html' %}
+{% load custom_filters %}
+
+{% block extra_head %}
+<style>
+  [x-cloak] { display:none !important; }
+
+  /* ── Ambient blobs ── */
+  .bg-blob {
+    position:fixed; border-radius:50%;
+    filter:blur(100px); opacity:.08;
+    pointer-events:none; z-index:0;
+    animation:drift 18s ease-in-out infinite alternate;
+  }
+  .bg-blob-1{width:420px;height:420px;background:#10b981;top:-120px;left:-160px;animation-delay:0s;}
+  .bg-blob-2{width:280px;height:280px;background:#059669;bottom:-60px;right:-80px;animation-delay:-7s;}
+  .bg-blob-3{width:200px;height:200px;background:#f59e0b;top:40%;right:10%;animation-delay:-12s;}
+  @keyframes drift{from{transform:translate(0,0) scale(1);}to{transform:translate(20px,28px) scale(1.06);}}
+
+  /* ── Scroll reveal ── */
+  .reveal{opacity:0;transform:translateY(12px);transition:opacity .4s ease,transform .4s ease;}
+  .reveal.visible{opacity:1;transform:none;}
+
+  /* ════ KPI CARDS ════ */
+  .kpi-glass {
+    background     : rgba(255,255,255,0.72);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border         : 1px solid rgba(255,255,255,0.9);
+    border-radius  : 18px;
+    box-shadow     : 0 2px 12px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.04);
+    transition     : box-shadow .2s, transform .2s;
+    position       : relative; overflow:hidden;
+  }
+  .kpi-glass:hover{box-shadow:0 8px 28px rgba(0,0,0,0.10);transform:translateY(-2px);}
+  .kpi-glass::before{
+    content:''; position:absolute; top:0; right:0;
+    width:60px; height:60px; border-radius:0 18px 0 100%; opacity:.07;
+  }
+  .kpi-glass.accent-emerald::before{background:#10b981;}
+  .kpi-glass.accent-blue::before   {background:#3b82f6;}
+  .kpi-glass.accent-amber::before  {background:#f59e0b;}
+  .kpi-glass.accent-violet::before {background:#8b5cf6;}
+  .kpi-glass.accent-rose::before   {background:#f43f5e;}
+  .kpi-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;}
+
+  /* ════ ACTION BAR ════ */
+  .action-bar {
+    background     : rgba(255,255,255,0.85);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border         : 1px solid rgba(255,255,255,0.9);
+    border-radius  : 14px;
+    box-shadow     : 0 2px 10px rgba(0,0,0,0.05);
+    padding        : 10px 14px;
+    display        : flex; align-items:center; gap:8px; flex-wrap:wrap;
+  }
+  .bar-divider{width:1px;height:24px;background:rgba(203,213,225,0.5);flex-shrink:0;}
+  .bar-input{background:transparent;border:none;font-size:13px;color:#1e293b;padding:4px 0;outline:none;min-width:0;}
+  .bar-input::placeholder{color:#94a3b8;}
+  .bar-input-wrap{display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:9px;transition:background .12s;}
+  .bar-input-wrap:focus-within{background:rgba(16,185,129,0.07);}
+  .bar-input-wrap i{color:#94a3b8;font-size:11px;flex-shrink:0;}
+  .bar-select{background:transparent;border:none;font-size:13px;color:#1e293b;padding:4px 20px 4px 0;outline:none;appearance:none;-webkit-appearance:none;cursor:pointer;min-width:80px;max-width:160px;}
+
+  /* Tier filter buttons */
+  .tier-btn{
+    display:inline-flex;align-items:center;gap:5px;
+    padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700;
+    border:1.5px solid transparent;cursor:pointer;transition:all .15s;
+    background:rgba(248,250,252,0.8);color:#94a3b8;border-color:rgba(203,213,225,0.4);
+  }
+  .tier-btn.active-regular {background:rgba(100,116,139,0.10);color:#475569;border-color:rgba(100,116,139,0.3);}
+  .tier-btn.active-silver  {background:rgba(148,163,184,0.15);color:#475569;border-color:rgba(148,163,184,0.5);}
+  .tier-btn.active-gold    {background:rgba(245,158,11,0.12);color:#b45309;border-color:rgba(245,158,11,0.35);}
+  .tier-btn.active-platinum{background:rgba(59,130,246,0.10);color:#1d4ed8;border-color:rgba(59,130,246,0.3);}
+  .tier-btn.active-vip     {background:rgba(139,92,246,0.12);color:#6d28d9;border-color:rgba(139,92,246,0.35);}
+  .tier-btn:hover{border-color:#6ee7b7;color:#059669;}
+
+  .btn-apply{padding:7px 16px;border-radius:10px;background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:#fff;font-size:12px;font-weight:700;border:none;cursor:pointer;white-space:nowrap;box-shadow:0 3px 10px rgba(16,185,129,0.28);transition:box-shadow .15s,transform .15s;flex-shrink:0;}
+  .btn-apply:hover{box-shadow:0 5px 16px rgba(16,185,129,0.40);transform:translateY(-1px);}
+  .btn-add{padding:7px 14px;border-radius:10px;background:rgba(16,185,129,0.09);border:1.5px solid rgba(16,185,129,0.25);color:#059669;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px;transition:all .12s;flex-shrink:0;}
+  .btn-add:hover{background:rgba(16,185,129,0.16);border-color:rgba(16,185,129,0.5);}
+  .btn-export{padding:7px 14px;border-radius:10px;background:rgba(255,255,255,0.8);border:1px solid rgba(203,213,225,0.6);color:#475569;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:5px;transition:background .12s,border-color .12s;flex-shrink:0;}
+  .btn-export:hover{background:#fff;border-color:#6ee7b7;color:#059669;}
+  .btn-reset{font-size:11px;font-weight:600;color:#94a3b8;background:none;border:none;cursor:pointer;padding:4px 6px;transition:color .12s;white-space:nowrap;flex-shrink:0;}
+  .btn-reset:hover{color:#475569;}
+  .micro-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin-bottom:5px;}
+
+  /* ════ TIER BADGES ════ */
+  .tier-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;}
+  .tier-regular  {background:rgba(100,116,139,0.08);color:#64748b;border:1px solid rgba(100,116,139,0.15);}
+  .tier-silver   {background:rgba(148,163,184,0.12);color:#475569;border:1px solid rgba(148,163,184,0.3);}
+  .tier-gold     {background:rgba(245,158,11,0.10);color:#d97706;border:1px solid rgba(245,158,11,0.25);}
+  .tier-platinum {background:rgba(59,130,246,0.10);color:#2563eb;border:1px solid rgba(59,130,246,0.25);}
+  .tier-vip      {background:rgba(139,92,246,0.10);color:#7c3aed;border:1px solid rgba(139,92,246,0.25);
+                  box-shadow:0 0 12px rgba(139,92,246,0.15);}
+
+  /* ════ TABLE ════ */
+  .table-card{background:rgba(255,255,255,0.88);backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);border:1px solid rgba(255,255,255,0.9);border-radius:18px;box-shadow:0 2px 16px rgba(0,0,0,0.06);overflow:hidden;}
+  .custom-scrollbar::-webkit-scrollbar{height:4px;}
+  .custom-scrollbar::-webkit-scrollbar-track{background:transparent;}
+  .custom-scrollbar::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:99px;}
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover{background:#cbd5e1;}
+  tr.data-row{transition:background .12s;}
+  tr.data-row:hover td{background:rgba(240,253,244,0.55) !important;}
+
+  /* Points bar */
+  .points-bar-track{height:4px;border-radius:99px;background:rgba(203,213,225,0.3);overflow:hidden;min-width:60px;}
+  .points-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#10b981,#059669);transition:width .6s cubic-bezier(.4,0,.2,1);}
+
+  /* Avatar */
+  .avatar-ring{border:2px solid rgba(16,185,129,0.2);padding:2px;border-radius:50%;}
+
+  /* Export menu */
+  .export-menu{background:rgba(255,255,255,0.97);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.9);border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,0.12);}
+  .export-item{display:flex;align-items:center;gap:10px;padding:9px 14px;font-size:12px;font-weight:600;color:#475569;transition:background .1s;border-radius:8px;text-decoration:none;cursor:pointer;}
+  .export-item:hover{background:rgba(16,185,129,0.06);color:#059669;}
+  .export-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+
+  /* Pagination */
+  .page-btn{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;cursor:pointer;border:1px solid rgba(203,213,225,0.5);background:rgba(255,255,255,0.7);color:#64748b;transition:all .12s;text-decoration:none;}
+  .page-btn:hover{background:#fff;border-color:#6ee7b7;color:#059669;}
+  .page-btn.active{background:rgba(16,185,129,0.12);border-color:#10b981;color:#059669;}
+  .page-btn.disabled{opacity:.35;pointer-events:none;}
+
+  /* Filter chip */
+  .filter-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600;background:rgba(16,185,129,0.10);color:#059669;border:1px solid rgba(16,185,129,0.2);}
+  .filter-chip button{background:none;border:none;cursor:pointer;color:inherit;opacity:.6;line-height:1;padding:0 0 0 2px;}
+  .filter-chip button:hover{opacity:1;}
+
+  #loadingIndicator{background:rgba(255,255,255,0.7);backdrop-filter:blur(8px);}
+
+  /* VIP glow row */
+  tr.vip-row td{background:rgba(139,92,246,0.02) !important;}
+  tr.vip-row:hover td{background:rgba(139,92,246,0.06) !important;}
+</style>
+{% endblock %}
+
+{% block summary_stats %}
+<div class="reveal grid grid-cols-2 xl:grid-cols-5 gap-3">
+
+  <div class="kpi-glass accent-emerald p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Pelanggan</p>
+        <p class="text-2xl font-bold text-slate-800">{{ total_customers|default:0 }}</p>
+        <p class="text-[11px] text-slate-400 mt-0.5">Registered</p>
+      </div>
+      <div class="kpi-icon bg-emerald-50 text-emerald-600"><i class="fas fa-users"></i></div>
+    </div>
+  </div>
+
+  <div class="kpi-glass accent-amber p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Member Gold</p>
+        <p class="text-2xl font-bold text-slate-800">{{ gold_count|default:0 }}</p>
+        <p class="text-[11px] text-amber-400 mt-0.5 font-semibold">⭐ Gold Tier</p>
+      </div>
+      <div class="kpi-icon bg-amber-50 text-amber-500"><i class="fas fa-star"></i></div>
+    </div>
+  </div>
+
+  <div class="kpi-glass accent-violet p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Member VIP</p>
+        <p class="text-2xl font-bold text-slate-800">{{ vip_count|default:0 }}</p>
+        <p class="text-[11px] text-violet-400 mt-0.5 font-semibold">👑 VIP Tier</p>
+      </div>
+      <div class="kpi-icon bg-violet-50 text-violet-600"><i class="fas fa-crown"></i></div>
+    </div>
+  </div>
+
+  <div class="kpi-glass accent-blue p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Poin Beredar</p>
+        <p class="text-2xl font-bold text-slate-800">{{ total_points|default:0|floatformat:0 }}</p>
+        <p class="text-[11px] text-slate-400 mt-0.5">Active points</p>
+      </div>
+      <div class="kpi-icon bg-blue-50 text-blue-500"><i class="fas fa-coins"></i></div>
+    </div>
+  </div>
+
+  <div class="kpi-glass accent-rose p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Ulang Tahun Bulan Ini</p>
+        <p class="text-2xl font-bold text-slate-800">{{ birthday_this_month|default:0 }}</p>
+        <p class="text-[11px] text-rose-400 mt-0.5 font-semibold">🎂 Kirim promo!</p>
+      </div>
+      <div class="kpi-icon bg-rose-50 text-rose-500"><i class="fas fa-birthday-cake"></i></div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-3" aria-hidden="true"></div>
+
+<div class="w-full flex-1 space-y-4 relative z-10"
+     x-data="customerList()"
+     x-init="init()"
+     x-cloak>
+
+  <!-- HEADER -->
+  <div class="reveal flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-emerald-600 mb-1">
+        <a href="{% url 'dashboard' %}" class="hover:text-emerald-800 transition-colors">Dashboard</a>
+        <span class="text-slate-300">/</span>
+        <span class="text-slate-600 font-medium">Pelanggan</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800">Direktori Pelanggan</h1>
+      <div class="flex items-center gap-2 mt-1">
+        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+        <span class="text-xs text-slate-400">CRM — Loyalty & Membership</span>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 flex-shrink-0">
+      <!-- Add Customer -->
+      <a href="{% url 'customer_create' %}" class="btn-add">
+        <i class="fas fa-user-plus text-[11px]"></i>
+        Pelanggan Baru
+      </a>
+
+      <!-- Export -->
+      <div class="relative" x-data="{open:false}">
+        <button @click="open=!open" @click.away="open=false" class="btn-export">
+          <i class="fas fa-file-export text-[11px]"></i>
+          Export
+          <i class="fas fa-chevron-down text-[9px] opacity-50 transition-transform duration-200" :class="open?'rotate-180':''"></i>
+        </button>
+        <div x-show="open"
+             x-transition:enter="transition duration-150"
+             x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
+             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+             x-transition:leave="transition duration-100"
+             x-transition:leave-end="opacity-0 scale-97"
+             class="export-menu absolute right-0 mt-2 w-52 z-50 p-1.5">
+          <a href="?export=csv{% for key, value in request.GET.items %}{% if key != 'export' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+             class="export-item export-link">
+            <div class="export-icon bg-emerald-50 text-emerald-600"><i class="fas fa-file-csv"></i></div>
+            <div><p class="font-bold text-slate-700 text-[12px]">CSV</p><p class="text-[10px] text-slate-400">Email marketing</p></div>
+          </a>
+          <a href="?export=excel{% for key, value in request.GET.items %}{% if key != 'export' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+             class="export-item export-link">
+            <div class="export-icon bg-green-50 text-green-600"><i class="fas fa-file-excel"></i></div>
+            <div><p class="font-bold text-slate-700 text-[12px]">Excel</p><p class="text-[10px] text-slate-400">Full data</p></div>
+          </a>
+          <a href="?export=whatsapp{% for key, value in request.GET.items %}{% if key != 'export' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+             class="export-item export-link">
+            <div class="export-icon bg-green-50 text-green-700"><i class="fab fa-whatsapp"></i></div>
+            <div><p class="font-bold text-slate-700 text-[12px]">WhatsApp</p><p class="text-[10px] text-slate-400">No. HP list</p></div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTION BAR -->
+  <form method="get" id="filterForm" @submit="onSubmit($event)">
+    <div class="reveal action-bar">
+
+      <!-- Search -->
+      <div class="bar-input-wrap flex-1" style="min-width:180px;">
+        <i class="fas fa-search"></i>
+        <input type="text" name="search" id="searchInput"
+               value="{{ request.GET.search }}"
+               placeholder="Cari nama, email, atau nomor HP..."
+               class="bar-input flex-1">
+      </div>
+
+      <div class="bar-divider hidden sm:block"></div>
+
+      <!-- Tier filter pills -->
+      <div class="flex items-center gap-1.5 flex-shrink-0 flex-wrap">
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider hidden sm:block">Tier:</span>
+        {% for tier_key, tier_label in tier_choices %}
+        <button type="button"
+                class="tier-btn {% if request.GET.tier == tier_key %}active-{{ tier_key }}{% endif %}"
+                @click="setTier('{{ tier_key }}')">
+          {% if tier_key == 'regular' %}👤{% elif tier_key == 'silver' %}🥈{% elif tier_key == 'gold' %}⭐{% elif tier_key == 'platinum' %}💎{% elif tier_key == 'vip' %}👑{% endif %}
+          {{ tier_label }}
+        </button>
+        {% endfor %}
+        <input type="hidden" name="tier" id="tierInput" value="{{ request.GET.tier }}">
+      </div>
+
+      <div class="bar-divider hidden sm:block"></div>
+
+      <!-- Sort -->
+      <div class="bar-input-wrap flex-shrink-0">
+        <i class="fas fa-sort-amount-down"></i>
+        <select name="sort_by" class="bar-select">
+          <option value="created_at" {% if request.GET.sort_by == 'created_at' or not request.GET.sort_by %}selected{% endif %}>Terbaru</option>
+          <option value="lifetime_value" {% if request.GET.sort_by == 'lifetime_value' %}selected{% endif %}>Lifetime Value</option>
+          <option value="points" {% if request.GET.sort_by == 'points' %}selected{% endif %}>Poin Tertinggi</option>
+          <option value="name" {% if request.GET.sort_by == 'name' %}selected{% endif %}>Nama A–Z</option>
+          <option value="last_visit" {% if request.GET.sort_by == 'last_visit' %}selected{% endif %}>Kunjungan Terakhir</option>
+        </select>
+        <i class="fas fa-chevron-down text-[9px] text-slate-300 pointer-events-none"></i>
+      </div>
+
+      <button type="submit" class="btn-apply flex-shrink-0">
+        <i class="fas fa-arrow-right text-[10px] mr-1.5"></i>Terapkan
+      </button>
+      <button type="button" @click="resetAll()" class="btn-reset flex-shrink-0">Reset</button>
+    </div>
+  </form>
+
+  <!-- ACTIVE FILTER CHIPS -->
+  {% if request.GET.search or request.GET.tier %}
+  <div class="flex flex-wrap items-center gap-2 text-[11px]">
+    <span class="text-slate-400 font-semibold text-[10px] uppercase tracking-wider">Filter aktif:</span>
+    {% if request.GET.search %}
+    <span class="filter-chip">
+      <i class="fas fa-search text-[9px]"></i>
+      {{ request.GET.search }}
+      <button onclick="window.location='{{ request.path }}{% querystring request.GET search=None %}'">×</button>
+    </span>
+    {% endif %}
+    {% if request.GET.tier %}
+    <span class="filter-chip">
+      <i class="fas fa-layer-group text-[9px]"></i>
+      Tier: {{ request.GET.tier|capfirst }}
+      <button onclick="window.location='{{ request.path }}{% querystring request.GET tier=None %}'">×</button>
+    </span>
+    {% endif %}
+    <a href="{{ request.path }}" class="text-slate-400 hover:text-rose-500 font-semibold transition-colors ml-auto text-[10px]">Hapus semua ×</a>
+  </div>
+  {% endif %}
+
+  <!-- TABLE -->
+  <div class="reveal table-card">
+
+    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100/60 bg-white/30">
+      <div class="flex items-center gap-3">
+        <div class="w-1.5 h-6 bg-emerald-500 rounded-full"></div>
+        <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">
+          {% if page_obj %}
+            Menampilkan <span class="text-slate-800">{{ page_obj.start_index }}–{{ page_obj.end_index }}</span> dari {{ page_obj.paginator.count }} Pelanggan
+          {% else %}
+            <span class="text-slate-800">{{ customers|length }}</span> Total Pelanggan
+          {% endif %}
+        </p>
+      </div>
+      <div class="flex items-center gap-2 px-3 py-1.5 bg-slate-100/50 rounded-full border border-slate-200/40 text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+        <i class="fas fa-clock text-emerald-500/60"></i>
+        <span>{% now "H:i, j M Y" %}</span>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto custom-scrollbar">
+      <table class="min-w-full border-separate border-spacing-0" aria-label="Customer Directory">
+        <thead>
+          <tr class="bg-slate-50/50 sticky top-0 z-10 backdrop-blur-md border-b border-slate-100">
+            <th class="px-6 py-4 text-left">
+              <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pelanggan</span>
+            </th>
+            <th class="px-6 py-4 text-left">
+              <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Kontak</span>
+            </th>
+            <th class="px-6 py-4 text-center">
+              <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tier</span>
+            </th>
+            <th class="px-6 py-4 text-right">
+              <a href="?sort_by=points&order={% if request.GET.sort_by == 'points' and request.GET.order == 'desc' %}asc{% else %}desc{% endif %}{% for k,v in request.GET.items %}{% if k not in 'sort_by,order' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+                 class="flex items-center justify-end gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-emerald-600 transition-colors">
+                Poin
+                <i class="fas fa-{% if request.GET.sort_by == 'points' %}{% if request.GET.order == 'desc' %}sort-down text-emerald-500{% else %}sort-up text-emerald-500{% endif %}{% else %}sort opacity-20{% endif %} text-[9px]"></i>
+              </a>
+            </th>
+            <th class="px-6 py-4 text-right">
+              <a href="?sort_by=lifetime_value&order={% if request.GET.sort_by == 'lifetime_value' and request.GET.order == 'desc' %}asc{% else %}desc{% endif %}{% for k,v in request.GET.items %}{% if k not in 'sort_by,order' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+                 class="flex items-center justify-end gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-emerald-600 transition-colors">
+                Lifetime Value
+                <i class="fas fa-{% if request.GET.sort_by == 'lifetime_value' %}{% if request.GET.order == 'desc' %}sort-down text-emerald-500{% else %}sort-up text-emerald-500{% endif %}{% else %}sort opacity-20{% endif %} text-[9px]"></i>
+              </a>
+            </th>
+            <th class="px-6 py-4 text-left">
+              <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Kunjungan Terakhir</span>
+            </th>
+            <th class="px-6 py-4 text-center">
+              <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Aksi</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for customer in customers %}
+          <tr class="data-row group {% if customer.tier == 'vip' %}vip-row{% endif %} {% if forloop.counter|divisibleby:2 %}bg-slate-50/30{% endif %}">
+
+            <!-- Customer info -->
+            <td class="px-6 py-4 border-b border-slate-100/60 group-hover:border-emerald-100/60">
+              <div class="flex items-center gap-3">
+                <div class="avatar-ring flex-shrink-0">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center font-black text-[11px] select-none text-white
+                    {% if customer.tier == 'vip' %}bg-gradient-to-br from-violet-400 to-violet-700
+                    {% elif customer.tier == 'gold' %}bg-gradient-to-br from-amber-400 to-amber-600
+                    {% elif customer.tier == 'platinum' %}bg-gradient-to-br from-blue-400 to-blue-600
+                    {% elif customer.tier == 'silver' %}bg-gradient-to-br from-slate-400 to-slate-500
+                    {% else %}bg-gradient-to-br from-emerald-400 to-emerald-600{% endif %}">
+                    {{ customer.name|slice:":2"|upper }}
+                  </div>
+                </div>
+                <div>
+                  <a href="{% url 'customer_detail' customer.id %}"
+                     class="text-[12px] font-bold text-slate-700 hover:text-emerald-600 transition-colors group-hover:text-slate-900">
+                    {{ customer.name }}
+                  </a>
+                  {% if customer.birth_date %}
+                  <p class="text-[10px] text-slate-400 mt-0.5 flex items-center gap-1">
+                    <i class="fas fa-birthday-cake text-[9px] text-rose-400"></i>
+                    {{ customer.birth_date|date:"d M" }}
+                  </p>
+                  {% endif %}
+                </div>
+              </div>
+            </td>
+
+            <!-- Contact -->
+            <td class="px-6 py-4 border-b border-slate-100/60 group-hover:border-emerald-100/60">
+              <p class="text-[11px] text-slate-600 flex items-center gap-1.5">
+                <i class="fab fa-whatsapp text-green-500 text-[11px]"></i>
+                {{ customer.whatsapp|default:"—" }}
+              </p>
+              {% if customer.email %}
+              <p class="text-[10px] text-slate-400 mt-0.5 flex items-center gap-1.5">
+                <i class="fas fa-envelope text-[9px]"></i>
+                {{ customer.email }}
+              </p>
+              {% endif %}
+            </td>
+
+            <!-- Tier badge -->
+            <td class="px-6 py-4 border-b border-slate-100/60 group-hover:border-emerald-100/60 text-center">
+              <span class="tier-badge tier-{{ customer.tier|lower|default:'regular' }}">
+                {% if customer.tier == 'vip' %}👑{% elif customer.tier == 'gold' %}⭐{% elif customer.tier == 'platinum' %}💎{% elif customer.tier == 'silver' %}🥈{% else %}👤{% endif %}
+                {{ customer.get_tier_display|default:"Regular" }}
+              </span>
+            </td>
+
+            <!-- Points with progress bar -->
+            <td class="px-6 py-4 border-b border-slate-100/60 group-hover:border-emerald-100/60 text-right">
+              <span class="text-[12px] font-black text-slate-700 group-hover:text-emerald-700 transition-colors">
+                {{ customer.points|default:0|floatformat:0 }}
+              </span>
+              <span class="block text-[9px] text-slate-300 uppercase tracking-wider">pts</span>
+              <div class="points-bar-track mt-1 ml-auto" style="max-width:60px;">
+                <div class="points-bar-fill" style="width:{% widthratio customer.points 1000 100 %}%;max-width:100%;"></div>
+              </div>
+              {% if customer.points_expiry %}
+              <p class="text-[9px] text-amber-500 mt-0.5 flex items-center justify-end gap-1">
+                <i class="fas fa-clock text-[8px]"></i>
+                Exp: {{ customer.points_expiry|date:"d M" }}
+              </p>
+              {% endif %}
+            </td>
+
+            <!-- Lifetime value -->
+            <td class="px-6 py-4 border-b border-slate-100/60 group-hover:border-emerald-100/60 text-right">
+              <span class="inline-block text-[12px] font-black text-slate-800
+                           group-hover:text-emerald-700 group-hover:bg-emerald-50/80
+                           group-hover:shadow-[0_0_0_1px_rgba(16,185,129,0.15),0_2px_8px_rgba(16,185,129,0.10)]
+                           px-2.5 py-1 rounded-lg transition-all duration-150">
+                Rp {{ customer.lifetime_value|floatformat:0|default:0 }}
+              </span>
+            </td>
+
+            <!-- Last visit -->
+            <td class="px-6 py-4 border-b border-slate-100/60 group-hover:border-emerald-100/60">
+              {% if customer.last_visit %}
+              <span class="text-[11px] text-slate-500 group-hover:text-slate-700">{{ customer.last_visit|date:"d M Y" }}</span>
+              <span class="block text-[10px] text-slate-300">{{ customer.last_visit|timesince }} lalu</span>
+              {% else %}
+              <span class="text-[10px] text-slate-300 italic">Belum ada kunjungan</span>
+              {% endif %}
+            </td>
+
+            <!-- Actions -->
+            <td class="px-6 py-4 border-b border-slate-100/60 group-hover:border-emerald-100/60 text-center">
+              <div class="flex items-center justify-center gap-1.5">
+                <a href="{% url 'customer_detail' customer.id %}"
+                   class="w-7 h-7 rounded-lg bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 flex items-center justify-center text-slate-400 transition-all text-[11px]"
+                   title="Lihat Detail">
+                  <i class="fas fa-eye"></i>
+                </a>
+                <a href="{% url 'customer_edit' customer.id %}"
+                   class="w-7 h-7 rounded-lg bg-slate-50 hover:bg-blue-50 hover:text-blue-600 flex items-center justify-center text-slate-400 transition-all text-[11px]"
+                   title="Edit">
+                  <i class="fas fa-pencil-alt"></i>
+                </a>
+                <a href="https://wa.me/{{ customer.whatsapp|cut:'+' }}" target="_blank"
+                   class="w-7 h-7 rounded-lg bg-slate-50 hover:bg-green-50 hover:text-green-600 flex items-center justify-center text-slate-400 transition-all text-[11px]"
+                   title="WhatsApp">
+                  <i class="fab fa-whatsapp"></i>
+                </a>
+              </div>
+            </td>
+
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="px-6 py-16 text-center">
+              <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center mx-auto mb-3">
+                <i class="fas fa-users text-slate-200 text-xl"></i>
+              </div>
+              <p class="text-sm font-semibold text-slate-500">Belum ada pelanggan</p>
+              <p class="text-xs text-slate-400 mt-0.5">Tambahkan pelanggan pertama Anda</p>
+              <a href="{% url 'customer_create' %}" class="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-xl bg-emerald-500 text-white text-xs font-bold hover:bg-emerald-600 transition-colors">
+                <i class="fas fa-user-plus"></i> Tambah Pelanggan
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PAGINATION -->
+  {% if page_obj.has_other_pages %}
+  <nav class="flex justify-center" aria-label="Pagination">
+    <div class="flex items-center gap-1.5">
+      {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}" class="page-btn"><i class="fas fa-chevron-left text-[10px]"></i></a>
+      {% else %}<span class="page-btn disabled"><i class="fas fa-chevron-left text-[10px]"></i></span>{% endif %}
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}<span class="page-btn active">{{ num }}</span>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <a href="?page={{ num }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}" class="page-btn">{{ num }}</a>
+        {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}
+          <span class="page-btn disabled" style="border:none;background:none;">…</span>
+        {% endif %}
+      {% endfor %}
+      {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}" class="page-btn"><i class="fas fa-chevron-right text-[10px]"></i></a>
+      {% else %}<span class="page-btn disabled"><i class="fas fa-chevron-right text-[10px]"></i></span>{% endif %}
+    </div>
+  </nav>
+  {% endif %}
+
+</div>
+
+<div id="loadingIndicator" class="fixed inset-0 hidden z-50 flex items-center justify-center">
+  <div class="flex items-center gap-3 bg-white px-5 py-3.5 rounded-2xl shadow-xl border border-slate-100">
+    <svg class="w-5 h-5 animate-spin text-emerald-500" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+    </svg>
+    <span class="text-sm font-semibold text-slate-600">Memuat...</span>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function customerList() {
+  return {
+    init() {
+      /* Scroll reveal */
+      const io = new IntersectionObserver(entries => {
+        entries.forEach((e,i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i*60);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold:.06 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+      /* Export loading */
+      document.querySelectorAll('.export-link').forEach(a => {
+        a.addEventListener('click', () => {
+          document.getElementById('loadingIndicator').classList.remove('hidden');
+          setTimeout(() => document.getElementById('loadingIndicator').classList.add('hidden'), 3000);
+        });
+      });
+    },
+    setTier(key) {
+      const current = document.getElementById('tierInput').value;
+      document.getElementById('tierInput').value = (current === key) ? '' : key;
+      document.getElementById('filterForm').submit();
+    },
+    onSubmit() {
+      document.getElementById('loadingIndicator').classList.remove('hidden');
+    },
+    resetAll() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('tierInput').value = '';
+      document.querySelector('select[name="sort_by"]').value = 'created_at';
+      document.getElementById('filterForm').submit();
+    },
+  };
+}
+</script>
+{% endblock %}

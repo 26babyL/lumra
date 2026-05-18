@@ -1,0 +1,70 @@
+[
+  {
+    "deleted": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\products.html",
+    "backup": "D:\\APPS\\Project\\lumra\\.lumra_dup_backup\\20260313_111105\\lumra_pages\\master_data\\products.html"
+  },
+  {
+    "deleted": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\product_details.html",
+    "backup": "D:\\APPS\\Project\\lumra\\.lumra_dup_backup\\20260313_111105\\lumra_pages\\master_data\\product_details.html"
+  },
+  {
+    "deleted": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\supplier_price_list.html",
+    "backup": "D:\\APPS\\Project\\lumra\\.lumra_dup_backup\\20260313_111105\\lumra_pages\\master_data\\supplier_price_list.html"
+  },
+  {
+    "deleted": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\supplier_price_form.html",
+    "backup": "D:\\APPS\\Project\\lumra\\.lumra_dup_backup\\20260313_111105\\lumra_pages\\master_data\\supplier_price_form.html"
+  },
+  {
+    "deleted": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\stock_opname_approvals.html",
+    "backup": "D:\\APPS\\Project\\lumra\\.lumra_dup_backup\\20260313_111105\\lumra_pages\\master_data\\stock_opname_approvals.html"
+  },
+  {
+    "deleted": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\stock_opname_approval_detail.html",
+    "backup": "D:\\APPS\\Project\\lumra\\.lumra_dup_backup\\20260313_111105\\lumra_pages\\master_data\\stock_opname_approval_detail.html"
+  },
+  {
+    "deleted": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\stock_opname_form.html",
+    "backup": "D:\\APPS\\Project\\lumra\\.lumra_dup_backup\\20260313_111105\\lumra_pages\\master_data\\stock_opname_form.html"
+  },
+  {
+    "deleted": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\stock_opname_locations.html",
+    "backup": "D:\\APPS\\Project\\lumra\\.lumra_dup_backup\\20260313_111105\\lumra_pages\\master_data\\stock_opname_locations.html"
+  },
+  {
+    "deleted": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\add_stock_movement.html",
+    "backup": "D:\\APPS\\Project\\lumra\\.lumra_dup_backup\\20260313_111105\\lumra_pages\\sales\\add_stock_movement.html"
+  },
+  {
+    "deleted": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\stock_movement.html",
+    "backup": "D:\\APPS\\Project\\lumra\\.lumra_dup_backup\\20260313_111105\\lumra_pages\\sales\\stock_movement.html"
+  },
+  {
+    "deleted": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\sales_performance.html",
+    "backup": "D:\\APPS\\Project\\lumra\\.lumra_dup_backup\\20260313_111105\\lumra_pages\\sales\\sales_performance.html"
+  },
+  {
+    "deleted": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\sales_history_product.html",
+    "backup": "D:\\APPS\\Project\\lumra\\.lumra_dup_backup\\20260313_111105\\lumra_pages\\sales\\sales_history_product.html"
+  },
+  {
+    "deleted": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\purchasing_report.html",
+    "backup": "D:\\APPS\\Project\\lumra\\.lumra_dup_backup\\20260313_111105\\lumra_pages\\sales\\purchasing_report.html"
+  },
+  {
+    "deleted": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\report_inventory_log.html",
+    "backup": "D:\\APPS\\Project\\lumra\\.lumra_dup_backup\\20260313_111105\\lumra_pages\\inventory\\report_inventory_log.html"
+  },
+  {
+    "deleted": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\report_inventory_low.html",
+    "backup": "D:\\APPS\\Project\\lumra\\.lumra_dup_backup\\20260313_111105\\lumra_pages\\inventory\\report_inventory_low.html"
+  },
+  {
+    "deleted": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\report_inventory_stock.html",
+    "backup": "D:\\APPS\\Project\\lumra\\.lumra_dup_backup\\20260313_111105\\lumra_pages\\inventory\\report_inventory_stock.html"
+  },
+  {
+    "deleted": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\report_sales_by_product.html",
+    "backup": "D:\\APPS\\Project\\lumra\\.lumra_dup_backup\\20260313_111105\\lumra_pages\\master_data\\report_sales_by_product.html"
+  }
+]

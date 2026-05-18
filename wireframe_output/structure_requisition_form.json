@@ -1,0 +1,452 @@
+{
+  "filename": "requisition_form.html",
+  "title": "Buat Permintaan Stok",
+  "components": [
+    {
+      "type": "alpine-root",
+      "tag": "div",
+      "label": "ALPINE COMPONENT [reqFormApp()]",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "w-full max-w-4xl mx-auto relative z-10",
+      "text_preview": "Buat Permintaan Stok Isi detail untuk memindahkan stok antar…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 2,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": "reqFormApp()"
+    },
+    {
+      "type": "heading",
+      "tag": "h1",
+      "label": "HEADING (H1)",
+      "depth": 3,
+      "path": "root/body/div/div/h1",
+      "classes": "text-2xl font-bold text-slate-800",
+      "text_preview": "Buat Permintaan Stok",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "glass-panel space-y-6",
+      "text_preview": "Lokasi Asal (Dari) Pilih Lokasi Asal... Lokasi Tujuan (Ke) Pilih Lokasi Tujuan..…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 4,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [GRID 1 cols]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "grid grid-cols-1 md:grid-cols-2 gap-6 border-b border-slate-200 pb-6",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "GRID 1 cols",
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "select",
+      "label": "INPUT FIELD",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/select",
+      "classes": "form-input",
+      "text_preview": "Pilih Lokasi Asal...",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "select",
+      "label": "INPUT FIELD",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/select",
+      "classes": "form-input",
+      "text_preview": "Pilih Lokasi Tujuan...",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "input",
+      "label": "INPUT FIELD",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/input",
+      "classes": "form-input",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "classes": "flex items-center justify-between mb-4",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h2",
+      "label": "HEADING (H2)",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/h2",
+      "classes": "font-bold text-slate-700",
+      "text_preview": "Daftar Barang",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: Tambah Baris",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/button",
+      "classes": "text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1",
+      "text_preview": "Tambah Baris",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "table",
+      "tag": "table",
+      "label": "[ TABLE ]",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/table",
+      "classes": "w-full text-sm text-left",
+      "text_preview": "Produk SKU Qty Aksi",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "input",
+      "label": "INPUT [text] Nama Produk",
+      "depth": 10,
+      "path": "root/body/div/div/div/div/table/tbody/template/tr/td/input",
+      "classes": "w-full bg-transparent border-b border-slate-200 focus:border-emerald-500 outline-none text-slate-700 py-1",
+      "text_preview": "Nama Produk",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "input",
+      "label": "INPUT [text] SKU",
+      "depth": 10,
+      "path": "root/body/div/div/div/div/table/tbody/template/tr/td/input",
+      "classes": "w-24 bg-transparent border-b border-slate-200 focus:border-emerald-500 outline-none text-slate-500 py-1",
+      "text_preview": "SKU",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "input",
+      "label": "INPUT [number] ",
+      "depth": 10,
+      "path": "root/body/div/div/div/div/table/tbody/template/tr/td/input",
+      "classes": "w-20 bg-slate-50 border border-slate-200 rounded px-2 py-1 text-slate-700",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: [icon]",
+      "depth": 10,
+      "path": "root/body/div/div/div/div/table/tbody/template/tr/td/button",
+      "classes": "text-rose-500 hover:text-rose-700",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "textarea",
+      "label": "INPUT FIELD",
+      "depth": 4,
+      "path": "root/body/div/div/div/textarea",
+      "classes": "form-input",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "flex items-center justify-end gap-3 pt-4 border-t border-slate-200",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: Kirim Permintaan",
+      "depth": 4,
+      "path": "root/body/div/div/div/button",
+      "classes": "px-6 py-2.5 rounded-lg text-sm font-semibold bg-slate-800 text-white shadow-lg hover:bg-slate-700 transition",
+      "text_preview": "Kirim Permintaan",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "alpine-root",
+      "label": "ALPINE COMPONENT [reqFormApp()]",
+      "text_preview": "Buat Permintaan Stok Isi detail untuk memindahkan stok antar…"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/h1",
+      "type": "heading",
+      "label": "HEADING (H1)",
+      "text_preview": "Buat Permintaan Stok"
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "Lokasi Asal (Dari) Pilih Lokasi Asal... Lokasi Tujuan (Ke) Pilih Lokasi Tujuan..…"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [GRID 1 cols]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/select",
+      "type": "input",
+      "label": "INPUT FIELD",
+      "text_preview": "Pilih Lokasi Asal..."
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/select",
+      "type": "input",
+      "label": "INPUT FIELD",
+      "text_preview": "Pilih Lokasi Tujuan..."
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/input",
+      "type": "input",
+      "label": "INPUT FIELD",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/h2",
+      "type": "heading",
+      "label": "HEADING (H2)",
+      "text_preview": "Daftar Barang"
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/button",
+      "type": "button",
+      "label": "BUTTON: Tambah Baris",
+      "text_preview": "Tambah Baris"
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/table",
+      "type": "table",
+      "label": "[ TABLE ]",
+      "text_preview": "Produk SKU Qty Aksi"
+    },
+    {
+      "depth": 10,
+      "path": "root/body/div/div/div/div/table/tbody/template/tr/td/input",
+      "type": "input",
+      "label": "INPUT [text] Nama Produk",
+      "text_preview": "Nama Produk"
+    },
+    {
+      "depth": 10,
+      "path": "root/body/div/div/div/div/table/tbody/template/tr/td/input",
+      "type": "input",
+      "label": "INPUT [text] SKU",
+      "text_preview": "SKU"
+    },
+    {
+      "depth": 10,
+      "path": "root/body/div/div/div/div/table/tbody/template/tr/td/input",
+      "type": "input",
+      "label": "INPUT [number] ",
+      "text_preview": ""
+    },
+    {
+      "depth": 10,
+      "path": "root/body/div/div/div/div/table/tbody/template/tr/td/button",
+      "type": "button",
+      "label": "BUTTON: [icon]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/textarea",
+      "type": "input",
+      "label": "INPUT FIELD",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/button",
+      "type": "button",
+      "label": "BUTTON: Kirim Permintaan",
+      "text_preview": "Kirim Permintaan"
+    }
+  ],
+  "issues": [
+    {
+      "type": "alpine_xcloak",
+      "severity": "info",
+      "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template",
+      "path": ""
+    }
+  ],
+  "stats": {
+    "total_components": 18,
+    "by_type": {
+      "alpine-root": 1,
+      "heading": 2,
+      "card": 1,
+      "layout": 3,
+      "input": 7,
+      "button": 3,
+      "table": 1
+    },
+    "interactive": 7,
+    "with_scroll": 0,
+    "with_form_fields": 7,
+    "scroll_nestings": 0,
+    "issues": 1,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 1
+    }
+  }
+}

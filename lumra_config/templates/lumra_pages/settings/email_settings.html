@@ -1,0 +1,134 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}Pengaturan Email — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-panel { background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid white; padding: 32px; max-w-2xl mx-auto; }
+  .form-input { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; background: rgba(255,255,255,0.5); transition: 0.2s; }
+  .form-input:focus { background: white; border-color: #0f172a; outline: none; }
+  
+  .status-dot { height: 8px; width: 8px; border-radius: 50%; display: inline-block; }
+  .st-on { background: #10b981; box-shadow: 0 0 0 2px #6ee7b7; }
+  .st-off { background: #ef4444; box-shadow: 0 0 0 2px #fca5a5; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="emailApp()" x-init="init()" x-cloak>
+  
+  <div class="flex items-center justify-center min-h-[80vh]">
+    <div class="glass-panel w-full">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-xl font-bold text-slate-800">Konfigurasi SMTP</h1>
+        <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 text-xs font-bold text-slate-500">
+            Status Server:
+            <span class="status-dot" :class="config.enabled ? 'st-on' : 'st-off'"></span>
+            <span :class="config.enabled ? 'text-emerald-600' : 'text-rose-600'" x-text="config.enabled ? 'Connected' : 'Disconnected'"></span>
+          </div>
+        </div>
+      </div>
+
+      <form @submit.prevent="saveConfig" class="space-y-5">
+        <!-- SMTP Host -->
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">SMTP Host</label>
+          <input type="text" x-model="config.host" placeholder="smtp.gmail.com" class="form-input">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Port</label>
+            <input type="number" x-model="config.port" placeholder="587" class="form-input">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Encryption</label>
+            <select x-model="config.encryption" class="form-input bg-white">
+              <option value="tls">TLS (Recommended)</option>
+              <option value="ssl">SSL</option>
+              <option value="none">None</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Username</label>
+            <input type="text" x-model="config.username" class="form-input">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Password</label>
+            <input type="password" x-model="config.password" placeholder="•••••••••" class="form-input font-mono">
+          </div>
+        </div>
+
+        <!-- Sender Info -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Pengirim (From)</label>
+          <div class="grid grid-cols-2 gap-4">
+            <input type="text" x-model="config.from_name" placeholder="Nama Toko Anda" class="form-input bg-white">
+            <input type="email" x-model="config.from_email" placeholder="no-reply@tokoanda.com" class="form-input bg-white">
+          </div>
+        </div>
+
+        <!-- Test Email Section -->
+        <div class="border-t border-slate-100 pt-5 mt-6">
+          <h3 class="font-bold text-slate-700 text-sm uppercase mb-3">Verifikasi Koneksi</h3>
+          <div class="flex items-center gap-4">
+            <input type="email" placeholder="Masukkan email Anda untuk test..." class="flex-1 bg-white border border-slate-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-emerald-500">
+            <button type="button" @click="sendTestEmail" :disabled="isSending" class="bg-slate-800 text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow hover:bg-slate-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+              <i class="fas fa-paper-plane" :class="{'fa-spin': isSending}"></i> Kirim Test
+            </button>
+          </div>
+          <p x-show="testMessage" class="text-xs mt-2 font-bold" :class="testSuccess ? 'text-emerald-600' : 'text-rose-600'" x-text="testMessage"></p>
+        </div>
+        
+        <div class="flex justify-end pt-4 border-t border-slate-100 mt-6">
+          <a href="dashboard" class="px-6 py-2.5 rounded-lg text-sm font-bold text-slate-500 hover:bg-slate-100 transition">Kembali</a>
+          <button type="submit" class="px-8 py-2.5 rounded-lg text-sm font-bold bg-slate-800 text-white shadow hover:bg-slate-700 transition">Simpan Konfigurasi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function emailApp() {
+  return {
+    config: {
+      host: 'smtp.gmail.com',
+      port: 587,
+      encryption: 'tls',
+      username: 'admin@coffee.com',
+      password: '',
+      from_name: 'CoffeeShop Admin',
+      from_email: 'no-reply@coffeeshop.com',
+      enabled: false
+    },
+    isSending: false,
+    testMessage: '',
+    testSuccess: false,
+
+    saveConfig() {
+      alert('Konfigurasi Email berhasil disimpan.');
+    },
+
+    sendTestEmail() {
+      this.isSending = true;
+      this.testMessage = '';
+      
+      // Simulate API Call
+      setTimeout(() => {
+        this.isSending = false;
+        this.testSuccess = true;
+        this.testMessage = 'Email test berhasil dikirim ke ' + document.querySelector('input[type="email"]').value;
+      }, 2000);
+    }
+  }
+}
+</script>
+{% endblock %}

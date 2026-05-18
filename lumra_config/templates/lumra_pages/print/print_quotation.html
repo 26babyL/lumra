@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Quotation — CoffeeShop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { background: #f1f5f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; font-family: 'Inter', sans-serif; }
+        
+        /* A4 Paper Simulation */
+        .quotation-page {
+            background: white;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            color: #334155;
+            page-break-after: always;
+        }
+
+        /* Typography */
+        h1 { font-family: 'Playfair Display', serif; font-size: 32px; color: #0f172a; margin-bottom: 0.5rem; }
+        .text-xl { font-size: 1.25rem; color: #1e293b; }
+        .text-sm { font-size: 14px; color: #64748b; }
+        .text-xs { font-size: 12px; color: #94a3b8; }
+        .text-slate-400 { color: #94a3b8; }
+        .text-emerald { color: #10b981; font-weight: 600; }
+        
+        /* Table */
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 12px 8px; border-bottom: 2px solid #e2e8f0; font-family: 'Playfair Display', serif; font-weight: 700; text-transform: uppercase; font-size: 13px; color: #475569; }
+        td { padding: 10px 8px; border-bottom: 1px solid #f1f5f9; font-size: 13px; color: #334155; }
+        tr:last-child td { border-bottom: none; }
+        
+        .text-right { text-align: right; font-weight: 600; }
+
+        /* Print Media */
+        @media print {
+            body { background: white; padding: 0; display: block; }
+            .quotation-page { box-shadow: none; margin: 0; width: 100%; padding: 0; border: none; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quotation-page">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-start mb-8">
+            <!-- Branding -->
+            <div>
+                <h1 style="margin-bottom: 0;">CoffeeShop</h1>
+                <p class="text-sm italic text-slate-400">Jasa Konsultasi & Kopi Premium</p>
+            <p class="text-xs text-slate-400">Jl. Rasuna Said, Jakarta Selatan</p>
+            <p class="text-xs text-slate-400">Telp: 0812-3456-7890 | Email: sales@coffeeshop.com</p>
+            <p class="text-xs text-slate-400">www.coffeeshop.com</p>
+            </div>
+            <!-- Quote Info -->
+            <div class="text-right">
+                <p class="text-2xl text-emerald-600 font-serif">QUOTATION</p>
+                <p class="text-xl text-slate-700 font-mono">NO. {{ quote_number }}</p>
+                <p class="text-sm text-slate-400">Valid Until: <span class="font-bold text-rose-500">{{ valid_until }}</span></p>
+            <p class="text-sm text-slate-400">Date: {{ quote_date }}</p>
+            </div>
+        </div>
+
+        <!-- Customer Info -->
+        <div class="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-xs text-slate-400 uppercase font-bold mb-1">Kepada Yth. PT Maju Jaya</p>
+                    <p class="text-sm text-slate-600">Jl. Sudirman No. 45, Jakarta Selatan</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs text-slate-400 uppercase font-bold">Estimasi Total</p>
+                    <p class="text-xl font-bold text-slate-800">{{ estimated_total }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Items Table -->
+        <div class="mb-8">
+            <table>
+                <thead>
+                    <th style="text-align: left;">Deskripsi</th>
+                    <th style="text-align: right;">Satuan</th>
+                    <th style="text-align: right;">Harga</th>
+                    <th style="text-right">Jumlah</th>
+                    <th style="text-align: right;">Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <!-- Simulasi Loop Items -->
+                    {% for item in items %}
+                    <tr>
+                        <td>
+                            <span class="text-base font-bold text-slate-800">{{ item.name }}</span>
+                            <div class="text-xs text-slate-400 mt-1">{{ item.description }}</div>
+                        </td>
+                        <td class="text-center text-sm">{{ item.uom }}</td>
+                        <td class="text-right font-mono">{{ item.price }}</td>
+                        <td class="text-center text-sm">{{ item.qty }}</td>
+                        <td class="text-right font-bold text-slate-800">{{ item.total }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer Totals -->
+        <div class="flex justify-end mt-8 pt-6 border-t border-slate-200">
+            <div class="w-64 mr-8">
+                <div class="flex justify-between mb-1 text-sm text-slate-500 uppercase">
+                    <span>Subtotal</span>
+                    <span class="font-mono">{{ subtotal }}</span>
+                </div>
+                <div class="flex justify-between text-lg font-bold text-slate-800">
+                    <span>Grand Total</span>
+                    <span class="font-mono text-emerald-600 text-xl">{{ grand_total }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Terms Section -->
+        <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 text-xs leading-relaxed text-slate-500">
+            <p class="1. Terms & Conditions:</p>
+            <p>1. Quotation ini berlaku selama 14 hari dari tanggal terbit.</p>
+            <p>2. Harga dapat berubah sewaktu-waktu tanpa pemberitahuan sebelumnya.</p>
+            <p>3. Pembayaran DP minimal 50% dibayarkan saat konfirmasi pesanan.</p>
+        </div>
+
+    </div>
+
+</body>
+</html>

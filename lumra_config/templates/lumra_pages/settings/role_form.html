@@ -1,0 +1,161 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}Konfigurasi Role — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  .glass-panel { background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid white; padding: 32px; max-width: 4xl; margin: 0 auto; }
+  .form-input { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; background: rgba(255,255,255,0.5); transition: 0.2s; }
+  .form-input:focus { background: white; border-color: #0f172a; outline: none; }
+  
+  .mod-section { background: #f8fafc; border-radius: 12px; padding: 16px; border: 1px solid #e2e8f0; }
+  .perm-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f1f5f9; }
+  .perm-item:last-child { border-bottom: none; }
+  
+  .toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
+  .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+  input:checked + .slider { background-color: #10b981; }
+  input:checked + .slider:before { transform: translateX(20px); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full relative z-10 space-y-6" x-data="roleFormApp()" x-cloak>
+  
+  <div class="max-w-4xl mx-auto">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-800">Konfigurasi Role</h1>
+        <p class="text-sm text-slate-500">Tentukan izin akses untuk jabatan ini.</p>
+      </div>
+      <a href="roles.html" class="text-slate-500 hover:text-slate-800 font-bold text-sm">Batal</a>
+    </div>
+
+    <div class="glass-panel grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Left: Basic Info -->
+      <div class="space-y-5">
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Nama Role</label>
+          <input type="text" x-model="form.name" class="form-input" placeholder="Cth: Supervisor Gudang">
+        </div>
+        
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Kode Role</label>
+          <input type="text" x-model="form.code" class="form-input font-mono" placeholder="ROLE_01">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Deskripsi</label>
+          <textarea x-model="form.description" rows="3" class="form-input" placeholder="Jelaskan tanggung jawab role ini..."></textarea>
+        </div>
+
+        <button @click="saveRole" class="w-full py-3 bg-slate-800 text-white rounded-xl font-bold shadow hover:bg-slate-700 transition">
+          Simpan Role
+        </button>
+      </div>
+
+      <!-- Right: Permissions -->
+      <div class="lg:col-span-2 space-y-4">
+        
+        <!-- Module: Inventory -->
+        <div class="mod-section">
+          <div class="flex justify-between items-center mb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center"><i class="fas fa-boxes"></i></div>
+              <h3 class="font-bold text-slate-700">Inventory</h3>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" x-model="form.permissions.inventory.access">
+              <span class="slider"></span>
+            </label>
+          </div>
+          
+          <div class="space-y-0 pl-10" x-show="form.permissions.inventory.access">
+            <div class="perm-item">
+              <span class="text-sm text-slate-600">Buat / Edit Produk</span>
+              <label class="toggle-switch">
+                <input type="checkbox" x-model="form.permissions.inventory.create">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="perm-item">
+              <span class="text-sm text-slate-600">Hapus Produk</span>
+              <label class="toggle-switch">
+                <input type="checkbox" x-model="form.permissions.inventory.delete">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="perm-item">
+              <span class="text-sm text-slate-600">Lihat Stok & Laporan</span>
+              <label class="toggle-switch">
+                <input type="checkbox" x-model="form.permissions.inventory.view">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Module: Sales -->
+        <div class="mod-section">
+          <div class="flex justify-between items-center mb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center"><i class="fas fa-cash-register"></i></div>
+              <h3 class="font-bold text-slate-700">Sales (POS)</h3>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" x-model="form.permissions.sales.access">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <!-- Sub-permissions similar to above... -->
+          <div class="space-y-0 pl-10 text-xs text-slate-400 italic" x-show="!form.permissions.sales.access">
+            Akses ke POS dinonaktifkan karena modul dimatikan.
+          </div>
+        </div>
+
+        <!-- Module: Finance -->
+        <div class="mod-section">
+          <div class="flex justify-between items-center mb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center"><i class="fas fa-chart-line"></i></div>
+              <h3 class="font-bold text-slate-700">Finance & Reports</h3>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" x-model="form.permissions.finance.access">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function roleFormApp() {
+  return {
+    form: {
+      name: '',
+      code: '',
+      description: '',
+      permissions: {
+        inventory: { access: false, create: false, delete: false, view: false },
+        sales: { access: false },
+        finance: { access: false }
+      }
+    },
+    saveRole() {
+      if(!this.form.name) return alert('Nama role wajib diisi');
+      alert('Role dan Permissions berhasil disimpan!');
+      window.location.href = 'roles.html';
+    }
+  }
+}
+</script>
+{% endblock %}

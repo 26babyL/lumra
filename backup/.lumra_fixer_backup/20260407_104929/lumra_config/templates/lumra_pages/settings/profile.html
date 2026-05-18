@@ -1,0 +1,863 @@
+{% extends 'base/base.html' %}
+{% block title %}Profile — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  @keyframes drift {
+  from { transform: translate(0,0) scale(1); }
+  to   { transform: translate(20px,28px) scale(1.06); }
+}
+</style>
+
+<style>
+  [x-cloak] { display: none !important; }
+
+  @keyframes drift {
+    0%,100%{ transform:translate(0,0) scale(1); }
+    50%    { transform:translate(22px,18px) scale(1.04); }
+  }
+
+  @keyframes ring-pulse {
+    0%,100%{ box-shadow:0 0 0 0 var(--color-emerald-700-a25); }
+    50%    { box-shadow:0 0 0 8px var(--color-emerald-700-a0); }
+  }
+
+  .avatar-ring { animation:ring-pulse 3s ease-in-out infinite; }
+
+  .info-row {
+    display:flex; align-items:center; gap:10px;
+    padding:11px 14px; border-radius:13px;
+    background:var(--color-slate-50-a6);
+    border:1px solid var(--color-slate-200-a5);
+    transition:background .13s,border-color .13s;
+  }
+
+  .info-row:hover { background:var(--color-white-a85); border-color:var(--color-emerald-600-a25); }
+
+  .tab-btn {
+    padding:8px 16px; border-radius:10px;
+    font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.06em;
+    color:var(--color-slate-400); background:transparent; border:var(--shadow-sm-16); cursor:pointer;
+    transition:color .13s,background .13s;
+  }
+
+  .tab-btn.active { color:var(--color-emerald-700); background:var(--color-emerald-700-a08); }
+
+  .tab-btn:hover:not(.active) { color:var(--color-slate-600); background:var(--color-black-a03); }
+
+  .act-item {
+    display:flex; align-items:flex-start; gap:12px;
+    padding:12px 14px; border-radius:13px;
+    border:1px solid var(--color-slate-200-a5);
+    background:var(--color-slate-50-a5);
+    transition:background .12s;
+  }
+
+  .act-item:hover { background:var(--color-white-a85); }
+
+  .toggle-track {
+    width:40px; height:22px; border-radius:99px;
+    background:var(--color-slate-200); position:relative; cursor:pointer;
+    transition:background .2s;
+  }
+
+  .toggle-track.on { background:var(--color-emerald-700); }
+
+  .toggle-thumb {
+    position:absolute; top:3px; left:3px;
+    width:16px; height:16px; border-radius:50%;
+    background:var(--color-fff); box-shadow:0 1px 4px var(--color-black-a15);
+    transition:transform .2s;
+  }
+
+  .toggle-track.on .toggle-thumb { transform:translateX(18px); }
+
+  .btn-ghost {
+    border:1.5px solid var(--color-slate-200-a8);
+    border-radius:10px; background:var(--color-white-a6);
+    color:var(--color-slate-500); font-size:11px; font-weight:700;
+    padding:8px 16px; cursor:pointer;
+    transition:background .12s,border-color .12s;
+    display:flex; align-items:center; gap:6px;
+  }
+
+  .btn-ghost:hover { background:var(--color-fff); border-color:var(--color-slate-300); }
+
+  @keyframes modalIn { from{opacity:0;transform:scale(.94) translateY(12px)} to{opacity:1;transform: none} }
+
+  .modal-box { animation:modalIn .22s cubic-bezier(.4,0,.2,1); }
+
+  .upload-zone {
+    border:2px dashed var(--color-emerald-600-a3); border-radius:14px;
+    padding:24px; text-align:center;
+    background:rgba(0,0,0,0.06);
+    transition:border-color .13s,background .13s;
+    cursor:pointer;
+  }
+
+  .upload-zone:hover { border-color:var(--color-emerald-600-a6); background:rgba(0,0,0,0.06); }
+
+  @keyframes toastIn  { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform: none} }
+
+  @keyframes toastOut { from{opacity:1} to{opacity:0;pointer-events: none} }
+
+  .strength-bar { height:3px; border-radius:99px; background:var(--color-slate-200); overflow:hidden; }
+
+  .strength-fill { height:100%; border-radius:99px; transition:width .3s,background .3s; }
+
+  .custom-scroll::-webkit-scrollbar { width:4px; }
+
+  .custom-scroll::-webkit-scrollbar-track { background:transparent; }
+
+  .custom-scroll::-webkit-scrollbar-thumb { background:var(--color-slate-200); border-radius:99px; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+
+  <!-- Ambient Blob Background -->
+  <div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+  <div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+  <div class="bg-blob bg-blob-3" aria-hidden="true"></div>
+
+<!--{# Blobs #}-->
+<div class="blob blob-a"></div>
+<div class="blob blob-b"></div>
+<div class="blob blob-c"></div>
+
+<div class="w-full flex-1 space-y-5 relative z-10"
+     x-data="profileApp()"
+     x-init="init()"
+     x-cloak
+     @keydown.escape.window="closeAllModals()">
+
+  <!--{# ══════════════════════════════════════
+     HEADER
+  ══════════════════════════════════════ #}-->
+  <div class="reveal">
+    <p class="text-[10px] font-black text-emerald-500 uppercase tracking-[.25em] mb-1">Administrator Profile</p>
+    <h1 class="text-2xl font-black text-slate-800 tracking-tight">
+      Personal <span class="text-emerald-600">Identity</span>
+    </h1>
+    <p class="text-sm text-slate-400 mt-0.5">Kelola akun, preferensi, dan keamanan Anda</p>
+  </div>
+
+  <!--{# ══════════════════════════════════════
+     MAIN LAYOUT — Left identity card + Right tabs
+  ══════════════════════════════════════ #}-->
+  <div class="reveal grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+    <!--{# ── LEFT: Identity Card ── #}-->
+    <div class="lg:col-span-1 space-y-4">
+
+      <!--{# Profile card #}-->
+      <div class="glass p-7 flex flex-col items-center text-center">
+
+        <!--{# Avatar #}-->
+        <div class="relative mb-5">
+          <div class="w-28 h-28 rounded-full border-4 border-white overflow-hidden avatar-ring shadow-xl">
+            {% if user.profile.avatar %}
+              <img src="{{ user.profile.avatar.url }}" alt="Avatar"
+                   class="w-full h-full object-cover" id="avatarPreview">
+            {% else %}
+              <div class="w-full h-full bg-gradient-to-br from-emerald-300 to-teal-400 flex items-center justify-center">
+                <span class="text-4xl font-black text-white select-none">
+                  {{ user.get_full_name|slice:":1"|upper|default:user.username|slice:":1"|upper }}
+                </span>
+              </div>
+            {% endif %}
+          </div>
+          <!--{# Status dot #}-->
+          <div class="absolute bottom-1 right-1 w-6 h-6 bg-emerald-500 border-4 border-white rounded-full flex items-center justify-center">
+            <i class="fas fa-check text-[8px] text-white"></i>
+          </div>
+          <!--{# Camera btn #}-->
+          <button @click="showAvatarModal=true"
+                  class="absolute -bottom-1 left-1 w-7 h-7 border-2 border-white rounded-full flex items-center justify-center hover:bg-slate-800 transition" style="background:var(--color-surface-strong)"
+                  title="Ubah avatar">
+            <i class="fas fa-camera text-[9px] text-white"></i>
+          </button>
+        </div>
+
+        <!--{# Name + role #}-->
+        <h2 class="text-[15px] font-black text-slate-800 uppercase tracking-tight leading-tight">
+          {{ user.get_full_name|default:user.username }}
+        </h2>
+        <span class="mt-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/60 text-[9px] font-black text-emerald-600 uppercase tracking-wider">
+          {{ user.groups.first.name|default:user.profile.role|default:"User" }}
+        </span>
+
+        <!--{# Divider #}-->
+        <div class="w-full h-px bg-slate-100/80 my-5"></div>
+
+        <!--{# Quick stats #}-->
+        <div class="grid grid-cols-2 gap-2.5 w-full">
+          <div class="px-3 py-2.5 rounded-2xl bg-slate-50/60 border border-slate-100/70 text-center">
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Bergabung</p>
+            <p class="text-[12px] font-black text-slate-700 mt-0.5">{{ user.date_joined|date:"M Y" }}</p>
+          </div>
+          <div class="px-3 py-2.5 rounded-2xl bg-slate-50/60 border border-slate-100/70 text-center">
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Status</p>
+            <p class="text-[12px] font-black mt-0.5 {% if user.is_active %}text-emerald-600{% else %}text-rose-500{% endif %}">
+              {% if user.is_active %}Aktif{% else %}Nonaktif{% endif %}
+            </p>
+          </div>
+          <div class="col-span-2 px-3 py-2.5 rounded-2xl bg-slate-50/60 border border-slate-100/70">
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Login Terakhir</p>
+            <p class="text-[11px] font-bold text-slate-600 mt-0.5">{{ user.last_login|date:"d M Y, H:i"|default:"Belum pernah" }}</p>
+          </div>
+        </div>
+
+        <!--{# Action buttons #}-->
+        <div class="flex flex-col gap-2 w-full mt-5">
+          <button @click="showEditModal=true" class="btn-primary w-full justify-center">
+            <i class="fas fa-pen-nib text-[11px]"></i> Edit Profile
+          </button>
+          <button @click="showPasswordModal=true" class="btn-ghost w-full justify-center">
+            <i class="fas fa-lock text-[11px]"></i> Ganti Password
+          </button>
+        </div>
+
+      </div><!--{# end profile card #}-->
+
+      <!--{# Store access card #}-->
+      <div class="glass px-5 py-4">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-1.5 h-5 bg-emerald-500 rounded-full"></div>
+          <p class="text-[10px] font-black text-slate-500 uppercase tracking-[.12em]">Akses Toko</p>
+        </div>
+        {% for store in user.profile.stores.all %}
+        <div class="flex items-center gap-3 py-2 border-b border-slate-100/60 last:border-none">
+          <div class="w-7 h-7 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-store text-emerald-500 text-[11px]"></i>
+          </div>
+          <div>
+            <p class="text-[11px] font-bold text-slate-700">{{ store.name }}</p>
+            <p class="text-[9px] text-slate-400 font-mono">{{ store.code }}</p>
+          </div>
+        </div>
+        {% empty %}
+        <p class="text-[11px] text-slate-300 py-2">Belum ada toko yang ditetapkan</p>
+        {% endfor %}
+      </div>
+
+    </div><!--{# end left column #}-->
+
+    <!--{# ── RIGHT: Tabs ── #}-->
+    <div class="lg:col-span-2">
+      <div class="glass overflow-hidden h-full flex flex-col">
+
+        <!--{# Tab nav #}-->
+        <div class="flex items-center gap-1 px-5 py-3.5 border-b border-slate-100/60 bg-white/30 flex-shrink-0">
+          <button @click="tab='overview'" class="tab-btn" :class="{active: tab==='overview'}">
+            <i class="fas fa-id-card mr-1 text-[10px]"></i> Overview
+          </button>
+          <button @click="tab='activity'" class="tab-btn" :class="{active: tab==='activity'}">
+            <i class="fas fa-clock mr-1 text-[10px]"></i> Activity Log
+          </button>
+          <button @click="tab='settings'" class="tab-btn" :class="{active: tab==='settings'}">
+            <i class="fas fa-sliders-h mr-1 text-[10px]"></i> Settings
+          </button>
+        </div>
+
+        <!--{# ── Overview Tab ── #}-->
+        <div x-show="tab==='overview'" class="flex-1 p-6 overflow-y-auto custom-scroll">
+
+          <!--{# Personal info #}-->
+          <div class="mb-6">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-1.5 h-5 bg-emerald-500 rounded-full"></div>
+              <p class="text-[10px] font-black text-slate-500 uppercase tracking-[.12em]">Informasi Personal</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+
+              <div class="space-y-1.5">
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Nama Lengkap</p>
+                <div class="info-row">
+                  <i class="fas fa-user text-slate-200 text-[12px] flex-shrink-0"></i>
+                  <span class="text-[12px] font-bold text-slate-700">{{ user.get_full_name|default:"—" }}</span>
+                </div>
+              </div>
+
+              <div class="space-y-1.5">
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Username</p>
+                <div class="info-row">
+                  <i class="fas fa-at text-slate-200 text-[12px] flex-shrink-0"></i>
+                  <span class="text-[12px] font-bold text-slate-700 font-mono">{{ user.username }}</span>
+                </div>
+              </div>
+
+              <div class="space-y-1.5 sm:col-span-2">
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Email</p>
+                <div class="info-row">
+                  <i class="fas fa-envelope text-slate-200 text-[12px] flex-shrink-0"></i>
+                  <span class="text-[12px] font-bold text-slate-700">{{ user.email }}</span>
+                </div>
+              </div>
+
+              <div class="space-y-1.5">
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Telepon</p>
+                <div class="info-row">
+                  <i class="fas fa-phone text-slate-200 text-[12px] flex-shrink-0"></i>
+                  <span class="text-[12px] font-bold text-slate-700">{{ user.profile.phone|default:"Belum diisi" }}</span>
+                </div>
+              </div>
+
+              <div class="space-y-1.5">
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Role</p>
+                <div class="info-row">
+                  <i class="fas fa-shield-alt text-slate-200 text-[12px] flex-shrink-0"></i>
+                  <span class="text-[12px] font-bold text-slate-700">{{ user.profile.role|default:"User" }}</span>
+                </div>
+              </div>
+
+              {% if user.profile.address %}
+              <div class="space-y-1.5 sm:col-span-2">
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Alamat</p>
+                <div class="info-row">
+                  <i class="fas fa-map-marker-alt text-slate-200 text-[12px] flex-shrink-0 mt-0.5"></i>
+                  <span class="text-[12px] font-bold text-slate-600 leading-relaxed">{{ user.profile.address }}</span>
+                </div>
+              </div>
+              {% endif %}
+
+            </div>
+          </div>
+
+          <!--{# Security status #}-->
+          <div>
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-1.5 h-5 bg-blue-500 rounded-full"></div>
+              <p class="text-[10px] font-black text-slate-500 uppercase tracking-[.12em]">Keamanan Akun</p>
+            </div>
+            <div class="grid grid-cols-3 gap-2.5">
+
+              <div class="px-4 py-3 rounded-2xl bg-slate-50/60 border border-slate-100/70">
+                <div class="w-8 h-8 rounded-xl bg-emerald-50 flex items-center justify-center mb-2">
+                  <i class="fas fa-lock text-emerald-500 text-[12px]"></i>
+                </div>
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Password</p>
+                <p class="text-[11px] font-bold text-emerald-600 mt-0.5">••••••••</p>
+              </div>
+
+              <div class="px-4 py-3 rounded-2xl bg-slate-50/60 border border-slate-100/70">
+                <div class="w-8 h-8 rounded-xl {% if user.profile.two_factor_enabled %}bg-emerald-50{% else %}bg-rose-50{% endif %} flex items-center justify-center mb-2">
+                  <i class="fas fa-mobile-alt {% if user.profile.two_factor_enabled %}text-emerald-500{% else %}text-rose-400{% endif %} text-[12px]"></i>
+                </div>
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">2FA</p>
+                <p class="text-[11px] font-bold {% if user.profile.two_factor_enabled %}text-emerald-600{% else %}text-rose-400{% endif %} mt-0.5">
+                  {% if user.profile.two_factor_enabled %}Aktif{% else %}Nonaktif{% endif %}
+                </p>
+              </div>
+
+              <div class="px-4 py-3 rounded-2xl bg-slate-50/60 border border-slate-100/70">
+                <div class="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center mb-2">
+                  <i class="fas fa-history text-blue-500 text-[12px]"></i>
+                </div>
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Session</p>
+                <p class="text-[11px] font-bold text-blue-600 mt-0.5">Aktif</p>
+              </div>
+
+            </div>
+          </div>
+
+        </div><!--{# end overview tab #}-->
+
+        <!--{# ── Activity Tab ── #}-->
+        <div x-show="tab==='activity'" class="flex-1 p-6 overflow-y-auto custom-scroll" style="display:none;">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-1.5 h-5 bg-sky-500 rounded-full"></div>
+            <p class="text-[10px] font-black text-slate-500 uppercase tracking-[.12em]">Recent Activity</p>
+          </div>
+          <div class="space-y-2">
+            {% for activity in activities %}
+            <div class="act-item">
+              <div class="w-8 h-8 rounded-xl bg-sky-50 border border-sky-100/70 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-{{ activity.icon|default:'circle-dot' }} text-sky-500 text-[11px]"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-[12px] font-bold text-slate-700 leading-snug">{{ activity.description }}</p>
+                <p class="text-[9px] text-slate-400 mt-0.5 font-mono">{{ activity.timestamp|date:"d M Y, H:i" }}</p>
+              </div>
+            </div>
+            {% empty %}
+            <div class="flex flex-col items-center justify-center py-14 opacity-50 select-none">
+              <i class="fas fa-clock text-3xl text-slate-200 mb-3"></i>
+              <p class="text-[12px] font-bold text-slate-400">Belum ada aktivitas</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!--{# ── Settings Tab ── #}-->
+        <div x-show="tab==='settings'" class="flex-1 p-6 overflow-y-auto custom-scroll" style="display:none;">
+          <form method="POST" @submit.prevent="saveSettings()">
+            {% csrf_token %}
+
+            <!--{# Notifications section #}-->
+            <div class="mb-6">
+              <div class="flex items-center gap-2 mb-4">
+                <div class="w-1.5 h-5 bg-amber-500 rounded-full"></div>
+                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[.12em]">Notifikasi</p>
+              </div>
+              <div class="space-y-3">
+
+                <div class="flex items-center justify-between px-4 py-3 rounded-2xl bg-slate-50/60 border border-slate-100/70 hover:bg-white/80 transition">
+                  <div>
+                    <p class="text-[12px] font-bold text-slate-700">Email Notifikasi</p>
+                    <p class="text-[10px] text-slate-400 mt-0.5">Terima notifikasi via email</p>
+                  </div>
+                  <div class="toggle-track" :class="{on: settings.email_notifications}"
+                       @click="settings.email_notifications=!settings.email_notifications">
+                    <div class="toggle-thumb"></div>
+                  </div>
+                  <input type="hidden" name="email_notifications" :value="settings.email_notifications">
+                </div>
+
+                <div class="flex items-center justify-between px-4 py-3 rounded-2xl bg-slate-50/60 border border-slate-100/70 hover:bg-white/80 transition">
+                  <div>
+                    <p class="text-[12px] font-bold text-slate-700">Push Notifikasi</p>
+                    <p class="text-[10px] text-slate-400 mt-0.5">Notifikasi langsung di browser</p>
+                  </div>
+                  <div class="toggle-track" :class="{on: settings.push_notifications}"
+                       @click="settings.push_notifications=!settings.push_notifications">
+                    <div class="toggle-thumb"></div>
+                  </div>
+                  <input type="hidden" name="push_notifications" :value="settings.push_notifications">
+                </div>
+
+                <div class="flex items-center justify-between px-4 py-3 rounded-2xl bg-slate-50/60 border border-slate-100/70 hover:bg-white/80 transition">
+                  <div>
+                    <p class="text-[12px] font-bold text-slate-700">Marketing Emails</p>
+                    <p class="text-[10px] text-slate-400 mt-0.5">Info promo dan update produk</p>
+                  </div>
+                  <div class="toggle-track" :class="{on: settings.marketing_emails}"
+                       @click="settings.marketing_emails=!settings.marketing_emails">
+                    <div class="toggle-thumb"></div>
+                  </div>
+                  <input type="hidden" name="marketing_emails" :value="settings.marketing_emails">
+                </div>
+
+              </div>
+            </div>
+
+            <!--{# Appearance section #}-->
+            <div class="mb-6">
+              <div class="flex items-center gap-2 mb-4">
+                <div class="w-1.5 h-5 bg-purple-500 rounded-full"></div>
+                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[.12em]">Tampilan</p>
+              </div>
+              <div class="space-y-2.5">
+
+                <div>
+                  <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Tema</p>
+                  <div class="flex gap-2">
+                    <template x-for="opt in [{val:'light',label:'Light',icon:'sun'},{val:'dark',label:'Dark',icon:'moon'},{val:'auto',label:'Auto',icon:'adjust'}]">
+                      <button type="button"
+                              @click="settings.theme=opt.val"
+                              class="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl border text-[11px] font-bold transition"
+                              :class="settings.theme===opt.val
+                                ? 'border-purple-400 bg-purple-50 text-purple-600'
+                                : 'border-slate-200/80 bg-white/60 text-slate-500 hover:bg-white'">
+                        <i :class="'fas fa-'+opt.icon" class="text-[10px]"></i>
+                        <span x-text="opt.label"></span>
+                      </button>
+                    </template>
+                  </div>
+                  <input type="hidden" name="theme" :value="settings.theme">
+                </div>
+
+                <div>
+                  <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Bahasa</p>
+                  <select name="language" class="f-input">
+                    <option value="id" {% if user.profile.language == 'id' %}selected{% endif %}>🇮🇩 Bahasa Indonesia</option>
+                    <option value="en" {% if user.profile.language == 'en' %}selected{% endif %}>🇺🇸 English</option>
+                  </select>
+                </div>
+
+              </div>
+            </div>
+
+            <!--{# Save #}-->
+            <button type="submit" class="btn-primary w-full justify-center py-3">
+              <i class="fas fa-save text-[11px]"></i> Simpan Pengaturan
+            </button>
+
+          </form>
+        </div>
+
+      </div>
+    </div><!--{# end right column #}-->
+
+  </div>
+
+  <!--{# Toast #}-->
+  <div class="fixed top-5 right-5 z-[100] flex flex-col gap-2" id="toastEl"></div>
+
+  <!--{# ══════════════════════════════════════
+     MODAL — Edit Profile
+  ══════════════════════════════════════ #}-->
+  <div x-show="showEditModal"
+       x-transition:enter="transition ease-out duration-200"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       class="fixed inset-0 z-50 flex items-center justify-center p-4"
+       style="background:var(--glass-dark-bg);backdrop-filter: var(--glass-blur);display:none;"
+       @click.self="showEditModal=false">
+    <div class="modal-box glass w-full max-w-lg p-6">
+
+      <div class="flex items-center justify-between mb-5">
+        <div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.12em]">Ubah Data</p>
+          <p class="text-[15px] font-black text-slate-800 mt-0.5">Edit Profile</p>
+        </div>
+        <button @click="showEditModal=false" class="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 hover:bg-slate-200 transition" style="background:var(--color-bg)">
+          <i class="fas fa-times text-[11px]"></i>
+        </button>
+      </div>
+
+      <form id="editProfileForm" x-ref="editProfileForm" @submit.prevent="submitEditProfile()" class="space-y-3.5">
+        {% csrf_token %}
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1.5 block">First Name</label>
+            <input type="text" name="first_name" value="{{ user.first_name }}" class="f-input" required>
+          </div>
+          <div>
+            <label class="text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1.5 block">Last Name</label>
+            <input type="text" name="last_name" value="{{ user.last_name }}" class="f-input" required>
+          </div>
+        </div>
+        <div>
+          <label class="text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1.5 block">Email</label>
+          <input type="email" name="email" value="{{ user.email }}" class="f-input" required>
+        </div>
+        <div>
+          <label class="text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1.5 block">Telepon</label>
+          <input type="tel" name="phone" value="{{ user.profile.phone|default:'' }}" placeholder="+62…" class="f-input">
+        </div>
+        <div>
+          <label class="text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1.5 block">Alamat</label>
+          <textarea name="address" rows="2" class="f-input resize-none">{{ user.profile.address|default:'' }}</textarea>
+        </div>
+        <div class="flex gap-2.5 pt-2">
+          <button type="button" @click="showEditModal=false"
+                  class="flex-1 py-2.5 rounded-xl border border-slate-200 text-[12px] font-bold text-slate-500 hover:bg-slate-50 transition">
+            Batal
+          </button>
+          <button type="submit" class="btn-primary flex-1 justify-center py-2.5"
+                  :disabled="editLoading">
+            <i class="fas" :class="editLoading?'fa-circle-notch fa-spin':'fa-save'" style="font-size:11px;"></i>
+            <span x-text="editLoading?'Menyimpan…':'Simpan'"></span>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!--{# ══════════════════════════════════════
+     MODAL — Change Password
+  ══════════════════════════════════════ #}-->
+  <div x-show="showPasswordModal"
+       x-transition:enter="transition ease-out duration-200"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       class="fixed inset-0 z-50 flex items-center justify-center p-4"
+       style="background:var(--glass-dark-bg);backdrop-filter: var(--glass-blur);display:none;"
+       @click.self="showPasswordModal=false">
+    <div class="modal-box glass w-full max-w-sm p-6">
+
+      <div class="flex items-center justify-between mb-5">
+        <div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.12em]">Keamanan</p>
+          <p class="text-[15px] font-black text-slate-800 mt-0.5">Ganti Password</p>
+        </div>
+        <button @click="showPasswordModal=false" class="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 hover:bg-slate-200 transition" style="background:var(--color-bg)">
+          <i class="fas fa-times text-[11px]"></i>
+        </button>
+      </div>
+
+      <form x-ref="changePasswordForm" @submit.prevent="submitChangePassword()" class="space-y-3.5">
+        {% csrf_token %}
+        <div>
+          <label class="text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1.5 block">Password Saat Ini</label>
+          <input type="password" name="old_password" class="f-input" required>
+        </div>
+        <div>
+          <label class="text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1.5 block">Password Baru</label>
+          <input type="password" name="new_password1" class="f-input" required
+                 x-model="newPw"
+                 @input="checkStrength($event.target.value)">
+          <!--{# Strength bar #}-->
+          <div class="strength-bar mt-1.5">
+            <div class="strength-fill" :style="`width:${strength.pct}%;background:${strength.color};`"></div>
+          </div>
+          <p class="text-[9px] mt-1 font-bold" :style="`color:${strength.color};`" x-text="strength.label"></p>
+        </div>
+        <div>
+          <label class="text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1.5 block">Konfirmasi Password Baru</label>
+          <input type="password" name="new_password2" x-model="confirmPw" class="f-input" required>
+          <p x-show="confirmPw && confirmPw!==newPw" class="text-[9px] text-rose-400 font-bold mt-1">Password tidak cocok</p>
+        </div>
+        <div class="flex gap-2.5 pt-2">
+          <button type="button" @click="showPasswordModal=false"
+                  class="flex-1 py-2.5 rounded-xl border border-slate-200 text-[12px] font-bold text-slate-500 hover:bg-slate-50 transition">
+            Batal
+          </button>
+          <button type="submit" class="btn-primary flex-1 justify-center py-2.5"
+                  :disabled="pwLoading || (confirmPw && confirmPw!==newPw)">
+            <i class="fas" :class="pwLoading?'fa-circle-notch fa-spin':'fa-key'" style="font-size:11px;"></i>
+            <span x-text="pwLoading?'Menyimpan…':'Ganti'"></span>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!--{# ══════════════════════════════════════
+     MODAL — Avatar Upload
+  ══════════════════════════════════════ #}-->
+  <div x-show="showAvatarModal"
+       x-transition:enter="transition ease-out duration-200"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       class="fixed inset-0 z-50 flex items-center justify-center p-4"
+       style="background:var(--glass-dark-bg);backdrop-filter: var(--glass-blur);display:none;"
+       @click.self="showAvatarModal=false">
+    <div class="modal-box glass w-full max-w-sm p-6">
+
+      <div class="flex items-center justify-between mb-5">
+        <div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.12em]">Avatar</p>
+          <p class="text-[15px] font-black text-slate-800 mt-0.5">Ubah Foto Profil</p>
+        </div>
+        <button @click="showAvatarModal=false" class="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 hover:bg-slate-200 transition" style="background:var(--color-bg)">
+          <i class="fas fa-times text-[11px]"></i>
+        </button>
+      </div>
+
+      <form @submit.prevent="submitAvatar()" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!--{# Preview #}-->
+        <div class="flex justify-center mb-4">
+          <div class="w-24 h-24 rounded-full border-4 border-white shadow-xl overflow-hidden bg-gradient-to-br from-emerald-300 to-teal-400">
+            <img :src="avatarPreview" x-show="avatarPreview" class="w-full h-full object-cover">
+            <div x-show="!avatarPreview" class="w-full h-full flex items-center justify-center">
+              <i class="fas fa-user text-white text-3xl"></i>
+            </div>
+          </div>
+        </div>
+
+        <!--{# Drop zone #}-->
+        <label class="upload-zone block" for="avatarFileInput">
+          <i class="fas fa-cloud-upload-alt text-emerald-300 text-3xl mb-2 block"></i>
+          <p class="text-[12px] font-bold text-slate-500">Klik atau drag foto ke sini</p>
+          <p class="text-[10px] text-slate-300 mt-1">JPG, PNG, WebP — maks 2MB</p>
+          <input type="file" id="avatarFileInput" name="avatar" accept="image/*" class="hidden"
+                 @change="previewAvatar($event)">
+        </label>
+
+        <div class="flex gap-2.5 mt-4">
+          <button type="button" @click="showAvatarModal=false"
+                  class="flex-1 py-2.5 rounded-xl border border-slate-200 text-[12px] font-bold text-slate-500 hover:bg-slate-50 transition">
+            Batal
+          </button>
+          <button type="submit" class="btn-primary flex-1 justify-center py-2.5"
+                  :disabled="!avatarFile || avatarLoading">
+            <i class="fas" :class="avatarLoading?'fa-circle-notch fa-spin':'fa-upload'" style="font-size:11px;"></i>
+            <span x-text="avatarLoading?'Mengupload…':'Upload'"></span>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+</div><!--{# end x-data #}-->
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function profileApp() {
+  return {
+
+    tab        : 'overview',
+
+    showEditModal    : false,
+    showPasswordModal: false,
+    showAvatarModal  : false,
+
+    editLoading  : false,
+    pwLoading    : false,
+    avatarLoading: false,
+
+    /* ── Password strength ── */
+    newPw    : '',
+    confirmPw: '',
+    strength : { pct:0, color:'#e2e8f0', label:'' },
+
+    /* ── Settings state (pre-populate from context) ── */
+    settings: {
+      email_notifications : {{ user.profile.email_notifications|yesno:'true,false' }},
+      push_notifications  : {{ user.profile.push_notifications|yesno:'true,false'  }},
+      marketing_emails    : {{ user.profile.marketing_emails|yesno:'true,false'    }},
+      theme               : '{{ user.profile.theme|default:"light" }}',
+    },
+
+    /* ── Avatar preview ── */
+    avatarPreview: null,
+    avatarFile   : null,
+
+    /* ── Init ── */
+    init() {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach((e,i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i * 60);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold:.08 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    },
+
+    closeAllModals() {
+      this.showEditModal = false;
+      this.showPasswordModal = false;
+      this.showAvatarModal = false;
+    },
+
+    /* ── Password strength checker ── */
+    checkStrength(pw) {
+      this.newPw = pw;
+      let score = 0;
+      if (pw.length >= 8)          score++;
+      if (/[A-Z]/.test(pw))        score++;
+      if (/[0-9]/.test(pw))        score++;
+      if (/[^a-zA-Z0-9]/.test(pw)) score++;
+      const map = [
+        { pct:0,   color:'#e2e8f0', label:'' },
+        { pct:25,  color:'#f43f5e', label:'Lemah' },
+        { pct:50,  color:'#f59e0b', label:'Sedang' },
+        { pct:75,  color:'#0ea5e9', label:'Kuat' },
+        { pct:100, color:'#059669', label:'Sangat Kuat' },
+      ];
+      this.strength = map[score];
+    },
+
+    /* ── Avatar preview ── */
+    previewAvatar(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      this.avatarFile = file;
+      const reader = new FileReader();
+      reader.onload = ev => { this.avatarPreview = ev.target.result; };
+      reader.readAsDataURL(file);
+    },
+
+    /* ── Form submissions ── */
+    submitEditProfile() {
+      this.editLoading = true;
+      const fd = new FormData(this.$refs.editProfileForm);
+      this._post('/api/profile/update/', fd)
+        .then(d => {
+          if (d.success) {
+            this._toast('Profil berhasil diperbarui ✓');
+            this.showEditModal = false;
+            setTimeout(() => location.reload(), 900);
+          } else if (d.errors) {
+            Object.values(d.errors).flat().forEach(msg => this._toast(msg, 'error'));
+          } else {
+            this._toast(d.error || 'Gagal memperbarui', 'error');
+          }
+        })
+        .finally(() => this.editLoading = false);
+    },
+
+    submitChangePassword() {
+      if (!this.newPw) {
+        this._toast('Password baru tidak boleh kosong', 'error'); return;
+      }
+      if (this.newPw !== this.confirmPw) {
+        this._toast('Konfirmasi password tidak cocok', 'error'); return;
+      }
+      this.pwLoading = true;
+      const fd = new FormData(this.$refs.changePasswordForm);
+      this._post('/api/profile/change-password/', fd)
+        .then(d => {
+          if (d.success) {
+            this._toast('Password berhasil diubah ✓');
+            this.showPasswordModal = false;
+            this.newPw = ''; this.confirmPw = '';
+            this.strength = { pct:0, color:'#e2e8f0', label:'' };
+          } else if (d.errors) {
+            Object.values(d.errors).flat().forEach(msg => this._toast(msg, 'error'));
+          } else {
+            this._toast(d.error || 'Gagal mengubah password', 'error');
+          }
+        })
+        .finally(() => this.pwLoading = false);
+    },
+
+    submitAvatar() {
+      if (!this.avatarFile) return;
+      this.avatarLoading = true;
+      const fd = new FormData();
+      fd.append('avatar', this.avatarFile);
+      this._post('/api/profile/update-avatar/', fd)
+        .then(d => {
+          if (d.success) {
+            this._toast('Avatar berhasil diupload ✓');
+            this.showAvatarModal = false;
+            setTimeout(() => location.reload(), 800);
+          } else {
+            this._toast(d.error || 'Gagal upload', 'error');
+          }
+        })
+        .finally(() => this.avatarLoading = false);
+    },
+
+    saveSettings() {
+      const fd = new FormData();
+      Object.entries(this.settings).forEach(([k, v]) => fd.append(k, v));
+      this._post('/api/profile/update-settings/', fd)
+        .then(d => {
+          if (d.success) { this._toast('Pengaturan disimpan ✓'); }
+          else { this._toast(d.error || 'Gagal menyimpan', 'error'); }
+        });
+    },
+
+    /* ── Helpers ── */
+    _csrf() {
+      return document.cookie.match(/csrftoken=([^;]+)/)?.[1] || '';
+    },
+
+    _post(url, fd) {
+      if (!fd.has('csrfmiddlewaretoken')) {
+        fd.append('csrfmiddlewaretoken', this._csrf());
+      }
+      return fetch(url, { method: 'POST', body: fd })
+        .then(r => r.ok ? r.json() : { success: false, error: 'Network error' })
+        .catch(() => ({ success: false, error: 'Koneksi error' }));
+    },
+
+    _toast(msg, type = 'success') {
+      const c = document.getElementById('toastEl');
+      if (!c) return;
+      const colors = { success: 'border-emerald-400', warn: 'border-amber-400', error: 'border-rose-400' };
+      const icons  = { success: 'check-circle', warn: 'exclamation-triangle', error: 'times-circle' };
+      const el = document.createElement('div');
+      el.className = `toast flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl min-w-52 max-w-xs text-white text-[12px] font-semibold border-l-4 ${colors[type] || colors.success}`;
+      el.style.cssText = 'background:rgba(15,23,42,.92);backdrop-filter: var(--glass-blur);';
+      el.innerHTML = `<i class="fas fa-${icons[type] || icons.success} text-xs flex-shrink-0"></i><span>${msg}</span>`;
+      c.appendChild(el);
+      setTimeout(() => el.remove(), 3100);
+    },
+  };
+}
+</script>
+{% endblock %}

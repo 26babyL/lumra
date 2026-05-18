@@ -1,0 +1,788 @@
+{% extends 'base/base_hybrid.html' %}
+{% load custom_filters_settings %}
+
+{% block title %}{{ report_title }} — Lumra{% endblock %}
+
+{% block extra_head %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ── Shared tokens (mirror dashboard.html) ── */
+    :root {
+        --card-radius: 12px;
+        --card-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
+        --card-border:  rgba(0,0,0,.06);
+        --jade: #00a86b;
+        --jade-hover: #009960;
+        --jade-bg: rgba(0,168,107,.1);
+    }
+
+    /* ── Page wrapper ── */
+    .report-page {
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        max-width: 1280px;
+        margin: 0 auto;
+    }
+
+    /* ── Page header ── */
+    .report-page-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: .75rem;
+    }
+
+    /* ── Section card (identical to dashboard) ── */
+    .section-card {
+        background: oklch(var(--b1));
+        border: .5px solid var(--card-border);
+        border-radius: var(--card-radius);
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+    }
+    .section-card-header {
+        padding: 1rem 1.25rem;
+        border-bottom: .5px solid oklch(var(--bc)/.06);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: .5rem;
+        flex-wrap: wrap;
+    }
+    .section-card-title {
+        font-size: .85rem;
+        font-weight: 700;
+        color: oklch(var(--bc));
+        text-transform: uppercase;
+        letter-spacing: .07em;
+    }
+    .section-card-body {
+        padding: 1.125rem 1.25rem;
+    }
+
+    /* ── KPI grid (for summary_stats block) ── */
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: .875rem;
+    }
+    .kpi-card {
+        background: oklch(var(--b1));
+        border: .5px solid var(--card-border);
+        border-radius: var(--card-radius);
+        box-shadow: var(--card-shadow);
+        padding: 1.125rem 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+        transition: box-shadow 180ms ease, transform 180ms ease;
+    }
+    .kpi-card:hover {
+        box-shadow: 0 4px 20px rgba(0,0,0,.08);
+        transform: translateY(-1px);
+    }
+    .kpi-icon {
+        width: 40px; height: 40px;
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+    .kpi-value {
+        font-size: 1.6rem;
+        font-weight: 800;
+        letter-spacing: -.02em;
+        line-height: 1;
+        color: oklch(var(--bc));
+    }
+    .kpi-label {
+        font-size: .75rem;
+        font-weight: 600;
+        color: oklch(var(--bc)/.5);
+        text-transform: uppercase;
+        letter-spacing: .06em;
+    }
+    .kpi-sub {
+        font-size: .72rem;
+        color: oklch(var(--bc)/.45);
+    }
+
+    /* ── Table (identical to dashboard) ── */
+    .dash-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: .82rem;
+    }
+    .dash-table th {
+        padding: .625rem 1rem;
+        text-align: left;
+        font-size: .68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .07em;
+        color: oklch(var(--bc)/.4);
+        border-bottom: .5px solid oklch(var(--bc)/.07);
+        cursor: pointer;
+        user-select: none;
+        white-space: nowrap;
+    }
+    .dash-table th:hover {
+        color: oklch(var(--bc)/.7);
+    }
+    .dash-table td {
+        padding: .75rem 1rem;
+        border-bottom: .5px solid oklch(var(--bc)/.05);
+        color: oklch(var(--bc)/.8);
+        vertical-align: middle;
+    }
+    .dash-table tr:last-child td { border-bottom: none; }
+    .dash-table tr:hover td { background: oklch(var(--b2)); }
+
+    /* ── Sort icon ── */
+    .sort-icon {
+        display: inline-block;
+        width: 8px; height: 8px;
+        margin-left: 4px;
+        opacity: .35;
+        vertical-align: middle;
+    }
+    .sort-icon.active { opacity: .8; color: var(--jade); }
+
+    /* ── Status badge (identical to dashboard) ── */
+    .status-badge {
+        display: inline-flex; align-items: center; gap: 4px;
+        padding: 2px 9px;
+        border-radius: 20px;
+        font-size: .67rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+    }
+    .status-badge::before {
+        content: '';
+        width: 5px; height: 5px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+    .status-badge.completed  { background: rgba(0,168,107,.1);  color: #065f46; }
+    .status-badge.processing { background: rgba(245,158,11,.1); color: #78350f; }
+    .status-badge.pending    { background: rgba(59,130,246,.1); color: #1e40af; }
+    .status-badge.cancelled  { background: rgba(239,68,68,.1);  color: #991b1b; }
+    .status-badge.info       { background: rgba(59,130,246,.1); color: #1e40af; }
+
+    [data-theme="dark"] .status-badge.completed  { background: rgba(0,168,107,.2);  color: #34d399; }
+    [data-theme="dark"] .status-badge.processing { background: rgba(245,158,11,.2); color: #fbbf24; }
+    [data-theme="dark"] .status-badge.pending    { background: rgba(59,130,246,.2); color: #60a5fa; }
+    [data-theme="dark"] .status-badge.cancelled  { background: rgba(239,68,68,.2);  color: #f87171; }
+
+    /* ── Info notice ── */
+    .report-notice {
+        display: flex;
+        align-items: flex-start;
+        gap: .75rem;
+        padding: .875rem 1.125rem;
+        background: rgba(59,130,246,.06);
+        border: .5px solid rgba(59,130,246,.2);
+        border-radius: 10px;
+        font-size: .8rem;
+        color: oklch(var(--bc)/.75);
+    }
+    .report-notice i {
+        color: #3b82f6;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+    .report-notice strong { color: oklch(var(--bc)); }
+
+    /* ── Filter card ── */
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: .875rem;
+        align-items: end;
+    }
+    .filter-label {
+        font-size: .75rem;
+        font-weight: 600;
+        color: oklch(var(--bc)/.55);
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        margin-bottom: .35rem;
+        display: block;
+    }
+    .filter-error {
+        font-size: .72rem;
+        color: #ef4444;
+        margin-top: .25rem;
+    }
+    .filter-actions {
+        display: flex;
+        gap: .5rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    /* ── Buttons ── */
+    .btn-jade {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0 16px;
+        height: 36px;
+        background: var(--jade);
+        color: #fff;
+        border: none;
+        border-radius: 9px;
+        font-size: .8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 150ms ease, opacity 150ms ease;
+        white-space: nowrap;
+    }
+    .btn-jade:hover:not(:disabled) { background: var(--jade-hover); }
+    .btn-jade:disabled { opacity: .5; cursor: not-allowed; }
+
+    .btn-ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0 16px;
+        height: 36px;
+        background: oklch(var(--b2));
+        color: oklch(var(--bc)/.7);
+        border: .5px solid var(--card-border);
+        border-radius: 9px;
+        font-size: .8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 150ms ease;
+        white-space: nowrap;
+    }
+    .btn-ghost:hover { background: oklch(var(--b3)); }
+
+    /* ── Pagination ── */
+    .report-pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .25rem;
+        flex-wrap: wrap;
+    }
+    .page-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px; height: 34px;
+        border-radius: 8px;
+        font-size: .8rem;
+        font-weight: 600;
+        border: .5px solid var(--card-border);
+        background: oklch(var(--b1));
+        color: oklch(var(--bc)/.6);
+        cursor: pointer;
+        transition: background 150ms, color 150ms;
+        text-decoration: none;
+    }
+    .page-btn:hover { background: oklch(var(--b2)); color: oklch(var(--bc)); }
+    .page-btn.active {
+        background: var(--jade-bg);
+        color: var(--jade);
+        border-color: rgba(0,168,107,.25);
+    }
+    .page-btn.dots {
+        background: transparent;
+        border-color: transparent;
+        cursor: default;
+        color: oklch(var(--bc)/.35);
+    }
+
+    /* ── Toast ── */
+    .report-toast {
+        position: fixed;
+        bottom: 1.25rem;
+        right: 1.25rem;
+        background: oklch(var(--b1));
+        border: .5px solid var(--card-border);
+        border-radius: 10px;
+        box-shadow: 0 8px 32px rgba(0,0,0,.12);
+        padding: .875rem 1.125rem;
+        max-width: 320px;
+        z-index: 9999;
+        display: flex;
+        align-items: flex-start;
+        gap: .75rem;
+        font-size: .82rem;
+    }
+    .report-toast p { margin: 0; color: oklch(var(--bc)/.85); }
+    .report-toast .toast-close {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: oklch(var(--bc)/.35);
+        padding: 0;
+        flex-shrink: 0;
+        font-size: .85rem;
+        line-height: 1;
+        margin-left: auto;
+    }
+    .report-toast .toast-close:hover { color: oklch(var(--bc)/.7); }
+
+    /* ── Spin animation ── */
+    .spin-anim { animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Empty state ── */
+    .empty-state {
+        padding: 3rem 1.5rem;
+        text-align: center;
+        color: oklch(var(--bc)/.35);
+    }
+    .empty-state i { font-size: 2rem; margin-bottom: .75rem; display: block; }
+    .empty-state p { font-size: .85rem; margin: 0; }
+
+    /* ── Print ── */
+    @media print {
+        .print-hidden { display: none !important; }
+        body, html { background: white !important; color: black !important; font-size: 11px; }
+        .report-page { padding: 0; }
+        .section-card {
+            box-shadow: none !important;
+            border: 1px solid #ddd !important;
+            border-radius: 0 !important;
+        }
+        .dash-table th, .dash-table td {
+            border: 1px solid #ccc;
+            padding: 6px 8px;
+        }
+        thead { display: table-header-group; }
+        tr { page-break-inside: avoid; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+        .report-page { padding: .875rem; gap: .875rem; }
+        .kpi-value { font-size: 1.35rem; }
+        .filter-grid { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="report-page"
+     x-data="reportManager()"
+     x-init="init()"
+     x-cloak>
+
+    {# ── Page Header ── #}
+    <div class="report-page-header">
+        <div>
+            <h1 style="font-size:1.3rem;font-weight:800;color:oklch(var(--bc));margin:0 0 2px;">
+                {{ report_title }}
+            </h1>
+            <p style="font-size:.8rem;color:oklch(var(--bc)/.5);margin:0;">
+                Generate and analyze your reports with ease
+            </p>
+        </div>
+        <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;" class="print-hidden">
+            <button
+                class="btn-ghost"
+                @click="exportCSV()"
+                :disabled="isExporting">
+                <svg :class="isExporting ? 'spin-anim' : ''"
+                     style="width:14px;height:14px;" fill="none" stroke="currentColor"
+                     stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+                <span x-text="isExporting ? 'Exporting...' : 'Export CSV'"></span>
+            </button>
+            <button
+                class="btn-ghost"
+                @click="window.print()">
+                <svg style="width:14px;height:14px;" fill="none" stroke="currentColor"
+                     stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                </svg>
+                Print
+            </button>
+        </div>
+    </div>
+
+    {# ── Summary Stats — child template overrides ini ── #}
+    {% block summary_stats %}
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div class="kpi-icon" style="background:rgba(0,168,107,.1);">
+                    <svg style="width:18px;height:18px;color:#00a86b;" fill="none" stroke="currentColor"
+                         stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="kpi-value">{{ total_sales|rupiah|default:'Rp 0' }}</div>
+            <div class="kpi-label">Total Sales</div>
+            <div class="kpi-sub">Reported period</div>
+        </div>
+    </div>
+    {% endblock %}
+
+    {# ── Data Limit Notice ── #}
+    <div class="report-notice print-hidden" role="note">
+        <i class="fas fa-info-circle"></i>
+        <p>
+            <strong>Showing first 50 results</strong>
+            — Use the filters below to narrow down your search and find specific data faster.
+        </p>
+    </div>
+
+    {# ── Filter Card ── #}
+    <div class="section-card print-hidden">
+        <div class="section-card-header">
+            <span class="section-card-title">Filter Options</span>
+        </div>
+        <div class="section-card-body">
+            <form id="baseFilterForm"
+                  method="get"
+                  @submit.prevent="applyFilters()"
+                  role="search"
+                  aria-label="Report filters">
+                <div class="filter-grid">
+
+                    {# Date From #}
+                    <div>
+                        <label for="base-date-start" class="filter-label">Date From</label>
+                        <input
+                            id="base-date-start"
+                            type="date"
+                            name="date_start"
+                            x-model="filters.date_start"
+                            @change="validateDateRange()"
+                            :class="errors.date_start ? 'input-error' : ''"
+                            class="input input-bordered input-sm w-full"
+                            style="border-radius:9px;height:36px;"
+                            max="{{ today|date:'Y-m-d' }}"
+                            aria-label="Tanggal Mulai">
+                        <p x-show="errors.date_start"
+                           x-text="errors.date_start"
+                           class="filter-error"
+                           role="alert"></p>
+                    </div>
+
+                    {# Date To #}
+                    <div>
+                        <label for="base-date-end" class="filter-label">Date To</label>
+                        <input
+                            id="base-date-end"
+                            type="date"
+                            name="date_end"
+                            x-model="filters.date_end"
+                            @change="validateDateRange()"
+                            :class="errors.date_end ? 'input-error' : ''"
+                            class="input input-bordered input-sm w-full"
+                            style="border-radius:9px;height:36px;"
+                            max="{{ today|date:'Y-m-d' }}"
+                            aria-label="Tanggal Selesai">
+                        <p x-show="errors.date_end"
+                           x-text="errors.date_end"
+                           class="filter-error"
+                           role="alert"></p>
+                    </div>
+
+                    {# Slot for additional filters per-report #}
+                    {% block filter_fields %}{% endblock %}
+
+                    {# Actions — spans full width on last row #}
+                    <div class="filter-actions" style="grid-column: 1 / -1;">
+                        <button
+                            type="submit"
+                            class="btn-jade"
+                            :disabled="isFiltering">
+                            <svg :class="isFiltering ? 'spin-anim' : ''"
+                                 style="width:14px;height:14px;" fill="none" stroke="currentColor"
+                                 stroke-width="2.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
+                            </svg>
+                            <span x-text="isFiltering ? 'Filtering...' : 'Apply Filter'"></span>
+                        </button>
+                        <button
+                            type="button"
+                            class="btn-ghost"
+                            @click="resetFilters()">
+                            <svg style="width:14px;height:14px;" fill="none" stroke="currentColor"
+                                 stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            </svg>
+                            Reset
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {# ── Data Table ── #}
+    <div class="section-card">
+        <div style="overflow-x:auto;">
+            <table class="dash-table" aria-label="{{ report_title }} Table">
+                <thead>
+                    {% block table_header %}
+                    <tr>
+                        <th @click="sortBy('column1')" aria-label="Sort by Column 1">
+                            Column 1
+                            <svg class="sort-icon" :class="sortColumn === 'column1' ? 'active' : ''"
+                                 fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      :d="sortColumn === 'column1' && sortDirection === 'asc'
+                                          ? 'M5 15l7-7 7 7'
+                                          : 'M19 9l-7 7-7-7'"/>
+                            </svg>
+                        </th>
+                        <th @click="sortBy('column2')" aria-label="Sort by Column 2">
+                            Column 2
+                            <svg class="sort-icon" :class="sortColumn === 'column2' ? 'active' : ''"
+                                 fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      :d="sortColumn === 'column2' && sortDirection === 'asc'
+                                          ? 'M5 15l7-7 7 7'
+                                          : 'M19 9l-7 7-7-7'"/>
+                            </svg>
+                        </th>
+                    </tr>
+                    {% endblock %}
+                </thead>
+                <tbody>
+                    {% block table_body %}
+                    <tr>
+                        <td>Data 1</td>
+                        <td>Data 2</td>
+                    </tr>
+                    {% endblock %}
+                </tbody>
+            </table>
+        </div>
+
+        {# Empty state — child template can override atau sembunyikan #}
+        {% block empty_state %}
+        {% if not object_list %}
+        <div class="empty-state">
+            <i class="fas fa-table" aria-hidden="true"></i>
+            <p>No data found. Try adjusting your filters.</p>
+        </div>
+        {% endif %}
+        {% endblock %}
+    </div>
+
+    {# ── Pagination ── #}
+    <div x-show="totalPages > 1"
+         class="report-pagination print-hidden"
+         aria-label="Pagination">
+        <template x-for="page in displayedPages" :key="page">
+            <template x-if="page === '...'">
+                <span class="page-btn dots">…</span>
+            </template>
+            <template x-if="page !== '...'">
+                <a
+                    @click.prevent="goToPage(page)"
+                    :class="currentPage === page ? 'active' : ''"
+                    :aria-current="currentPage === page ? 'page' : undefined"
+                    class="page-btn"
+                    href="#"
+                    x-text="page">
+                </a>
+            </template>
+        </template>
+    </div>
+
+    {# ── Toast ── #}
+    <div
+        x-show="showToast"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0 translate-y-2"
+        x-transition:enter-end="opacity-100 translate-y-0"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100 translate-y-0"
+        x-transition:leave-end="opacity-0 translate-y-2"
+        class="report-toast print-hidden"
+        role="alert"
+        aria-live="assertive">
+        <i :class="toastIconClass" style="font-size:1rem;flex-shrink:0;margin-top:1px;" aria-hidden="true"></i>
+        <p x-text="toastMessage"></p>
+        <button class="toast-close" @click="hideToast()" aria-label="Dismiss notification">
+            <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+    </div>
+
+</div>{# /report-page #}
+
+<script>
+function reportManager() {
+    return {
+        /* ── State ── */
+        filters: {
+            date_start: '{{ request.GET.date_start|default:"" }}',
+            date_end:   '{{ request.GET.date_end|default:"" }}',
+        },
+        errors:       {},
+        isFiltering:  false,
+        isExporting:  false,
+        showToast:    false,
+        toastMessage: '',
+        toastType:    'success',
+        currentPage:  {{ page_obj.number|default:1 }},
+        totalPages:   {{ page_obj.paginator.num_pages|default:1 }},
+        sortColumn:    '',
+        sortDirection: 'asc',
+
+        /* ── Computed ── */
+        get toastIconClass() {
+            const map = {
+                success: 'fas fa-check-circle',
+                error:   'fas fa-exclamation-circle',
+                info:    'fas fa-info-circle',
+            };
+            const colorMap = {
+                success: 'color:#00a86b;',
+                error:   'color:#ef4444;',
+                info:    'color:#3b82f6;',
+            };
+            return map[this.toastType] ?? 'fas fa-check-circle';
+        },
+
+        get displayedPages() {
+            const pages = [];
+            const c     = this.currentPage;
+            const total = this.totalPages;
+
+            if (total <= 7) {
+                for (let i = 1; i <= total; i++) pages.push(i);
+            } else if (c <= 4) {
+                for (let i = 1; i <= 5; i++) pages.push(i);
+                pages.push('...'); pages.push(total);
+            } else if (c >= total - 3) {
+                pages.push(1); pages.push('...');
+                for (let i = total - 4; i <= total; i++) pages.push(i);
+            } else {
+                pages.push(1); pages.push('...');
+                for (let i = c - 1; i <= c + 1; i++) pages.push(i);
+                pages.push('...'); pages.push(total);
+            }
+            return pages;
+        },
+
+        /* ── Lifecycle ── */
+        init() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('date_start')) this.filters.date_start = params.get('date_start');
+            if (params.get('date_end'))   this.filters.date_end   = params.get('date_end');
+        },
+
+        /* ── Validation ── */
+        validateDateRange() {
+            this.errors = {};
+            const s = this.filters.date_start;
+            const e = this.filters.date_end;
+            if (s && e && new Date(s) > new Date(e)) {
+                this.errors.date_start = 'Start date must be before end date';
+                this.errors.date_end   = 'End date must be after start date';
+                return false;
+            }
+            return true;
+        },
+
+        /* ── Filters ── */
+        applyFilters() {
+            if (!this.validateDateRange()) {
+                this.showToastMessage('Please fix the date range.', 'error');
+                return;
+            }
+            this.isFiltering = true;
+
+            // Baca semua input form secara generik —
+            // child template cukup tambah input di block filter_fields.
+            const form = document.getElementById('baseFilterForm');
+            const url  = new URL(window.location);
+            url.search = '';
+
+            new FormData(form).forEach((value, key) => {
+                if (value) url.searchParams.set(key, value);
+            });
+
+            url.searchParams.delete('page');
+            window.location.href = url.toString();
+        },
+
+        resetFilters() {
+            this.filters = { date_start: '', date_end: '' };
+            this.errors  = {};
+            const url = new URL(window.location);
+            url.search = '';
+            window.location.href = url.toString();
+        },
+
+        /* ── Sorting ── */
+        sortBy(column) {
+            if (this.sortColumn === column) {
+                this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                this.sortColumn    = column;
+                this.sortDirection = 'asc';
+            }
+            const url = new URL(window.location);
+            url.searchParams.set('sort_by', column);
+            url.searchParams.set('order',   this.sortDirection);
+            window.location.href = url.toString();
+        },
+
+        /* ── Pagination ── */
+        goToPage(page) {
+            const url = new URL(window.location);
+            url.searchParams.set('page', page);
+            window.location.href = url.toString();
+        },
+
+        /* ── Export ── */
+        exportCSV() {
+            this.isExporting = true;
+            const url = new URL(window.location);
+            url.searchParams.set('export', 'csv');
+
+            const a = document.createElement('a');
+            a.href = url.toString();
+            a.download = `{{ report_title|slugify }}_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            setTimeout(() => {
+                this.isExporting = false;
+                this.showToastMessage('Report exported successfully!', 'success');
+            }, 3000);
+        },
+
+        /* ── Toast ── */
+        showToastMessage(message, type = 'success') {
+            this.toastMessage = message;
+            this.toastType    = type;
+            this.showToast    = true;
+            setTimeout(() => this.hideToast(), 5000);
+        },
+        hideToast() {
+            this.showToast = false;
+        },
+    };
+}
+</script>
+
+{% endblock %}{# /block content #}
+
+{% block extra_scripts %}{% endblock %}

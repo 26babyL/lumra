@@ -1,0 +1,230 @@
+{% extends "base/base_hybrid.html" %}
+{% block title %}Laba Rugi - Lumra ERP{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="profitLossApp()" x-init="init()" x-cloak">
+  <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 flex-wrap">
+    <div>
+      <h1 class="text-2xl font-bold text-base-content">Laporan Laba Rugi</h1>
+      <p class="text-sm text-base-content/60 mt-0.5">Laporan kinerja keuangan perusahaan.</p>
+    </div>
+    <div class="flex items-center gap-3 card bg-base-100 shadow-lg border border-base-300 px-4 py-2">
+      <label class="text-xs font-bold tracking-widest uppercase text-base-content/60 mr-2">Periode</label>
+      <input aria-label="Periode" type="month" x-model="period" @change="updatePeriod()" class="input input-bordered input-sm">
+      <button aria-label="Unduh" class="btn btn-ghost btn-sm">
+        <i class="fas fa-download"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="card bg-base-100 shadow-lg border border-base-300">
+      <div class="card-body p-4">
+        <p class="text-xs font-bold tracking-widest uppercase text-base-content/60 mb-2">Pendapatan</p>
+        <p class="text-xl font-bold text-success font-mono" x-text="formatCurrency(totalRevenue)"></p>
+      </div>
+    </div>
+    <div class="card bg-base-100 shadow-lg border border-base-300">
+      <div class="card-body p-4">
+        <p class="text-xs font-bold tracking-widest uppercase text-base-content/60 mb-2">HPP</p>
+        <p class="text-xl font-bold text-error font-mono" x-text="formatCurrency(cogs)"></p>
+      </div>
+    </div>
+    <div class="card bg-base-100 shadow-lg border border-base-300">
+      <div class="card-body p-4">
+        <p class="text-xs font-bold tracking-widest uppercase text-base-content/60 mb-2">Laba Kotor</p>
+        <p class="text-xl font-bold text-info font-mono" x-text="formatCurrency(grossProfit)"></p>
+      </div>
+    </div>
+    <div class="card bg-base-100 shadow-lg border border-base-300">
+      <div class="card-body p-4">
+        <p class="text-xs font-bold tracking-widest uppercase text-base-content/60 mb-2">Laba Bersih</p>
+        <p class="text-xl font-bold text-primary font-mono" x-text="formatCurrency(netProfit)"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profit Loss Table -->
+  <div class="card bg-base-100 shadow-lg border border-base-300">
+    <div class="p-6">
+      <table class="table table-compact w-full">
+        <tbody>
+          <!-- Revenue Section -->
+          <tr class="bg-base-200">
+            <td colspan="2" class="font-bold text-sm">PENDAPATAN</td>
+          </tr>
+          <template x-for="item in revenue" :key="item.id">
+            <tr class="hover:bg-base-200">
+              <td class="pl-label" x-text="item.name"></td>
+              <td class="pl-value font-mono" x-text="formatCurrency(item.amount)"></td>
+            </tr>
+          </template>
+          <tr class="total-row">
+            <td class="font-bold">Total Pendapatan</td>
+            <td class="pl-value font-mono font-bold" x-text="formatCurrency(totalRevenue)"></td>
+          </tr>
+
+          <!-- Cost of Goods Sold -->
+          <tr class="bg-base-200">
+            <td colspan="2" class="font-bold text-sm">HARGA POKOK PENJUALAN</td>
+          </tr>
+          <template x-for="item in cogsItems" :key="item.id">
+            <tr class="hover:bg-base-200">
+              <td class="pl-label" x-text="item.name"></td>
+              <td class="pl-value font-mono" x-text="formatCurrency(item.amount)"></td>
+            </tr>
+          </template>
+          <tr class="total-row">
+            <td class="font-bold">Total HPP</td>
+            <td class="pl-value font-mono font-bold text-error" x-text="formatCurrency(cogs)"></td>
+          </tr>
+
+          <!-- Gross Profit -->
+          <tr class="grand-row">
+            <td class="font-bold">LABA KOTOR</td>
+            <td class="pl-value font-mono font-bold text-info" x-text="formatCurrency(grossProfit)"></td>
+          </tr>
+
+          <!-- Operating Expenses -->
+          <tr class="bg-base-200">
+            <td colspan="2" class="font-bold text-sm">BIAYA OPERASIONAL</td>
+          </tr>
+          <template x-for="item in operatingExpenses" :key="item.id">
+            <tr class="hover:bg-base-200">
+              <td class="pl-label" x-text="item.name"></td>
+              <td class="pl-value font-mono" x-text="formatCurrency(item.amount)"></td>
+            </tr>
+          </template>
+          <tr class="total-row">
+            <td class="font-bold">Total Biaya Operasional</td>
+            <td class="pl-value font-mono font-bold text-error" x-text="formatCurrency(totalOperatingExpenses)"></td>
+          </tr>
+
+          <!-- Operating Income -->
+          <tr class="grand-row">
+            <td class="font-bold">LABA OPERASIONAL</td>
+            <td class="pl-value font-mono font-bold text-warning" x-text="formatCurrency(operatingIncome)"></td>
+          </tr>
+
+          <!-- Other Income/Expenses -->
+          <tr class="bg-base-200">
+            <td colspan="2" class="font-bold text-sm">PENDAPATAN & BIAYA LAIN-LAIN</td>
+          </tr>
+          <template x-for="item in otherItems" :key="item.id">
+            <tr class="hover:bg-base-200">
+              <td class="pl-label" x-text="item.name"></td>
+              <td class="pl-value font-mono" x-text="formatCurrency(item.amount)"></td>
+            </tr>
+          </template>
+          <tr class="total-row">
+            <td class="font-bold">Total Lain-lain</td>
+            <td class="pl-value font-mono font-bold" x-text="formatCurrency(totalOther)"></td>
+          </tr>
+
+          <!-- Net Profit -->
+          <tr class="grand-row">
+            <td class="font-bold">LABA BERSIH</td>
+            <td class="pl-value font-mono font-bold text-primary" x-text="formatCurrency(netProfit)"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+function profitLossApp() {
+  return {
+    period: '2024-01',
+    
+    // Revenue Data
+    revenue: [
+      { id: 1, name: 'Penjualan Produk', amount: 200000000 },
+      { id: 2, name: 'Penjualan Jasa', amount: 50000000 },
+      { id: 3, name: 'Pendapatan Lain', amount: 5000000 }
+    ],
+    
+    // COGS Data
+    cogsItems: [
+      { id: 4, name: 'Harga Pokok Produk', amount: 80000000 },
+      { id: 5, name: 'Biaya Pengiriman', amount: 10000000 }
+    ],
+    
+    // Operating Expenses
+    operatingExpenses: [
+      { id: 6, name: 'Gaji Karyawan', amount: 25000000 },
+      { id: 7, name: 'Sewa Kantor', amount: 5000000 },
+      { id: 8, name: 'Listrik & Air', amount: 2000000 },
+      { id: 9, name: 'Marketing', amount: 3000000 }
+    ],
+    
+    // Other Items
+    otherItems: [
+      { id: 10, name: 'Bunga Bank', amount: 1000000 },
+      { id: 11, name: 'Biaya Administrasi', amount: -500000 }
+    ],
+    
+    // Computed Values
+    totalRevenue: 0,
+    cogs: 0,
+    grossProfit: 0,
+    totalOperatingExpenses: 0,
+    operatingIncome: 0,
+    totalOther: 0,
+    netProfit: 0,
+    
+    init() {
+      this.calculateTotals();
+    },
+    
+    calculateTotals() {
+      this.totalRevenue = this.revenue.reduce((sum, item) => sum + item.amount, 0);
+      this.cogs = this.cogsItems.reduce((sum, item) => sum + item.amount, 0);
+      this.grossProfit = this.totalRevenue - this.cogs;
+      
+      this.totalOperatingExpenses = this.operatingExpenses.reduce((sum, item) => sum + item.amount, 0);
+      this.operatingIncome = this.grossProfit - this.totalOperatingExpenses;
+      
+      this.totalOther = this.otherItems.reduce((sum, item) => sum + item.amount, 0);
+      this.netProfit = this.operatingIncome + this.totalOther;
+    },
+    
+    updatePeriod() {
+      console.log('Update period:', this.period);
+      // In real app, this would reload data for new period
+    },
+    
+    formatCurrency(amount) {
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0
+      }).format(amount);
+    }
+  }
+}
+</script>
+
+<style>
+  .pl-label { padding-right: 20px; }
+  .pl-value { text-align: right; font-family: monospace; font-weight: 700; }
+  .total-row td {
+    border-top: 1px solid #cbd5e1;
+    font-weight: 800;
+    color: #0f172a;
+  }
+  .grand-row td {
+    border-top: 2px solid #94a3b8;
+    font-size: 15px;
+    font-weight: 900;
+    color: #0f172a;
+  }
+</style>
+{% endblock %}

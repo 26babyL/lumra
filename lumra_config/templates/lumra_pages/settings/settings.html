@@ -1,0 +1,111 @@
+{% extends "base/base_hybrid.html" %}
+{% load static %}
+
+{% block title %}Settings{% endblock %}
+{% block page_title %}Settings{% endblock %}
+{% block page_subtitle %}Manage application settings{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        <!-- Settings Sidebar -->
+        <div class="lg:col-span-1">
+            <div class="card bg-base-100 shadow-lg">
+                <div class="card-body p-4">
+                    <h3 class="text-lg font-semibold mb-4">Settings</h3>
+                    <ul class="menu menu-compact">
+                        <li><a href="{% url 'settings' %}" class="active">General</a></li>
+                        <li><a href="{% url 'business_settings' %}">Business</a></li>
+                        <li><a href="{% url 'user_roles_permissions' %}">Users & Roles</a></li>
+                        <li><a href="{% url 'email_settings' %}">Email</a></li>
+                        <li><a href="{% url 'notification_settings' %}">Notifications</a></li>
+                        <li><a href="{% url 'numbering_settings' %}">Numbering</a></li>
+                        <li><a href="{% url 'backup_restore' %}">Backup</a></li>
+                        <li><a href="{% url 'api_keys' %}">API Keys</a></li>
+                        <li><a href="{% url 'system_status' %}">System Status</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Content -->
+        <div class="lg:col-span-3">
+            <div class="card bg-base-100 shadow-lg">
+                <div class="card-body p-6">
+                    <h3 class="text-xl font-semibold mb-6">General Settings</h3>
+                    
+                    <!-- Application Settings -->
+                    <div class="mb-8">
+                        <h4 class="text-lg font-medium mb-4">Application Settings</h4>
+                        <div class="form-control mb-4">
+                            <label class="label">
+                                <span class="label-text">Application Name</span>
+                            </label>
+                            <input type="text" class="input input-bordered w-full" value="Lumra" />
+                        </div>
+                        
+                        <div class="form-control mb-4">
+                            <label class="label">
+                                <span class="label-text">Default Language</span>
+                            </label>
+                            <select class="select select-bordered w-full">
+                                <option>Indonesian</option>
+                                <option>English</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-control mb-4">
+                            <label class="label">
+                                <span class="label-text">Timezone</span>
+                            </label>
+                            <select class="select select-bordered w-full">
+                                <option>Asia/Jakarta (WIB)</option>
+                                <option>Asia/Singapore</option>
+                                <option>UTC</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- UI Settings -->
+                    <div class="mb-8">
+                        <h4 class="text-lg font-medium mb-4">UI Settings</h4>
+                        <div class="form-control mb-4">
+                            <label class="label">
+                                <span class="label-text">Theme</span>
+                            </label>
+                            <select class="select select-bordered w-full">
+                                <option>Light</option>
+                                <option>Dark</option>
+                                <option>Auto</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-control mb-4">
+                            <label class="label cursor-pointer">
+                                <input type="checkbox" class="toggle toggle-primary" checked />
+                                <span class="label-text">Enable animations</span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-control mb-4">
+                            <label class="label cursor-pointer">
+                                <input type="checkbox" class="toggle toggle-primary" checked />
+                                <span class="label-text">Show tooltips</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Save Button -->
+                    <div class="flex justify-end">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-save mr-2"></i>
+                            Save Settings
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

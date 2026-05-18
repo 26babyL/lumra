@@ -1,0 +1,210 @@
+{% extends 'base/base.html' %}
+{% block title %}Lab RnD - CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-card {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.95);
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: all 0.3s;
+  }
+  .glass-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  }
+  .filter-btn {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    background: transparent;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .filter-btn:hover { background: #f1f5f9; }
+  .filter-btn.active {
+    background: #0f172a;
+    color: white;
+    box-shadow: 0 4px 10px rgba(15,23,42,0.2);
+  }
+  .prob-bar-bg {
+    height: 4px;
+    background: #f1f5f9;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .prob-bar-fill { height: 100%; border-radius: 99px; transition: width 0.8s ease; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="rndListApp()" x-init="init()" x-cloak>
+  <div class="flex items-end justify-between">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+        <a href="#" class="hover:text-slate-800">Produksi</a>
+        <span>/</span>
+        <span class="text-slate-800 font-medium">Lab RnD</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800">Lab Riset & Pengembangan</h1>
+      <p class="text-sm text-slate-400 mt-0.5">Simulasi, uji coba, dan dokumentasi formula sebelum produksi</p>
+    </div>
+    <a href="{% url 'rnd_form' %}" class="bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:bg-slate-700 transition flex items-center gap-2">
+      <i class="fas fa-flask"></i> Formula Baru
+    </a>
+  </div>
+
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <template x-for="stat in stats" :key="stat.label">
+      <div class="bg-white/70 backdrop-blur border border-white rounded-2xl p-4">
+        <p class="text-xs text-slate-400 mb-1" x-text="stat.label"></p>
+        <p class="text-2xl font-bold text-slate-800" x-text="stat.value"></p>
+      </div>
+    </template>
+  </div>
+
+  <div class="flex items-center gap-3 overflow-x-auto pb-2">
+    <button @click="filter='all'" class="filter-btn" :class="filter==='all' ? 'active' : ''">Semua</button>
+    <button @click="filter='idea'" class="filter-btn" :class="filter==='idea' ? 'active' : ''">Idea</button>
+    <button @click="filter='in_trial'" class="filter-btn" :class="filter==='in_trial' ? 'active' : ''">In Trial</button>
+    <button @click="filter='review'" class="filter-btn" :class="filter==='review' ? 'active' : ''">Review</button>
+    <button @click="filter='approved'" class="filter-btn" :class="filter==='approved' ? 'active' : ''">Approved</button>
+    <div class="relative ml-auto w-64">
+      <input type="text" x-model="search" placeholder="Cari formula atau pembuat..." class="w-full bg-white/60 border border-slate-200 rounded-full px-4 py-2 pl-10 text-sm focus:bg-white focus:border-slate-400 outline-none transition">
+      <i class="fas fa-search absolute left-3.5 top-2.5 text-slate-400 text-xs"></i>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+    <template x-for="rnd in filteredRnDs" :key="rnd.id">
+      <div class="glass-card p-5 relative group cursor-pointer" @click="window.location.href=`{% url 'rnd_detail' 0 %}`.replace('/0/', `/${rnd.id}/`)">
+        <div class="flex justify-between items-start mb-4">
+          <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl transition" :class="rnd.statusMeta.iconBg">
+            <i :class="rnd.statusMeta.icon"></i>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            <span class="text-[10px] font-bold px-2 py-1 rounded-full uppercase" :class="rnd.statusMeta.badge" x-text="rnd.statusMeta.label"></span>
+            <span x-show="rnd.bom_id" class="text-[10px] font-bold px-2 py-1 rounded-full bg-emerald-50 text-emerald-700">Promoted</span>
+          </div>
+        </div>
+
+        <h3 class="font-bold text-slate-800 text-lg leading-tight mb-0.5" x-text="rnd.name"></h3>
+        <p class="text-xs text-slate-400 mb-4">
+          Trial <span x-text="rnd.trial_count"></span> • oleh <span x-text="rnd.created_by"></span>
+        </p>
+
+        <div class="space-y-2 pt-4 border-t border-slate-100">
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-500">Komponen</span>
+            <span class="font-bold text-slate-700" x-text="rnd.ingredient_count + ' bahan'"></span>
+          </div>
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-500">Kemungkinan berhasil</span>
+            <span class="font-bold" :class="rnd.probColor" x-text="rnd.success_probability + '%'"></span>
+          </div>
+          <div class="prob-bar-bg">
+            <div class="prob-bar-fill" :style="`width:${rnd.success_probability}%; background:${rnd.probHex}`"></div>
+          </div>
+          <div class="flex justify-between text-xs mt-1">
+            <span class="text-slate-500">Est. HPP</span>
+            <span class="font-bold text-emerald-600" x-text="formatCurrency(rnd.estimated_cost)"></span>
+          </div>
+        </div>
+
+        <div class="absolute inset-0 bg-slate-900/5 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-2 rounded-2xl">
+          <button class="px-3 py-1.5 bg-white text-slate-700 rounded-lg text-xs font-bold shadow hover:bg-slate-50">Detail</button>
+          <button @click.stop="window.location.href=`{% url 'rnd_form' %}?edit=${rnd.id}`" class="px-3 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-bold shadow hover:bg-slate-700">Edit</button>
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <div x-show="filteredRnDs.length === 0" class="text-center py-16 text-slate-400">
+    <i class="fas fa-flask text-4xl mb-3 opacity-30"></i>
+    <p class="font-medium">Formula tidak ditemukan</p>
+    <p class="text-sm mt-1">Coba ubah filter atau kata kunci pencarian</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+{{ rnds_data|json_script:"rnds-data" }}
+<script>
+function rndListApp() {
+  return {
+    rnds: [],
+    filter: 'all',
+    search: '',
+    statusConfig: {
+      idea: { label: 'Idea', badge: 'bg-violet-100 text-violet-700', icon: 'fas fa-lightbulb text-violet-500', iconBg: 'bg-violet-50 group-hover:bg-violet-100' },
+      in_trial: { label: 'In Trial', badge: 'bg-amber-100 text-amber-700', icon: 'fas fa-flask text-amber-500', iconBg: 'bg-amber-50 group-hover:bg-amber-100' },
+      review: { label: 'Review', badge: 'bg-sky-100 text-sky-700', icon: 'fas fa-clipboard-check text-sky-500', iconBg: 'bg-sky-50 group-hover:bg-sky-100' },
+      approved: { label: 'Approved', badge: 'bg-emerald-100 text-emerald-700', icon: 'fas fa-check-circle text-emerald-500', iconBg: 'bg-emerald-50 group-hover:bg-emerald-100' },
+    },
+    get filteredRnDs() {
+      const query = this.search.toLowerCase();
+      return this.rnds.filter((rnd) => {
+        const matchFilter = this.filter === 'all' || rnd.status === this.filter;
+        const matchSearch = rnd.name.toLowerCase().includes(query) || String(rnd.created_by || '').toLowerCase().includes(query);
+        return matchFilter && matchSearch;
+      });
+    },
+    get stats() {
+      const source = this.filteredRnDs;
+      return [
+        { label: 'Total Formula', value: source.length },
+        { label: 'In Trial', value: source.filter((rnd) => rnd.status === 'in_trial').length },
+        { label: 'Menunggu Review', value: source.filter((rnd) => rnd.status === 'review').length },
+        { label: 'Approved', value: source.filter((rnd) => rnd.status === 'approved').length },
+      ];
+    },
+    probColor(pct) {
+      if (pct >= 70) return 'text-emerald-600';
+      if (pct >= 40) return 'text-amber-600';
+      return 'text-rose-500';
+    },
+    probHex(pct) {
+      if (pct >= 70) return '#10b981';
+      if (pct >= 40) return '#f59e0b';
+      return '#f43f5e';
+    },
+    formatCurrency(num) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(Number(num || 0));
+    },
+    init() {
+      const el = document.getElementById('rnds-data');
+      if (!el || !el.textContent) return;
+      try {
+        const raw = JSON.parse(el.textContent) || [];
+        this.rnds = raw.map((r) => {
+          const pct = Number(r.success_probability || 0);
+          const status = r.status || 'idea';
+          return {
+            id: r.id,
+            name: r.name || r.code,
+            status,
+            trial_count: '#' + (r.trial_count || 1),
+            created_by: r.created_by || '-',
+            ingredient_count: Number(r.ingredient_count || 0),
+            success_probability: pct,
+            estimated_cost: Number(r.estimated_cost || 0),
+            bom_id: r.bom_id || null,
+            statusMeta: this.statusConfig[status] || this.statusConfig.idea,
+            probColor: this.probColor(pct),
+            probHex: this.probHex(pct),
+          };
+        });
+      } catch (error) {
+        this.rnds = [];
+      }
+    },
+  }
+}
+</script>
+{% endblock %}

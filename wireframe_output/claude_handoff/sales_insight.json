@@ -1,0 +1,675 @@
+{
+  "module_name": "sales_insight",
+  "template_total": 7,
+  "templates": [
+    {
+      "template_name": "lumra_pages/sales_insight/dashboard.html",
+      "template_file": "lumra_config/templates/lumra_pages/sales_insight/dashboard.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 1,
+      "structure_stats": {
+        "component_total": 90,
+        "interactive_total": 16,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "section",
+            "label": "[ SECTION ]",
+            "text_preview": "Home / Sales Insight / Dashboard Quick Actions Akses cepat untuk operasional har…"
+          },
+          {
+            "type": "breadcrumb",
+            "label": "BREADCRUMB",
+            "text_preview": "Home / Sales Insight / Dashboard"
+          },
+          {
+            "type": "breadcrumb",
+            "label": "BREADCRUMB",
+            "text_preview": "/"
+          },
+          {
+            "type": "breadcrumb",
+            "label": "BREADCRUMB",
+            "text_preview": "/"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H2)",
+            "text_preview": "Akses cepat untuk operasional hari ini"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/sales_insight/trends_analysis.html",
+      "template_file": "lumra_config/templates/lumra_pages/sales_insight/trends_analysis.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 1,
+      "structure_stats": {
+        "component_total": 30,
+        "interactive_total": 3,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "📈 Trends Analysis"
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "Last 7 Days Last 30 Days Last 90 Days Last Year All Categories Coffee Non-Coffee…"
+          },
+          {
+            "type": "input",
+            "label": "INPUT [select] period",
+            "text_preview": "period"
+          },
+          {
+            "type": "input",
+            "label": "INPUT [select] category",
+            "text_preview": "category"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: 🔄 Update",
+            "text_preview": "🔄 Update"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/sales_insight/pos.html",
+      "template_file": "lumra_config/templates/lumra_pages/sales_insight/pos.html",
+      "routes": [
+        {
+          "route": "pos/",
+          "url_name": "pos",
+          "url_file": "lumra_config/urls/sales.py",
+          "view_name": "pos_view"
+        }
+      ],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 77,
+        "interactive_total": 21,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "header",
+            "label": "[ HEADER ]",
+            "text_preview": "Point of Sale Kasir aktif —"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Point of Sale"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/sales_insight/market_insights.html",
+      "template_file": "lumra_config/templates/lumra_pages/sales_insight/market_insights.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 100,
+        "interactive_total": 5,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Market Insights"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Market Insights"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "{{ date_start }} → {{ date_end }} {% for label, days in presets %} {{ label }} {…"
+          },
+          {
+            "type": "calendar",
+            "label": "CALENDAR",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/sales_insight/sales_intelligence.html",
+      "template_file": "lumra_config/templates/lumra_pages/sales_insight/sales_intelligence.html",
+      "routes": [
+        {
+          "route": "history/",
+          "url_name": "sales_history",
+          "url_file": "lumra_config/urls/sales.py",
+          "view_name": "sales_history_view"
+        }
+      ],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 71,
+        "interactive_total": 21,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Sales & Insights / Sales History"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Sales History"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "badge",
+            "label": "BADGE / STATUS",
+            "text_preview": "{{ anomaly_count }} anomali"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Export",
+            "text_preview": "Export"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/sales_insight/financial_reports.html",
+      "template_file": "lumra_config/templates/lumra_pages/sales_insight/financial_reports.html",
+      "routes": [],
+      "forward_batch": "batch_4_complex",
+      "batch_reason": "Report/print/logic-heavy page, cocok setelah fondasi stabil.",
+      "complexity_score": 6,
+      "structure_stats": {
+        "component_total": 95,
+        "interactive_total": 6,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Financial Reports"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Financial Reports"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Print",
+            "text_preview": "Print"
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "{{ date_start }} → {{ date_end }} {% for label, days in presets %} {{ label }} {…"
+          },
+          {
+            "type": "calendar",
+            "label": "CALENDAR",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/sales_insight/sales_performance.html",
+      "template_file": "lumra_config/templates/lumra_pages/sales_insight/sales_performance.html",
+      "routes": [
+        {
+          "route": "performance/",
+          "url_name": "sales_performance",
+          "url_file": "lumra_config/urls/sales.py",
+          "view_name": "sales_performance_view"
+        }
+      ],
+      "forward_batch": "batch_4_complex",
+      "batch_reason": "Report/print/logic-heavy page, cocok setelah fondasi stabil.",
+      "complexity_score": 6,
+      "structure_stats": {
+        "component_total": 87,
+        "interactive_total": 20,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Revenue {{ total_revenue|rupiah }} {{ date_start }} → {{ date_end }}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Transaksi {{ total_orders }} Orders"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Avg / Order {{ avg_order_value|rupiah }} Per transaksi"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    }
+  ],
+  "views": [
+    {
+      "view_name": "dashboard_view",
+      "view_module": "lumra_config.views.dashboard_views",
+      "view_file": "lumra_config/views/dashboard_views.py",
+      "line": 457,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [
+        "dashboard_data",
+        "kpis",
+        "notifications",
+        "notifications_count",
+        "quick_stats"
+      ],
+      "context_expression": "{'kpis': kpis, 'quick_stats': quick_stats, 'dashboard_data': dashboard_data, 'notifications_count': notifications_count, 'notifications': notifications}",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def dashboard_view(request):\n    \"\"\"\n    Main dashboard.\n    - kpis, quick_stats  → Django context for SSR ({{ kpis.x }})\n    - dashboard_data     → json_script for JS auto-refresh bootstrap\n    All keys snake_case so template + JS use the same names.\n    \"\"\"\n    today      = timezone.now().date()\n    raw        = _fetch_dashboard_data(today)\n    kpis       = _build_kpis(raw)\n    period     = request.GET.get(\"period\", \"7d\")\n    chart_data = _get_chart_data(period)\n\n    # FIX-2: cast to str so that 0 is \"0\" (truthy) and Django's\n    #         |default:\"—\" filter does NOT replace it with a dash.\n    quick_stats = {\n        \"active_products\": str(raw[\"active_products\"]),\n        \"pending_orders\":  str(raw[\"pending_orders\"]),\n        \"total_locations\": str(raw[\"total_locations\"]),\n    }\n\n    dashboard_data = json.dumps({\n        \"kpis\":         kpis,\n        \"chart_data\":   chart_data,\n        \"quick_stats\":  quick_stats,\n        \"last_updated\": timezone.now().strftime(\"%H:%M\"),\n    })\n\n    # Placeholder for notifications\n    notifications_count = 0\n    notifications       = []\n\n    return render(request, \"lumra_pages/sales_insight/dashboard.html\", {\n        \"kpis\":                kpis,\n        \"quick_stats\":         quick_stats,\n        \"dashboard_data\":      dashboard_data,\n        \"notifications_count\": notifications_count,\n        \"notifications\":       notifications,\n    })"
+    },
+    {
+      "view_name": "pos_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 185,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def pos_view(request):\n    \"\"\"Point of Sale (POS) untuk transaksi penjualan.\n\n    The template expects `products` to be a JSON string (consumed via\n    `json_script`) rather than a raw queryset.  Previously we were\n    passing a queryset directly which triggered the\n    ``Object of type QuerySet is not JSON serializable`` error.\n\n    We also supply a ``categories`` value so the tab bar loop in the\n    template has something to iterate over.\n    \"\"\"\n\n    # queryset of variants with related product and category for later\n    # serialization; ordering mimics original behaviour\n    variants = (\n        ProductVariant.objects\n        .select_related(\"product__category\")\n        .order_by(\"sku\")\n    )\n\n    # convert to plain Python objects suitable for json.dumps()\n    products_data = []\n    for value_item in variants:\n        prod = v.product\n        products_data.append({\n            \"id\": v.id,\n            \"name\": prod.name,\n            \"sku\": v.sku,\n            \"price\": float(v.price_sell),\n            \"stock\": int(v.total_stock),\n            \"image_url\": prod.image.url if getattr(prod, \"image\", None) else \"\",\n            \"category_id\": str(prod.category_id) if prod.category_id else \"\",\n            \"category\": prod.category.name if prod.category else \"\",\n        })\n    # TODO[C5-N1]: Query di dalam loop → pindahkan ke atas loop.\n    # Gunakan: queryset = Model.objects.select_related(...).prefetch_related(...)\n    # lalu iterasi queryset di luar, TANPA query tambahan di dalam loop.\n\n    products_json = json.dumps(products_data)\n # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n # Gunakan Model.objects.select_related('...').prefetch_related('...')\n\n    # categories for the tabs; use Category model so IDs are available\n    from lumra_config.models import Category\n    categories = Category.objects.filter(is_active=True).order_by(\"name\")\n\n    # minimal extras so template can always call json_script safely\n    context = {\n        \"products\": products_json,\n        \"categories\": categories,\n        \"discount_presets\": json.dumps([]),   # will be replaced with real data later\n        \"payment_methods\": json.dumps([]),\n        \"held_orders\": json.dumps([]),\n        \"tax_rate\": 0,\n    }\n    return render(request, \"lumra_pages/sales_insight/pos.html\", context)"
+    },
+    {
+      "view_name": "sales_history_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 415,
+      "decorators": [
+        "login_required",
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def sales_history_view(request):\n    \"\"\"\n    Sales History — satu view, dua entry point:\n      /sales/history/          (sidebar Sales)\n      /insights/sales_insight/ (sidebar Insights) — alias di bawah\n    Template: lumra_pages/sales/sales_insight.html\n    \"\"\"\n    from .helpers import safe_get, safe_select_related\n \n    # ── Sorting ───────────────────────────────────────────────────────\n    ALLOWED_SORT = {\n        'order.id'            : 'order__id',\n        'order.customer_name' : 'order__customer_name',\n        'order.created_at'    : 'order__created_at',\n        'variant.product.name': 'variant__product__name',\n        'quantity'            : 'quantity',\n        'price'               : 'price',\n        'total'               : 'quantity',\n    }\n    sort_by = request.GET.get('sort_by', 'order.created_at')\n    order   = request.GET.get('order', 'desc')\n    db_sort = ALLOWED_SORT.get(sort_by, 'order__created_at')\n    if order == 'desc':\n        db_sort = '-' + db_sort\n \n    # ── Base queryset — hanya field yang PASTI ada ────────────────────\n    qs = OrderItem.objects.select_related(\n        'order',\n        'order__customer',\n        'variant',\n        'variant__product',\n    )\n \n    # Field opsional — ditambahkan hanya kalau ada di model\n    qs = safe_select_related(\n        qs,\n        'order__location',     # belum ada di model sekarang → di-skip otomatis\n        'order__cashier',      # idem\n        'variant__product__category',\n    )\n \n    qs = qs.order_by(db_sort)\n \n    # ── Filters ───────────────────────────────────────────────────────\n    search     = request.GET.get('search', '').strip()\n    store_id   = request.GET.get('store', '').strip()\n    date_start = request.GET.get('date_start', '').strip()\n    date_end   = request.GET.get('date_end', '').strip()\n \n    if search:\n        qs = qs.filter(\n            Q(order__customer_name__icontains=search) |\n            Q(variant__product__name__icontains=search) |\n            Q(variant__sku__icontains=search)\n        )\n \n    # Filter store hanya kalau field-nya ada di model Order\n    if store_id and model_has_field(Order, 'location'):\n        qs = qs.filter(order__location_id=store_id)\n \n    if date_start:\n        qs = qs.filter(order__created_at__date__gte=date_start)\n    if date_end:\n        qs = qs.filter(order__created_at__date__lte=date_end)\n \n    # ── Aggregates ────────────────────────────────────────────────────\n    sales_list   = list(qs)\n    total_qty    = sum(i.quantity for i in sales_list)\n    total_amount = sum(i.quantity * i.price for i in sales_list)\n    total_orders = len({i.order_id for i in sales_list})\n \n    # ── Anomaly detection — transaksi > 2× rata-rata ──────────────────\n    avg_amount  = float(total_amount) / total_orders if total_orders > 0 else 0\n    threshold   = avg_amount * 2\n    anomaly_ids = []\n \n    for item in sales_list:\n        item_total      = float(item.quantity * item.price)\n        item.is_anomaly = item_total > threshold and threshold > 0\n        if item.is_anomaly:\n            anomaly_ids.append(item.order_id)\n \n    anomaly_count = len(anomaly_ids)\n \n    # ── Daily growth ──────────────────────────────────────────────────\n    today     = timezone.now().date()\n    # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n    # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n    # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n    # Gunakan Model.objects.select_related('...').prefetch_related('...')\n    yesterday = today - timedelta(days=1)\n \n    def day_revenue(d):\n        try:\n            rows = OrderItem.objects.filter(order__created_at__date=d)\n            return float(sum(r.quantity * r.price for r in rows))\n        except Exception:\n            return 0.0\n \n    today_rev     = day_revenue(today)\n    yesterday_rev = day_revenue(yesterday)\n    daily_growth  = (\n        round((today_rev - yesterday_rev) / yesterday_rev * 100, 1)\n        if yesterday_rev > 0 else 0\n    )\n \n    # ── Sparkline 7 hari ─────────────────────────────────────────────\n    day_names        = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min']\n    sparkline_labels = []\n    sparkline_data   = []\n \n    for i in range(6, -1, -1):\n        data_dict = today - timedelta(days=i)\n        sparkline_labels.append('Hari Ini' if i == 0 else day_names[d.weekday()])\n        sparkline_data.append(day_revenue(d))\n \n    # ── Pagination ────────────────────────────────────────────────────\n    paginator = Paginator(sales_list, 25)\n    page_obj  = paginator.get_page(request.GET.get('page', 1))\n \n    # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n    # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n    # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n    # Gunakan Model.objects.select_related('...').prefetch_related('...')\n    # ── Stores — hanya kalau model Order punya field location ─────────\n    stores = []\n    if model_has_field(Order, 'location'):\n        stores = Location.objects.all().order_by('name')\n \n    context = {\n        'sales'            : page_obj,\n        'page_obj'         : page_obj,\n        'total_orders'     : total_orders,\n        'total_qty'        : total_qty,\n        'total_amount'     : total_amount,\n        'avg_amount'       : round(avg_amount, 2),\n        'anomaly_ids'      : anomaly_ids,\n        'anomaly_count'    : anomaly_count,\n        'daily_growth'     : daily_growth,\n        'sparkline_labels' : sparkline_labels,\n        'sparkline_data'   : sparkline_data,\n        'stores'           : stores,\n        'sort_by'          : sort_by,\n        'order'            : order,\n        'today_str'        : today.strftime('%Y-%m-%d'),\n        'yesterday_str'    : yesterday.strftime('%Y-%m-%d'),\n        'report_title'     : 'Sales History',\n    }\n \n    return render(request, 'lumra_pages/sales_insight/sales_intelligence.html', context)"
+    },
+    {
+      "view_name": "sales_performance_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 810,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def sales_performance_view(request):\n    \"\"\"\n    Sales Performance — 3 sections:\n    1. Target vs Realisasi (SalesTarget model)\n    2. Trend harian/mingguan (Chart.js line+bar)\n    3. Performa customer (repeat buyers, tier, new vs returning)\n \n    Menerima context dari Sales History via:\n      ?date_start=...&date_end=...&from=sales_history&highlight=trend\n    \"\"\"\n    from django.db.models import Avg, Count, Max, Min\n    from django.db.models.functions import TruncDate, TruncWeek\n    from lumra_config.models import Customer, SalesTarget\n    import calendar\n \n    # ── 1. Params & date range ─────────────────────\n    date_start = request.GET.get('date_start', '')\n    date_end   = request.GET.get('date_end',   '')\n    from_page  = request.GET.get('from', '')       # 'sales_history' or ''\n    highlight  = request.GET.get('highlight', '')  # 'trend' | 'target' | 'customer'\n \n    today = timezone.now().date()\n \n    if date_start and date_end:\n        try:\n            ds = datetime.strptime(date_start, '%Y-%m-%d').date()\n            de = datetime.strptime(date_end,   '%Y-%m-%d').date()\n        except ValueError:\n            ds = today.replace(day=1)\n            de = today\n    else:\n        ds = today.replace(day=1)   # default: bulan ini\n        de = today\n \n    filter_start = timezone.make_aware(datetime.combine(ds, time.min))\n    filter_end   = timezone.make_aware(datetime.combine(de, time.max))\n \n    # ── 2. Base queryset ───────────────────────────\n    orders_qs = (\n        Order.objects\n        .filter(created_at__range=(filter_start, filter_end))\n        .annotate(\n            order_total=Sum(\n                F('items__quantity') * F('items__price'),\n                output_field=DecimalField()\n            )\n        )\n    )\n \n    # ── 3. Section 1: Target vs Realisasi ─────────\n    # Ambil target untuk bulan-bulan dalam range\n    months_in_range = set()\n    cur = ds.replace(day=1)\n    while cur <= de:\n        months_in_range.add((cur.year, cur.month))\n        # Next month\n        if cur.month == 12:\n            cur = cur.replace(year=cur.year+1, month=1)\n        else:\n            cur = cur.replace(month=cur.month+1)\n \n    targets_qs = SalesTarget.objects.filter(\n        year__in=[y for y,m in months_in_range],\n        month__in=[m for y,m in months_in_range],\n    )\n    target_map = {(t.year, t.month): float(t.target_amount) for t in targets_qs}\n \n    # Realisasi per bulan\n    from django.db.models.functions import TruncMonth\n    monthly_revenue = (\n        Order.objects\n        .filter(created_at__range=(filter_start, filter_end))\n        .annotate(month=TruncMonth('created_at'))\n        .values('month')\n        .annotate(\n            revenue=Sum(\n                F('items__quantity') * F('items__price'),\n                output_field=DecimalField()\n            ),\n            order_count=Count('id', distinct=True)\n        )\n        .order_by('month')\n    )\n \n    target_chart = []\n    for row in monthly_revenue:\n        m = row['month']\n        yr, mo = m.year, m.month\n        tgt = target_map.get((yr, mo), 0)\n        rev = float(row['revenue'] or 0)\n        pct = round((rev / tgt * 100), 1) if tgt > 0 else None\n        target_chart.append({\n            'label'      : f\"{m.strftime('%b')} {yr}\",\n            'target'     : tgt,\n            'realisasi'  : rev,\n            'pct'        : pct,\n            'order_count': row['order_count'],\n            'status'     : 'achieved' if (pct or 0) >= 100\n                           else 'on_track' if (pct or 0) >= 70\n                           else 'behind',\n        })\n \n    # Total target & realisasi dalam range\n    total_target     = sum(target_map.get(ym, 0) for ym in months_in_range)\n    total_realisasi  = sum(r['realisasi'] for r in target_chart)\n    total_pct        = round(total_realisasi / total_target * 100, 1) if total_target else None\n \n    # Handle POST: set target baru\n    if request.method == 'POST' and request.user.is_staff:\n        try:\n            yr  = int(request.POST.get('target_year'))\n            mo  = int(request.POST.get('target_month'))\n            amt = float(request.POST.get('target_amount', 0))\n            notes = request.POST.get('notes', '')\n            SalesTarget.objects.update_or_create(\n                year=yr, month=mo,\n                defaults={\n                    'target_amount': amt,\n                    'notes'        : notes,\n                    'created_by'   : request.user,\n                }\n            )\n            messages.success(request, f\"Target berhasil disimpan.\")\n        except (ValueError, TypeError):\n            messages.error(request, \"Format angka tidak valid.\")\n        return redirect(request.path + f'?date_start={date_start}&date_end={date_end}')\n \n    # ── 4. Section 2: Trend harian ─────────────────\n    daily_trend = (\n        OrderItem.objects\n        .filter(order__created_at__range=(filter_start, filter_end))\n        .annotate(date=TruncDate('order__created_at'))\n        .values('date')\n        .annotate(\n            revenue=Sum(F('quantity') * F('price'), output_field=DecimalField()),\n            order_count=Count('order', distinct=True),\n            items_sold=Sum('quantity'),\n        )\n        .order_by('date')\n    )\n \n    trend_labels   = []\n    trend_revenue  = []\n    trend_orders   = []\n    trend_items    = []\n    for row in daily_trend:\n        trend_labels.append(row['date'].strftime('%d %b'))\n        trend_revenue.append(float(row['revenue'] or 0))\n        trend_orders.append(row['order_count'])\n        trend_items.append(row['items_sold'])\n \n    # Moving average 3-hari\n    ma3 = []\n    for i in range(len(trend_revenue)):\n        window = trend_revenue[max(0, i-2):i+1]\n        ma3.append(round(sum(window) / len(window), 2))\n \n    # ── 5. Section 3: Customer performance ─────────\n    # Revenue per customer dalam periode\n    customer_revenue = (\n        Order.objects\n        .filter(created_at__range=(filter_start, filter_end))\n        .values('customer_id', 'customer__name', 'customer__tier')\n        .annotate(\n            period_revenue=Sum(\n                F('items__quantity') * F('items__price'),\n                output_field=DecimalField()\n            ),\n            period_orders=Count('id', distinct=True),\n        )\n        .filter(customer_id__isnull=False)\n        .order_by('-period_revenue')[:10]\n    )\n \n    top_customers = [\n        {\n            'name'    : r['customer__name'] or 'Guest',\n            'tier'    : r['customer__tier'] or 'bronze',\n            'revenue' : float(r['period_revenue'] or 0),\n            'orders'  : r['period_orders'],\n            'avg'     : float(r['period_revenue'] or 0) / r['period_orders']\n                        if r['period_orders'] else 0,\n        }\n        for r in customer_revenue\n    ]\n \n    # Tier distribution dalam periode\n    tier_dist = (\n        Order.objects\n        .filter(\n            created_at__range=(filter_start, filter_end),\n            customer__isnull=False\n        )\n        .values('customer__tier')\n        .annotate(\n            count=Count('id', distinct=True),\n            revenue=Sum(\n                F('items__quantity') * F('items__price'),\n                output_field=DecimalField()\n            )\n        )\n        .order_by('-revenue')\n    )\n    tier_labels  = []\n    tier_counts  = []\n    tier_revenue = []\n    TIER_COLORS  = {\n        'platinum': '#6366f1',\n        'gold'    : '#f59e0b',\n        'silver'  : '#94a3b8',\n        'bronze'  : '#92400e',\n    }\n    for t in tier_dist:\n        tier_labels.append((t['customer__tier'] or 'bronze').capitalize())\n        # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n        # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n        # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n        # Gunakan Model.objects.select_related('...').prefetch_related('...')\n        tier_counts.append(t['count'])\n        tier_revenue.append(float(t['revenue'] or 0))\n \n    # New vs returning (customer created dalam periode = new)\n    new_customers = Customer.objects.filter(\n        created_at__range=(filter_start, filter_end)\n    ).count()\n    returning_customers = (\n        Order.objects\n        .filter(\n            created_at__range=(filter_start, filter_end),\n            customer__created_at__lt=filter_start,\n            customer__isnull=False\n        )\n        .values('customer_id')\n        .distinct()\n        .count()\n    )\n \n    # Repeat buyers (order > 1 dalam periode)\n    repeat_buyers = (\n        Order.objects\n        .filter(created_at__range=(filter_start, filter_end))\n        .values('customer_id')\n        .annotate(cnt=Count('id'))\n        .filter(cnt__gt=1, customer_id__isnull=False)\n        .count()\n    )\n \n    # Summary stats\n    total_orders_count = orders_qs.count()\n    total_revenue      = float(\n        orders_qs.aggregate(t=Sum('order_total'))['t'] or 0\n    )\n    avg_order_value    = total_revenue / total_orders_count if total_orders_count else 0\n \n    # Back-link context (dari Sales History)\n    back_context = None\n    if from_page == 'sales_history':\n        back_context = {\n            'url'        : f\"/reports/history/?date_start={date_start}&date_end={date_end}\",\n            'label'      : f\"Sales History ({ds.strftime('%d %b')} – {de.strftime('%d %b %Y')})\",\n            'orders'     : total_orders_count,\n            'revenue'    : total_revenue,\n        }\n \n    # ── 6. Context ─────────────────────────────────\n    context = {\n        # Meta\n        'report_title'    : 'Sales Performance',\n        'date_start'      : str(ds),\n        'date_end'        : str(de),\n        'from_page'       : from_page,\n        'highlight'       : highlight,\n        'back_context'    : back_context,\n \n        # Summary KPI\n        'total_revenue'   : total_revenue,\n        'total_orders'    : total_orders_count,\n        'avg_order_value' : avg_order_value,\n        'total_target'    : total_target,\n        'total_pct'       : total_pct,\n \n        # Section 1 — Target\n        'target_chart_json': json.dumps(target_chart),\n        'total_target'     : total_target,\n        'total_realisasi'  : total_realisasi,\n        'months_in_range'  : sorted(months_in_range),\n        'current_year'     : today.year,\n        'current_month'    : today.month,\n        'month_choices'    : [\n            (1,'Januari'),(2,'Februari'),(3,'Maret'),(4,'April'),\n            (5,'Mei'),(6,'Juni'),(7,'Juli'),(8,'Agustus'),\n            (9,'September'),(10,'Oktober'),(11,'November'),(12,'Desember'),\n        ],\n        'presets'          : [],   # passed as JS inline\n        'target_chart'     : target_chart,\n \n        # Section 2 — Trend\n        'trend_labels_json'  : json.dumps(trend_labels),\n        'trend_revenue_json' : json.dumps(trend_revenue),\n        'trend_orders_json'  : json.dumps(trend_orders),\n        'trend_ma3_json'     : json.dumps(ma3),\n \n        # Section 3 — Customer\n        'top_customers_json' : json.dumps(top_customers),\n        'tier_labels_json'   : json.dumps(tier_labels),\n        'tier_revenue_json'  : json.dumps(tier_revenue),\n        'new_customers'      : new_customers,\n        'returning_customers': returning_customers,\n        'repeat_buyers'      : repeat_buyers,\n    }\n \n    return render(request, 'lumra_pages/sales_insight/sales_performance.html', context)"
+    },
+    {
+      "view_name": "financial_reports_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 1169,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def financial_reports_view(request):\n    \"\"\"\n    Financial Reports — P&L dashboard:\n      - KPI: Revenue, HPP, Gross Profit, Gross Margin %\n      - Target vs Realisasi (dari SalesTarget)\n      - Trend Revenue vs HPP per bulan\n      - Naik/turun vs periode sebelumnya\n      - Diskon: placeholder (belum ada di model)\n    \"\"\"\n    from django.db.models.functions import TruncMonth\n    from decimal import Decimal\n\n    # ── Parse dates ──────────────────────────────────────────────\n    today = datetime.today().date()\n    default_start = today.replace(day=1)                          # awal bulan ini\n    default_end   = today\n\n    try:\n        date_start = datetime.strptime(request.GET.get('date_start', ''), '%Y-%m-%d').date()\n    except ValueError:\n        date_start = default_start\n\n    try:\n        date_end = datetime.strptime(request.GET.get('date_end', ''), '%Y-%m-%d').date()\n    except ValueError:\n        date_end = default_end\n\n    dt_start = datetime.combine(date_start, time.min)\n    dt_end   = datetime.combine(date_end,   time.max)\n\n    # ── Periode sebelumnya (untuk perbandingan naik/turun) ────────\n    period_days  = (date_end - date_start).days + 1\n    prev_end     = date_start - timedelta(days=1)\n    prev_start   = prev_end   - timedelta(days=period_days - 1)\n    dt_prev_start = datetime.combine(prev_start, time.min)\n    dt_prev_end   = datetime.combine(prev_end,   time.max)\n\n    # ── Helper: hitung revenue + HPP dari OrderItem queryset ──────\n    def calc_financials(qs_orders):\n        items = OrderItem.objects.filter(\n            order__in=qs_orders,\n            order__status='completed',\n        ).select_related('variant')\n        revenue = items.aggregate(\n            rev=Sum(F('quantity') * F('price'), output_field=DecimalField())\n        )['rev'] or Decimal('0')\n        hpp = items.aggregate(\n            hpp=Sum(F('quantity') * F('variant__price_buy'), output_field=DecimalField())\n        )['hpp'] or Decimal('0')\n        order_count = qs_orders.filter(status='completed').count()\n        return revenue, hpp, order_count\n\n    # ── Data periode ini ──────────────────────────────────────────\n    orders_now  = Order.objects.filter(created_at__range=(dt_start, dt_end))\n    revenue, hpp, order_count = calc_financials(orders_now)\n    gross_profit = revenue - hpp\n    gross_margin = round(gross_profit / revenue * 100, 1) if revenue else Decimal('0')\n\n    # ── Data periode sebelumnya ───────────────────────────────────\n    orders_prev = Order.objects.filter(created_at__range=(dt_prev_start, dt_prev_end))\n    rev_prev, hpp_prev, _ = calc_financials(orders_prev)\n    profit_prev = rev_prev - hpp_prev\n\n    def pct_change(now, prev):\n        if not prev:\n            return None\n        return round((now - prev) / prev * 100, 1)\n\n    rev_change    = pct_change(revenue, rev_prev)\n    profit_change = pct_change(gross_profit, profit_prev)\n    margin_prev   = round(profit_prev / rev_prev * 100, 1) if rev_prev else Decimal('0')\n    margin_change = pct_change(gross_margin, margin_prev)\n\n    # ── Target bulan ini (dari SalesTarget) ───────────────────────\n    months_in_range = set()\n    cursor = date_start.replace(day=1)\n    while cursor <= date_end:\n        months_in_range.add((cursor.year, cursor.month))\n        if cursor.month == 12:\n            cursor = cursor.replace(year=cursor.year + 1, month=1)\n        else:\n            cursor = cursor.replace(month=cursor.month + 1)\n\n    targets = SalesTarget.objects.filter(\n        year__in=[y for y, m in months_in_range],\n        month__in=[m for y, m in months_in_range],\n    )\n    target_map = {(t.year, t.month): t.target_amount for t in targets}\n\n    total_target = sum(\n        target_map.get(ym, Decimal('0')) for ym in months_in_range\n    )\n    target_pct = round(revenue / total_target * 100, 1) if total_target else None\n\n    # ── Monthly trend (Revenue vs HPP per bulan) ──────────────────\n    monthly_items = OrderItem.objects.filter(\n        order__created_at__range=(dt_start, dt_end),\n        order__status='completed',\n    ).annotate(\n        month=TruncMonth('order__created_at')\n    ).values('month').annotate(\n        revenue=Sum(F('quantity') * F('price'),         output_field=DecimalField()),\n        hpp    =Sum(F('quantity') * F('variant__price_buy'), output_field=DecimalField()),\n    ).order_by('month')\n\n    trend_labels  = []\n    trend_revenue = []\n    trend_hpp     = []\n    trend_profit  = []\n\n    MONTH_ID = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',\n                'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']\n\n    for row in monthly_items:\n        m = row['month']\n        lbl = f\"{MONTH_ID[m.month]} {m.year}\"\n        rev = float(row['revenue'] or 0)\n        h   = float(row['hpp']     or 0)\n        trend_labels.append(lbl)\n        trend_revenue.append(rev)\n        trend_hpp.append(h)\n        trend_profit.append(round(rev - h, 2))\n\n    # ── Target vs Realisasi per bulan (untuk chart bar) ───────────\n    target_bars = []\n    for ym in sorted(months_in_range):\n        y, m = ym\n        lbl = f\"{MONTH_ID[m]} {y}\"\n        tgt = float(target_map.get(ym, 0))\n        # cari revenue bulan itu dari trend\n        rev_month = 0\n        for i, row in enumerate(monthly_items):\n            if row['month'].year == y and row['month'].month == m:\n                rev_month = float(row['revenue'] or 0)\n                break\n        pct = round(rev_month / tgt * 100, 1) if tgt else None\n        status = 'achieved' if pct and pct >= 100 else \\\n                 'on_track' if pct and pct >= 70  else \\\n                 'behind'   if pct                else 'no_target'\n        target_bars.append({\n            'label'    : lbl,\n            'target'   : tgt,\n            'realisasi': rev_month,\n            'pct'      : pct,\n            'status'   : status,\n        })\n\n    # ── Avg daily revenue (untuk ekspektasi) ─────────────────────\n    avg_daily = float(revenue) / period_days if period_days else 0\n\n    # Proyeksi akhir bulan (kalau periode ini < 1 bulan penuh)\n    days_in_month = 30\n    expected_monthly = avg_daily * days_in_month\n\n    # ── Presets untuk date filter ──────────────────────────────────\n    presets = [\n        ('Bulan Ini', 0),\n        ('30 Hari',  30),\n        ('90 Hari',  90),\n        ('Tahun Ini', -1),\n    ]\n\n    context = {\n        'date_start': date_start.strftime('%Y-%m-%d'),\n        'date_end'  : date_end.strftime('%Y-%m-%d'),\n\n        # KPI cards\n        'revenue'       : revenue,\n        'hpp'           : hpp,\n        'gross_profit'  : gross_profit,\n        'gross_margin'  : gross_margin,\n        'order_count'   : order_count,\n        'avg_order_value': round(revenue / order_count, 2) if order_count else 0,\n\n        # Perbandingan periode\n        'rev_change'    : rev_change,\n        'profit_change' : profit_change,\n        'margin_change' : margin_change,\n        'rev_prev'      : rev_prev,\n        'profit_prev'   : profit_prev,\n\n        # Target\n        'total_target'  : total_target,\n        'target_pct'    : target_pct,\n\n        # Proyeksi\n        'avg_daily'     : round(avg_daily, 0),\n        'expected_monthly': round(expected_monthly, 0),\n        'period_days'   : period_days,\n\n        # Trend chart data (JSON)\n        'trend_labels_json' : json.dumps(trend_labels),\n        'trend_revenue_json': json.dumps(trend_revenue),\n        'trend_hpp_json'    : json.dumps(trend_hpp),\n        'trend_profit_json' : json.dumps(trend_profit),\n\n        # Target bars\n        'target_bars'       : target_bars,\n        'target_bars_json'  : json.dumps(target_bars),\n # TODO[C3-LONG]: 'market_insights_view' = 295 baris (max 30). Pecah: market_insights_view_validate(), market_insights_view_query(), market_insights_view_render()\n\n        # Misc\n        'presets'      : presets,\n        'current_year' : today.year,\n        'current_month': today.month,\n    }\n    return render(request, 'lumra_pages/sales_insight/financial_reports.html', context)"
+    },
+    {
+      "view_name": "market_insights_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 1493,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def market_insights_view(request):\n    \"\"\"\n    Market Insights — 3 sections:\n    1. Peak Hours & Waktu (heatmap jam × hari, jam tersibuk, hari terbaik)\n    2. Customer Behavior (pertumbuhan, churn risk, frekuensi, tier)\n    3. Product Intelligence (top laris, margin, slow-moving)\n    \"\"\"\n    from django.db.models.functions import TruncMonth, ExtractHour, ExtractWeekDay\n    from django.db.models import Avg, Max, Min, Count, DecimalField, F, Sum, Q\n    from lumra_config.models import Customer, ProductVariant, Product\n    from decimal import Decimal\n\n    today = timezone.now().date()\n\n    # ── Parse dates ──────────────────────────────────────────────\n    try:\n        date_start = datetime.strptime(request.GET.get('date_start', ''), '%Y-%m-%d').date()\n    except ValueError:\n        date_start = today - timedelta(days=29)\n\n    try:\n        date_end = datetime.strptime(request.GET.get('date_end', ''), '%Y-%m-%d').date()\n    except ValueError:\n        date_end = today\n\n    dt_start = timezone.make_aware(datetime.combine(date_start, time.min))\n    dt_end   = timezone.make_aware(datetime.combine(date_end,   time.max))\n\n    period_days = (date_end - date_start).days + 1\n\n    # ── Base order queryset ───────────────────────────────────────\n    orders_qs = Order.objects.filter(\n        created_at__range=(dt_start, dt_end),\n        status='completed',\n    )\n    has_data = orders_qs.exists()\n\n    # ════════════════════════════════════════════════════\n    # SECTION 1 — PEAK HOURS & WAKTU\n    # ════════════════════════════════════════════════════\n\n    # Transaksi per jam (0-23)\n    hourly = (\n        orders_qs\n        .annotate(hour=ExtractHour('created_at'))\n        .values('hour')\n        .annotate(count=Count('id'), revenue=Sum(\n            F('items__quantity') * F('items__price'),\n            output_field=DecimalField()\n        ))\n        .order_by('hour')\n    )\n\n    hour_counts  = [0] * 24\n    hour_revenue = [0.0] * 24\n    for row in hourly:\n        h = row['hour']\n        if 0 <= h < 24:\n            hour_counts[h]  = row['count']\n            hour_revenue[h] = float(row['revenue'] or 0)\n\n    peak_hour = hour_counts.index(max(hour_counts)) if any(hour_counts) else None\n    peak_hour_count = max(hour_counts) if any(hour_counts) else 0\n\n    # Transaksi per hari (1=Minggu, 2=Senin... 7=Sabtu di Django ExtractWeekDay)\n    DAY_NAMES = ['', 'Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab']\n    DAY_FULL  = ['', 'Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']\n\n    daily_pattern = (\n        orders_qs\n        .annotate(weekday=ExtractWeekDay('created_at'))\n        .values('weekday')\n        .annotate(count=Count('id'), revenue=Sum(\n            F('items__quantity') * F('items__price'),\n            output_field=DecimalField()\n        ))\n        .order_by('weekday')\n    )\n\n    day_counts  = [0] * 8   # index 1-7\n    day_revenue = [0.0] * 8\n    for row in daily_pattern:\n        data_dict = row['weekday']\n        if 1 <= d <= 7:\n            day_counts[d]  = row['count']\n            day_revenue[d] = float(row['revenue'] or 0)\n\n    best_day_idx = day_counts.index(max(day_counts[1:], default=0)) if any(day_counts[1:]) else None\n    best_day_name = DAY_FULL[best_day_idx] if best_day_idx else None\n\n    # Heatmap data: jam × hari (untuk JS grid)\n    heatmap_raw = (\n        orders_qs\n        .annotate(hour=ExtractHour('created_at'), weekday=ExtractWeekDay('created_at'))\n        .values('hour', 'weekday')\n        .annotate(count=Count('id'))\n    )\n    heatmap = {}\n    for row in heatmap_raw:\n        heatmap[f\"{row['weekday']}-{row['hour']}\"] = row['count']\n # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n # Gunakan Model.objects.select_related('...').prefetch_related('...')\n\n    # ════════════════════════════════════════════════════\n    # SECTION 2 — CUSTOMER BEHAVIOR\n    # ════════════════════════════════════════════════════\n\n    total_customers = Customer.objects.filter(is_active=True).count()\n\n    # Pertumbuhan customer baru per bulan (6 bulan terakhir)\n    six_months_ago = today.replace(day=1) - timedelta(days=5*30)\n    growth_qs = (\n        Customer.objects\n        .filter(created_at__date__gte=six_months_ago)\n        .annotate(month=TruncMonth('created_at'))\n        .values('month')\n        .annotate(new_count=Count('id'))\n        .order_by('month')\n    )\n    MONTH_ID = ['','Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des']\n    growth_labels = []\n    growth_data   = []\n    for row in growth_qs:\n        m = row['month']\n        growth_labels.append(f\"{MONTH_ID[m.month]} {m.year}\")\n        # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n        # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n        # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n        # Gunakan Model.objects.select_related('...').prefetch_related('...')\n        growth_data.append(row['new_count'])\n\n    # Churn risk — customer yang tidak order > 30 hari\n    churn_threshold = today - timedelta(days=30)\n    churn_count = Customer.objects.filter(\n        is_active=True,\n        last_order_date__isnull=False,\n        last_order_date__date__lt=churn_threshold,\n    ).count()\n    # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n    # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n    # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n    # Gunakan Model.objects.select_related('...').prefetch_related('...')\n    churn_pct = round(churn_count / total_customers * 100, 1) if total_customers else 0\n\n    # Customer belum pernah order sama sekali\n    never_ordered = Customer.objects.filter(\n        is_active=True,\n        last_order_date__isnull=True,\n    ).count()\n\n    # Frekuensi kunjungan rata-rata (orders per customer dalam periode)\n    active_customers_in_period = (\n        orders_qs\n        .filter(customer__isnull=False)\n        .values('customer_id')\n        .annotate(order_count=Count('id'))\n    )\n    if active_customers_in_period.exists():\n        avg_frequency = round(\n            sum(r['order_count'] for r in active_customers_in_period) /\n            active_customers_in_period.count(), 1\n        )\n        max_frequency = max(r['order_count'] for r in active_customers_in_period)\n    else:\n        avg_frequency = 0\n        max_frequency = 0\n\n    # Tier distribution\n    tier_dist = (\n        Customer.objects\n        .filter(is_active=True)\n        .values('tier')\n        .annotate(count=Count('id'))\n        .order_by('-count')\n    # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n    # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n    )\n    tier_labels_list = []\n    tier_counts_list = []\n    TIER_COLOR = {\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        'platinum': '#6366f1',\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        'gold'    : '#f59e0b',\n        'silver'  : '#94a3b8',\n        'bronze'  : '#92400e',\n    }\n    for t in tier_dist:\n        # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n        # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n        tier_labels_list.append((t['tier'] or 'bronze').capitalize())\n        # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n        # Gunakan Model.objects.select_related('...').prefetch_related('...')\n        tier_counts_list.append(t['count'])\n\n    # Top spending customers\n    top_spenders = Customer.objects.filter(\n        is_active=True, total_orders__gt=0\n    ).order_by('-total_spent')[:5]\n\n    # ════════════════════════════════════════════════════\n    # SECTION 3 — PRODUCT INTELLIGENCE\n    # ════════════════════════════════════════════════════\n\n    # Top 10 produk terlaris dalam periode\n    top_products = (\n        OrderItem.objects\n        .filter(order__in=orders_qs)\n        .values('variant__product__name', 'variant__product_id')\n        .annotate(\n            qty_sold=Sum('quantity'),\n            revenue=Sum(F('quantity') * F('price'), output_field=DecimalField()),\n        )\n        .order_by('-qty_sold')[:10]\n    )\n    top_products_list = [\n        {\n            'name'   : r['variant__product__name'],\n            'qty'    : r['qty_sold'],\n            'revenue': float(r['revenue'] or 0),\n        }\n        for r in top_products\n    ]\n\n    # Margin per produk (price_sell - price_buy) / price_sell × 100\n    margin_products = (\n    ProductVariant.objects\n    .select_related('product')\n    .filter(price_sell__gt=0, price_buy__gt=0)\n    .annotate(\n        margin_pct=(\n            (F('price_sell') - F('price_buy')) * 100 / F('price_sell')\n        )\n    )\n    .order_by('-margin_pct')[:10]\n)\n    margin_list = [\n        {\n            'name'      : v.product.name,\n            'sku'       : v.sku,\n            'price_sell': float(v.price_sell),\n            'price_buy' : float(v.price_buy),\n            'margin_pct': round(float((v.price_sell - v.price_buy) / v.price_sell * 100), 1),\n        }\n        for value_item in margin_products\n    ]\n\n    # Slow-moving — produk yang tidak terjual dalam periode tapi punya stok\n    sold_product_ids = set(\n        OrderItem.objects\n        .filter(order__in=orders_qs)\n        .values_list('variant__product_id', flat=True)\n        .distinct()\n    )\n    slow_moving = (\n        Product.objects\n        .exclude(id__in=sold_product_ids)\n        .filter(variants__isnull=False)\n        .distinct()\n        .order_by('name')[:10]\n    )\n    slow_moving_list = [\n        {'name': p.name, 'id': p.id}\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        for page_obj in slow_moving\n    ]\n\n    # ── Presets ───────────────────────────────────────────────────\n    presets = [\n        ('7 Hari',   7),\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        ('30 Hari',  30),\n        ('90 Hari',  90),\n        ('Tahun Ini', -1),\n    ]\n\n    context = {\n        'date_start' : date_start.strftime('%Y-%m-%d'),\n        'date_end'   : date_end.strftime('%Y-%m-%d'),\n        'period_days': period_days,\n        'has_data'   : has_data,\n        'presets'    : presets,\n\n        # Section 1 — Peak hours\n        'hour_counts_json'  : json.dumps(hour_counts),\n        'hour_revenue_json' : json.dumps(hour_revenue),\n        'day_counts_json'   : json.dumps(day_counts[1:]),   # index 1-7 → list 7 item\n        'day_revenue_json'  : json.dumps(day_revenue[1:]),\n        'day_names_json'    : json.dumps(DAY_NAMES[1:]),\n        'heatmap_json'      : json.dumps(heatmap),\n        'peak_hour'         : peak_hour,\n        'peak_hour_count'   : peak_hour_count,\n        'best_day_name'     : best_day_name,\n\n        # Section 2 — Customer behavior\n        'total_customers'   : total_customers,\n        'churn_count'       : churn_count,\n        'churn_pct'         : churn_pct,\n        'never_ordered'     : never_ordered,\n        'avg_frequency'     : avg_frequency,\n        'max_frequency'     : max_frequency,\n        'growth_labels_json': json.dumps(growth_labels),\n        'growth_data_json'  : json.dumps(growth_data),\n        'tier_labels_json'  : json.dumps(tier_labels_list),\n        'tier_counts_json'  : json.dumps(tier_counts_list),\n        'top_spenders'      : top_spenders,\n\n        # Section 3 — Product intelligence\n        'top_products_json' : json.dumps(top_products_list),\n        'margin_list_json'  : json.dumps(margin_list),\n        'slow_moving_list'  : slow_moving_list,\n        'top_products_count': len(top_products_list),\n        'slow_moving_count' : len(slow_moving_list),\n    }\n    return render(request, 'lumra_pages/sales_insight/market_insights.html', context)"
+    },
+    {
+      "view_name": "trends_analysis_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 1499,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def trends_analysis_view(request):\n    context = {\"trends\": {}}\n    return render(request, \"lumra_pages/sales_insight/trends_analysis.html\", context)"
+    },
+    {
+      "view_name": "download_report_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 1619,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def download_report_view(request, report_type):\n    # FIX: validasi report_type — sebelumnya semua string diterima dan dirender begitu saja\n    if report_type not in VALID_REPORT_TYPES:\n        raise Http404(f\"Report type '{report_type}' tidak dikenal.\")\n    context = {\"report_type\": report_type}\n    return render(request, \"lumra_pages/sales_insight/market_insights.html\", context)"
+    },
+    {
+      "view_name": "export_trends_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 1628,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def export_trends_view(request, trend_type):\n    # FIX: validasi trend_type\n    if trend_type not in VALID_TREND_TYPES:\n        raise Http404(f\"Trend type '{trend_type}' tidak dikenal.\")\n    context = {\"trend_type\": trend_type}\n    return render(request, \"lumra_pages/sales_insight/trends_analysis.html\", context)"
+    },
+    {
+      "view_name": "pos_view",
+      "view_module": "lumra_config.views.sales_views",
+      "view_file": "lumra_config/views/sales_views.py",
+      "line": 40,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def pos_view(request):\n    \"\"\"Point of Sale interface - main POS page with cart and products.\"\"\"\n    import json\n    from django.core.serializers.json import DjangoJSONEncoder\n    \n    # Placeholder: In production, fetch from database\n    products_json = json.dumps([], cls=DjangoJSONEncoder)\n    categories_json = json.dumps([], cls=DjangoJSONEncoder)\n    customers_json = json.dumps([], cls=DjangoJSONEncoder)\n    discounts_json = json.dumps([], cls=DjangoJSONEncoder)\n    payment_methods_json = json.dumps([\n        {'code': 'cash', 'name': 'Cash'},\n        {'code': 'card', 'name': 'Kartu Kredit'},\n        {'code': 'transfer', 'name': 'Transfer Bank'},\n    ], cls=DjangoJSONEncoder)\n    \n    context = {\n        'products_json': products_json,\n        'categories_json': categories_json,\n        'customers_json': customers_json,\n        'discounts_json': discounts_json,\n        'payment_methods_json': payment_methods_json,\n    }\n    return render(request, 'lumra_pages/sales_insight/pos.html', context)"
+    }
+  ]
+}

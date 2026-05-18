@@ -1,0 +1,153 @@
+{% extends 'base/base.html' %}
+{% block title %}Production Orders — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-card { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.95); border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: all 0.2s; }
+  .glass-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+  
+  .status-badge { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .st-pending { background: #f1f5f9; color: #475569; }
+  .st-process { background: #dbeafe; color: #2563eb; } /* Blue */
+  .st-completed { background: #dcfce7; color: #16a34a; } /* Green */
+  .st-hold { background: #fee2e2; color: #dc2626; } /* Red */
+
+  .progress-track { background: #e2e8f0; height: 6px; border-radius: 99px; overflow: hidden; margin-top: 10px; }
+  .progress-fill { background: #0f172a; height: 100%; transition: width 0.5s ease; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="poListApp()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex items-end justify-between">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+        <a href="#" class="hover:text-slate-800">Produksi</a>
+        <span>/</span>
+        <span class="text-slate-800 font-medium">Surat Perintah Kerja (SPK)</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800">Production Orders</h1>
+      <p class="text-sm text-slate-400 mt-0.5">Monitoring eksekusi produksi di lantai kerja</p>
+    </div>
+    <a href="{% url 'production_order_form' %}" class="bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:bg-slate-700 transition flex items-center gap-2">
+      <i class="fas fa-plus"></i> Buat SPK Baru
+    </a>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="flex items-center justify-between bg-white/60 backdrop-blur rounded-xl p-2 border border-white">
+    <div class="flex gap-1">
+      <button @click="filter='all'" class="px-4 py-2 rounded-lg text-xs font-bold transition" 
+              :class="filter==='all' ? 'bg-slate-800 text-white' : 'text-slate-600 hover:bg-slate-100'">Semua</button>
+      <button @click="filter='pending'" class="px-4 py-2 rounded-lg text-xs font-bold transition" 
+              :class="filter==='pending' ? 'bg-slate-200 text-slate-800' : 'text-slate-600 hover:bg-slate-100'">Antrian</button>
+      <button @click="filter='in_progress'" class="px-4 py-2 rounded-lg text-xs font-bold transition" 
+              :class="filter==='in_progress' ? 'bg-blue-100 text-blue-700' : 'text-slate-600 hover:bg-slate-100'">Sedang Dikerjakan</button>
+      <button @click="filter='completed'" class="px-4 py-2 rounded-lg text-xs font-bold transition" 
+              :class="filter==='completed' ? 'bg-emerald-100 text-emerald-700' : 'text-slate-600 hover:bg-slate-100'">Selesai</button>
+    </div>
+    <div class="relative">
+      <input type="text" x-model="search" placeholder="Cari PO / Produk..." class="bg-white/80 border border-slate-200 rounded-lg px-3 py-1.5 text-sm w-64 outline-none focus:border-slate-400">
+    </div>
+  </div>
+
+  <!-- Grid PO Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    <template x-for="po in filteredPOs" :key="po.id">
+      <div class="glass-card p-5 relative group cursor-pointer" @click="window.location.href='{% url 'production_order_detail' 0 %}'.replace('/0/', '/' + po.id + '/')">
+        
+        <!-- Top Row -->
+        <div class="flex justify-between items-start mb-3">
+          <div>
+            <h3 class="font-bold text-slate-800 text-lg leading-tight" x-text="po.product"></h3>
+            <p class="text-xs font-mono text-slate-400 mt-1" x-text="po.code"></p>
+          </div>
+          <span class="status-badge" :class="statusClass(po.status)" x-text="formatStatus(po.status)"></span>
+        </div>
+
+        <!-- Specs -->
+        <div class="grid grid-cols-2 gap-y-2 text-xs mb-4">
+          <div>
+            <span class="text-slate-400 block">Target Qty</span>
+            <span class="font-bold text-slate-700 text-sm" x-text="po.target_qty + ' ' + po.uom"></span>
+          </div>
+          <div class="text-right">
+            <span class="text-slate-400 block">Line</span>
+            <span class="font-bold text-slate-700 text-sm" x-text="po.line"></span>
+          </div>
+          <div>
+            <span class="text-slate-400 block">Plan Start</span>
+            <span class="font-medium text-slate-600" x-text="po.start_date"></span>
+          </div>
+          <div class="text-right">
+            <span class="text-slate-400 block">Priority</span>
+            <span class="font-bold text-rose-500" x-show="po.priority === 'High'" x-text="po.priority"></span>
+            <span class="font-bold text-slate-500" x-show="po.priority !== 'High'" x-text="po.priority"></span>
+          </div>
+        </div>
+
+        <!-- Progress (Only if started) -->
+        <template x-if="po.status !== 'pending'">
+          <div class="mt-auto">
+            <div class="flex justify-between text-[10px] font-bold mb-1">
+              <span class="text-slate-500">Progress</span>
+              <span class="text-slate-700" x-text="Math.round((po.produced_qty / po.target_qty) * 100) + '%'"></span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" :style="`width: ${(po.produced_qty / po.target_qty) * 100}%`"></div>
+            </div>
+          </div>
+        </template>
+
+        <!-- Hover Action -->
+        <div class="absolute inset-0 bg-slate-900/5 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition flex items-center justify-center rounded-2xl">
+          <button class="px-6 py-2 bg-slate-800 text-white rounded-lg text-sm font-bold shadow hover:bg-slate-700">
+            <i class="fas fa-cog mr-2"></i> Kontrol Produksi
+          </button>
+        </div>
+
+      </div>
+    </template>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ pos_data|json_script:"pos-data" }}
+<script>
+function poListApp() {
+  return {
+    pos: [],
+    filter: 'all',
+    search: '',
+    
+    get filteredPOs() {
+      return this.pos.filter(p => {
+        const f = this.filter === 'all' || p.status === this.filter;
+        const s = p.product.toLowerCase().includes(this.search.toLowerCase()) || p.code.toLowerCase().includes(this.search.toLowerCase());
+        return f && s;
+      });
+    },
+    
+    formatStatus(s) {
+      return s.replace('_', ' ');
+    },
+
+    statusClass(s) {
+      const map = { pending: 'st-pending', in_progress: 'st-process', completed: 'st-completed', on_hold: 'st-hold' };
+      return map[s] || 'st-pending';
+    },
+    
+    init(){
+      const el = document.getElementById('pos-data');
+      if (el && el.textContent) {
+        try { this.pos = JSON.parse(el.textContent) || []; } catch(e) { this.pos = []; }
+      }
+    }
+  }
+}
+</script>
+{% endblock %}

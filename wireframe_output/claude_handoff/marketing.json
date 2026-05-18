@@ -1,0 +1,1125 @@
+{
+  "module_name": "marketing",
+  "template_total": 11,
+  "templates": [
+    {
+      "template_name": "lumra_pages/marketing/add_campaign.html",
+      "template_file": "lumra_config/templates/lumra_pages/marketing/add_campaign.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 1,
+      "structure_stats": {
+        "component_total": 85,
+        "interactive_total": 40,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Campaigns / {% if campaign %}Edit{% else %}Buat Baru{% endif %}"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{% if campaign %}Edit Campaign {% else %}Campaign Baru {% endif %}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "badge",
+            "label": "BADGE / STATUS",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "{% csrf_token %} 1 Pilih Tipe Promo % Diskon Persen / Flat Potongan % atau nomin…"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='w-7 h-7 rounded-lg bg-rose-50 text-rose-400 hover:'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/marketing/campaign_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/marketing/campaign_list.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 1,
+      "structure_stats": {
+        "component_total": 64,
+        "interactive_total": 7,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Total Campaigns {{ total_campaigns|default:0 }} All time"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Active Now {{ active_campaigns|default:0 }} ▶ Running"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Total Budget {{ total_budget|default:0|floatformat:0 }} Across all"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/marketing/customer_segment_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/marketing/customer_segment_list.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 0,
+      "structure_stats": {
+        "component_total": 6,
+        "interactive_total": 2,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{{ page_title }}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT [text] Cari...",
+            "text_preview": "Cari..."
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: [icon]",
+            "text_preview": ""
+          },
+          {
+            "type": "search",
+            "label": "SEARCH BAR",
+            "text_preview": ""
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/marketing/discount.html",
+      "template_file": "lumra_config/templates/lumra_pages/marketing/discount.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 1,
+      "structure_stats": {
+        "component_total": 24,
+        "interactive_total": 3,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "💸 Discounts"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/marketing/loyalty_members.html",
+      "template_file": "lumra_config/templates/lumra_pages/marketing/loyalty_members.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 1,
+      "structure_stats": {
+        "component_total": 24,
+        "interactive_total": 3,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "🏆 Loyalty Program Members"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/marketing/promotion_calendar.html",
+      "template_file": "lumra_config/templates/lumra_pages/marketing/promotion_calendar.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 1,
+      "structure_stats": {
+        "component_total": 57,
+        "interactive_total": 11,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Voucher / Kalender Promo"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Kalender Promo"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "alert",
+            "label": "ALERT / NOTIFICATION",
+            "text_preview": "tumpang tindih terdeteksi Lihat semua detail"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/marketing/voucher_claim_log.html",
+      "template_file": "lumra_config/templates/lumra_pages/marketing/voucher_claim_log.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 0,
+      "structure_stats": {
+        "component_total": 6,
+        "interactive_total": 2,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{{ page_title }}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT [text] Cari...",
+            "text_preview": "Cari..."
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: [icon]",
+            "text_preview": ""
+          },
+          {
+            "type": "search",
+            "label": "SEARCH BAR",
+            "text_preview": ""
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/marketing/voucher_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/marketing/voucher_list.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 1,
+      "structure_stats": {
+        "component_total": 60,
+        "interactive_total": 11,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Voucher"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Voucher & Promo"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "calendar",
+            "label": "CALENDAR",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "input_no_label",
+            "message": "Input tanpa label/placeholder: <input> id='' class='mt-1 w-3.5 h-3.5 accent-emerald-500 rounded cursor'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/marketing/campaign.html",
+      "template_file": "lumra_config/templates/lumra_pages/marketing/campaign.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 64,
+        "interactive_total": 7,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Total Campaigns {{ total_campaigns|default:0 }} All time"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Active Now {{ active_campaigns|default:0 }} ▶ Running"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Total Budget {{ total_budget|default:0|floatformat:0 }} Across all"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/marketing/customer_segment_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/marketing/customer_segment_form.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 4,
+        "interactive_total": 1,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{{ form_title }}"
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "{% csrf_token %} {% if form_errors %} {{ form_errors }} {% endif %} {% for field…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Simpan",
+            "text_preview": "Simpan"
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/marketing/voucher_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/marketing/voucher_form.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 53,
+        "interactive_total": 22,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Voucher /"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "{# ══════════ LEFT: Form Fields ══════════ #} {# ── Section: Info Dasar ── #} In…"
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "{# ══════════ LEFT: Form Fields ══════════ #} {# ── Section: Info Dasar ── #} In…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    }
+  ],
+  "views": [
+    {
+      "view_name": "campaign_list",
+      "view_module": "lumra_config.views.marketing_views",
+      "view_file": "lumra_config/views/marketing_views.py",
+      "line": 20,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def campaign_list(request):\n    \"\"\"List all Campaigns.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/marketing/campaign_list.html', context)"
+    },
+    {
+      "view_name": "campaign_detail",
+      "view_module": "lumra_config.views.marketing_views",
+      "view_file": "lumra_config/views/marketing_views.py",
+      "line": 34,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def campaign_detail(request, pk):\n    \"\"\"View Campaign detail.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/marketing/campaign.html', context)"
+    },
+    {
+      "view_name": "discount_list",
+      "view_module": "lumra_config.views.marketing_views",
+      "view_file": "lumra_config/views/marketing_views.py",
+      "line": 43,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def discount_list(request):\n    \"\"\"List all Discounts.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/marketing/discount.html', context)"
+    },
+    {
+      "view_name": "discount_form",
+      "view_module": "lumra_config.views.marketing_views",
+      "view_file": "lumra_config/views/marketing_views.py",
+      "line": 50,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def discount_form(request, pk=None):\n    \"\"\"Create/Edit Discount.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/marketing/discount.html', context)"
+    },
+    {
+      "view_name": "voucher_list",
+      "view_module": "lumra_config.views.marketing_views",
+      "view_file": "lumra_config/views/marketing_views.py",
+      "line": 59,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def voucher_list(request):\n    \"\"\"List all Vouchers.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/marketing/voucher_list.html', context)"
+    },
+    {
+      "view_name": "voucher_form",
+      "view_module": "lumra_config.views.marketing_views",
+      "view_file": "lumra_config/views/marketing_views.py",
+      "line": 66,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def voucher_form(request, pk=None):\n    \"\"\"Create/Edit Voucher.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/marketing/voucher_form.html', context)"
+    },
+    {
+      "view_name": "voucher_claim_log",
+      "view_module": "lumra_config.views.marketing_views",
+      "view_file": "lumra_config/views/marketing_views.py",
+      "line": 73,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def voucher_claim_log(request):\n    \"\"\"View Voucher Claim Log.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/marketing/voucher_claim_log.html', context)"
+    },
+    {
+      "view_name": "loyalty_members",
+      "view_module": "lumra_config.views.marketing_views",
+      "view_file": "lumra_config/views/marketing_views.py",
+      "line": 82,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def loyalty_members(request):\n    \"\"\"List all Loyalty Members.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/marketing/loyalty_members.html', context)"
+    },
+    {
+      "view_name": "loyalty_member_form",
+      "view_module": "lumra_config.views.marketing_views",
+      "view_file": "lumra_config/views/marketing_views.py",
+      "line": 89,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def loyalty_member_form(request, pk=None):\n    \"\"\"Create/Edit Loyalty Member.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/marketing/loyalty_members.html', context)"
+    },
+    {
+      "view_name": "customer_segment_list",
+      "view_module": "lumra_config.views.marketing_views",
+      "view_file": "lumra_config/views/marketing_views.py",
+      "line": 98,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def customer_segment_list(request):\n    \"\"\"List all Customer Segments.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/marketing/customer_segment_list.html', context)"
+    },
+    {
+      "view_name": "customer_segment_form",
+      "view_module": "lumra_config.views.marketing_views",
+      "view_file": "lumra_config/views/marketing_views.py",
+      "line": 105,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def customer_segment_form(request, pk=None):\n    \"\"\"Create/Edit Customer Segment.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/marketing/customer_segment_form.html', context)"
+    },
+    {
+      "view_name": "promotion_calendar",
+      "view_module": "lumra_config.views.marketing_views",
+      "view_file": "lumra_config/views/marketing_views.py",
+      "line": 114,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def promotion_calendar(request):\n    \"\"\"View Promotion Calendar.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/marketing/promotion_calendar.html', context)"
+    },
+    {
+      "view_name": "campaign_list_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 864,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def campaign_list_view(request):\n    context = {\n        \"total_campaigns\":     0,\n        \"active_campaigns\":    0,\n        \"completed_campaigns\": 0,\n        \"campaigns\":           [],\n    }\n    return render(request, \"lumra_pages/marketing/campaign.html\", context)"
+    },
+    {
+      "view_name": "add_campaign_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 870,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def add_campaign_view(request):\n    context = {\"action\": \"add\"}\n    return render(request, \"lumra_pages/marketing/campaign.html\", context)"
+    },
+    {
+      "view_name": "edit_campaign_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 876,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def edit_campaign_view(request, campaign_id):\n    context = {\"campaign_id\": campaign_id, \"action\": \"edit\"}\n    return render(request, \"lumra_pages/marketing/campaign.html\", context)"
+    },
+    {
+      "view_name": "delete_campaign_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 882,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [
+        "campaign_id"
+      ],
+      "context_expression": "{'campaign_id': campaign_id}",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def delete_campaign_view(request, campaign_id):\n    if request.method != \"POST\":\n        return render(request, \"lumra_pages/marketing/campaign.html\", {\"campaign_id\": campaign_id})\n    messages.warning(request, \"Delete campaign belum diimplementasi.\")\n    return redirect(\"campaign_list\")"
+    },
+    {
+      "view_name": "discount_list_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 898,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def discount_list_view(request):\n    context = {\n        \"total_discounts\":  0,\n        \"active_discounts\": 0,\n        \"discounts\":        [],\n    }\n    return render(request, \"lumra_pages/marketing/discount.html\", context)"
+    },
+    {
+      "view_name": "add_discount_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 904,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def add_discount_view(request):\n    context = {\"action\": \"add\"}\n    return render(request, \"lumra_pages/marketing/discount.html\", context)"
+    },
+    {
+      "view_name": "edit_discount_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 910,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def edit_discount_view(request, discount_id):\n    context = {\"discount_id\": discount_id, \"action\": \"edit\"}\n    return render(request, \"lumra_pages/marketing/discount.html\", context)"
+    },
+    {
+      "view_name": "delete_discount_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 916,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [
+        "discount_id"
+      ],
+      "context_expression": "{'discount_id': discount_id}",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def delete_discount_view(request, discount_id):\n    if request.method != \"POST\":\n        return render(request, \"lumra_pages/marketing/discount.html\", {\"discount_id\": discount_id})\n    messages.warning(request, \"Delete discount belum diimplementasi.\")\n    return redirect(\"discount_list\")"
+    },
+    {
+      "view_name": "loyalty_members_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 932,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def loyalty_members_view(request):\n    context = {\n        \"total_members\":  0,\n        \"active_members\": 0,\n        \"members\":        [],\n    }\n    return render(request, \"lumra_pages/marketing/loyalty_members.html\", context)"
+    },
+    {
+      "view_name": "add_loyalty_member_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 938,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def add_loyalty_member_view(request):\n    context = {\"action\": \"add\"}\n    return render(request, \"lumra_pages/marketing/loyalty_members.html\", context)"
+    },
+    {
+      "view_name": "edit_loyalty_member_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 944,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def edit_loyalty_member_view(request, member_id):\n    context = {\"member_id\": member_id, \"action\": \"edit\"}\n    return render(request, \"lumra_pages/marketing/loyalty_members.html\", context)"
+    },
+    {
+      "view_name": "delete_loyalty_member_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 950,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [
+        "member_id"
+      ],
+      "context_expression": "{'member_id': member_id}",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def delete_loyalty_member_view(request, member_id):\n    if request.method != \"POST\":\n        return render(request, \"lumra_pages/marketing/loyalty_members.html\", {\"member_id\": member_id})\n    # TODO[C3-LONG]: 'financial_reports_view' = 206 baris (max 30). Pecah: financial_reports_view_validate(), financial_reports_view_query(), financial_reports_view_render()\n    messages.warning(request, \"Delete loyalty member belum diimplementasi.\")\n    return redirect(\"loyalty_members\")"
+    }
+  ]
+}

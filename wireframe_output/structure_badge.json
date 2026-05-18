@@ -1,0 +1,140 @@
+{
+  "filename": "badge.html",
+  "title": "badge",
+  "components": [
+    {
+      "type": "layout",
+      "tag": "span",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 2,
+      "path": "root/body/p/span",
+      "classes": "inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-900/30 text-emerald-300 border border-emerald-700",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "span",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 2,
+      "path": "root/body/p/span",
+      "classes": "inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-900/30 text-red-300 border border-red-700",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "span",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 2,
+      "path": "root/body/p/span",
+      "classes": "inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-amber-900/30 text-amber-300 border border-amber-700",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "span",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 2,
+      "path": "root/body/p/span",
+      "classes": "inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-900/30 text-blue-300 border border-blue-700",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "span",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 2,
+      "path": "root/body/p/span",
+      "classes": "inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-slate-800 text-slate-300 border border-slate-700",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 2,
+      "path": "root/body/p/span",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 2,
+      "path": "root/body/p/span",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 2,
+      "path": "root/body/p/span",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 2,
+      "path": "root/body/p/span",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 2,
+      "path": "root/body/p/span",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 5,
+    "by_type": {
+      "layout": 5
+    },
+    "interactive": 0,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

@@ -1,0 +1,164 @@
+{
+  "filename": "footer.html",
+  "title": "footer",
+  "components": [
+    {
+      "type": "footer",
+      "tag": "footer",
+      "label": "FOOTER",
+      "depth": 2,
+      "path": "root/body/p/footer",
+      "classes": "footer-glass fixed-footer",
+      "text_preview": "© {% now \"Y\" %} Lumra ERP • Emerald Odyssey v3.0 • Tentang UI aktif",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "footer",
+      "tag": "div",
+      "label": "FOOTER",
+      "depth": 3,
+      "path": "root/body/p/footer/div",
+      "classes": "footer-container",
+      "text_preview": "© {% now \"Y\" %} Lumra ERP • Emerald Odyssey v3.0 • Tentang UI aktif",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "depth": 4,
+      "path": "root/body/p/footer/div/div",
+      "classes": "flex flex-col items-center justify-center gap-1 md:flex-row md:flex-wrap md:gap-0",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (column)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "footer",
+      "tag": "span",
+      "label": "FOOTER",
+      "depth": 6,
+      "path": "root/body/p/footer/div/div/p/span",
+      "classes": "footer-separator",
+      "text_preview": "•",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "footer",
+      "tag": "span",
+      "label": "FOOTER",
+      "depth": 6,
+      "path": "root/body/p/footer/div/div/p/span",
+      "classes": "footer-separator",
+      "text_preview": "•",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "footer",
+      "tag": "span",
+      "label": "FOOTER",
+      "depth": 5,
+      "path": "root/body/p/footer/div/div/span",
+      "classes": "footer-pill",
+      "text_preview": "UI aktif",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 2,
+      "path": "root/body/p/footer",
+      "type": "footer",
+      "label": "FOOTER",
+      "text_preview": "© {% now \"Y\" %} Lumra ERP • Emerald Odyssey v3.0 • Tentang UI aktif"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/p/footer/div",
+      "type": "footer",
+      "label": "FOOTER",
+      "text_preview": "© {% now \"Y\" %} Lumra ERP • Emerald Odyssey v3.0 • Tentang UI aktif"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/p/footer/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/p/footer/div/div/p/span",
+      "type": "footer",
+      "label": "FOOTER",
+      "text_preview": "•"
+    },
+    {
+      "depth": 6,
+      "path": "root/body/p/footer/div/div/p/span",
+      "type": "footer",
+      "label": "FOOTER",
+      "text_preview": "•"
+    },
+    {
+      "depth": 5,
+      "path": "root/body/p/footer/div/div/span",
+      "type": "footer",
+      "label": "FOOTER",
+      "text_preview": "UI aktif"
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 6,
+    "by_type": {
+      "footer": 5,
+      "layout": 1
+    },
+    "interactive": 0,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

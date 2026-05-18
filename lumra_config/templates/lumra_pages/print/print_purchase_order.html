@@ -1,0 +1,67 @@
+{% extends 'lumra_pages/print/print_base.html' %}
+
+{% block content %}
+<div class="border-double mb-4 pb-4">
+    <table class="table-w-full" style="border-bottom: none;">
+        <tr>
+            <td style="border-bottom: none; padding-left: 0;">
+                <div class="font-bold" style="font-size: 24px;">PURCHASE ORDER</div>
+                <div class="text-sm">{{ document_number }}</div>
+                <div class="text-xs">Tanggal: {{ document_date|date:"d M Y" }}</div>
+            </td>
+            <td class="text-right" style="border-bottom: none; padding-right: 0;">
+                <div class="text-xs text-slate-400">Status</div>
+                <div class="font-bold">{{ status }}</div>
+                <div class="text-xs">Total: Rp {{ total|floatformat:0 }}</div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="mb-4">
+    <div class="font-bold">Kepada</div>
+    <div>{{ vendor.name }}</div>
+    <div class="text-sm">{{ vendor.contact_person|default:"-" }}</div>
+    <div class="text-sm">{{ vendor.address|default:"-" }}</div>
+</div>
+
+<div class="mb-4">
+    <div class="text-xs text-slate-400">Alamat Pengiriman</div>
+    <div class="text-sm">{{ delivery_address|default:"-" }}</div>
+</div>
+
+<table class="table-w-full">
+    <thead>
+        <tr>
+            <th>Barang</th>
+            <th>Deskripsi</th>
+            <th class="text-center">Unit</th>
+            <th class="text-right">Qty</th>
+            <th class="text-right">Harga</th>
+            <th class="text-right">Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.description }}</td>
+            <td class="text-center">{{ item.unit }}</td>
+            <td class="text-right">{{ item.quantity }}</td>
+            <td class="text-right">Rp {{ item.unit_price|floatformat:0 }}</td>
+            <td class="text-right">Rp {{ item.total|floatformat:0 }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" class="text-center text-slate-400">Belum ada item pembelian.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="mt-4 text-right">
+    <div class="text-sm">Subtotal: <span class="font-bold">Rp {{ subtotal|floatformat:0 }}</span></div>
+    <div class="text-sm">PPN 11%: <span class="font-bold">Rp {{ tax_amount|floatformat:0 }}</span></div>
+    <div class="font-bold" style="font-size: 16px;">Grand Total: Rp {{ total|floatformat:0 }}</div>
+</div>
+{% endblock %}

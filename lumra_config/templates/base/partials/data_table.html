@@ -1,0 +1,56 @@
+{# base/partials/data_table.html — DaisyUI Version
+   Reusable data table component with sorting, filtering
+#}
+
+<div class="overflow-x-auto">
+  <table class="table table-zebra table-compact w-full text-sm">
+    <thead>
+      <tr class="bg-base-200">
+        {% for column in table_columns %}
+          <th class="px-6 py-3 text-left font-semibold text-base-content">
+            {% if column.sortable %}
+              <button aria-label="Urutkan" class="flex items-center gap-2 hover:text-success transition-colors">
+                {{ column.label }}
+                <i class="fas fa-sort text-base-content/60"></i>
+              </button>
+            {% else %}
+              {{ column.label }}
+            {% endif %}
+          </th>
+        {% endfor %}
+        <th class="px-6 py-3 text-center font-semibold text-base-content">Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in table_rows %}
+        <tr class="hover:bg-base-100 transition-colors">
+          {% for column in table_columns %}
+            <td class="px-6 py-4 text-base-content">
+              {{ row|get_item:column.key }}
+            </td>
+          {% endfor %}
+          <td class="px-6 py-4 text-center">
+            <div class="flex items-center justify-center gap-2">
+              {% if row.edit_url %}
+                <a href="{{ row.edit_url }}" class="text-success hover:text-success/80" title="Edit">
+                  <i class="fas fa-pen"></i>
+                </a>
+              {% endif %}
+              {% if row.delete_url %}
+                <button aria-label="Hapus" onclick="deleteItem('{{ row.delete_url }}')" class="text-error hover:text-error/80" title="Hapus">
+                  <i class="fas fa-trash"></i>
+                </button>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="{{ table_columns|length|add:1 }}" class="px-6 py-8 text-center text-base-content/60">
+            Tidak ada data
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

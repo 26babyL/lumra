@@ -1,0 +1,160 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}Zona Gudang — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>[x-cloak]{display:none!important}
+
+  .glass-panel { background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border-radius: 20px; padding: 32px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid white; max-width: 600px; margin: 0 auto; }
+  .form-input { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 12px; background: rgba(255,255,255,0.5); transition: 0.2s; font-size: 14px; }
+  .form-input:focus { background: white; border-color: #00B8A3; outline: none; box-shadow: 0 0 0 3px rgba(0, 184, 163, 0.1); }
+  .type-card { border: 2px solid #e2e8f0; border-radius: 12px; padding: 16px; cursor: pointer; transition: 0.2s; text-align: center; }
+  .type-card:hover { border-color: #cbd5e1; }
+  .type-card.selected { border-color: #00B8A3; background: rgba(0, 184, 163, 0.05); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full relative z-10 flex items-center justify-center min-h-[80vh]" x-data="zoneFormApp()" x-init="init()" x-cloak>
+  
+  <div class="glass-panel w-full">
+    <div class="text-center mb-8">
+      <h1 class="text-2xl font-bold text-slate-800">Tambah Zona Baru</h1>
+      <p class="text-sm text-slate-500 mt-1">Tentukan area penyimpanan fisik barang</p>
+    </div>
+
+    <form @submit.prevent="submitForm" class="space-y-6">
+      <!-- Type Selection -->
+      <div>
+        <label class="block text-sm font-bold text-slate-700 mb-3">Tipe Penyimpanan</label>
+        <div class="grid grid-cols-3 gap-3">
+          <div class="type-card" :class="{'selected': form.type==='rack'}" @click="form.type='rack'">
+            <i class="fas fa-boxes-stacked text-2xl mb-2 text-emerald-500"></i>
+            <div class="font-bold text-slate-700 text-sm">Rack</div>
+            <div class="text-[10px] text-slate-400">Rak</div>
+          </div>
+          <div class="type-card" :class="{'selected': form.type==='cold'}" @click="form.type='cold'">
+            <i class="fas fa-snowflake text-2xl mb-2 text-blue-500"></i>
+            <div class="font-bold text-slate-700 text-sm">Cold</div>
+            <div class="text-[10px] text-slate-400">Dingin</div>
+          </div>
+          <div class="type-card" :class="{'selected': form.type==='frozen'}" @click="form.type='frozen'">
+            <i class="fas fa-icicles text-2xl mb-2 text-indigo-500"></i>
+            <div class="font-bold text-slate-700 text-sm">Frozen</div>
+            <div class="text-[10px] text-slate-400">Beku</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Kode Zona</label>
+          <input type="text" x-model="form.code" placeholder="Cth: A-01" class="form-input font-mono font-bold text-slate-700">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Nama Area</label>
+          <input type="text" x-model="form.name" placeholder="Cth: Rak Kopi Utama" class="form-input">
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Lokasi Fisik</label>
+        <select aria-label="Input" x-model="form.location_id" class="form-input">
+          <option value="">Pilih Lokasi...</option>
+          <template x-for="l in locations" :key="l.id">
+            <option :value="l.id" x-text="l.name"></option>
+          </template>
+        </select>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Kapasitas Max (Unit/Pallet)</label>
+          <input aria-label="Input" type="number" x-model="form.capacity" class="form-input">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Dimensi (PxLxT)</label>
+          <input type="text" x-model="form.dimensions" placeholder="200x100x50 cm" class="form-input">
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Catatan</label>
+        <input type="text" x-model="form.notes" placeholder="Opsional" class="form-input">
+      </div>
+
+      <div class="pt-6 flex justify-end gap-3">
+        <button type="button" onclick="history.back()" class="px-6 py-2.5 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-100 transition">Batal</button>
+        <button type="submit" class="px-8 py-2.5 rounded-lg text-sm font-bold bg-slate-800 text-white shadow-lg shadow-slate-300 hover:bg-slate-700 transition">
+          Simpan Zona
+        </button>
+      </div>
+    </form>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+{{ locations_data|json_script:"locations-data" }}
+<script>
+function zoneFormApp() {
+  return {
+    locations: [],
+    form: {
+      type: 'rack',
+      code: '',
+      name: '',
+      location_id: '',
+      capacity: '',
+      dimensions: '',
+      notes: ''
+    },
+    init() {
+      const el = document.getElementById('locations-data');
+      if (el && el.textContent) {
+        try { this.locations = JSON.parse(el.textContent) || []; } catch(e) { this.locations = []; }
+      }
+    },
+    submitForm() {
+      if(!this.form.code || !this.form.name || !this.form.location_id) {
+        alert('Mohon lengkapi kode dan nama zona');
+        return;
+      }
+
+      const payload = {
+        zone_type: this.form.type,
+        code: this.form.code,
+        name: this.form.name,
+        location_id: this.form.location_id,
+        capacity: this.form.capacity || 0,
+        notes: this.form.notes || '',
+        is_active: true,
+      };
+
+      const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+      };
+
+      fetch('{{ submit_url }}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken'),
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(r => r.json().then(j => ({ ok: r.ok, j })))
+      .then(({ ok, j }) => {
+        if (!ok || !j.success) throw new Error(j.error || 'Gagal menyimpan zona');
+        window.location.href = '{% url 'warehouse_zones' %}';
+      })
+      .catch(e => alert(e.message || 'Terjadi kesalahan'));
+    }
+  }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,254 @@
+{% extends "base/base_hybrid.html" %}
+{% block title %}Neraca — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="bsApp()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-base-content">Neraca (Balance Sheet)</h1>
+      <p class="text-sm text-base-content/60 mt-0.5">Laporan posisi keuangan perusahaan.</p>
+    </div>
+    <div class="flex items-center gap-3 card bg-base-100 shadow-lg border border-base-300 px-4 py-2">
+      <label class="text-xs font-bold tracking-widest uppercase text-base-content/60 mr-2">Per</label>
+      <input aria-label="Per" type="date" x-model="asOfDate" @change="window.location.href=`?as_of_date=${asOfDate}`" class="input input-bordered input-sm">
+      <button aria-label="Unduh" class="btn btn-ghost btn-sm">
+        <i class="fas fa-download"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Visual Balance Check -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+    <!-- Assets Bar -->
+    <div class="card bg-base-100 shadow-lg border border-base-300 p-4">
+      <div class="flex items-center gap-4">
+        <div class="text-right flex-1">
+          <p class="text-xs font-bold tracking-widest uppercase text-base-content/60">Total Aset</p>
+          <p class="text-lg font-black font-mono" x-text="formatCurrency(totalAssets)"></p>
+        </div>
+        <div class="w-full bg-base-200 rounded-full h-4 overflow-hidden">
+          <div class="h-full bg-info" :style="`width: 100%`"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Liab+Equity Bar -->
+    <div class="card bg-base-100 shadow-lg border border-base-300 p-4">
+      <div class="flex items-center gap-4">
+        <div class="text-right flex-1">
+          <p class="text-xs font-bold tracking-widest uppercase text-base-content/60">Total Kewajiban + Modal</p>
+          <p class="text-lg font-black font-mono" x-text="formatCurrency(totalLiabilitiesEquity)"></p>
+        </div>
+        <div class="w-full bg-base-200 rounded-full h-4 overflow-hidden">
+          <div class="h-full bg-success" :style="`width: 100%`"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Balance Sheet Table -->
+  <div class="card bg-base-100 shadow-lg border border-base-300">
+    <div class="p-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Assets Section -->
+        <div>
+          <h3 class="text-lg font-bold text-base-content mb-4 pb-2 border-b border-base-300">ASET</h3>
+          
+          <table class="table table-compact w-full">
+            <tbody>
+              <!-- Current Assets -->
+              <tr class="bg-base-200">
+                <td colspan="2" class="font-bold text-sm">Aset Lancar</td>
+              </tr>
+              <template x-for="asset in currentAssets" :key="asset.id">
+                <tr class="hover:bg-base-200">
+                  <td class="col-label" x-text="asset.name"></td>
+                  <td class="col-value font-mono" x-text="formatCurrency(asset.amount)"></td>
+                </tr>
+              </template>
+              <tr class="row-sub">
+                <td class="font-semibold">Total Aset Lancar</td>
+                <td class="col-value font-mono font-bold" x-text="formatCurrency(totalCurrentAssets)"></td>
+              </tr>
+              
+              <!-- Fixed Assets -->
+              <tr class="bg-base-200">
+                <td colspan="2" class="font-bold text-sm mt-4">Aset Tetap</td>
+              </tr>
+              <template x-for="asset in fixedAssets" :key="asset.id">
+                <tr class="hover:bg-base-200">
+                  <td class="col-label" x-text="asset.name"></td>
+                  <td class="col-value font-mono" x-text="formatCurrency(asset.amount)"></td>
+                </tr>
+              </template>
+              <tr class="row-sub">
+                <td class="font-semibold">Total Aset Tetap</td>
+                <td class="col-value font-mono font-bold" x-text="formatCurrency(totalFixedAssets)"></td>
+              </tr>
+              
+              <!-- Total Assets -->
+              <tr class="row-total">
+                <td class="font-bold">TOTAL ASET</td>
+                <td class="col-value font-mono font-bold" x-text="formatCurrency(totalAssets)"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Liabilities & Equity Section -->
+        <div>
+          <h3 class="text-lg font-bold text-base-content mb-4 pb-2 border-b border-base-300">KEWAJIBAN & MODAL</h3>
+          
+          <table class="table table-compact w-full">
+            <tbody>
+              <!-- Current Liabilities -->
+              <tr class="bg-base-200">
+                <td colspan="2" class="font-bold text-sm">Kewajiban Lancar</td>
+              </tr>
+              <template x-for="liability in currentLiabilities" :key="liability.id">
+                <tr class="hover:bg-base-200">
+                  <td class="col-label" x-text="liability.name"></td>
+                  <td class="col-value font-mono" x-text="formatCurrency(liability.amount)"></td>
+                </tr>
+              </template>
+              <tr class="row-sub">
+                <td class="font-semibold">Total Kewajiban Lancar</td>
+                <td class="col-value font-mono font-bold" x-text="formatCurrency(totalCurrentLiabilities)"></td>
+              </tr>
+              
+              <!-- Long-term Liabilities -->
+              <tr class="bg-base-200">
+                <td colspan="2" class="font-bold text-sm mt-4">Kewajiban Jangka Panjang</td>
+              </tr>
+              <template x-for="liability in longTermLiabilities" :key="liability.id">
+                <tr class="hover:bg-base-200">
+                  <td class="col-label" x-text="liability.name"></td>
+                  <td class="col-value font-mono" x-text="formatCurrency(liability.amount)"></td>
+                </tr>
+              </template>
+              <tr class="row-sub">
+                <td class="font-semibold">Total Kewajiban Jangka Panjang</td>
+                <td class="col-value font-mono font-bold" x-text="formatCurrency(totalLongTermLiabilities)"></td>
+              </tr>
+              
+              <!-- Total Liabilities -->
+              <tr class="row-total">
+                <td class="font-bold">TOTAL KEWAJIBAN</td>
+                <td class="col-value font-mono font-bold" x-text="formatCurrency(totalLiabilities)"></td>
+              </tr>
+              
+              <!-- Equity -->
+              <tr class="bg-base-200">
+                <td colspan="2" class="font-bold text-sm mt-4">Modal</td>
+              </tr>
+              <template x-for="equity in equityItems" :key="equity.id">
+                <tr class="hover:bg-base-200">
+                  <td class="col-label" x-text="equity.name"></td>
+                  <td class="col-value font-mono" x-text="formatCurrency(equity.amount)"></td>
+                </tr>
+              </template>
+              <tr class="row-total">
+                <td class="font-bold">TOTAL MODAL</td>
+                <td class="col-value font-mono font-bold" x-text="formatCurrency(totalEquity)"></td>
+              </tr>
+              
+              <!-- Total Liabilities + Equity -->
+              <tr class="row-grand">
+                <td class="font-bold">TOTAL KEWAJIBAN + MODAL</td>
+                <td class="col-value font-mono font-bold" x-text="formatCurrency(totalLiabilitiesEquity)"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function bsApp() {
+  return {
+    asOfDate: '2024-01-31',
+    
+    // Assets Data
+    currentAssets: [
+      { id: 1, name: 'Kas dan Setara Kas', amount: 50000000 },
+      { id: 2, name: 'Piutang Usaha', amount: 25000000 },
+      { id: 3, name: 'Persediaan', amount: 75000000 }
+    ],
+    
+    fixedAssets: [
+      { id: 4, name: 'Tanah dan Bangunan', amount: 200000000 },
+      { id: 5, name: 'Peralatan', amount: 50000000 },
+      { id: 6, name: 'Akumulasi Penyusutan', amount: -30000000 }
+    ],
+    
+    // Liabilities Data
+    currentLiabilities: [
+      { id: 7, name: 'Hutang Usaha', amount: 15000000 },
+      { id: 8, name: 'Hutang Pajak', amount: 5000000 }
+    ],
+    
+    longTermLiabilities: [
+      { id: 9, name: 'Hutang Bank Jangka Panjang', amount: 50000000 }
+    ],
+    
+    // Equity Data
+    equityItems: [
+      { id: 10, name: 'Modal Saham', amount: 100000000 },
+      { id: 11, name: 'Laba Ditahan', amount: 45000000 }
+    ],
+    
+    // Computed Values
+    totalCurrentAssets: 0,
+    totalFixedAssets: 0,
+    totalAssets: 0,
+    totalCurrentLiabilities: 0,
+    totalLongTermLiabilities: 0,
+    totalLiabilities: 0,
+    totalEquity: 0,
+    totalLiabilitiesEquity: 0,
+    
+    init() {
+      this.calculateTotals();
+    },
+    
+    calculateTotals() {
+      this.totalCurrentAssets = this.currentAssets.reduce((sum, asset) => sum + asset.amount, 0);
+      this.totalFixedAssets = this.fixedAssets.reduce((sum, asset) => sum + asset.amount, 0);
+      this.totalAssets = this.totalCurrentAssets + this.totalFixedAssets;
+      
+      this.totalCurrentLiabilities = this.currentLiabilities.reduce((sum, liability) => sum + liability.amount, 0);
+      this.totalLongTermLiabilities = this.longTermLiabilities.reduce((sum, liability) => sum + liability.amount, 0);
+      this.totalLiabilities = this.totalCurrentLiabilities + this.totalLongTermLiabilities;
+      
+      this.totalEquity = this.equityItems.reduce((sum, equity) => sum + equity.amount, 0);
+      this.totalLiabilitiesEquity = this.totalLiabilities + this.totalEquity;
+    },
+    
+    formatCurrency(amount) {
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0
+      }).format(amount);
+    }
+  }
+}
+</script>
+
+<style>
+  .col-label { padding-right: 20px; }
+  .col-value { text-align: right; font-family: monospace; font-weight: 600; }
+  .row-sub { padding-left: 20px; font-size: 12px; }
+  .row-total { font-weight: 800; color: #0f172a; border-top: 1px solid #cbd5e1; margin-top: 4px; padding-top: 8px; }
+  .row-grand { font-weight: 900; font-size: 15px; color: #0f172a; border-top: 2px solid #94a3b8; margin-top: 8px; padding-top: 12px; }
+</style>
+{% endblock %}

@@ -1,0 +1,244 @@
+{
+  "filename": "cash_flow.html",
+  "title": "Laporan Arus Kas (Cash Flow)",
+  "components": [
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "w-full flex-1 space-y-6 relative z-10",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": "cfApp()"
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "flex items-end justify-between mb-6",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h1",
+      "label": "HEADING (H1)",
+      "depth": 4,
+      "path": "root/body/div/div/div/h1",
+      "classes": "text-2xl font-bold text-slate-800",
+      "text_preview": "Laporan Arus Kas (Cash Flow)",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "flex items-center gap-3 glass-card px-4 py-2",
+      "text_preview": "Periode",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "input",
+      "label": "INPUT [month] period",
+      "depth": 4,
+      "path": "root/body/div/div/div/input",
+      "classes": "bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-sm font-bold text-slate-700 outline-none focus:border-slate-400",
+      "text_preview": "period",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: [icon]",
+      "depth": 4,
+      "path": "root/body/div/div/div/button",
+      "classes": "text-slate-400 hover:text-slate-600",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "glass-card overflow-hidden",
+      "text_preview": "Cash Flow untuk Periode Berakhir Aktivitas Operasional Arus Kas Bersih dari Akti…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h2",
+      "label": "HEADING (H2)",
+      "depth": 4,
+      "path": "root/body/div/div/div/h2",
+      "classes": "font-bold text-slate-800 mb-1",
+      "text_preview": "Cash Flow untuk Periode Berakhir",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "table",
+      "tag": "table",
+      "label": "[ TABLE ]",
+      "depth": 4,
+      "path": "root/body/div/div/div/table",
+      "classes": "cf-table",
+      "text_preview": "Aktivitas Operasional Arus Kas Bersih dari Aktivitas Operasional Aktivitas Inves…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/h1",
+      "type": "heading",
+      "label": "HEADING (H1)",
+      "text_preview": "Laporan Arus Kas (Cash Flow)"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "Periode"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/input",
+      "type": "input",
+      "label": "INPUT [month] period",
+      "text_preview": "period"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/button",
+      "type": "button",
+      "label": "BUTTON: [icon]",
+      "text_preview": ""
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "Cash Flow untuk Periode Berakhir Aktivitas Operasional Arus Kas Bersih dari Akti…"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/h2",
+      "type": "heading",
+      "label": "HEADING (H2)",
+      "text_preview": "Cash Flow untuk Periode Berakhir"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/table",
+      "type": "table",
+      "label": "[ TABLE ]",
+      "text_preview": "Aktivitas Operasional Arus Kas Bersih dari Aktivitas Operasional Aktivitas Inves…"
+    }
+  ],
+  "issues": [
+    {
+      "type": "alpine_xcloak",
+      "severity": "info",
+      "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template",
+      "path": ""
+    }
+  ],
+  "stats": {
+    "total_components": 9,
+    "by_type": {
+      "layout": 2,
+      "heading": 2,
+      "card": 2,
+      "input": 1,
+      "button": 1,
+      "table": 1
+    },
+    "interactive": 2,
+    "with_scroll": 0,
+    "with_form_fields": 4,
+    "scroll_nestings": 0,
+    "issues": 1,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 1
+    }
+  }
+}

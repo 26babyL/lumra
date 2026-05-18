@@ -1,0 +1,94 @@
+{
+  "filename": "form_field.html",
+  "title": "form_field",
+  "components": [
+    {
+      "type": "input",
+      "tag": "textarea",
+      "label": "INPUT [textarea] {{ name }}",
+      "depth": 2,
+      "path": "root/body/div/textarea",
+      "classes": "f-input inp{% if error %} err{% endif %}",
+      "text_preview": "{{ name }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": true,
+      "id": "id_{{ name }}",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "select",
+      "label": "INPUT [select] {{ name }}",
+      "depth": 2,
+      "path": "root/body/div/select",
+      "classes": "f-input inp{% if error %} err{% endif %}",
+      "text_preview": "{{ name }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": true,
+      "id": "id_{{ name }}",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "input",
+      "label": "INPUT [{{ field_type }}] {{ name }}",
+      "depth": 2,
+      "path": "root/body/div/input",
+      "classes": "f-input inp{% if error %} err{% endif %}",
+      "text_preview": "{{ name }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": true,
+      "id": "id_{{ name }}",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 2,
+      "path": "root/body/div/textarea",
+      "type": "input",
+      "label": "INPUT [textarea] {{ name }}",
+      "text_preview": "{{ name }}"
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/select",
+      "type": "input",
+      "label": "INPUT [select] {{ name }}",
+      "text_preview": "{{ name }}"
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/input",
+      "type": "input",
+      "label": "INPUT [{{ field_type }}] {{ name }}",
+      "text_preview": "{{ name }}"
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 3,
+    "by_type": {
+      "input": 3
+    },
+    "interactive": 3,
+    "with_scroll": 0,
+    "with_form_fields": 3,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

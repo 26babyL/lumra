@@ -1,0 +1,39 @@
+# Core
+Django>=6.0
+psycopg2-binary
+djangorestframework
+django-unfold
+
+# UI & Frontend
+django-tailwind
+django-crispy-forms
+crispy-tailwind
+django-widget-tweaks
+django-htmx
+django-browser-reload
+
+# Performance & Search
+redis
+django-cacheops
+django-tables2
+django-filter
+django-queryset-csv
+meilisearch
+
+# Background Tasks
+celery[redis]
+django-celery-beat
+django-celery-results
+
+# Monitoring & Security
+django-debug-toolbar
+django-silk
+sentry-sdk
+django-axes
+django-environ
+django-extensions
+
+# Utilities
+weasyprint
+openpyxl
+Pillow

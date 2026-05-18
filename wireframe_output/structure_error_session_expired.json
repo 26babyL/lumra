@@ -1,0 +1,120 @@
+{
+  "filename": "error_session_expired.html",
+  "title": "Sesi Berakhir — CoffeeShop",
+  "components": [
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "login-card",
+      "text_preview": "Sesi Anda Berakhir Demi alasan keamanan, sesi login Anda telah berakhir. Silakan…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 5,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h2",
+      "label": "HEADING (H2)",
+      "depth": 2,
+      "path": "root/body/div/h2",
+      "classes": "",
+      "text_preview": "Sesi Anda Berakhir",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "form",
+      "tag": "form",
+      "label": "[ FORM ]",
+      "depth": 2,
+      "path": "root/body/div/form",
+      "classes": "",
+      "text_preview": "Login Kembali",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button-primary",
+      "tag": "button",
+      "label": "BUTTON (Primary)",
+      "depth": 3,
+      "path": "root/body/div/form/button",
+      "classes": "btn btn-primary",
+      "text_preview": "Login Kembali",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "Sesi Anda Berakhir Demi alasan keamanan, sesi login Anda telah berakhir. Silakan…"
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/h2",
+      "type": "heading",
+      "label": "HEADING (H2)",
+      "text_preview": "Sesi Anda Berakhir"
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/form",
+      "type": "form",
+      "label": "[ FORM ]",
+      "text_preview": "Login Kembali"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/form/button",
+      "type": "button-primary",
+      "label": "BUTTON (Primary)",
+      "text_preview": "Login Kembali"
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 4,
+    "by_type": {
+      "card": 1,
+      "heading": 1,
+      "form": 1,
+      "button-primary": 1
+    },
+    "interactive": 1,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

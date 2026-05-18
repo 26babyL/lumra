@@ -1,0 +1,120 @@
+{% extends "base/base_hybrid.html" %}
+{% block title %}Buku Besar - CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="ledgerApp()" x-init="init()">
+  <form method="get" x-ref="filterForm" class="card bg-base-100 shadow-lg border border-base-300 p-8 mb-6" action="#">
+    <div class="flex flex-col md:flex-row justify-between items-end gap-4">
+      <div>
+        <h1 class="text-2xl font-bold text-base-content">Buku Besar (General Ledger)</h1>
+        <div class="mt-2 flex flex-col sm:flex-row gap-3">
+          <div>
+            <label class="label">
+              <span class="label-text text-xs font-bold tracking-widest uppercase">Akun</span>
+            </label>
+            <select aria-label="Akun" name="account" @change="$refs.filterForm.submit()" class="select select-bordered select-primary w-64">
+              {% for account in accounts %}
+              <option value="{{ account.id }}" {% if selected_account_id == account.id|stringformat:"s" %}selected{% endif %}>{{ account.code }} {{ account.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label class="label">
+              <span class="label-text text-xs font-bold tracking-widest uppercase">Periode</span>
+            </label>
+            <input aria-label="Periode" type="month" name="period" value="{{ period }}" @change="$refs.filterForm.submit()" class="input input-bordered input-primary">
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="card bg-base-100 shadow-lg border border-base-300 overflow-x-auto">
+    <div class="p-6">
+      <div class="flex justify-between items-center mb-4 pb-2 border-b border-base-300">
+        <h2 class="font-bold text-base-content">{{ account_name }}</h2>
+        <div class="text-right">
+          <span class="text-xs text-base-content/60 block">Saldo Awal</span>
+          <span class="font-mono font-bold text-base-content" x-text="formatCurrency(openingBalance)"></span>
+        </div>
+      </div>
+
+      <table class="table table-compact w-full">
+        <thead>
+          <tr class="bg-base-200">
+            <th class="text-left">Tanggal</th>
+            <th class="text-left">Deskripsi</th>
+            <th class="text-left">Ref</th>
+            <th class="text-right">Debit</th>
+            <th class="text-right">Kredit</th>
+            <th class="text-right">Saldo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="entry in ledgerEntries" :key="entry.id">
+            <tr class="hover:bg-base-200">
+              <td x-text="entry.date"></td>
+              <td x-text="entry.description"></td>
+              <td class="font-mono text-sm" x-text="entry.ref"></td>
+              <td class="text-right font-mono" x-text="entry.debit > 0 ? formatCurrency(entry.debit) : ''"></td>
+              <td class="text-right font-mono" x-text="entry.credit > 0 ? formatCurrency(entry.credit) : ''"></td>
+              <td class="text-right font-mono font-bold" x-text="formatCurrency(entry.balance)"></td>
+            </tr>
+          </template>
+          
+          <!-- Total Row -->
+          <tr class="bg-base-200 font-bold">
+            <td colspan="3" class="text-right">TOTAL:</td>
+            <td class="text-right font-mono" x-text="formatCurrency(totalDebit)"></td>
+            <td class="text-right font-mono" x-text="formatCurrency(totalCredit)"></td>
+            <td class="text-right font-mono" x-text="formatCurrency(closingBalance)"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+function ledgerApp() {
+  return {
+    openingBalance: 50000000,
+    ledgerEntries: [
+      { id: 1, date: '2024-01-01', description: 'Saldo Awal', ref: 'SA', debit: 50000000, credit: 0, balance: 50000000 },
+      { id: 2, date: '2024-01-05', description: 'Penjualan Cash', ref: 'JU001', debit: 0, credit: 15000000, balance: 35000000 },
+      { id: 3, date: '2024-01-10', description: 'Pembelian Persediaan', ref: 'PB001', debit: 8000000, credit: 0, balance: 43000000 },
+      { id: 4, date: '2024-01-15', description: 'Biaya Operasional', ref: 'BO001', debit: 5000000, credit: 0, balance: 48000000 },
+      { id: 5, date: '2024-01-20', description: 'Penjualan Kredit', ref: 'JK001', debit: 0, credit: 20000000, balance: 28000000 }
+    ],
+    
+    totalDebit: 0,
+    totalCredit: 0,
+    closingBalance: 0,
+    
+    init() {
+      this.calculateTotals();
+    },
+    
+    calculateTotals() {
+      this.totalDebit = this.ledgerEntries.reduce((sum, entry) => sum + entry.debit, 0);
+      this.totalCredit = this.ledgerEntries.reduce((sum, entry) => sum + entry.credit, 0);
+      this.closingBalance = this.openingBalance + this.totalCredit - this.totalDebit;
+    },
+    
+    formatCurrency(amount) {
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0
+      }).format(amount);
+    }
+  }
+}
+</script>
+{% endblock %}

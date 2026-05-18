@@ -1,0 +1,43 @@
+{% extends 'lumra_pages/print/print_base.html' %}
+
+{% block content %}
+<div style="max-width: 148mm; margin: 0 auto;">
+    <div class="border-double mb-4 pb-4 text-center">
+        <div class="font-bold" style="font-size: 22px;">PACKING SLIP</div>
+        <div class="text-sm">{{ document_number }}</div>
+        <div class="text-xs">{{ document_date|date:"d M Y H:i" }}</div>
+    </div>
+
+    <div class="mb-4">
+        <div class="text-xs text-slate-400">Tujuan</div>
+        <div class="font-bold">{{ customer_name }}</div>
+        <div class="text-sm">{{ customer_address|default:"-" }}</div>
+        <div class="text-xs">Jumlah paket: {{ package_count }}</div>
+    </div>
+
+    <table class="table-w-full">
+        <thead>
+            <tr>
+                <th>Barang</th>
+                <th class="text-center">Qty</th>
+                <th class="text-center">Unit</th>
+                <th>Keterangan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td class="text-center">{{ item.quantity }}</td>
+                <td class="text-center">{{ item.unit }}</td>
+                <td>{{ item.description }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="mt-4 text-center text-xs text-slate-400">
+        QR / barcode placeholder untuk validasi paket
+    </div>
+</div>
+{% endblock %}

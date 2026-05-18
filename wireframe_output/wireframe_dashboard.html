@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireframe: DASHBOARD</title>
+  <style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Courier New', monospace;
+    background: #F5F5F5;
+    color: #333;
+    padding: 16px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* ── Komponen utama ── */
+.wf-page        { max-width: 1100px; margin: 0 auto; }
+.wf-header      { background: #2C2C2C; color: #fff; padding: 12px 16px; border-radius: 4px; margin-bottom: 12px; font-weight: bold; font-size: 14px; }
+.wf-nav         { background: #444; color: #fff; padding: 10px 16px; border-radius: 4px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; }
+.wf-nav-item    { background: #666; color: #ddd; padding: 4px 10px; border-radius: 3px; font-size: 11px; }
+.wf-breadcrumb  { color: #888; font-size: 11px; margin-bottom: 8px; }
+.wf-breadcrumb span { margin: 0 4px; }
+
+/* ── Sections & Cards ── */
+.wf-section     { border: 1.5px solid #CCC; border-radius: 6px; padding: 12px; margin-bottom: 12px; background: #FFF; }
+.wf-card        { border: 1px solid #CCC; border-radius: 4px; padding: 10px; background: #FAFAFA; margin-bottom: 8px; }
+.wf-card-dark   { border: 1px solid #888; border-radius: 4px; padding: 10px; background: #2C2C2C; color: #EEE; margin-bottom: 8px; }
+.wf-metric      { border: 1px solid #CCC; border-radius: 4px; padding: 10px; background: #F0F0F0; text-align: center; }
+.wf-metric .val { font-size: 22px; font-weight: bold; margin: 4px 0; }
+.wf-metric .lbl { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+.wf-sidebar     { border: 1.5px dashed #AAA; border-radius: 4px; padding: 10px; background: #F8F8F8; }
+
+/* ── Layout ── */
+.wf-grid        { display: grid; gap: 10px; margin-bottom: 10px; }
+.wf-grid-2      { grid-template-columns: 1fr 1fr; }
+.wf-grid-3      { grid-template-columns: 1fr 1fr 1fr; }
+.wf-grid-4      { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.wf-grid-23     { grid-template-columns: 2fr 1fr; }
+.wf-grid-32     { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
+.wf-flex        { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+
+/* ── Form Elements ── */
+.wf-input       { border: 1px solid #BBB; background: #FFF; border-radius: 3px; padding: 7px 10px; font-size: 12px; font-family: inherit; display: block; width: 100%; color: #555; }
+.wf-select      { border: 1px solid #BBB; background: #FFF url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6"><path d="M0 0l5 6 5-6z" fill="%23888"/></svg>') no-repeat right 8px center; border-radius: 3px; padding: 7px 28px 7px 10px; font-size: 12px; font-family: inherit; display: block; width: 100%; appearance: none; color: #555; }
+.wf-textarea    { border: 1px solid #BBB; background: #FFF; border-radius: 3px; padding: 7px 10px; font-size: 12px; font-family: inherit; display: block; width: 100%; color: #555; min-height: 60px; resize: vertical; }
+.wf-label       { font-size: 10px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; display: block; }
+.wf-field-group { margin-bottom: 10px; }
+
+/* ── Buttons ── */
+.wf-btn         { border: 1.5px solid #888; background: #E8E8E8; color: #333; padding: 7px 14px; border-radius: 3px; font-size: 12px; font-family: inherit; cursor: default; display: inline-block; font-weight: bold; }
+.wf-btn-primary { border-color: #333; background: #333; color: #FFF; }
+.wf-btn-danger  { border-color: #AA0000; background: #FFEEEE; color: #AA0000; }
+.wf-btn-success { border-color: #006600; background: #EEFFEE; color: #006600; }
+.wf-btn-sm      { padding: 4px 10px; font-size: 11px; }
+
+/* ── Filters & Tabs ── */
+.wf-filter-row  { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; }
+.wf-chip        { border: 1px solid #CCC; background: #F0F0F0; color: #555; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+.wf-chip-active { border-color: #333; background: #333; color: #FFF; }
+.wf-tab-row     { display: flex; gap: 4px; margin-bottom: 10px; border-bottom: 1px solid #CCC; padding-bottom: 6px; }
+.wf-tab         { border: 1px solid #CCC; background: #F5F5F5; color: #888; padding: 5px 14px; border-radius: 3px 3px 0 0; font-size: 11px; font-weight: bold; }
+.wf-tab-active  { border-bottom-color: #FFF; background: #FFF; color: #333; }
+
+/* ── Table ── */
+.wf-table       { width: 100%; border-collapse: collapse; font-size: 12px; }
+.wf-table th    { background: #EAEAEA; color: #555; padding: 7px 10px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1.5px solid #CCC; }
+.wf-table td    { padding: 7px 10px; border-bottom: 1px solid #EEE; color: #333; }
+.wf-table tr:hover td { background: #F8F8F8; }
+
+/* ── Progress & Charts ── */
+.wf-progress-bg  { background: #E8E8E8; border-radius: 99px; height: 8px; overflow: hidden; margin: 4px 0; }
+.wf-progress-fill{ background: #555; height: 100%; border-radius: 99px; }
+.wf-circle       { width: 80px; height: 80px; border-radius: 50%; border: 8px solid #CCC; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: #555; }
+
+/* ── Image Placeholder ── */
+.wf-img         { background: #E0E0E0; border: 1.5px dashed #AAA; border-radius: 4px; display: flex; align-items: center; justify-content: center; min-height: 60px; color: #888; font-size: 11px; text-align: center; padding: 8px; }
+
+/* ── Badge / Status ── */
+.wf-badge       { display: inline-block; border: 1px solid #AAA; background: #EEE; color: #555; padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+
+/* ── Timeline ── */
+.wf-timeline    { padding-left: 20px; border-left: 2px solid #CCC; }
+.wf-tl-item     { position: relative; padding: 6px 0 6px 12px; }
+.wf-tl-item::before { content:''; position: absolute; left: -7px; top: 12px; width: 12px; height: 12px; border-radius: 50%; background: #CCC; border: 2px solid #FFF; box-shadow: 0 0 0 1px #CCC; }
+.wf-tl-title    { font-size: 12px; font-weight: bold; color: #333; }
+.wf-tl-meta     { font-size: 10px; color: #888; }
+
+/* ── Scroll nesting warning ── */
+.wf-scroll-warn { border: 2px dashed #FFC107; background: #FFFDE7; padding: 8px; border-radius: 4px; margin-bottom: 6px; }
+.wf-scroll-label{ font-size: 10px; color: #856404; font-weight: bold; margin-bottom: 4px; }
+
+/* ── Footer ── */
+.wf-footer      { background: #EAEAEA; border: 1px solid #CCC; border-radius: 4px; padding: 10px 16px; margin-top: 12px; color: #888; font-size: 11px; text-align: center; }
+
+/* ── Alpine root marker ── */
+.wf-alpine      { border: 1.5px dotted #AAA; border-radius: 4px; padding: 10px; margin-bottom: 10px; position: relative; }
+.wf-alpine::before { content: 'Alpine Component'; position: absolute; top: -9px; left: 8px; background: #FFF; padding: 0 4px; font-size: 9px; color: #AAA; font-weight: bold; }
+
+/* ── Section label ── */
+.wf-section-label { font-size: 10px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid #EEE; }
+
+/* ── Heading styles ── */
+.wf-h1 { font-size: 20px; font-weight: bold; color: #111; margin-bottom: 6px; }
+.wf-h2 { font-size: 16px; font-weight: bold; color: #222; margin-bottom: 5px; }
+.wf-h3 { font-size: 13px; font-weight: bold; color: #333; margin-bottom: 4px; }
+.wf-h4 { font-size: 12px; font-weight: bold; color: #444; margin-bottom: 3px; }
+
+/* ── Empty state ── */
+.wf-empty { border: 1.5px dashed #CCC; border-radius: 6px; padding: 24px; text-align: center; color: #AAA; font-size: 12px; background: #FAFAFA; }
+
+/* ── Annotations ── */
+.wf-annotation  { font-size: 10px; color: #999; font-style: italic; margin-top: 3px; }
+.wf-components  { margin-top: 20px; border-top: 2px solid #DDD; padding-top: 12px; }
+.wf-comp-item   { font-size: 11px; color: #666; padding: 2px 0; }
+.wf-comp-type   { display: inline-block; background: #EAEAEA; border-radius: 3px; padding: 1px 6px; font-size: 10px; font-weight: bold; color: #555; margin-right: 6px; }
+.wf-issues      { margin-top: 12px; border-top: 1px solid #EEE; padding-top: 10px; }
+.wf-issue       { font-size: 11px; padding: 3px 0 3px 16px; position: relative; color: #666; }
+.wf-issue::before { position: absolute; left: 0; }
+.wf-issue.warning::before { content: '⚠'; color: #CC8800; }
+.wf-issue.info::before    { content: 'ℹ'; color: #0066CC; }
+    
+  </style>
+</head>
+<body>
+<div class="wf-page">
+
+  <!-- ── WIREFRAME HEADER INFO ───────────────────────── -->
+  <div class="wf-header">
+    ▦ WIREFRAME: DASHBOARD
+    <span style="float:right;font-size:11px;font-weight:normal;color:#AAA">
+      Generated: 27 Apr 2026 09:43 &nbsp;|&nbsp;
+      90 komponen &nbsp;|&nbsp;
+      1 isu terdeteksi
+    </span>
+  </div>
+
+  <!-- ── STAT SUMMARY ───────────────────────────────── -->
+  <div class="wf-grid wf-grid-4" style="margin-bottom:12px">
+    <div class="wf-metric">
+      <div class="wf-metric val">90</div>
+      <div class="wf-metric lbl">Total Komponen</div>
+    </div>
+    <div class="wf-metric">
+      <div class="wf-metric val">16</div>
+      <div class="wf-metric lbl">Interaktif</div>
+    </div>
+    <div class="wf-metric">
+      <div class="wf-metric val">0</div>
+      <div class="wf-metric lbl">Scroll Nesting</div>
+    </div>
+    <div class="wf-metric">
+      <div class="wf-metric val">0</div>
+      <div class="wf-metric lbl">⚠ Warnings</div>
+    </div>
+  </div>
+
+  <!-- ── SCROLL NESTING WARNINGS ────────────────────── -->
+  
+
+  <!-- ══ WIREFRAME CONTENT ══════════════════════════════ -->
+  <div class="wf-section">
+    <div class="wf-section-label">Wireframe Struktur Halaman</div>
+    <p style="font-size:12px;color:#555;margin-bottom:6px;">{% extends "base/base.html" %} {% load i18n %} {% block title %}Dashboard — CoffeeShop{% endblock %} {% block extra_css…</p><span style="font-size:12px;color:#555">Main Dashboard Wrapper</span><div class="wf-alpine"><div class="wf-section"><div class="wf-section-label">[ SECTION ]</div><span style="font-size:12px;color:#555">Home</span><span style="font-size:12px;color:#555">Sales Insight</span><span style="font-size:12px;color:#555">Dashboard</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><p style="font-size:12px;color:#555;margin-bottom:6px;">Quick Actions</p><div class="wf-h2">Akses cepat untuk operasional hari ini</div><p style="font-size:12px;color:#555;margin-bottom:6px;">Langsung buat transaksi, tambah produk, atau cek laporan tanpa buang ruang layar.</p><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><button class="wf-btn " style="margin:2px">Pesanan Baru</button><button class="wf-btn " style="margin:2px">Tambah Produk</button><button class="wf-btn " style="margin:2px">Laporan Hari Ini</button></div></div></div><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><div class="wf-section"><div class="wf-section-label">[ ARTICLE ]</div><p style="font-size:12px;color:#555;margin-bottom:6px;">100%</p><p style="font-size:12px;color:#555;margin-bottom:6px;">Ready</p><p style="font-size:12px;color:#555;margin-bottom:6px;">All Systems Operational</p></div><div class="wf-section"><div class="wf-section-label">[ ARTICLE ]</div><p style="font-size:12px;color:#555;margin-bottom:6px;">{{ stores_count|default:'4' }}</p><p style="font-size:12px;color:#555;margin-bottom:6px;">Stores</p><p style="font-size:12px;color:#555;margin-bottom:6px;">Active Locations</p></div><div class="wf-section"><div class="wf-section-label">[ ARTICLE ]</div><p style="font-size:12px;color:#555;margin-bottom:6px;">Live</p><p style="font-size:12px;color:#555;margin-bottom:6px;">Sync</p><p style="font-size:12px;color:#555;margin-bottom:6px;">Realtime Connected</p></div><div class="wf-section"><div class="wf-section-label">[ ARTICLE ]</div><p style="font-size:12px;color:#555;margin-bottom:6px;">{{ connected_users|default:'1' }}</p><p style="font-size:12px;color:#555;margin-bottom:6px;">Users</p><p style="font-size:12px;color:#555;margin-bottom:6px;">Connected Now</p></div></div><div class="wf-section"><div class="wf-section-label">[ SECTION ]</div><span style="font-size:12px;color:#555">{# ══ HEADER ══ #}</span><div class="wf-section"><div class="wf-section-label">[ HEADER / HERO ]</div><p style="font-size:12px;color:#555;margin-bottom:6px;">Overview</p><div class="wf-h1">DASHBOARD</div><p style="font-size:12px;color:#555;margin-bottom:6px;">{% trans "Real-time insights for your operations" %}</p><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><span style="font-size:12px;color:#555">Store Switcher Component</span><div class="wf-alpine"><button class="wf-btn " style="margin:2px">[icon]</button><span style="font-size:12px;color:#555">Dropdown</span><input class="wf-input" type="text" placeholder="Cari Lokasi/Cabang..." disabled><ul style="padding-left:18px;margin-bottom:8px"><li style="font-size:12px;color:#555;padding:2px 0">Cabang tidak ditemukan</li></ul><button class="wf-btn " style="margin:2px">Kelola Lokasi</button></div><span style="font-size:12px;color:#555">Date Period Selector Component</span><div class="wf-alpine"><button class="wf-btn " style="margin:2px">[icon]</button><span style="font-size:12px;color:#555">Date Dropdown</span><span style="font-size:12px;color:#555">Presets</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><button class="wf-btn " style="margin:2px">[icon]</button><button class="wf-btn " style="margin:2px">KUSTOM RANGE</button></div><span style="font-size:12px;color:#555">Custom Range</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><button class="wf-btn " style="margin:2px">[icon]</button><span style="font-size:12px;color:#555">Pilih Rentang</span></div><div class="wf-grid wf-grid-1" style="margin-bottom:8px"><label class="wf-label">DARI</label><input class="wf-input" type="text" value="[date]" placeholder="startDate" disabled style="width:auto"><label class="wf-label">SAMPAI</label><input class="wf-input" type="text" value="[date]" placeholder="endDate" disabled style="width:auto"></div><button class="wf-btn wf-btn-success" style="margin:2px">Apply Range</button></div></div><span style="font-size:12px;color:#555">Live Indicator</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><div class="wf-grid wf-grid-2" style="margin-bottom:8px"></div><div class="wf-grid wf-grid-2" style="margin-bottom:8px"></div></div><span style="font-size:12px;color:#555">Live</span></div></div></div><span style="font-size:12px;color:#555">{# ══ METRIC CARDS — Emerald Odyssey KPI Grid ══ #}</span><div class="wf-section"><div class="wf-section-label">[ SECTION ]</div><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><p style="font-size:12px;color:#555;margin-bottom:6px;">OVERVIEW</p><div class="wf-h2">Key Performance Indicators</div><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><span style="font-size:12px;color:#555">View Details</span></div></div><div class="wf-grid wf-grid-1" style="margin-bottom:8px"><span style="font-size:12px;color:#555">{# ── Today's Sales ── #}</span><div class="wf-metric"><div class="wf-metric val">—</div><div class="wf-metric lbl">Today's Sales Active {{ kpis.t</div></div><span style="font-size:12px;color:#555">{# ── Total Transactions ── #}</span><div class="wf-metric"><div class="wf-metric val">—</div><div class="wf-metric lbl">Transactions {{ kpis.total_tra</div></div><span style="font-size:12px;color:#555">{# ── Best Seller ── #}</span><div class="wf-metric"><div class="wf-metric val">—</div><div class="wf-metric lbl">Best Seller {{ kpis.best_selle</div></div><span style="font-size:12px;color:#555">{# ── Low Stock Alert ── #}</span><div class="wf-metric"><div class="wf-metric val">—</div><div class="wf-metric lbl">Low Stock {% if kpis.low_stock</div></div></div><span style="font-size:12px;color:#555">✅ FIXED: Missing closing div for the grid</span></div><span style="font-size:12px;color:#555">{# ══ MAIN AREA: Chart + Sidebar ══ #}</span><div class="wf-grid wf-grid-1" style="margin-bottom:8px"><span style="font-size:12px;color:#555">{# ── Chart ── #}</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><p style="font-size:12px;color:#555;margin-bottom:6px;">Performance Overview</p><div class="wf-h2">Sales Analytics</div><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><div class="wf-grid wf-grid-2" style="margin-bottom:8px"></div><div class="wf-grid wf-grid-2" style="margin-bottom:8px"></div></div><span style="font-size:12px;color:#555">Synced</span></div></div><span style="font-size:12px;color:#555">Loading Overlay</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"></div><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><span style="font-size:12px;color:#555">Aktual</span></div><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><span style="font-size:12px;color:#555">Target</span></div></div><span style="font-size:12px;color:#555">12.5%</span><span style="font-size:12px;color:#555">Growth vs Prev</span></div><span style="font-size:12px;color:#555">{# ── Sidebar: Activity Pulse ── #}</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"></div></div><span style="font-size:12px;color:#555">{# ══ PERFORMANCE STRIP ══ #}</span><div class="wf-section"><div class="wf-section-label">[ SECTION ]</div><p style="font-size:12px;color:#555;margin-bottom:6px;">Performance Metrics</p><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><p style="font-size:12px;color:#555;margin-bottom:6px;">{{ kpis.monthly_growth|default:"—" }}</p><p style="font-size:12px;color:#555;margin-bottom:6px;">Monthly Growth</p><p style="font-size:12px;color:#555;margin-bottom:6px;">{{ kpis.customer_retention|default:"—" }}</p><p style="font-size:12px;color:#555;margin-bottom:6px;">Customer Retention</p><p style="font-size:12px;color:#555;margin-bottom:6px;">{{ kpis.avg_order_value|default:"—" }}</p><p style="font-size:12px;color:#555;margin-bottom:6px;">Avg Order Value</p><p style="font-size:12px;color:#555;margin-bottom:6px;">{{ kpis.inventory_turnover|default:"—" }}</p><p style="font-size:12px;color:#555;margin-bottom:6px;">Inventory Turnover</p></div></div><span style="font-size:12px;color:#555">{# ══ BOTTOM METRICS ══ #}</span><div class="wf-section"><div class="wf-section-label">[ SECTION ]</div><p style="font-size:12px;color:#555;margin-bottom:6px;">Financial Overview — 30 Hari Terakhir</p><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><div class="wf-grid wf-grid-2" style="margin-bottom:8px"></div><p style="font-size:12px;color:#555;margin-bottom:6px;">Total Revenue</p><p style="font-size:12px;color:#555;margin-bottom:6px;">{{ metrics.total_revenue|default_if_none:"—" }}</p></div><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><div class="wf-grid wf-grid-2" style="margin-bottom:8px"></div><p style="font-size:12px;color:#555;margin-bottom:6px;">Profit Margin</p><p style="font-size:12px;color:#555;margin-bottom:6px;">{{ metrics.profit_margin|default_if_none:"—" }}</p></div><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><div class="wf-grid wf-grid-2" style="margin-bottom:8px"></div><p style="font-size:12px;color:#555;margin-bottom:6px;">Return Rate</p><p style="font-size:12px;color:#555;margin-bottom:6px;">{{ metrics.return_rate|default_if_none:"—" }}</p></div><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><div class="wf-grid wf-grid-2" style="margin-bottom:8px"></div><p style="font-size:12px;color:#555;margin-bottom:6px;">Inventory Value</p><p style="font-size:12px;color:#555;margin-bottom:6px;">{{ metrics.inventory_value|default_if_none:"—" }}</p></div></div></div><span style="font-size:12px;color:#555">{# ══ QUICK STATS FOOTER ══ #}</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><span style="font-size:12px;color:#555">Quick Stats</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><span style="font-size:12px;color:#555">Produk aktif:</span></div><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><span style="font-size:12px;color:#555">Order pending:</span></div><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><span style="font-size:12px;color:#555">Total lokasi:</span></div></div><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><span style="font-size:12px;color:#555">Diperbarui:</span><span style="font-size:12px;color:#555">baru saja</span></div></div></div></div><span style="font-size:12px;color:#555">{# ══ TOAST NOTIFICATIONS ══ #}</span><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><div class="wf-grid wf-grid-2" style="margin-bottom:8px"></div></div><span style="font-size:12px;color:#555">Data Injection</span>
+  </div>
+
+  <!-- ── COMPONENT INDEX ────────────────────────────── -->
+  <div class="wf-components">
+    <div class="wf-section-label">Indeks Komponen Terdeteksi (90)</div>
+    <div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>section</span>[ SECTION ]  <em style='color:#AAA;font-size:10px'> — Home / Sales Insight / Dashboard Quick Actions Akses cepat untuk operasional har…</em></div><div class='wf-comp-item'><span class='wf-comp-type'>breadcrumb</span>BREADCRUMB  <em style='color:#AAA;font-size:10px'> — Home / Sales Insight / Dashboard</em></div><div class='wf-comp-item'><span class='wf-comp-type'>breadcrumb</span>BREADCRUMB  <em style='color:#AAA;font-size:10px'> — /</em></div><div class='wf-comp-item'><span class='wf-comp-type'>breadcrumb</span>BREADCRUMB  <em style='color:#AAA;font-size:10px'> — /</em></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (column)]</div><div class='wf-comp-item'><span class='wf-comp-type'>heading</span>HEADING (H2)  <em style='color:#AAA;font-size:10px'> — Akses cepat untuk operasional hari ini</em></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: Pesanan Baru  <em style='color:#AAA;font-size:10px'> — Pesanan Baru</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: Tambah Produk  <em style='color:#AAA;font-size:10px'> — Tambah Produk</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: Laporan Hari Ini  <em style='color:#AAA;font-size:10px'> — Laporan Hari Ini</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>section</span>[ SECTION ]  <em style='color:#AAA;font-size:10px'> — 100% Ready All Systems Operational {{ stores_count|default:'4' }} Stores Active…</em></div><div class='wf-comp-item'><span class='wf-comp-type'>article</span>[ ARTICLE ]  <em style='color:#AAA;font-size:10px'> — 100% Ready All Systems Operational</em></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>article</span>[ ARTICLE ]  <em style='color:#AAA;font-size:10px'> — {{ stores_count|default:'4' }} Stores Active Locations</em></div><div class='wf-comp-item'><span class='wf-comp-type'>article</span>[ ARTICLE ]  <em style='color:#AAA;font-size:10px'> — Live Sync Realtime Connected</em></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>article</span>[ ARTICLE ]  <em style='color:#AAA;font-size:10px'> — {{ connected_users|default:'1' }} Users Connected Now</em></div><div class='wf-comp-item'><span class='wf-comp-type'>section</span>[ SECTION ]  <em style='color:#AAA;font-size:10px'> — {# ══ HEADER ══ #} Overview DASHBOARD {% trans "Real-time insights for your oper…</em></div><div class='wf-comp-item'><span class='wf-comp-type'>header</span>[ HEADER ]  <em style='color:#AAA;font-size:10px'> — Overview DASHBOARD {% trans "Real-time insights for your operations" %} Cabang t…</em></div><div class='wf-comp-item'><span class='wf-comp-type'>heading</span>HEADING (H1)  <em style='color:#AAA;font-size:10px'> — DASHBOARD</em></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>alpine-root</span>ALPINE COMPONENT [storeSwitcher()]  <em style='color:#AAA;font-size:10px'> — Cabang tidak ditemukan Kelola Lokasi</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: [icon]  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (column)]</div><div class='wf-comp-item'><span class='wf-comp-type'>search</span>SEARCH BAR</div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [text] Cari Lokasi/Cabang...  <em style='color:#AAA;font-size:10px'> — Cari Lokasi/Cabang...</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>ul</span>[ LIST ]  <em style='color:#AAA;font-size:10px'> — Cabang tidak ditemukan</em>  <span class='wf-badge' style='font-size:9px'>scroll</span></div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: [icon]  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: Kelola Lokasi  <em style='color:#AAA;font-size:10px'> — Kelola Lokasi</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>alpine-root</span>ALPINE COMPONENT [datePicker()]  <em style='color:#AAA;font-size:10px'> — KUSTOM RANGE Pilih Rentang DARI SAMPAI Apply Range</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: [icon]  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (column)]</div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: [icon]  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: KUSTOM RANGE  <em style='color:#AAA;font-size:10px'> — KUSTOM RANGE</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (column)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: [icon]  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [GRID 1 cols]</div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [date] startDate  <em style='color:#AAA;font-size:10px'> — startDate</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [date] endDate  <em style='color:#AAA;font-size:10px'> — endDate</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: Apply Range  <em style='color:#AAA;font-size:10px'> — Apply Range</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>section</span>[ SECTION ]  <em style='color:#AAA;font-size:10px'> — OVERVIEW Key Performance Indicators View Details {# ── Today's Sales ── #} Today…</em></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>heading</span>HEADING (H2)  <em style='color:#AAA;font-size:10px'> — Key Performance Indicators</em></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [GRID 1 cols]</div><div class='wf-comp-item'><span class='wf-comp-type'>card</span>CARD  <em style='color:#AAA;font-size:10px'> — Today's Sales Active {{ kpis.today_sales|default:"Rp 0" }} {% if kpis.sales_grow…</em></div><div class='wf-comp-item'><span class='wf-comp-type'>card</span>CARD  <em style='color:#AAA;font-size:10px'> — Transactions {{ kpis.total_transactions|default:"—" }} Total count today</em></div><div class='wf-comp-item'><span class='wf-comp-type'>card</span>CARD  <em style='color:#AAA;font-size:10px'> — Best Seller {{ kpis.best_seller_name|default:"N/A" }} {% if kpis.best_seller_cou…</em></div><div class='wf-comp-item'><span class='wf-comp-type'>card</span>CARD  <em style='color:#AAA;font-size:10px'> — Low Stock {% if kpis.low_stock_count and kpis.low_stock_count != '0' %} Alert {%…</em></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [GRID 1 cols]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>heading</span>HEADING (H2)  <em style='color:#AAA;font-size:10px'> — Sales Analytics</em></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (column)]</div><div class='wf-comp-item'><span class='wf-comp-type'>section</span>[ SECTION ]  <em style='color:#AAA;font-size:10px'> — Performance Metrics {{ kpis.monthly_growth|default:"—" }} Monthly Growth {{ kpis…</em></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [GRID 2 cols]</div><div class='wf-comp-item'><span class='wf-comp-type'>section</span>[ SECTION ]  <em style='color:#AAA;font-size:10px'> — Financial Overview — 30 Hari Terakhir {% with metrics=kpis %} Total Revenue {{ m…</em></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [GRID 2 cols]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (column)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (column)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (column)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (column)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (column)]</div><div class='wf-comp-item'><span class='wf-comp-type'>alert</span>ALERT / NOTIFICATION</div>
+  </div>
+
+  <!-- ── ISSUES ─────────────────────────────────────── -->
+  <div class="wf-issues"><div class="wf-section-label">Isu Terdeteksi (1)</div><div class="wf-issue info">x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template</div></div>
+
+</div>
+</body>
+</html>

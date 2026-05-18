@@ -1,0 +1,147 @@
+{% extends 'base/base.html' %}
+{% block title %}Manajemen Resep (BOM) — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Glassmorphism Base */
+  [x-cloak] { display: none !important; }
+  .glass-card { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.95); border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: all 0.3s; }
+  .glass-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+  
+  .filter-btn { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; color: #64748b; background: transparent; border: 1px solid transparent; transition: all 0.2s; }
+  .filter-btn:hover { background: #f1f5f9; }
+  .filter-btn.active { background: #0f172a; color: white; box-shadow: 0 4px 10px rgba(15,23,42,0.2); }
+  
+  .bom-tag { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; text-transform: uppercase; }
+  .tag-active { background: #dcfce7; color: #166534; }
+  .tag-draft { background: #f1f5f9; color: #475569; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="bomListApp()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex items-end justify-between">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+        <a href="#" class="hover:text-slate-800">Produksi</a>
+        <span>/</span>
+        <span class="text-slate-800 font-medium">Resep & BOM</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800">Daftar Resep (Bill of Materials)</h1>
+      <p class="text-sm text-slate-400 mt-0.5">Definisi komposisi dan biaya standar produk</p>
+    </div>
+    <a href="{% url 'bom_form' %}" class="bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:bg-slate-700 transition flex items-center gap-2">
+      <i class="fas fa-plus"></i> Buat Resep Baru
+    </a>
+  </div>
+
+  <!-- Filters -->
+  <div class="flex items-center gap-3 overflow-x-auto pb-2">
+    <button @click="filter='all'" class="filter-btn" :class="filter==='all' ? 'active' : ''">Semua Resep</button>
+    <button @click="filter='beverage'" class="filter-btn" :class="filter==='beverage' ? 'active' : ''">Minuman</button>
+    <button @click="filter='food'" class="filter-btn" :class="filter==='food' ? 'active' : ''">Makanan</button>
+    <button @click="filter='raw'" class="filter-btn" :class="filter==='raw' ? 'active' : ''">Bahan Mentah (Pre-mix)</button>
+    
+    <div class="relative ml-auto w-64">
+      <input type="text" x-model="search" placeholder="Cari nama produk..." class="w-full bg-white/60 border border-slate-200 rounded-full px-4 py-2 pl-10 text-sm focus:bg-white focus:border-slate-400 outline-none transition">
+      <i class="fas fa-search absolute left-3.5 top-2.5 text-slate-400 text-xs"></i>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+    <template x-for="bom in filteredBOMs" :key="bom.id">
+      <div class="glass-card p-5 relative group cursor-pointer" @click="window.location.href='{% url 'bom_detail' 0 %}'.replace('/0/', '/' + bom.id + '/')">
+        <!-- Header Card -->
+        <div class="flex justify-between items-start mb-4">
+          <div class="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-500 text-xl group-hover:bg-emerald-50 group-hover:text-emerald-600 transition">
+            <i :class="bom.icon"></i>
+          </div>
+          <span class="bom-tag" :class="bom.status === 'active' ? 'tag-active' : 'tag-draft'" x-text="bom.status"></span>
+        </div>
+
+        <h3 class="font-bold text-slate-800 text-lg leading-tight mb-1" x-text="bom.name"></h3>
+        <p class="text-xs text-slate-400 mb-4">SKU: <span class="font-mono text-slate-500" x-text="bom.sku"></span></p>
+
+        <!-- Mini Stats -->
+        <div class="space-y-2 pt-4 border-t border-slate-100">
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-500">Versi</span>
+            <span class="font-bold text-slate-700" x-text="bom.version"></span>
+          </div>
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-500">Bahan Baku</span>
+            <span class="font-bold text-slate-700" x-text="bom.ingredients_count + ' Item'"></span>
+          </div>
+          <div class="flex justify-between text-xs mt-2">
+            <span class="text-slate-500">Biaya Bahan</span>
+            <span class="font-bold text-emerald-600" x-text="formatCurrency(bom.cost)"></span>
+          </div>
+        </div>
+
+        <!-- Hover Action -->
+        <div class="absolute inset-0 bg-slate-900/5 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-2 rounded-2xl">
+          <button class="px-3 py-1.5 bg-white text-slate-700 rounded-lg text-xs font-bold shadow hover:bg-slate-50">Detail</button>
+          <button class="px-3 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-bold shadow hover:bg-slate-700">Edit</button>
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <!-- Empty State -->
+  <div x-show="filteredBOMs.length === 0" class="text-center py-16 text-slate-400">
+    <i class="fas fa-scroll text-4xl mb-3 opacity-30"></i>
+    <p class="font-medium">Resep tidak ditemukan</p>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ boms_data|json_script:"boms-data" }}
+<script>
+function bomListApp() {
+  return {
+    boms: [],
+    filter: 'all',
+    search: '',
+    
+    get filteredBOMs() {
+      return this.boms.filter(b => {
+        const f = this.filter === 'all' || b.type === this.filter;
+        const s = b.name.toLowerCase().includes(this.search.toLowerCase()) || b.sku.toLowerCase().includes(this.search.toLowerCase());
+        return f && s;
+      });
+    },
+    
+    formatCurrency(num) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+    },
+    
+    init(){
+      const el = document.getElementById('boms-data');
+      if (el && el.textContent) {
+        try {
+          const raw = JSON.parse(el.textContent) || [];
+          this.boms = raw.map(b => ({
+            id: b.id,
+            name: b.name,
+            sku: b.sku,
+            version: 'v' + (b.version || 1),
+            status: b.is_active ? 'active' : 'draft',
+            ingredients_count: 0,
+            cost: 0,
+            type: 'all',
+            icon: 'fas fa-scroll',
+          }));
+        } catch(e) {
+          this.boms = [];
+        }
+      }
+    }
+  }
+}
+</script>
+{% endblock %}

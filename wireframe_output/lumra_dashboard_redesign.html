@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumra — Operations Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:          #0E0F13;
+      --surface:     #16181F;
+      --surface-2:   #1E2029;
+      --surface-3:   #272A35;
+      --border:      rgba(255,255,255,0.07);
+      --border-hover:rgba(255,255,255,0.14);
+      --accent:      #6C7FFF;
+      --accent-dim:  rgba(108,127,255,0.15);
+      --accent-glow: rgba(108,127,255,0.35);
+      --text-1:      #F0F1F5;
+      --text-2:      #9699A8;
+      --text-3:      #5A5E70;
+      --success:     #34D399;
+      --warning:     #FBBF24;
+      --danger:      #F87171;
+      --sb-width:    248px;
+      --nb-height:   56px;
+      --radius:      10px;
+      --radius-sm:   6px;
+      --font-body:   'DM Sans', sans-serif;
+      --font-display:'Syne', sans-serif;
+      --transition:  200ms cubic-bezier(0.4,0,0.2,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-1);
+      min-height: 100vh;
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ══════════════════════════════════
+       APP SHELL
+    ══════════════════════════════════ */
+    .app-shell {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ══════════════════════════════════
+       SIDEBAR
+    ══════════════════════════════════ */
+    .sidebar {
+      width: var(--sb-width);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 40;
+    }
+
+    /* Brand */
+    .sb-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 16px;
+      height: var(--nb-height);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .sb-brand-icon {
+      width: 30px; height: 30px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 18px var(--accent-glow);
+      flex-shrink: 0;
+    }
+    .sb-brand-icon svg { width: 16px; height: 16px; fill: #fff; }
+    .sb-brand-name {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      color: var(--text-1);
+    }
+    .sb-brand-version {
+      font-size: 10px;
+      color: var(--text-3);
+      background: var(--surface-3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 5px;
+      margin-left: auto;
+      letter-spacing: 0.3px;
+    }
+
+    /* Branch pill */
+    .sb-branch {
+      margin: 10px 12px 8px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 7px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: border-color var(--transition), background var(--transition);
+    }
+    .sb-branch:hover { border-color: var(--border-hover); background: var(--surface-3); }
+    .sb-branch-dot {
+      width: 7px; height: 7px;
+      background: var(--success);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--success);
+      flex-shrink: 0;
+    }
+    .sb-branch-label { font-size: 12px; font-weight: 500; color: var(--text-2); flex: 1; }
+    .sb-branch-arrow { color: var(--text-3); font-size: 10px; }
+
+    /* Nav */
+    .sb-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 4px 8px 8px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--surface-3) transparent;
+    }
+    .sb-nav::-webkit-scrollbar { width: 4px; }
+    .sb-nav::-webkit-scrollbar-track { background: transparent; }
+    .sb-nav::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 4px; }
+
+    .sb-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-3);
+      padding: 10px 8px 4px;
+    }
+
+    .sb-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--text-2);
+      font-size: 13.5px;
+      font-weight: 400;
+      transition: background var(--transition), color var(--transition);
+      position: relative;
+      border: 1px solid transparent;
+      margin-bottom: 1px;
+      user-select: none;
+    }
+    .sb-item:hover {
+      background: var(--surface-2);
+      color: var(--text-1);
+      border-color: var(--border);
+    }
+    .sb-item.active {
+      background: var(--accent-dim);
+      color: var(--accent);
+      border-color: rgba(108,127,255,0.2);
+      font-weight: 500;
+    }
+    .sb-item.active .sb-item-icon { color: var(--accent); }
+
+    .sb-item-icon {
+      width: 18px; height: 18px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-3);
+      flex-shrink: 0;
+      transition: color var(--transition);
+    }
+    .sb-item:hover .sb-item-icon { color: var(--text-2); }
+
+    .sb-item-text { flex: 1; }
+
+    .sb-item-badge {
+      background: var(--danger);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 99px;
+      line-height: 1.4;
+    }
+
+    .sb-item-chevron {
+      width: 14px; height: 14px;
+      color: var(--text-3);
+      transition: transform var(--transition), color var(--transition);
+    }
+    .sb-item:hover .sb-item-chevron { color: var(--text-2); }
+    .sb-item.open .sb-item-chevron { transform: rotate(90deg); }
+
+    /* Sub-items */
+    .sb-subnav {
+      margin-left: 28px;
+      border-left: 1px solid var(--border);
+      padding-left: 8px;
+      margin-bottom: 2px;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 300ms ease;
+    }
+    .sb-subnav.open { max-height: 300px; }
+    .sb-subitem {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 8px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--text-3);
+      font-size: 12.5px;
+      transition: background var(--transition), color var(--transition);
+      margin-bottom: 1px;
+    }
+    .sb-subitem:hover { background: var(--surface-2); color: var(--text-2); }
+    .sb-subitem.active { color: var(--accent); font-weight: 500; }
+    .sb-subitem::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.5;
+      flex-shrink: 0;
+    }
+    .sb-subitem.active::before { opacity: 1; }
+
+    /* Footer */
+    .sb-footer {
+      flex-shrink: 0;
+      border-top: 1px solid var(--border);
+      padding: 10px 12px;
+    }
+
+    .sb-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background var(--transition);
+      position: relative;
+    }
+    .sb-user:hover { background: var(--surface-2); }
+
+    .sb-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #a78bfa);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #fff;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 2px var(--surface), 0 0 0 3px var(--border);
+    }
+    .sb-user-info { flex: 1; min-width: 0; }
+    .sb-user-name { font-size: 13px; font-weight: 500; color: var(--text-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sb-user-role { font-size: 11px; color: var(--text-3); }
+    .sb-logout-btn {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      background: transparent;
+      border: 1px solid transparent;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-3);
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition), color var(--transition);
+      flex-shrink: 0;
+    }
+    .sb-logout-btn:hover { background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.3); color: var(--danger); }
+
+    /* Logout modal */
+    .sb-logout-modal {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 12px; right: 12px;
+      background: var(--surface-2);
+      border: 1px solid var(--border-hover);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      display: none;
+      z-index: 100;
+    }
+    .sb-logout-modal.show { display: block; }
+    .sb-logout-modal-title { font-size: 13px; font-weight: 600; color: var(--text-1); margin-bottom: 4px; }
+    .sb-logout-modal-desc { font-size: 12px; color: var(--text-2); margin-bottom: 14px; }
+    .sb-logout-modal-actions { display: flex; gap: 8px; }
+    .btn-cancel {
+      flex: 1; padding: 7px; text-align: center;
+      background: var(--surface-3); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); font-size: 12.5px; font-weight: 500;
+      color: var(--text-2); cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+    }
+    .btn-cancel:hover { background: var(--surface-3); color: var(--text-1); }
+    .btn-logout-confirm {
+      flex: 1; padding: 7px; text-align: center;
+      background: rgba(248,113,113,0.15); border: 1px solid rgba(248,113,113,0.3);
+      border-radius: var(--radius-sm); font-size: 12.5px; font-weight: 500;
+      color: var(--danger); cursor: pointer;
+      transition: background var(--transition);
+    }
+    .btn-logout-confirm:hover { background: rgba(248,113,113,0.25); }
+
+    /* ══════════════════════════════════
+       MAIN SHELL (navbar + content)
+    ══════════════════════════════════ */
+    .main-shell {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ══════════════════════════════════
+       NAVBAR
+    ══════════════════════════════════ */
+    .navbar {
+      height: var(--nb-height);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 12px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      z-index: 30;
+    }
+
+    /* Mobile hamburger */
+    .nb-hamburger {
+      display: none;
+      width: 34px; height: 34px;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      border: 1px solid var(--border);
+      align-items: center; justify-content: center;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .nb-hamburger:hover { background: var(--surface-2); }
+
+    /* Breadcrumb */
+    .nb-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-3);
+    }
+    .nb-breadcrumb-sep { font-size: 11px; color: var(--text-3); }
+    .nb-breadcrumb-current { color: var(--text-1); font-weight: 500; }
+
+    /* Search */
+    .nb-search {
+      flex: 1;
+      max-width: 380px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .nb-search-input {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 7px 12px 7px 36px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--text-1);
+      outline: none;
+      transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+    }
+    .nb-search-input::placeholder { color: var(--text-3); }
+    .nb-search-input:focus {
+      border-color: var(--accent);
+      background: var(--surface-3);
+      box-shadow: 0 0 0 3px var(--accent-dim);
+    }
+    .nb-search-icon {
+      position: absolute;
+      left: 11px; top: 50%; transform: translateY(-50%);
+      color: var(--text-3);
+      width: 15px; height: 15px;
+      pointer-events: none;
+    }
+    .nb-search-kbd {
+      position: absolute;
+      right: 9px; top: 50%; transform: translateY(-50%);
+      background: var(--surface-3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 10px;
+      color: var(--text-3);
+      font-family: monospace;
+      pointer-events: none;
+    }
+
+    /* Right actions */
+    .nb-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: auto;
+    }
+
+    .nb-icon-btn {
+      width: 34px; height: 34px;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      border: 1px solid transparent;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition), color var(--transition);
+      position: relative;
+    }
+    .nb-icon-btn:hover {
+      background: var(--surface-2);
+      border-color: var(--border);
+      color: var(--text-1);
+    }
+    .nb-icon-btn svg { width: 17px; height: 17px; }
+    .nb-icon-btn .nb-dot {
+      position: absolute;
+      top: 6px; right: 6px;
+      width: 7px; height: 7px;
+      background: var(--danger);
+      border: 2px solid var(--surface);
+      border-radius: 50%;
+    }
+
+    /* Notification dropdown */
+    .nb-notif-panel {
+      position: absolute;
+      top: calc(var(--nb-height) + 6px);
+      right: 100px;
+      width: 320px;
+      background: var(--surface-2);
+      border: 1px solid var(--border-hover);
+      border-radius: var(--radius);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      display: none;
+      z-index: 200;
+      overflow: hidden;
+    }
+    .nb-notif-panel.show { display: block; }
+    .nb-notif-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .nb-notif-title { font-size: 13px; font-weight: 600; color: var(--text-1); }
+    .nb-notif-count {
+      background: var(--accent-dim);
+      color: var(--accent);
+      font-size: 10px; font-weight: 700;
+      padding: 1px 7px; border-radius: 99px;
+    }
+    .nb-notif-item {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .nb-notif-item:hover { background: var(--surface-3); }
+    .nb-notif-item:last-child { border-bottom: none; }
+    .nb-notif-item-title { font-size: 12.5px; font-weight: 500; color: var(--text-1); margin-bottom: 2px; }
+    .nb-notif-item-desc { font-size: 11.5px; color: var(--text-2); }
+    .nb-notif-item-time { font-size: 11px; color: var(--text-3); margin-top: 3px; }
+    .nb-notif-item.unread { border-left: 2px solid var(--accent); }
+    .nb-notif-footer {
+      padding: 10px 16px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--accent);
+      cursor: pointer;
+      border-top: 1px solid var(--border);
+    }
+    .nb-notif-footer:hover { background: var(--accent-dim); }
+
+    /* User menu */
+    .nb-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px 4px 4px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .nb-user:hover { background: var(--surface-2); border-color: var(--border); }
+    .nb-avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #a78bfa);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: #fff;
+    }
+    .nb-user-name { font-size: 13px; font-weight: 500; color: var(--text-1); }
+    .nb-user-chevron { color: var(--text-3); }
+
+    /* User dropdown */
+    .nb-user-panel {
+      position: absolute;
+      top: calc(var(--nb-height) + 6px);
+      right: 16px;
+      width: 200px;
+      background: var(--surface-2);
+      border: 1px solid var(--border-hover);
+      border-radius: var(--radius);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      display: none;
+      z-index: 200;
+      overflow: hidden;
+      padding: 6px;
+    }
+    .nb-user-panel.show { display: block; }
+    .nb-user-panel-item {
+      display: flex; align-items: center; gap: 9px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-2);
+      font-size: 13px;
+      transition: background var(--transition), color var(--transition);
+    }
+    .nb-user-panel-item:hover { background: var(--surface-3); color: var(--text-1); }
+    .nb-user-panel-item.danger { color: var(--danger); }
+    .nb-user-panel-item.danger:hover { background: rgba(248,113,113,0.1); }
+    .nb-user-panel-divider { height: 1px; background: var(--border); margin: 6px 0; }
+
+    /* ══════════════════════════════════
+       MAIN CONTENT
+    ══════════════════════════════════ */
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 28px 28px 40px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--surface-3) transparent;
+    }
+    .main-content::-webkit-scrollbar { width: 5px; }
+    .main-content::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 4px; }
+
+    /* ── Demo Dashboard Content ── */
+    .page-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-1);
+      margin-bottom: 4px;
+      letter-spacing: -0.5px;
+    }
+    .page-subtitle { font-size: 13px; color: var(--text-3); margin-bottom: 28px; }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .kpi-card:hover { border-color: var(--border-hover); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+    .kpi-card.blue::before { background: linear-gradient(90deg, var(--accent), transparent); }
+    .kpi-card.green::before { background: linear-gradient(90deg, var(--success), transparent); }
+    .kpi-card.yellow::before { background: linear-gradient(90deg, var(--warning), transparent); }
+    .kpi-card.red::before { background: linear-gradient(90deg, var(--danger), transparent); }
+    .kpi-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-3); margin-bottom: 10px; }
+    .kpi-value { font-family: var(--font-display); font-size: 26px; font-weight: 800; color: var(--text-1); letter-spacing: -0.5px; margin-bottom: 6px; }
+    .kpi-change {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 600;
+      padding: 2px 8px; border-radius: 99px;
+    }
+    .kpi-change.up { background: rgba(52,211,153,0.12); color: var(--success); }
+    .kpi-change.down { background: rgba(248,113,113,0.12); color: var(--danger); }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 16px;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .panel-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-title { font-size: 13.5px; font-weight: 600; color: var(--text-1); }
+    .panel-action { font-size: 12px; color: var(--accent); cursor: pointer; }
+    .panel-body { padding: 14px 18px; }
+
+    /* Mini table */
+    .mini-table { width: 100%; border-collapse: collapse; }
+    .mini-table th {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
+      color: var(--text-3); padding: 0 0 10px; text-align: left;
+    }
+    .mini-table td {
+      font-size: 12.5px; color: var(--text-2);
+      padding: 9px 0; border-top: 1px solid var(--border);
+    }
+    .mini-table td:first-child { color: var(--text-1); font-weight: 500; }
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 99px;
+    }
+    .status-pill.done { background: rgba(52,211,153,0.12); color: var(--success); }
+    .status-pill.pending { background: rgba(251,191,36,0.12); color: var(--warning); }
+    .status-pill.process { background: rgba(108,127,255,0.12); color: var(--accent); }
+
+    /* Activity list */
+    .activity-list { display: flex; flex-direction: column; gap: 0; }
+    .activity-item {
+      display: flex; align-items: flex-start; gap: 11px;
+      padding: 11px 0; border-bottom: 1px solid var(--border);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      margin-top: 4px; flex-shrink: 0;
+    }
+    .activity-dot.blue { background: var(--accent); box-shadow: 0 0 6px var(--accent-glow); }
+    .activity-dot.green { background: var(--success); }
+    .activity-dot.yellow { background: var(--warning); }
+    .activity-text { font-size: 12.5px; color: var(--text-2); flex: 1; }
+    .activity-text strong { color: var(--text-1); }
+    .activity-time { font-size: 11px; color: var(--text-3); white-space: nowrap; }
+
+    /* Overlay for dropdowns */
+    .overlay { position: fixed; inset: 0; z-index: 100; display: none; }
+    .overlay.show { display: block; }
+
+    /* ══════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════ */
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        left: -var(--sb-width);
+        transform: translateX(calc(-1 * var(--sb-width)));
+        transition: transform 300ms ease;
+        z-index: 50;
+        box-shadow: none;
+      }
+      .sidebar.mobile-open {
+        transform: translateX(0);
+        box-shadow: 20px 0 60px rgba(0,0,0,0.5);
+      }
+      .nb-hamburger { display: flex; }
+      .nb-search { display: none; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .content-grid { grid-template-columns: 1fr; }
+      .nb-user-name { display: none; }
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .kpi-card { animation: fadeSlideUp 400ms ease both; }
+    .kpi-card:nth-child(1) { animation-delay: 50ms; }
+    .kpi-card:nth-child(2) { animation-delay: 100ms; }
+    .kpi-card:nth-child(3) { animation-delay: 150ms; }
+    .kpi-card:nth-child(4) { animation-delay: 200ms; }
+  </style>
+</head>
+<body>
+
+<!-- OVERLAY (for closing dropdowns) -->
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+<div class="app-shell">
+
+  <!-- ══════════════════════════════════
+       SIDEBAR
+  ══════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Brand -->
+    <div class="sb-brand">
+      <div class="sb-brand-icon">
+        <svg viewBox="0 0 16 16"><path d="M8 1L1 5v6l7 4 7-4V5L8 1zm0 2.2l4.5 2.6L8 8.4 3.5 5.8 8 3.2zm-5 4.1l4 2.3v4.6L3 12.4V7.3zm6 6.9v-4.6l4-2.3v5.1l-4 2.3-.1-.5z"/></svg>
+      </div>
+      <span class="sb-brand-name">Lumra</span>
+      <span class="sb-brand-version">v3</span>
+    </div>
+
+    <!-- Branch selector -->
+    <div class="sb-branch" onclick="alert('Ganti cabang')">
+      <div class="sb-branch-dot"></div>
+      <span class="sb-branch-label">Cabang Pusat — Jakarta</span>
+      <span class="sb-branch-arrow">↕</span>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sb-nav">
+
+      <div class="sb-section-label">Menu</div>
+
+      <!-- Dashboard -->
+      <div class="sb-item active" onclick="setActive(this)">
+        <span class="sb-item-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </span>
+        <span class="sb-item-text">Dashboard</span>
+      </div>
+
+      <!-- Point of Sale -->
+      <div class="sb-item" onclick="setActive(this)">
+        <span class="sb-item-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </span>
+        <span class="sb-item-text">Point of Sale</span>
+      </div>
+
+      <!-- Sales (expandable) -->
+      <div class="sb-item" onclick="toggleSubnav(this, 'sub-sales')">
+        <span class="sb-item-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        </span>
+        <span class="sb-item-text">Sales</span>
+        <svg class="sb-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+      <div class="sb-subnav" id="sub-sales">
+        <div class="sb-subitem active">Sales Orders</div>
+        <div class="sb-subitem">Quotations</div>
+        <div class="sb-subitem">Invoices</div>
+      </div>
+
+      <!-- Inventory -->
+      <div class="sb-item" onclick="toggleSubnav(this, 'sub-inv')">
+        <span class="sb-item-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        </span>
+        <span class="sb-item-text">Inventory</span>
+        <svg class="sb-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+      <div class="sb-subnav" id="sub-inv">
+        <div class="sb-subitem">Products</div>
+        <div class="sb-subitem">Stock Transfer</div>
+        <div class="sb-subitem">Adjustments</div>
+      </div>
+
+      <!-- Production -->
+      <div class="sb-item" onclick="setActive(this)">
+        <span class="sb-item-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+        </span>
+        <span class="sb-item-text">Production</span>
+      </div>
+
+      <!-- Accounting -->
+      <div class="sb-item" onclick="setActive(this)">
+        <span class="sb-item-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        </span>
+        <span class="sb-item-text">Accounting</span>
+      </div>
+
+      <!-- Procurement -->
+      <div class="sb-item" onclick="setActive(this)">
+        <span class="sb-item-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        </span>
+        <span class="sb-item-text">Procurement</span>
+      </div>
+
+      <!-- Marketing -->
+      <div class="sb-item" onclick="setActive(this)">
+        <span class="sb-item-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        </span>
+        <span class="sb-item-text">Marketing</span>
+      </div>
+
+      <!-- Master Data -->
+      <div class="sb-item" onclick="setActive(this)">
+        <span class="sb-item-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        </span>
+        <span class="sb-item-text">Master Data</span>
+      </div>
+
+      <!-- Reports -->
+      <div class="sb-item" onclick="setActive(this)">
+        <span class="sb-item-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><bar x="18" y="3" width="4" height="18"/><bar x="10" y="8" width="4" height="13"/><bar x="2" y="13" width="4" height="8"/><line x1="2" y1="21" x2="22" y2="21"/><rect x="2" y="13" width="4" height="8"/><rect x="10" y="8" width="4" height="13"/><rect x="18" y="3" width="4" height="18"/></svg>
+        </span>
+        <span class="sb-item-text">Reports</span>
+      </div>
+
+      <div class="sb-section-label" style="margin-top:8px">Sistem</div>
+
+      <!-- Notifications -->
+      <div class="sb-item" onclick="setActive(this)">
+        <span class="sb-item-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </span>
+        <span class="sb-item-text">Notifikasi</span>
+        <span class="sb-item-badge">5</span>
+      </div>
+
+      <!-- Settings -->
+      <div class="sb-item" onclick="setActive(this)">
+        <span class="sb-item-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </span>
+        <span class="sb-item-text">Settings</span>
+      </div>
+
+    </nav>
+
+    <!-- Footer: user + logout -->
+    <div class="sb-footer">
+      <!-- Logout modal -->
+      <div class="sb-logout-modal" id="logoutModal">
+        <div class="sb-logout-modal-title">Keluar dari sesi?</div>
+        <div class="sb-logout-modal-desc">Yakin mau keluar dari sesi ini?</div>
+        <div class="sb-logout-modal-actions">
+          <button class="btn-cancel" onclick="hideLogout()">Batal</button>
+          <a class="btn-logout-confirm" href="#">Keluar</a>
+        </div>
+      </div>
+
+      <div class="sb-user">
+        <div class="sb-avatar">AR</div>
+        <div class="sb-user-info">
+          <div class="sb-user-name">Ahmad Rizki</div>
+          <div class="sb-user-role">Administrator</div>
+        </div>
+        <button class="sb-logout-btn" onclick="showLogout(event)" title="Logout">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ══════════════════════════════════
+       MAIN SHELL
+  ══════════════════════════════════ -->
+  <div class="main-shell">
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+
+      <!-- Mobile hamburger -->
+      <button class="nb-hamburger" onclick="toggleSidebar()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+
+      <!-- Breadcrumb -->
+      <div class="nb-breadcrumb">
+        <span>Operations</span>
+        <span class="nb-breadcrumb-sep">›</span>
+        <span class="nb-breadcrumb-current">Dashboard</span>
+      </div>
+
+      <!-- Search -->
+      <div class="nb-search">
+        <svg class="nb-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="nb-search-input" type="text" placeholder="Cari menu, dokumen, transaksi…">
+        <span class="nb-search-kbd">/ ESC</span>
+      </div>
+
+      <!-- Right actions -->
+      <div class="nb-actions">
+
+        <!-- Notification bell -->
+        <button class="nb-icon-btn" onclick="toggleNotif(event)" id="notifBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <span class="nb-dot"></span>
+        </button>
+
+        <!-- User menu -->
+        <div class="nb-user" onclick="toggleUserMenu(event)" id="userBtn">
+          <div class="nb-avatar">AR</div>
+          <span class="nb-user-name">Ahmad Rizki</span>
+          <svg class="nb-user-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+
+      </div>
+
+      <!-- Notification panel -->
+      <div class="nb-notif-panel" id="notifPanel">
+        <div class="nb-notif-header">
+          <span class="nb-notif-title">Notifikasi</span>
+          <span class="nb-notif-count">5 baru</span>
+        </div>
+        <div class="nb-notif-item unread">
+          <div class="nb-notif-item-title">Purchase Order disetujui</div>
+          <div class="nb-notif-item-desc">PO-2026-0042 dari Supplier Maju Jaya</div>
+          <div class="nb-notif-item-time">2 menit lalu</div>
+        </div>
+        <div class="nb-notif-item unread">
+          <div class="nb-notif-item-title">Stok mendekati batas minimum</div>
+          <div class="nb-notif-item-desc">Produk: Tepung Terigu 25kg — sisa 12 unit</div>
+          <div class="nb-notif-item-time">15 menit lalu</div>
+        </div>
+        <div class="nb-notif-item">
+          <div class="nb-notif-item-title">Invoice #INV-2026-0318 lunas</div>
+          <div class="nb-notif-item-desc">Pembayaran diterima dari PT Sinar Mas</div>
+          <div class="nb-notif-item-time">1 jam lalu</div>
+        </div>
+        <div class="nb-notif-footer">Lihat semua →</div>
+      </div>
+
+      <!-- User panel -->
+      <div class="nb-user-panel" id="userPanel">
+        <div class="nb-user-panel-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profil Saya
+        </div>
+        <div class="nb-user-panel-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          Pengaturan
+        </div>
+        <div class="nb-user-panel-divider"></div>
+        <div class="nb-user-panel-item danger">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Keluar
+        </div>
+      </div>
+
+    </header>
+
+    <!-- MAIN CONTENT (demo dashboard) -->
+    <main class="main-content">
+      <div class="page-title">Operations Dashboard</div>
+      <div class="page-subtitle">Senin, 27 April 2026 — Selamat pagi, Ahmad 👋</div>
+
+      <!-- KPI -->
+      <div class="kpi-grid">
+        <div class="kpi-card blue">
+          <div class="kpi-label">Pendapatan Hari Ini</div>
+          <div class="kpi-value">Rp 48,2jt</div>
+          <span class="kpi-change up">↑ 12,4% vs kemarin</span>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">Order Baru</div>
+          <div class="kpi-value">137</div>
+          <span class="kpi-change up">↑ 8 order</span>
+        </div>
+        <div class="kpi-card yellow">
+          <div class="kpi-label">Stok Menipis</div>
+          <div class="kpi-value">14</div>
+          <span class="kpi-change down">↑ 3 item baru</span>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-label">Invoice Jatuh Tempo</div>
+          <div class="kpi-value">6</div>
+          <span class="kpi-change down">Rp 23,1jt tertunda</span>
+        </div>
+      </div>
+
+      <!-- Content grid -->
+      <div class="content-grid">
+
+        <!-- Recent orders table -->
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Order Terbaru</span>
+            <span class="panel-action">Lihat semua →</span>
+          </div>
+          <div class="panel-body">
+            <table class="mini-table">
+              <thead>
+                <tr>
+                  <th>No. Order</th>
+                  <th>Pelanggan</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>SO-2026-0892</td>
+                  <td>PT Maju Bersama</td>
+                  <td>Rp 4.200.000</td>
+                  <td><span class="status-pill done">● Selesai</span></td>
+                </tr>
+                <tr>
+                  <td>SO-2026-0891</td>
+                  <td>CV Karya Indah</td>
+                  <td>Rp 1.750.000</td>
+                  <td><span class="status-pill process">● Diproses</span></td>
+                </tr>
+                <tr>
+                  <td>SO-2026-0890</td>
+                  <td>Toko Sinar Jaya</td>
+                  <td>Rp 890.000</td>
+                  <td><span class="status-pill pending">● Pending</span></td>
+                </tr>
+                <tr>
+                  <td>SO-2026-0889</td>
+                  <td>UD Makmur</td>
+                  <td>Rp 3.100.000</td>
+                  <td><span class="status-pill done">● Selesai</span></td>
+                </tr>
+                <tr>
+                  <td>SO-2026-0888</td>
+                  <td>PT Cahaya Nusantara</td>
+                  <td>Rp 6.800.000</td>
+                  <td><span class="status-pill process">● Diproses</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Activity feed -->
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Aktivitas Terkini</span>
+            <span class="panel-action">Semua</span>
+          </div>
+          <div class="panel-body">
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-dot blue"></div>
+                <div class="activity-text"><strong>Budi</strong> membuat invoice baru INV-0318</div>
+                <div class="activity-time">2m</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot green"></div>
+                <div class="activity-text">Pembayaran <strong>Rp 4,2jt</strong> diterima</div>
+                <div class="activity-time">8m</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot yellow"></div>
+                <div class="activity-text">Stok <strong>Tepung 25kg</strong> di bawah minimum</div>
+                <div class="activity-time">15m</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot blue"></div>
+                <div class="activity-text"><strong>Sari</strong> approve PO-0042 ke Supplier</div>
+                <div class="activity-time">32m</div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-dot green"></div>
+                <div class="activity-text">Production order <strong>PRD-0087</strong> selesai</div>
+                <div class="activity-time">1j</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div><!-- end main-shell -->
+
+</div><!-- end app-shell -->
+
+<script>
+  // Active nav item
+  function setActive(el) {
+    document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  // Subnav toggle
+  function toggleSubnav(el, id) {
+    const sub = document.getElementById(id);
+    const isOpen = sub.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.sb-subnav').forEach(s => s.classList.remove('open'));
+    document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) {
+      sub.classList.add('open');
+      el.classList.add('open');
+    }
+    setActive(el);
+  }
+
+  // Mobile sidebar
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('mobile-open');
+    document.getElementById('overlay').classList.toggle('show');
+  }
+
+  // Notifications
+  function toggleNotif(e) {
+    e.stopPropagation();
+    const panel = document.getElementById('notifPanel');
+    const isOpen = panel.classList.contains('show');
+    closeAll();
+    if (!isOpen) {
+      panel.classList.add('show');
+      document.getElementById('overlay').classList.add('show');
+    }
+  }
+
+  // User menu
+  function toggleUserMenu(e) {
+    e.stopPropagation();
+    const panel = document.getElementById('userPanel');
+    const isOpen = panel.classList.contains('show');
+    closeAll();
+    if (!isOpen) {
+      panel.classList.add('show');
+      document.getElementById('overlay').classList.add('show');
+    }
+  }
+
+  // Logout modal
+  function showLogout(e) {
+    e.stopPropagation();
+    document.getElementById('logoutModal').classList.add('show');
+  }
+  function hideLogout() {
+    document.getElementById('logoutModal').classList.remove('show');
+  }
+
+  function closeAll() {
+    document.getElementById('notifPanel').classList.remove('show');
+    document.getElementById('userPanel').classList.remove('show');
+    document.getElementById('sidebar').classList.remove('mobile-open');
+    document.getElementById('overlay').classList.remove('show');
+  }
+
+  // Sub-sales open by default (demo)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('sub-sales').classList.add('open');
+    document.querySelector('[onclick*="sub-sales"]').classList.add('open');
+  });
+</script>
+</body>
+</html>

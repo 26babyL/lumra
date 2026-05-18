@@ -1,0 +1,772 @@
+{% extends 'base/base.html' %}
+{% block title %}{{ vendor.name }} — Vendor Detail{% endblock %}
+
+{% block extra_css %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap');
+
+  [x-cloak]{display:var(--shadow-sm-16) !important;}
+
+  *{font-family:'DM Sans',sans-serif;}
+
+  .mono{font-family:'DM Mono',monospace;}
+
+  @keyframes drift{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(24px,18px) scale(1.05)}}
+
+  .hero-card{
+    background:linear-gradient(135deg,var(--color-rgba-238-242-255-a88),var(--color-rgba-224-231-255-a72));
+    backdrop-filter:var(--backdrop-blur-24px-saturate-160);
+    border:1px solid var(--color-rgba-199-210-254-a7);
+    border-radius:24px;
+    box-shadow:0 4px 28px var(--color-rgba-99-102-241-a10);
+    position:relative; overflow:hidden;
+  }
+
+  .hero-card::before{
+    content:'';position:absolute;
+    top:-80px;right:-80px;
+    width:300px;height:300px;border-radius:50%;
+    background:radial-gradient(circle,var(--color-rgba-99-102-241-a12),transparent 70%);
+    pointer-events:var(--shadow-sm-16);
+  }
+
+  .big-avatar{
+    width:68px;height:68px;border-radius:20px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:24px;font-weight:900;
+    box-shadow:0 6px 20px var(--color-rgba-79-70-229-a28);
+    position:relative;overflow:hidden;
+  }
+
+  .big-avatar::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(135deg,var(--color-white-a25),transparent);
+  }
+
+  .stat-card{
+    background:var(--color-white-a68);
+    border:1px solid var(--color-rgba-199-210-254-a5);
+    border-radius:16px;
+    padding:16px 18px;
+    position:relative;overflow:hidden;
+    transition:box-shadow .15s,transform .15s;
+  }
+
+  .stat-card:hover{box-shadow:0 6px 20px var(--color-rgba-99-102-241-a1);transform:translateY(-2px);}
+
+  .stat-card::before{
+    content:'';position:absolute;
+    top:0;left:0;width:60px;height:60px;border-radius:0 0 60px 0;
+    opacity:.07;
+  }
+
+  .perf-track{height:6px;border-radius:99px;background:var(--color-rgba-199-210-254-a3);overflow:hidden;}
+
+  .perf-fill{height:100%;border-radius:99px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+
+  .badge-preferred{
+    display:inline-flex;align-items:center;gap:4px;
+    padding:4px 10px;border-radius:99px;
+    background:linear-gradient(135deg,var(--color-rgba-99-102-241-a15),var(--color-rgba-79-70-229-a1));
+    border:1px solid var(--color-rgba-99-102-241-a3);
+    font-size:9px;font-weight:900;color:var(--color-6366f1);
+    text-transform:uppercase;letter-spacing:.1em;
+  }
+
+  .badge-verified{
+    display:inline-flex;align-items:center;gap:4px;
+    padding:4px 10px;border-radius:99px;
+    background:var(--color-rgba-59-130-246-a1);border:1px solid var(--color-rgba-59-130-246-a25);
+    font-size:9px;font-weight:900;color:var(--color-2563eb);
+    text-transform:uppercase;letter-spacing:.1em;
+  }
+
+  .tab-btn{
+    padding:8px 16px;border-radius:10px;
+    font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--color-slate-400);background:transparent;border:var(--shadow-sm-16);cursor:pointer;
+    transition:color .12s,background .12s;
+  }
+
+  .tab-btn.active{color:var(--color-6366f1);background:var(--color-rgba-99-102-241-a09);}
+
+  .tab-btn:hover:not(.active){color:var(--color-slate-600);background:var(--color-black-a025);}
+
+  .po-head{
+    background:var(--color-rgba-239-246-255-a8);
+    backdrop-filter:var(--backdrop-blur-12px);
+    position:sticky;top:0;z-index:5;
+    border-bottom:1px solid var(--color-rgba-199-210-254-a4);
+  }
+
+  .po-th{
+    padding:10px 16px;
+    font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--color-slate-400);white-space:nowrap;
+  }
+
+  .po-row{border-bottom:1px solid var(--color-slate-200-a35);transition:background .12s;}
+
+  .po-row:last-of-type{border-bottom:var(--shadow-sm-16);}
+
+  .po-row:hover td{background:var(--color-rgba-239-246-255-a5) !important;}
+
+  .ps-approved{background:var(--color-rgba-37-99-235-a1);color:var(--color-2563eb);border:1px solid var(--color-rgba-37-99-235-a2);}
+
+  .ps-pending  {background:var(--color-rgba-245-158-11-a1);color:var(--color-b45309);border:1px solid var(--color-rgba-245-158-11-a2);}
+
+  .ps-received {background:var(--color-rgba-59-130-246-a1);color:var(--color-2563eb);border:1px solid var(--color-rgba-59-130-246-a2);}
+
+  .ps-rejected {background:var(--color-rgba-244-63-94-a1);color:var(--color-e11d48);border:1px solid var(--color-rgba-244-63-94-a2);}
+
+  .po-status{
+    padding:3px 9px;border-radius:99px;
+    font-size:9px;font-weight:900;
+    text-transform:uppercase;letter-spacing:.08em;
+    display:inline-block;
+  }
+
+  #spendChart{display:block;width:100%;height:220px;}
+
+  .tl-item{
+    display:flex;gap:14px;padding-bottom:20px;
+    position:relative;
+  }
+
+  .tl-item:not(:last-child)::after{
+    content:'';position:absolute;
+    left:13px;top:28px;
+    width:1px;height:calc(100% - 8px);
+    background:linear-gradient(to bottom,var(--color-rgba-199-210-254-a5),transparent);
+  }
+
+  .tl-dot{
+    width:28px;height:28px;border-radius:9px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-size:10px;
+  }
+
+  .info-row{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 13px;border-radius:12px;
+    background:var(--color-slate-50-a55);
+    border:1px solid var(--color-rgba-224-231-255-a5);
+    transition:background .12s;
+  }
+
+  .info-row:hover{background:var(--color-white-a8);}
+
+  .btn-indigo{
+    background:linear-gradient(135deg,var(--color-4f46e5),var(--color-6366f1));
+    border:var(--shadow-sm-16);border-radius:12px;color:var(--color-fff);
+    font-size:12px;font-weight:800;cursor:pointer;
+    padding:10px 20px;display:flex;align-items:center;gap:7px;
+    box-shadow:0 4px 16px var(--color-rgba-99-102-241-a30);
+    transition:opacity .13s,transform .13s;text-decoration:var(--shadow-sm-16);
+  }
+
+  .btn-indigo:hover{opacity:.9;transform:translateY(-1px);}
+
+  .btn-ghost{
+    border:1.5px solid var(--color-rgba-199-210-254-a7);
+    border-radius:11px;background:var(--color-white-a55);
+    color:var(--color-slate-500);font-size:11px;font-weight:700;
+    padding:9px 16px;cursor:pointer;
+    transition:background .12s,border-color .12s;
+    display:flex;align-items:center;gap:6px;text-decoration:var(--shadow-sm-16);
+  }
+
+  .btn-ghost:hover{background:var(--color-rgba-239-246-255-a8);border-color:var(--color-rgba-99-102-241-a3);}
+
+  @keyframes tIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:var(--shadow-sm-16)}}
+
+  @keyframes tOut{from{opacity:1}to{opacity:0;pointer-events:var(--shadow-sm-16)}}
+
+  .custom-scroll::-webkit-scrollbar{width:3px;}
+
+  .custom-scroll::-webkit-scrollbar-thumb{background:var(--color-slate-200);border-radius:99px;}
+</style>
+{% endblock %}
+
+{% block content %}
+
+{{ po_history_json|json_script:"po-data" }}
+{{ spend_chart_json|json_script:"spend-data" }}
+
+<div class="blob blob-a"></div>
+<div class="blob blob-b"></div>
+<div class="blob blob-c"></div>
+
+<div class="w-full flex-1 space-y-5 relative z-10"
+     x-data="vendorDetail()"
+     x-init="init()"
+     x-cloak>
+
+  <!--{# ══ BACK NAV ══ #}-->
+  <div class="reveal flex items-center gap-3">
+    <a href="{% url 'vendors_list' %}" class="btn-ghost">
+      <i class="fas fa-arrow-left text-[10px]"></i> Kembali
+    </a>
+    <nav class="flex items-center gap-2 text-xs text-indigo-400">
+      <a href="{% url 'dashboard' %}" class="hover:text-indigo-700">Dashboard</a>
+      <span class="text-slate-300">/</span>
+      <a href="{% url 'vendors_list' %}" class="hover:text-indigo-700">Vendors</a>
+      <span class="text-slate-300">/</span>
+      <span class="text-slate-600 font-medium">{{ vendor.name }}</span>
+    </nav>
+  </div>
+
+  <!--{# ══ HERO ══ #}-->
+  <div class="reveal hero-card p-6 md:p-8">
+    <div class="flex flex-col md:flex-row gap-6 items-start">
+
+      <!--{# Avatar + identity #}-->
+      <div class="flex items-start gap-5">
+        <div class="big-avatar" style="background:linear-gradient(135deg,{{ vendor.color|default:'#4f46e5' }}dd,{{ vendor.color|default:'#6366f1' }}99);">
+          <span class="text-white z-10 relative">{{ vendor.name|slice:":2"|upper }}</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap mb-1">
+            <p class="text-[11px] mono text-indigo-400 font-bold">{{ vendor.code|default:"VND-000" }}</p>
+            {% if vendor.tier == 'preferred' %}
+            <span class="badge-preferred"><i class="fas fa-star text-[7px]"></i> Preferred Partner</span>
+            {% elif vendor.tier == 'verified' %}
+            <span class="badge-verified"><i class="fas fa-check text-[7px]"></i> Verified</span>
+            {% endif %}
+          </div>
+          <h1 class="text-xl md:text-2xl font-black text-slate-800 uppercase tracking-tight leading-tight">
+            {{ vendor.name }}
+          </h1>
+          <p class="text-sm text-slate-500 mt-1">{{ vendor.description|default:"Mitra pemasok produk CoffeeShop" }}</p>
+
+          <div class="flex flex-wrap gap-3 mt-3">
+            {% for cat in vendor.categories.all %}
+            <span class="px-2.5 py-1 rounded-lg text-[9px] font-black uppercase"
+                  style="background:{{ vendor.color|default:'#4f46e5' }}15;color:{{ vendor.color|default:'#4f46e5' }};border:1px solid {{ vendor.color|default:'#4f46e5' }}25;">
+              {{ cat.name }}
+            </span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!--{# Quick actions #}-->
+      <div class="md:ml-auto flex items-start gap-2.5 flex-wrap">
+        <a href="{{ vendor.get_edit_url }}" class="btn-ghost">
+          <i class="fas fa-pen text-[10px]"></i> Edit
+        </a>
+        <a href="{% url 'purchasing' %}?vendor={{ vendor.id }}" class="btn-indigo">
+          <i class="fas fa-cart-plus text-[11px]"></i> Buat PO
+        </a>
+      </div>
+
+    </div>
+
+    <!--{# KPI Row #}-->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6 pt-5 border-t border-indigo-200/30">
+      <div>
+        <p class="text-[9px] font-black text-indigo-400 uppercase tracking-[.12em]">Total Pembelian</p>
+        <p class="text-[18px] font-black text-slate-800 mt-0.5">
+          Rp {{ total_spend|floatformat:0|default:"0" }}
+        </p>
+      </div>
+      <div>
+        <p class="text-[9px] font-black text-indigo-400 uppercase tracking-[.12em]">Total PO</p>
+        <p class="text-[18px] font-black text-slate-800 mt-0.5">{{ total_po|default:0 }}</p>
+      </div>
+      <div>
+        <p class="text-[9px] font-black text-indigo-400 uppercase tracking-[.12em]">SKU Dipasok</p>
+        <p class="text-[18px] font-black text-slate-800 mt-0.5">{{ vendor.sku_count|default:0 }}</p>
+      </div>
+      <div>
+        <p class="text-[9px] font-black text-indigo-400 uppercase tracking-[.12em]">On-Time Delivery</p>
+        <p class="text-[18px] font-black mt-0.5"
+           style="color:{{ vendor.color|default:'#4f46e5' }}">
+          {{ vendor.ontime_pct|default:0 }}%
+        </p>
+        <div class="perf-track mt-1">
+          <div class="perf-fill" id="heroPerf"
+               style="width:{{ vendor.ontime_pct|default:0 }}%;background:{{ vendor.color|default:'#4f46e5' }};"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--{# ══ MAIN CONTENT — 3+1 cols ══ #}-->
+  <div class="reveal grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+    <!--{# ── LEFT 2 cols: Tabs ── #}-->
+    <div class="lg:col-span-2 glass overflow-hidden flex flex-col">
+
+      <!--{# Tab nav #}-->
+      <div class="flex items-center gap-1 px-5 py-3.5 border-b border-slate-100/60 bg-gradient-to-r from-blue-50/30 to-indigo-50/20 flex-shrink-0">
+        <button @click="tab='pos'" class="tab-btn" :class="{active:tab==='pos'}">
+          <i class="fas fa-file-invoice mr-1 text-[10px]"></i> Purchase Orders
+        </button>
+        <button @click="tab='chart'" class="tab-btn" :class="{active:tab==='chart'}">
+          <i class="fas fa-chart-area mr-1 text-[10px]"></i> Spending Chart
+        </button>
+        <button @click="tab='products'" class="tab-btn" :class="{active:tab==='products'}">
+          <i class="fas fa-boxes mr-1 text-[10px]"></i> Produk
+        </button>
+      </div>
+
+      <!--{# ── PO List Tab ── #}-->
+      <div x-show="tab==='pos'" class="flex-1 overflow-auto custom-scroll">
+
+        <!--{# PO Filter bar #}-->
+        <div class="flex items-center gap-2 px-5 py-3 border-b border-slate-100/50 bg-white/20">
+          <select x-model="poFilter" @change="filterPO()"
+                  class="text-[11px] font-semibold text-slate-600 border border-indigo-200/50 rounded-xl px-3 py-1.5 outline-none cursor-pointer" style="background:var(--color-surface)">
+            <option value="">Semua Status</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="received">Received</option>
+            <option value="rejected">Rejected</option>
+          </select>
+          <select x-model="poYear" @change="filterPO()"
+                  class="text-[11px] font-semibold text-slate-600 border border-indigo-200/50 rounded-xl px-3 py-1.5 outline-none cursor-pointer" style="background:var(--color-surface)">
+            <option value="">Semua Tahun</option>
+            <template x-for="y in poYears" :key="y"><option :value="y" x-text="y"></option></template>
+          </select>
+          <span class="ml-auto text-[10px] text-slate-400 font-bold"
+                x-text="poFiltered.length+' PO'"></span>
+        </div>
+
+        <table class="min-w-full border-separate border-spacing-0">
+          <thead class="po-head">
+            <tr>
+              <th class="po-th">No PO</th>
+              <th class="po-th">Tanggal</th>
+              <th class="po-th hidden sm:table-cell">Produk</th>
+              <th class="po-th">Total</th>
+              <th class="po-th">Status</th>
+              <th class="po-th text-right">Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="po in poFiltered" :key="po.id">
+              <tr class="po-row group">
+                <td class="px-4 py-3.5">
+                  <p class="text-[11px] font-black text-slate-700 mono" x-text="po.ref"></p>
+                  <p class="text-[9px] text-slate-400 mono mt-0.5" x-text="po.store||''"></p>
+                </td>
+                <td class="px-4 py-3.5">
+                  <p class="text-[11px] font-bold text-slate-600" x-text="po.date"></p>
+                  <p class="text-[9px] text-slate-400 mt-0.5" x-text="po.delivery_date||'—'"></p>
+                </td>
+                <td class="px-4 py-3.5 hidden sm:table-cell">
+                  <p class="text-[10px] font-bold text-slate-600 truncate max-w-[140px]" x-text="po.items_summary||'—'"></p>
+                  <p class="text-[9px] text-slate-400 mono" x-text="po.item_count+' item'"></p>
+                </td>
+                <td class="px-4 py-3.5">
+                  <p class="text-[12px] font-black text-slate-800" x-text="'Rp '+fmt(po.total)"></p>
+                </td>
+                <td class="px-4 py-3.5">
+                  <span class="po-status" :class="'ps-'+(po.status||'pending')" x-text="po.status"></span>
+                </td>
+                <td class="px-4 py-3.5 text-right">
+                  <a :href="po.detailUrl||'#'"
+                     class="w-7 h-7 inline-flex items-center justify-center rounded-xl text-slate-200 hover:text-indigo-600 hover:bg-indigo-50 transition text-[10px]">
+                    <i class="fas fa-chevron-right"></i>
+                  </a>
+                </td>
+              </tr>
+            </template>
+            <template x-if="poFiltered.length===0">
+              <tr>
+                <td colspan="6">
+                  <div class="flex flex-col items-center py-14 opacity-50 select-none">
+                    <i class="fas fa-file-invoice text-3xl text-slate-200 mb-3"></i>
+                    <p class="text-[12px] font-black text-slate-400">Belum ada PO untuk vendor ini</p>
+                  </div>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+
+      <!--{# ── Spending Chart Tab ── #}-->
+      <div x-show="tab==='chart'" class="flex-1 p-6" style="display:none">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <div class="w-1.5 h-5 bg-indigo-500 rounded-full"></div>
+              <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.12em]">Total Belanja</p>
+            </div>
+            <p class="text-2xl font-black text-slate-800">
+              Rp <span id="chartTotal">{{ total_spend|floatformat:0|default:"0" }}</span>
+            </p>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <template x-for="p in ['6M','1Y','2Y','All']" :key="p">
+              <button @click="chartPeriod=p; drawChart()"
+                      class="px-3 py-1.5 rounded-lg text-[10px] font-bold transition"
+                      :class="chartPeriod===p
+                        ? 'bg-indigo-600 text-white shadow-[0_2px_8px_rgba(99,102,241,.3)]'
+                        : 'bg-slate-100/70 text-slate-400 hover:text-slate-600'"
+                      x-text="p">
+              </button>
+            </template>
+          </div>
+        </div>
+
+        <!--{# Chart canvas #}-->
+        <div class="relative" style="height:220px;">
+          <canvas id="spendChart"></canvas>
+        </div>
+
+        <!--{# Month breakdown mini-table #}-->
+        <div class="mt-5 space-y-1.5">
+          <p class="text-[9px] font-black text-slate-400 uppercase tracking-[.12em] mb-3">Rincian Per Bulan</p>
+          <template x-for="row in chartRows" :key="row.label">
+            <div class="flex items-center gap-3 py-2 border-b border-slate-50/80 last:border-none">
+              <span class="text-[10px] mono text-slate-400 w-20 flex-shrink-0" x-text="row.label"></span>
+              <div class="flex-1 h-1.5 rounded-full bg-slate-100/70 overflow-hidden">
+                <div class="h-full rounded-full transition-all"
+                     style="background:linear-gradient(90deg,#4f46e5,#6366f1)"
+                     :style="'width:'+row.pct+'%'"></div>
+              </div>
+              <span class="text-[10px] font-bold text-slate-600 w-28 text-right flex-shrink-0 mono"
+                    x-text="'Rp '+fmt(row.amount)"></span>
+              <span class="text-[9px] font-black w-10 flex-shrink-0 text-right"
+                    :class="row.delta>=0?'text-blue-500':'text-rose-400'"
+                    x-text="(row.delta>=0?'+':'')+row.delta+'%'"></span>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!--{# ── Products Tab ── #}-->
+      <div x-show="tab==='products'" class="flex-1 p-5 overflow-auto custom-scroll" style="display:none">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-1.5 h-5 bg-violet-500 rounded-full"></div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.12em]">Produk yang Dipasok</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          {% for product in vendor_products %}
+          <div class="flex items-center gap-3 px-3.5 py-3 rounded-2xl border border-slate-100/60 hover:bg-white/80 transition group" style="background:var(--color-surface)">
+            <div class="w-9 h-9 rounded-xl overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 flex-shrink-0">
+              {% if product.image %}
+                <img src="{{ product.image.url }}" class="w-full h-full object-cover">
+              {% else %}
+                <div class="w-full h-full flex items-center justify-center">
+                  <i class="fas fa-box text-slate-300 text-[12px]"></i>
+                </div>
+              {% endif %}
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[11px] font-black text-slate-700 truncate uppercase tracking-tight">{{ product.name }}</p>
+              <p class="text-[9px] mono text-slate-300 mt-0.5">{{ product.sku }}</p>
+            </div>
+            <div class="text-right flex-shrink-0">
+              <p class="text-[11px] font-black text-slate-700">Rp {{ product.price|floatformat:0 }}</p>
+              <p class="text-[9px] text-slate-300 mt-0.5">{{ product.stock }} stok</p>
+            </div>
+          </div>
+          {% empty %}
+          <div class="col-span-2 flex flex-col items-center py-12 opacity-50 select-none">
+            <i class="fas fa-boxes text-3xl text-slate-200 mb-3"></i>
+            <p class="text-[12px] font-black text-slate-400">Belum ada produk tercatat</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div><!--{# end left 2 cols #}-->
+
+    <!--{# ── RIGHT 1 col ── #}-->
+    <div class="space-y-4">
+
+      <!--{# Vendor Info Card #}-->
+      <div class="glass p-5">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-1.5 h-5 bg-indigo-500 rounded-full"></div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.12em]">Informasi</p>
+        </div>
+        <div class="space-y-2">
+          <div class="info-row">
+            <i class="fas fa-envelope text-indigo-200 text-[11px] w-4 flex-shrink-0"></i>
+            <span class="text-[11px] font-bold text-slate-600 truncate">{{ vendor.email|default:"—" }}</span>
+          </div>
+          <div class="info-row">
+            <i class="fas fa-phone text-indigo-200 text-[11px] w-4 flex-shrink-0"></i>
+            <span class="text-[11px] font-bold text-slate-600">{{ vendor.phone|default:"—" }}</span>
+          </div>
+          <div class="info-row">
+            <i class="fas fa-map-marker-alt text-indigo-200 text-[11px] w-4 flex-shrink-0"></i>
+            <span class="text-[11px] font-bold text-slate-600">{{ vendor.address|default:"—" }}</span>
+          </div>
+          <div class="info-row">
+            <i class="fas fa-city text-indigo-200 text-[11px] w-4 flex-shrink-0"></i>
+            <span class="text-[11px] font-bold text-slate-600">{{ vendor.city|default:"—" }}</span>
+          </div>
+          <div class="info-row">
+            <i class="fas fa-clock text-indigo-200 text-[11px] w-4 flex-shrink-0"></i>
+            <div>
+              <span class="text-[9px] font-black text-slate-400 block uppercase tracking-wider">Lead Time</span>
+              <span class="text-[11px] font-bold text-slate-700">{{ vendor.lead_time_days|default:"—" }} hari</span>
+            </div>
+          </div>
+          <div class="info-row">
+            <i class="fas fa-file-contract text-indigo-200 text-[11px] w-4 flex-shrink-0"></i>
+            <div>
+              <span class="text-[9px] font-black text-slate-400 block uppercase tracking-wider">Min. Order</span>
+              <span class="text-[11px] font-bold text-slate-700">Rp {{ vendor.min_order|floatformat:0|default:"—" }}</span>
+            </div>
+          </div>
+          <div class="info-row">
+            <i class="fas fa-bank text-indigo-200 text-[11px] w-4 flex-shrink-0"></i>
+            <div>
+              <span class="text-[9px] font-black text-slate-400 block uppercase tracking-wider">Payment Terms</span>
+              <span class="text-[11px] font-bold text-slate-700">{{ vendor.payment_terms|default:"—" }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--{# Performance Card #}-->
+      <div class="glass p-5">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-1.5 h-5 bg-violet-500 rounded-full"></div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.12em]">Performa</p>
+        </div>
+        <div class="space-y-3.5">
+          <div>
+            <div class="flex justify-between mb-1.5">
+              <span class="text-[10px] font-bold text-slate-500">On-Time Delivery</span>
+              <span class="text-[10px] font-black text-indigo-600">{{ vendor.ontime_pct|default:0 }}%</span>
+            </div>
+            <div class="perf-track">
+              <div class="perf-fill" style="width:{{ vendor.ontime_pct|default:0 }}%;background:linear-gradient(90deg,#4f46e5,#6366f1);"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between mb-1.5">
+              <span class="text-[10px] font-bold text-slate-500">Kualitas Produk</span>
+              <span class="text-[10px] font-black text-blue-600">{{ vendor.quality_pct|default:0 }}%</span>
+            </div>
+            <div class="perf-track">
+              <div class="perf-fill" style="width:{{ vendor.quality_pct|default:0 }}%;background:linear-gradient(90deg,#2563eb,#3b82f6);"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between mb-1.5">
+              <span class="text-[10px] font-bold text-slate-500">Responsiveness</span>
+              <span class="text-[10px] font-black text-sky-600">{{ vendor.response_pct|default:0 }}%</span>
+            </div>
+            <div class="perf-track">
+              <div class="perf-fill" style="width:{{ vendor.response_pct|default:0 }}%;background:linear-gradient(90deg,#0ea5e9,#38bdf8);"></div>
+            </div>
+          </div>
+        </div>
+
+        <!--{# Overall score #}-->
+        <div class="mt-4 pt-4 border-t border-slate-100/60 flex items-center justify-between">
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Skor Keseluruhan</p>
+          <div class="flex items-center gap-1.5">
+            {% with score=vendor.overall_score|default:0 %}
+            {% for i in "12345" %}
+              {% if forloop.counter <= score|floatformat:"0"|add:"0" %}
+                <i class="fas fa-star text-amber-400 text-[11px]"></i>
+              {% else %}
+                <i class="fas fa-star text-slate-200 text-[11px]"></i>
+              {% endif %}
+            {% endfor %}
+            {% endwith %}
+            <span class="text-[12px] font-black text-slate-700 ml-1">{{ vendor.overall_score|default:"—" }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!--{# Relationship Timeline #}-->
+      <div class="glass p-5">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-1.5 h-5 bg-sky-500 rounded-full"></div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.12em]">Timeline</p>
+        </div>
+        <div>
+          {% for event in vendor_timeline %}
+          <div class="tl-item">
+            <div class="tl-dot"
+                 style="background:{{ event.color|default:'#eff6ff' }};border:1px solid {{ event.color|default:'#bfdbfe' }}">
+              <i class="fas fa-{{ event.icon|default:'circle-dot' }}" style="color:{{ event.color|default:'#6366f1' }};font-size:10px;"></i>
+            </div>
+            <div class="flex-1 min-w-0 pt-1">
+              <p class="text-[11px] font-bold text-slate-700 leading-snug">{{ event.description }}</p>
+              <p class="text-[9px] mono text-slate-400 mt-0.5">{{ event.date|date:"d M Y" }}</p>
+            </div>
+          </div>
+          {% empty %}
+          <p class="text-[11px] text-slate-300 py-4">Belum ada riwayat</p>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div><!--{# end right col #}-->
+
+  </div><!--{# end grid #}-->
+
+  <div class="fixed top-5 right-5 z-[100] flex flex-col gap-2" id="toastEl"></div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+function vendorDetail() {
+  return {
+    tab         : 'pos',
+    chartPeriod : '1Y',
+    poFilter    : '',
+    poYear      : '',
+    poAll       : [],
+    poFiltered  : [],
+    poYears     : [],
+    chartData   : null,
+    chartRows   : [],
+    chartInst   : null,
+
+    init() {
+      /* ── PO data ── */
+      const poEl = document.getElementById('po-data');
+      if (poEl) { try { this.poAll=JSON.parse(poEl.textContent); } catch(e){this.poAll=[];} }
+      this.poYears = [...new Set(this.poAll.map(p=>p.year))].sort((a,b)=>b-a);
+      this.filterPO();
+
+      /* ── Chart data ── */
+      const cdEl = document.getElementById('spend-data');
+      if (cdEl) { try { this.chartData=JSON.parse(cdEl.textContent); } catch(e){this.chartData=null;} }
+      this.buildChartRows();
+
+      /* ── Scroll reveal ── */
+      const io = new IntersectionObserver(entries=>{
+        entries.forEach((e,i)=>{
+          if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*60);io.unobserve(e.target);}
+        });
+      },{threshold:.08});
+      document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+      /* ── Draw chart when tab shown ── */
+      this.$watch('tab', val => { if(val==='chart') this.$nextTick(()=>this.drawChart()); });
+    },
+
+    filterPO() {
+      this.poFiltered = this.poAll.filter(po=>{
+        const ms = !this.poFilter || po.status===this.poFilter;
+        const my = !this.poYear  || String(po.year)===String(this.poYear);
+        return ms&&my;
+      });
+    },
+
+    buildChartRows() {
+      if (!this.chartData) return;
+      const data = this.chartData.monthly || [];
+      const max = Math.max(...data.map(d=>d.amount),1);
+      this.chartRows = data.map((d,i)=>({
+        label  : d.label,
+        amount : d.amount,
+        pct    : Math.round((d.amount/max)*100),
+        delta  : i>0 ? Math.round(((d.amount - data[i-1].amount)/Math.max(data[i-1].amount,1))*100) : 0,
+      }));
+    },
+
+    drawChart() {
+      const ctx = document.getElementById('spendChart');
+      if (!ctx||!this.chartData) return;
+      if (this.chartInst) { this.chartInst.destroy(); this.chartInst=null; }
+
+      /* Filter by period */
+      let monthly = this.chartData.monthly || [];
+      if (this.chartPeriod==='6M') monthly = monthly.slice(-6);
+      else if (this.chartPeriod==='1Y') monthly = monthly.slice(-12);
+      else if (this.chartPeriod==='2Y') monthly = monthly.slice(-24);
+
+      const labels = monthly.map(d=>d.label);
+      const values = monthly.map(d=>d.amount);
+
+      this.chartInst = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Pembelian',
+            data: values,
+            borderColor: '#6366f1',
+            borderWidth: 2,
+            tension: 0.42,
+            pointRadius: 4,
+            pointBackgroundColor: '#6366f1',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            fill: true,
+            backgroundColor: (ctx2) => {
+              const g = ctx2.chart.ctx.createLinearGradient(0,0,0,220);
+              g.addColorStop(0,'rgba(99,102,241,.14)');
+              g.addColorStop(1,'rgba(99,102,241,.00)');
+              return g;
+            },
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(15,23,42,.9)',
+              titleColor: '#a5b4fc',
+              bodyColor: '#fff',
+              titleFont: { family:'DM Mono', size:10 },
+              bodyFont: { family:'DM Sans', size:12, weight:'bold' },
+              padding: 10,
+              cornerRadius: 10,
+              callbacks: {
+                label: ctx3 => ' Rp '+this.fmt(ctx3.raw),
+              },
+            },
+          },
+          scales: {
+            x: {
+              grid: { display:false },
+              ticks: { color:'#94a3b8', font:{ family:'DM Mono', size:9 } },
+              border: { display:false },
+            },
+            y: {
+              grid: { color:'rgba(226,232,240,.35)', drawTicks:false },
+              ticks: {
+                color:'#94a3b8',
+                font: { family:'DM Mono', size:9 },
+                callback: v => v>=1000000 ? 'Rp '+(v/1000000)+'Jt' : 'Rp '+(v/1000)+'K',
+              },
+              border: { display:false, dash:[3,4] },
+            },
+          },
+        },
+      });
+    },
+
+    fmt(n) {
+      if (!n&&n!==0) return '0';
+      if (n>=1000000) return (n/1000000).toFixed(1).replace(/\.0$/,'')+'Jt';
+      if (n>=1000)    return (n/1000).toFixed(0)+'K';
+      return String(n);
+    },
+
+    _toast(msg,type='success'){
+      const c=document.getElementById('toastEl');if(!c)return;
+      const col={success:'border-indigo-400',warn:'border-amber-400',error:'border-rose-400'};
+      const ico={success:'check-circle',warn:'exclamation-triangle',error:'times-circle'};
+      const el=document.createElement('div');
+      el.className=`toast flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl min-w-52 max-w-xs text-white text-[12px] font-semibold border-l-4 ${col[type]||col.success}`;
+      el.style.cssText='background:rgba(15,23,42,.92);backdrop-filter:blur(12px);';
+      el.innerHTML=`<i class="fas fa-${ico[type]||ico.success} text-xs flex-shrink-0"></i><span>${msg}</span>`;
+      c.appendChild(el);setTimeout(()=>el.remove(),3100);
+    },
+  };
+}
+</script>
+{% endblock %}

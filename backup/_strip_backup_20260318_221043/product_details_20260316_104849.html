@@ -1,0 +1,402 @@
+
+<style>
+/* Glass Minimal — lumra_glass_fix.py fase 5 (konservatif) */
+.modal-overlay {
+  background: var(--glass-dark-bg, rgba(15,23,42,0.40));
+  backdrop-filter: var(--glass-dark-blur, blur(6px));
+  -webkit-backdrop-filter: var(--glass-dark-blur, blur(6px));
+}
+.panel-glass {
+  background: var(--glass-bg, rgba(255,255,255,0.72));
+  backdrop-filter: var(--glass-blur, blur(14px) saturate(180%));
+  -webkit-backdrop-filter: var(--glass-blur, blur(14px) saturate(180%));
+  border: 1px solid var(--glass-border, rgba(255,255,255,0.20));
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow, 0 2px 12px rgba(0,0,0,.06));
+}
+
+</style>
+{% extends 'base/base.html' %}
+{% block title %}{{ product.name }} — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+
+  /* ── BACKGROUND BLOBS ── */
+  .bg-blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: .18;
+    pointer-events: none;
+    z-index: 0;
+    animation: drift 14s ease-in-out infinite alternate;
+  }
+  .bg-blob-1 { width: 480px; height: 480px; background: #059669; top: -100px; left: -140px; animation-delay: 0s; }
+  .bg-blob-2 { width: 320px; height: 320px; background: #047857; bottom: -70px; right: -90px; animation-delay: -5s; }
+  .bg-blob-3 { width: 220px; height: 220px; background: #34d399; top: 42%; left: 58%; animation-delay: -2.5s; }
+  .bg-blob-4 { width: 160px; height: 160px; background: #6ee7b7; top: 18%; right: 12%; animation-delay: -8s; }
+  @keyframes drift {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(22px, 32px) scale(1.07); }
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity .5s ease, transform .5s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    animation: toastIn .3s ease, toastOut .3s ease 4.5s forwards;
+  }
+  @keyframes toastIn  { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: none; } }
+  @keyframes toastOut { from { opacity: 1; } to { opacity: 0; pointer-events: none; } }
+
+  /* ── MODAL ── */
+  .modal-box {
+    animation: modalIn .25s cubic-bezier(.4,0,.2,1);
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(.93) translateY(14px); }
+    to   { opacity: 1; transform: none; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+{{ variants_json|json_script:"variants-data" }}
+
+<!-- Background blobs -->
+<div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-3" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-4" aria-hidden="true"></div>
+
+<div x-data="productDetail()" x-init="init()">
+<div class="max-w-5xl mx-auto space-y-8">
+
+  {# ── BREADCRUMB ── #}
+  <nav class="reveal" aria-label="Breadcrumb">
+    <ol class="flex items-center gap-2 text-sm text-emerald-600">
+      <li><a href="{% url 'dashboard' %}" class="hover:text-emerald-800 transition-colors">Dashboard</a></li>
+      <li aria-hidden="true"><span class="text-emerald-300">/</span></li>
+      <li><a href="{% url 'products' %}" class="hover:text-emerald-800 transition-colors">Products</a></li>
+      <li aria-hidden="true"><span class="text-emerald-300">/</span></li>
+      <li class="text-emerald-800 font-medium truncate max-w-xs" aria-current="page">{{ product.name }}</li>
+    </ol>
+  </nav>
+
+  {# ── PRODUCT HEADER ── #}
+  <div class="reveal bg-white p-6 rounded-2xl shadow-xl border border-emerald-100 hover:shadow-2xl transition-shadow duration-300">
+    <div class="flex flex-col md:flex-row gap-6">
+
+      {# Gambar produk #}
+      <div class="md:w-56 flex-shrink-0">
+        <div class="h-52 bg-gradient-to-br from-emerald-100 to-green-200 rounded-xl flex items-center justify-center overflow-hidden border border-emerald-100">
+          {% if product.image %}
+            <img src="{{ product.image.url }}"
+                 alt="{{ product.name }}"
+                 class="w-full h-full object-cover"
+                 loading="lazy">
+          {% else %}
+            <i class="fas fa-coffee text-emerald-400 text-5xl" aria-hidden="true"></i>
+          {% endif %}
+        </div>
+      </div>
+
+      {# Info produk #}
+      <div class="flex-1">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <h1 class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
+              {{ product.name }}
+            </h1>
+            <span class="inline-block mt-1.5 bg-emerald-100 text-emerald-700 text-xs font-semibold px-2.5 py-0.5 rounded-full">
+              {{ product.category }}
+            </span>
+          </div>
+          <div class="flex gap-2 flex-shrink-0">
+            <a href="{% url 'products' %}"
+               class="inline-flex items-center gap-1.5 px-3 py-2 text-sm text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl transition-all duration-300 hover:scale-105">
+              <i class="fas fa-arrow-left text-xs" aria-hidden="true"></i>
+              Kembali
+            </a>
+            <button @click="openModal('editProduct')"
+                    class="inline-flex items-center gap-1.5 px-3 py-2 text-sm text-white bg-blue-500 hover:bg-blue-600 rounded-xl transition-all duration-300 hover:scale-105 shadow-sm">
+              <i class="fas fa-edit text-xs" aria-hidden="true"></i>
+              Edit
+            </button>
+          </div>
+        </div>
+
+        <p class="text-sm text-gray-500 mt-3 leading-relaxed">
+          {{ product.description|default:"Tidak ada deskripsi tersedia." }}
+        </p>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-5">
+          <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 p-3 rounded-xl border border-emerald-100">
+            <p class="text-xs text-emerald-600 font-medium">Total Variants</p>
+            <p class="text-2xl font-bold text-emerald-700 mt-0.5">{{ product.variants.count }}</p>
+          </div>
+          <div class="bg-gradient-to-br from-green-50 to-green-100 p-3 rounded-xl border border-green-100">
+            <p class="text-xs text-green-600 font-medium">Total Stok</p>
+            <p class="text-2xl font-bold text-green-700 mt-0.5">{{ product.total_stock|default:0 }}</p>
+          </div>
+          <div class="bg-gradient-to-br from-teal-50 to-teal-100 p-3 rounded-xl border border-teal-100">
+            <p class="text-xs text-teal-600 font-medium">Status</p>
+            <p class="text-sm font-bold mt-0.5
+              {% if product.total_stock|default:0 < 10 %}text-red-600{% else %}text-teal-700{% endif %}">
+              {% if product.total_stock|default:0 < 10 %}Low Stock{% else %}In Stock{% endif %}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# ── VARIANTS TABLE ── #}
+  <section class="reveal bg-white rounded-2xl shadow-xl border border-emerald-100 overflow-hidden hover:shadow-2xl transition-shadow duration-300"
+           aria-labelledby="variants-heading">
+
+    <div class="px-6 py-4 border-b border-emerald-100 flex items-center justify-between">
+      <h2 id="variants-heading" class="text-sm font-semibold text-emerald-800">Product Variants</h2>
+      <span class="text-xs text-emerald-500 font-medium">{{ product.variants.count }} varian</span>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-emerald-50" role="table">
+        <thead>
+          <tr class="bg-emerald-50/60">
+            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-emerald-600 uppercase tracking-wider">SKU</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-emerald-600 uppercase tracking-wider">Size / Weight</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-emerald-600 uppercase tracking-wider">Harga</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-emerald-600 uppercase tracking-wider">Stok</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-emerald-600 uppercase tracking-wider">Aksi</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-emerald-50">
+          {% for variant in product.variants.all %}
+          <tr class="hover:bg-emerald-50/40 transition-colors duration-150">
+            <td class="px-6 py-4 font-mono text-sm font-medium text-gray-900">{{ variant.sku }}</td>
+            <td class="px-6 py-4 text-sm text-gray-600">{{ variant.size_weight }}</td>
+            <td class="px-6 py-4 text-sm font-bold text-emerald-700">
+              Rp {{ variant.price_sell|floatformat:0 }}
+            </td>
+            <td class="px-6 py-4">
+              <span class="px-2.5 py-1 inline-flex text-xs font-semibold rounded-full
+                {% if variant.total_stock > 0 %}bg-emerald-100 text-emerald-700{% else %}bg-red-100 text-red-700{% endif %}">
+                {{ variant.total_stock|default:0 }} unit
+              </span>
+            </td>
+            <td class="px-6 py-4">
+              <button @click="showVariantDetail({{ variant.id }})"
+                      class="text-sm text-emerald-600 hover:text-emerald-800 font-medium transition-colors"
+                      aria-label="Lihat detail variant {{ variant.sku }}">
+                <i class="fas fa-info-circle mr-1" aria-hidden="true"></i>Detail
+              </button>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="px-6 py-12 text-center text-emerald-400">
+              <i class="fas fa-layer-group text-4xl mb-3 block opacity-50" aria-hidden="true"></i>
+              <p class="text-sm">Tidak ada varian tersedia</p>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>
+</div>
+</div>
+
+{# ================================================================
+   VARIANT DETAIL MODAL
+================================================================= #}
+<div x-show="activeModal === 'variantDetail'"
+     x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+     class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+     @keydown.escape.window="closeModal()" @click.self="closeModal()"
+     role="dialog" aria-modal="true" aria-labelledby="modal-variant-title"
+     x-cloak>
+  <div class="modal-box bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+
+    <div class="flex items-center justify-between px-6 py-4 border-b border-emerald-100">
+      <h2 id="modal-variant-title" class="text-lg font-bold text-gray-900 flex items-center gap-2">
+        <i class="fas fa-layer-group text-emerald-500 text-base" aria-hidden="true"></i>
+        Variant: <span x-text="activeVariant?.sku ?? ''"></span>
+      </h2>
+      <button @click="closeModal()"
+              class="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg transition-colors"
+              aria-label="Tutup modal">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <div class="p-6">
+      <div x-show="!activeVariant" class="flex justify-center py-8">
+        <i class="fas fa-circle-notch fa-spin text-emerald-500 text-2xl" aria-label="Memuat..."></i>
+      </div>
+
+      <div x-show="activeVariant" class="space-y-5">
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+            <p class="text-xs text-emerald-600 mb-0.5">Size / Weight</p>
+            <p class="font-bold text-gray-900 text-sm" x-text="activeVariant?.size_weight"></p>
+          </div>
+          <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+            <p class="text-xs text-emerald-600 mb-0.5">Harga Jual</p>
+            <p class="font-bold text-emerald-700 text-sm">
+              Rp <span x-text="activeVariant?.price_sell?.toLocaleString('id-ID')"></span>
+            </p>
+          </div>
+          <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100 col-span-2">
+            <p class="text-xs text-emerald-600 mb-0.5">Total Stok</p>
+            <p class="font-bold text-gray-900 text-lg">
+              <span x-text="activeVariant?.total_stock"></span> unit
+            </p>
+          </div>
+        </div>
+
+        <div x-show="activeVariant?.attributes?.length">
+          <p class="text-xs font-semibold text-emerald-600 uppercase tracking-wide mb-2">Attributes</p>
+          <div class="space-y-1.5">
+            <template x-for="attr in activeVariant?.attributes ?? []" :key="attr.name">
+              <div class="flex items-center justify-between px-3 py-2 bg-emerald-50 rounded-xl text-sm border border-emerald-100">
+                <span class="text-gray-600" x-text="attr.name"></span>
+                <span class="font-semibold text-emerald-800" x-text="attr.value"></span>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <div x-show="!activeVariant?.attributes?.length" class="text-xs text-gray-400 italic">
+          Tidak ada atribut tambahan
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{# ── TOAST CONTAINER ── #}
+<div class="fixed bottom-4 right-4 z-50 space-y-2"
+     x-data
+     aria-live="polite"
+     aria-atomic="true">
+  <template x-for="t in $store.toasts.list" :key="t.id">
+    <div class="toast bg-emerald-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 min-w-64 max-w-sm"
+         :class="{
+           'border-l-4 border-emerald-400': t.type === 'success',
+           'border-l-4 border-teal-400':    t.type === 'info',
+           'border-l-4 border-amber-400':   t.type === 'warning',
+           'border-l-4 border-red-400':     t.type === 'error'
+         }">
+      <i :class="t.icon" aria-hidden="true"></i>
+      <span x-text="t.message"></span>
+    </div>
+  </template>
+</div>
+
+{% endblock %}
+
+{% block dashboard_scripts %}
+<script>
+document.addEventListener('alpine:init', () => {
+  if (!Alpine.store('toasts')) {
+    Alpine.store('toasts', {
+      list: [],
+      _id: 0,
+      show(message, type = 'success', icon = 'fas fa-check-circle') {
+        const id = ++this._id;
+        this.list.push({ id, message, type, icon });
+        setTimeout(() => { this.list = this.list.filter(t => t.id !== id); }, 4800);
+      }
+    });
+  }
+});
+</script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function productDetail() {
+  return {
+    variants:      [],
+    activeVariant: null,
+    activeModal:   null,
+    previousFocus: null,
+
+    /* ── Init ── */
+    init() {
+      this.variants = JSON.parse(
+        document.getElementById('variants-data').textContent || '[]'
+      );
+
+      // Scroll reveal
+      const els = document.querySelectorAll('.reveal');
+      const io  = new IntersectionObserver((entries) => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i * 90);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.07 });
+      els.forEach(el => io.observe(el));
+    },
+
+    /* ── Variant Detail ── */
+    showVariantDetail(variantId) {
+      this.previousFocus = document.activeElement;
+      this.activeVariant = this.variants.find(v => v.id === variantId) ?? null;
+      this.activeModal   = 'variantDetail';
+
+      this.$nextTick(() => {
+        const modal = document.querySelector('[role="dialog"]:not([style*="display: none"])');
+        if (modal) {
+          const first = modal.querySelector('button, input, select, [tabindex]:not([tabindex="-1"])');
+          if (first) first.focus();
+        }
+      });
+    },
+
+    /* ── Modal ── */
+    openModal(name) {
+      this.previousFocus = document.activeElement;
+      this.activeModal   = name;
+    },
+
+    closeModal() {
+      this.activeModal   = null;
+      this.activeVariant = null;
+      if (this.previousFocus) this.previousFocus.focus();
+    },
+
+    /* ── Toast ── */
+    _toast(message, type = 'info') {
+      const icons = {
+        success: 'fas fa-check-circle',
+        error:   'fas fa-times-circle',
+        warning: 'fas fa-exclamation-triangle',
+        info:    'fas fa-info-circle',
+      };
+      Alpine.store('toasts').show(message, type, icons[type] ?? icons.info);
+    },
+  };
+}
+</script>
+{% endblock %}

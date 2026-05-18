@@ -1,0 +1,366 @@
+{% extends 'base/base_hybrid.html' %}
+
+{% block title %}Daftar Sales Order — LUMRA{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="salesOrderList()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-base-content">Daftar Sales Order</h1>
+      <p class="text-base-content/60 text-sm">Manajemen sales order dan quotation.</p>
+    </div>
+    <div class="flex gap-2">
+      <button class="btn btn-ghost" @click="exportOrders()">
+        <i class="fas fa-download mr-2"></i> Export
+      </button>
+      <a href="{% url 'sales:sales_order_form' %}" class="btn btn-primary">
+        <i class="fas fa-plus mr-2"></i> Sales Order Baru
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-primary">
+      <div class="card-body p-5">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-xs font-bold text-base-content/60 uppercase">Total SO</p>
+            <p class="text-2xl font-bold text-base-content" x-text="stats.total_orders"></p>
+          </div>
+          <i class="fas fa-shopping-cart text-primary/60 text-2xl"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-success">
+      <div class="card-body p-5">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-xs font-bold text-base-content/60 uppercase">Selesai</p>
+            <p class="text-2xl font-bold text-success" x-text="stats.completed_orders"></p>
+          </div>
+          <i class="fas fa-check-circle text-success/60 text-2xl"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-warning">
+      <div class="card-body p-5">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-xs font-bold text-base-content/60 uppercase">Proses</p>
+            <p class="text-2xl font-bold text-warning" x-text="stats.processing_orders"></p>
+          </div>
+          <i class="fas fa-clock text-warning/60 text-2xl"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-info">
+      <div class="card-body p-5">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-xs font-bold text-base-content/60 uppercase">Total Nilai</p>
+            <p class="text-2xl font-bold text-info" x-text="formatCurrency(stats.total_value)"></p>
+          </div>
+          <i class="fas fa-dollar-sign text-info/60 text-2xl"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card bg-base-100 shadow-lg border border-base-300">
+    <div class="card-body p-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Status</span>
+          </label>
+          <select x-model="filters.status" class="select select-bordered select-sm">
+            <option value="">Semua Status</option>
+            <option value="draft">Draft</option>
+            <option value="confirmed">Dikonfirmasi</option>
+            <option value="processing">Diproses</option>
+            <option value="completed">Selesai</option>
+            <option value="cancelled">Dibatalkan</option>
+          </select>
+        </div>
+        
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Pelanggan</span>
+          </label>
+          <select x-model="filters.customer" class="select select-bordered select-sm">
+            <option value="">Semua Pelanggan</option>
+            <template x-for="customer in customers" :key="customer.id">
+              <option :value="customer.id" x-text="customer.name"></option>
+            </template>
+          </select>
+        </div>
+        
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Tanggal</span>
+          </label>
+          <input 
+            type="date" 
+            x-model="filters.date" 
+            class="input input-bordered input-sm"
+          >
+        </div>
+        
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Search</span>
+          </label>
+          <input 
+            type="text" 
+            x-model="filters.search" 
+            placeholder="Cari SO..."
+            class="input input-bordered input-sm"
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sales Order Table -->
+  <div class="card bg-base-100 shadow-lg border border-base-300">
+    <div class="card-body p-0">
+      <div class="overflow-x-auto">
+        <table class="table table-compact w-full">
+          <thead>
+            <tr class="bg-base-200">
+              <th class="text-left">SO #</th>
+              <th class="text-left">Tanggal</th>
+              <th class="text-left">Pelanggan</th>
+              <th class="text-right">Total</th>
+              <th class="text-left">Status</th>
+              <th class="text-center">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="order in filteredOrders" :key="order.id">
+              <tr class="hover:bg-base-200">
+                <td class="font-mono" x-text="order.so_number"></td>
+                <td>
+                  <div>
+                    <p class="text-sm" x-text="formatDate(order.date)"></p>
+                    <p class="text-xs text-base-content/60" x-text="order.time"></p>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <p class="font-semibold" x-text="order.customer_name"></p>
+                    <p class="text-xs text-base-content/60" x-text="order.customer_code"></p>
+                  </div>
+                </td>
+                <td class="text-right font-mono" x-text="formatCurrency(order.total)"></td>
+                <td>
+                  <span class="badge badge-sm" :class="getStatusClass(order.status)" x-text="getStatusText(order.status)"></span>
+                </td>
+                <td class="text-center">
+                  <div class="flex gap-2 justify-center">
+                    <button class="btn btn-ghost btn-xs" @click="viewOrder(order.id)">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn btn-ghost btn-xs" @click="editOrder(order.id)">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-ghost btn-xs" @click="printOrder(order.id)">
+                      <i class="fas fa-print"></i>
+                    </button>
+                    <button class="btn btn-ghost btn-xs" @click="convertToInvoice(order.id)" x-show="order.status === 'completed'">
+                      <i class="fas fa-file-invoice"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function salesOrderList() {
+  return {
+    orders: [],
+    customers: [],
+    filters: {
+      status: '',
+      customer: '',
+      date: '',
+      search: ''
+    },
+    filteredOrders: [],
+    stats: {
+      total_orders: 0,
+      completed_orders: 0,
+      processing_orders: 0,
+      total_value: 0
+    },
+    
+    init() {
+      this.loadOrders();
+      this.loadCustomers();
+    },
+    
+    loadOrders() {
+      // Mock data - replace with actual API call
+      this.orders = [
+        {
+          id: 1,
+          so_number: 'SO-2024-001',
+          date: '2024-01-15',
+          time: '10:30',
+          customer_name: 'PT. Maju Jaya',
+          customer_code: 'CUST-001',
+          total: 15000000,
+          status: 'completed'
+        },
+        {
+          id: 2,
+          so_number: 'SO-2024-002',
+          date: '2024-01-16',
+          time: '14:20',
+          customer_name: 'CV. Sejahtera',
+          customer_code: 'CUST-002',
+          total: 8500000,
+          status: 'processing'
+        },
+        {
+          id: 3,
+          so_number: 'SO-2024-003',
+          date: '2024-01-17',
+          time: '09:15',
+          customer_name: 'UD. Berkah',
+          customer_code: 'CUST-003',
+          total: 12000000,
+          status: 'draft'
+        }
+      ];
+      
+      this.calculateStats();
+      this.applyFilters();
+    },
+    
+    loadCustomers() {
+      // Mock data - replace with actual API call
+      this.customers = [
+        { id: 1, name: 'PT. Maju Jaya' },
+        { id: 2, name: 'CV. Sejahtera' },
+        { id: 3, name: 'UD. Berkah' }
+      ];
+    },
+    
+    calculateStats() {
+      this.stats.total_orders = this.orders.length;
+      this.stats.completed_orders = this.orders.filter(o => o.status === 'completed').length;
+      this.stats.processing_orders = this.orders.filter(o => o.status === 'processing').length;
+      this.stats.total_value = this.orders.reduce((sum, o) => sum + o.total, 0);
+    },
+    
+    applyFilters() {
+      this.filteredOrders = this.orders.filter(order => {
+        let matches = true;
+        
+        if (this.filters.status && order.status !== this.filters.status) {
+          matches = false;
+        }
+        
+        if (this.filters.customer && order.customer_id != this.filters.customer) {
+          matches = false;
+        }
+        
+        if (this.filters.date && order.date !== this.filters.date) {
+          matches = false;
+        }
+        
+        if (this.filters.search) {
+          const search = this.filters.search.toLowerCase();
+          if (!order.so_number.toLowerCase().includes(search) &&
+              !order.customer_name.toLowerCase().includes(search) &&
+              !order.customer_code.toLowerCase().includes(search)) {
+            matches = false;
+          }
+        }
+        
+        return matches;
+      });
+    },
+    
+    getStatusClass(status) {
+      switch(status) {
+        case 'draft': return 'badge-neutral';
+        case 'confirmed': return 'badge-info';
+        case 'processing': return 'badge-warning';
+        case 'completed': return 'badge-success';
+        case 'cancelled': return 'badge-error';
+        default: return 'badge-neutral';
+      }
+    },
+    
+    getStatusText(status) {
+      switch(status) {
+        case 'draft': return 'Draft';
+        case 'confirmed': return 'Dikonfirmasi';
+        case 'processing': return 'Diproses';
+        case 'completed': return 'Selesai';
+        case 'cancelled': return 'Dibatalkan';
+        default: return 'Tidak Diketahui';
+      }
+    },
+    
+    formatCurrency(amount) {
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0
+      }).format(amount);
+    },
+    
+    formatDate(dateStr) {
+      return new Date(dateStr).toLocaleDateString('id-ID');
+    },
+    
+    viewOrder(id) {
+      console.log('View order:', id);
+      // Navigate to order detail
+    },
+    
+    editOrder(id) {
+      console.log('Edit order:', id);
+      // Navigate to order edit
+    },
+    
+    printOrder(id) {
+      console.log('Print order:', id);
+      // Print order
+    },
+    
+    convertToInvoice(id) {
+      console.log('Convert to invoice:', id);
+      // Convert to invoice
+    },
+    
+    exportOrders() {
+      console.log('Export orders');
+      // Export orders
+    }
+  }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,451 @@
+{
+  "filename": "journal_entry_list.html",
+  "title": "Journal Entry List",
+  "components": [
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "w-full flex-1 space-y-6 relative z-10",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": "journalListApp()"
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "flex items-end justify-between",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "nav",
+      "tag": "nav",
+      "label": "[ NAVIGATION BAR ]",
+      "depth": 4,
+      "path": "root/body/div/div/div/nav",
+      "classes": "flex items-center gap-2 text-xs text-slate-500 mb-1",
+      "text_preview": "Keuangan / Jurnal Umum",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h1",
+      "label": "HEADING (H1)",
+      "depth": 4,
+      "path": "root/body/div/div/div/h1",
+      "classes": "text-2xl font-bold text-slate-800",
+      "text_preview": "Journal Entry List",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "a",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/a",
+      "classes": "bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:bg-slate-700 transition flex items-center gap-2",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "flex items-center justify-between bg-white/60 backdrop-blur rounded-xl p-2 border border-white",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "flex gap-1",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: Semua",
+      "depth": 4,
+      "path": "root/body/div/div/div/button",
+      "classes": "px-4 py-2 rounded-lg text-xs font-bold transition",
+      "text_preview": "Semua",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: Draft",
+      "depth": 4,
+      "path": "root/body/div/div/div/button",
+      "classes": "px-4 py-2 rounded-lg text-xs font-bold transition",
+      "text_preview": "Draft",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: Posted",
+      "depth": 4,
+      "path": "root/body/div/div/div/button",
+      "classes": "px-4 py-2 rounded-lg text-xs font-bold transition",
+      "text_preview": "Posted",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "input",
+      "label": "INPUT [date] dateFilter",
+      "depth": 4,
+      "path": "root/body/div/div/div/input",
+      "classes": "bg-white/80 border border-slate-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-slate-400",
+      "text_preview": "dateFilter",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [GRID 1 cols]",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "GRID 1 cols",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 4,
+      "path": "root/body/div/div/template/div",
+      "classes": "glass-card p-5 cursor-pointer",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 5,
+      "path": "root/body/div/div/template/div/div",
+      "classes": "flex justify-between items-start mb-3",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h2",
+      "label": "HEADING (H2)",
+      "depth": 7,
+      "path": "root/body/div/div/template/div/div/div/h2",
+      "classes": "font-bold text-slate-800",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 6,
+      "path": "root/body/div/div/template/div/div/div",
+      "classes": "flex items-center",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 5,
+      "path": "root/body/div/div/template/div/div",
+      "classes": "flex justify-between items-center pt-3 border-t border-slate-100",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: [icon]",
+      "depth": 6,
+      "path": "root/body/div/div/template/div/div/button",
+      "classes": "w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/nav",
+      "type": "nav",
+      "label": "[ NAVIGATION BAR ]",
+      "text_preview": "Keuangan / Jurnal Umum"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/h1",
+      "type": "heading",
+      "label": "HEADING (H1)",
+      "text_preview": "Journal Entry List"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/a",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/button",
+      "type": "button",
+      "label": "BUTTON: Semua",
+      "text_preview": "Semua"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/button",
+      "type": "button",
+      "label": "BUTTON: Draft",
+      "text_preview": "Draft"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/button",
+      "type": "button",
+      "label": "BUTTON: Posted",
+      "text_preview": "Posted"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/input",
+      "type": "input",
+      "label": "INPUT [date] dateFilter",
+      "text_preview": "dateFilter"
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [GRID 1 cols]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/template/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/template/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 7,
+      "path": "root/body/div/div/template/div/div/div/h2",
+      "type": "heading",
+      "label": "HEADING (H2)",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/template/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/template/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/template/div/div/button",
+      "type": "button",
+      "label": "BUTTON: [icon]",
+      "text_preview": ""
+    }
+  ],
+  "issues": [
+    {
+      "type": "alpine_xcloak",
+      "severity": "info",
+      "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template",
+      "path": ""
+    }
+  ],
+  "stats": {
+    "total_components": 18,
+    "by_type": {
+      "layout": 9,
+      "nav": 1,
+      "heading": 2,
+      "button": 4,
+      "input": 1,
+      "card": 1
+    },
+    "interactive": 5,
+    "with_scroll": 0,
+    "with_form_fields": 3,
+    "scroll_nestings": 0,
+    "issues": 1,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 1
+    }
+  }
+}

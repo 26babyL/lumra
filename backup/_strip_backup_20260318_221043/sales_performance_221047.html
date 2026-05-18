@@ -1,0 +1,847 @@
+{% extends 'lumra_pages/reports/base_report.html' %}
+{% load custom_filters %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  [x-cloak]{display:var(--shadow-sm-16)!important;}
+
+  /* ── Blobs ── */
+  .bg-blob{position:fixed;border-radius:50%;filter:blur(100px);opacity:.08;pointer-events:var(--shadow-sm-16);z-index:0;animation:drift 18s ease-in-out infinite alternate;}
+  .bg-blob-1{width:420px;height:420px;background:var(--color-emerald-600);top:-120px;left:-160px;}
+  .bg-blob-2{width:280px;height:280px;background:var(--color-6366f1);bottom:-60px;right:-80px;animation-delay:-7s;}
+  @keyframes drift{from{transform:translate(0,0) scale(1);}to{transform:translate(20px,28px) scale(1.06);}}
+  .reveal{opacity:0;transform:translateY(10px);transition:opacity .4s ease,transform .4s ease;}
+  .reveal.visible{opacity:1;transform:var(--shadow-sm-16);}
+
+  /* ── Glass card (standard) ── */
+  .glass-card{
+    background:var(--color-white-a088);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border:1px solid var(--color-white-a09);
+    border-radius:18px;
+    box-shadow:0 2px 16px var(--color-black-a006);
+  }
+
+  /* ── KPI glass ── */
+  .kpi-glass{background:var(--color-white-a072);backdrop-filter: var(--glass-blur);-webkit-backdrop-filter: var(--glass-blur);border:1px solid var(--color-white-a09);border-radius:18px;box-shadow:0 2px 12px var(--color-black-a006),0 0 0 0.5px var(--color-black-a004);transition:box-shadow .2s,transform .2s;position:relative;overflow:hidden;}
+  .kpi-glass:hover{box-shadow:0 8px 28px var(--color-black-a010);transform:translateY(-2px);}
+  .kpi-glass::before{content:'';position:absolute;top:0;right:0;width:60px;height:60px;border-radius:0 18px 0 100%;opacity:.06;}
+  .kpi-glass.accent-emerald::before{background:var(--color-emerald-600);}
+  .kpi-glass.accent-blue::before{background:var(--color-3b82f6);}
+  .kpi-glass.accent-amber::before{background:var(--color-f59e0b);}
+  .kpi-glass.accent-violet::before{background:var(--color-8b5cf6);}
+  .kpi-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;}
+
+  /* ── Section header ── */
+  .section-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--color-slate-400);}
+
+  /* ── Back banner ── */
+  .back-banner{
+    background:var(--color-rgba-99-102-241-a006);
+    border:1px solid var(--color-rgba-99-102-241-a018);
+    border-radius:12px;
+    padding:10px 16px;
+  }
+
+  /* ── Progress bar ── */
+  .progress-track{height:8px;border-radius:99px;background:var(--color-slate-100-a1);overflow:hidden;}
+  .progress-fill{height:100%;border-radius:99px;transition:width 1s cubic-bezier(.4,0,.2,1);}
+
+  /* ── Status pill ── */
+  .status-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;}
+  .status-pill.achieved {background:var(--color-emerald-600-a010);color:var(--color-emerald-700);border:1px solid var(--color-emerald-600-a025);}
+  .status-pill.on_track {background:var(--color-rgba-245-158-11-a010);color:var(--color-d97706);border:1px solid var(--color-rgba-245-158-11-a025);}
+  .status-pill.behind   {background:var(--color-rgba-239-68-68-a010);color:var(--color-dc2626);border:1px solid var(--color-rgba-239-68-68-a020);}
+  .status-pill.no_target{background:var(--color-slate-400-a010);color:var(--color-slate-400);border:1px solid var(--color-slate-400-a02);}
+
+  /* ── Target form modal ── */
+  .modal-overlay{position:fixed;inset:0;background:var(--color-slate-900-a045);backdrop-filter: var(--glass-dark-blur);z-index:100;display:flex;align-items:center;justify-content:center;}
+  .modal-card{background:var(--color-fff);border-radius:20px;padding:28px;width:100%;max-width:420px;box-shadow:0 24px 60px var(--color-black-a016);}
+
+  /* ── Tier badge ── */
+  .tier-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:700;text-transform:capitalize;}
+  .tier-platinum{background:var(--color-rgba-99-102-241-a010);color:var(--color-4f46e5);}
+  .tier-gold    {background:var(--color-rgba-245-158-11-a012);color:var(--color-b45309);}
+  .tier-silver  {background:var(--color-slate-400-a015);color:var(--color-slate-600);}
+  .tier-bronze  {background:var(--color-rgba-120-53-15-a008);color:var(--color-92400e);}
+
+  /* ── Date bar ── */
+  .action-bar{background:var(--color-white-a085);backdrop-filter: var(--glass-blur);-webkit-backdrop-filter: var(--glass-blur);border:1px solid var(--color-white-a09);border-radius:14px;box-shadow:0 2px 10px var(--color-black-a005);padding:10px 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .bar-divider{width:1px;height:24px;background:var(--color-slate-300-a05);flex-shrink:0;}
+  .date-pill{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:99px;background:var(--color-emerald-600-a008);border:1px solid var(--color-emerald-600-a02);font-size:12px;font-weight:600;color:var(--color-emerald-700);cursor:pointer;white-space:nowrap;transition:background .15s;}
+  .date-pill:hover,.date-pill.has-range{background:var(--color-emerald-600-a014);border-color:var(--color-emerald-600-a04);}
+  .btn-apply{padding:7px 16px;border-radius:10px;background:linear-gradient(135deg,var(--color-emerald-600) 0%,var(--color-emerald-700) 100%);color:var(--color-fff);font-size:12px;font-weight:700;border:var(--shadow-sm-16);cursor:pointer;white-space:nowrap;box-shadow:0 3px 10px var(--color-emerald-600-a028);transition:box-shadow .15s,transform .15s;flex-shrink:0;}
+  .btn-apply:hover{box-shadow:0 5px 16px var(--color-emerald-600-a040);transform:translateY(-1px);}
+
+  /* ── Nav tab ── */
+  .nav-tab{padding:8px 16px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;border:var(--shadow-sm-16);background:transparent;color:var(--color-slate-400);}
+  .nav-tab.active{background:var(--color-emerald-600-a010);color:var(--color-emerald-700);}
+  .nav-tab:hover:not(.active){color:var(--color-slate-600);background:var(--color-slate-100-a08);}
+
+  /* ── Highlight pulse (when linked from sales_history) ── */
+  @keyframes sectionPulse{0%{box-shadow:0 0 0 0 var(--color-emerald-600-a04);}70%{box-shadow:0 0 0 12px var(--color-emerald-600-a0);}100%{box-shadow:0 0 0 0 var(--color-emerald-600-a0);}}
+  .highlight-pulse{animation:sectionPulse .8s ease 3;}
+
+  /* ── Customer bar ── */
+  .cust-bar-wrap{height:6px;border-radius:99px;background:var(--color-slate-100);overflow:hidden;flex:1;}
+  .cust-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--color-emerald-600),var(--color-emerald-700));transition:width 1s cubic-bezier(.4,0,.2,1);}
+</style>
+{% endblock %}
+
+
+{% block summary_stats %}
+<div class="reveal grid grid-cols-2 xl:grid-cols-4 gap-3">
+
+  <div class="kpi-glass accent-emerald p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Revenue</p>
+        <p class="text-2xl font-bold text-slate-800">{{ total_revenue|rupiah }}</p>
+        <p class="text-[11px] text-slate-400 mt-0.5">{{ date_start }} → {{ date_end }}</p>
+      </div>
+      <div class="kpi-icon bg-emerald-50 text-emerald-600"><i class="fas fa-coins"></i></div>
+    </div>
+  </div>
+
+  <div class="kpi-glass accent-blue p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Transaksi</p>
+        <p class="text-2xl font-bold text-slate-800">{{ total_orders }}</p>
+        <p class="text-[11px] text-slate-400 mt-0.5">Orders</p>
+      </div>
+      <div class="kpi-icon bg-blue-50 text-blue-500"><i class="fas fa-receipt"></i></div>
+    </div>
+  </div>
+
+  <div class="kpi-glass accent-amber p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Avg / Order</p>
+        <p class="text-2xl font-bold text-slate-800">{{ avg_order_value|rupiah }}</p>
+        <p class="text-[11px] text-slate-400 mt-0.5">Per transaksi</p>
+      </div>
+      <div class="kpi-icon bg-amber-50 text-amber-500"><i class="fas fa-calculator"></i></div>
+    </div>
+  </div>
+
+  <div class="kpi-glass accent-violet p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">vs Target</p>
+        {% if total_pct is not None %}
+          <p class="text-2xl font-bold {% if total_pct >= 100 %}text-emerald-600{% elif total_pct >= 70 %}text-amber-600{% else %}text-rose-600{% endif %}">
+            {{ total_pct }}%
+          </p>
+          <p class="text-[11px] text-slate-400 mt-0.5">dari target {{ total_target|rupiah }}</p>
+        {% else %}
+          <p class="text-2xl font-bold text-slate-300">—</p>
+          <p class="text-[11px] text-slate-400 mt-0.5">Belum ada target</p>
+        {% endif %}
+      </div>
+      <div class="kpi-icon bg-violet-50 text-violet-500"><i class="fas fa-bullseye"></i></div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+
+{% block content %}
+<div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+
+<div class="w-full flex-1 space-y-5 relative z-10"
+     x-data="perfApp()"
+     x-init="init()"
+     x-cloak>
+
+  <!-- ══ BACK BANNER (dari Sales History) ══ -->
+  {% if back_context %}
+  <div class="reveal back-banner flex items-center justify-between gap-4 flex-wrap">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
+        <i class="fas fa-arrow-left text-indigo-500 text-xs"></i>
+      </div>
+      <div>
+        <p class="text-xs font-bold text-slate-700">Kamu masuk dari Sales History</p>
+        <p class="text-[11px] text-slate-400">
+          Periode: <strong class="text-slate-600">{{ back_context.label }}</strong> ·
+          {{ back_context.orders }} transaksi ·
+          {{ back_context.revenue|rupiah }}
+        </p>
+      </div>
+    </div>
+    <a href="{{ back_context.url }}"
+       class="flex items-center gap-2 text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors flex-shrink-0">
+      <i class="fas fa-clock-rotate-left text-[10px]"></i>
+      Kembali ke Sales History
+    </a>
+  </div>
+  {% endif %}
+
+  <!-- ══ HEADER ══ -->
+  <div class="reveal flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-emerald-600 mb-1">
+        <a href="{% url 'dashboard' %}" class="hover:text-emerald-800 transition-colors">Dashboard</a>
+        <span class="text-slate-300">/</span>
+        <span class="text-slate-500 font-medium">Sales Performance</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800">Sales Performance</h1>
+      <div class="flex items-center gap-2 mt-1">
+        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+        <span class="text-xs text-slate-400">{{ date_start }} → {{ date_end }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DATE FILTER ══ -->
+  <form method="get" id="perfForm">
+    <div class="reveal action-bar">
+      <i class="fas fa-calendar-alt text-slate-300 text-[11px] flex-shrink-0"></i>
+      <div class="relative flex-shrink-0">
+        <button type="button" @click="toggleFp()"
+                class="date-pill has-range">
+          <span>{{ date_start }} → {{ date_end }}</span>
+        </button>
+        <input type="text" id="fpAnchor" style="position:absolute;top:100%;left:0;width:0;height:0;opacity:0;pointer-events:none;">
+        <input type="hidden" name="date_start" id="date_start" value="{{ date_start }}">
+        <input type="hidden" name="date_end"   id="date_end"   value="{{ date_end }}">
+      </div>
+
+      <!-- Quick presets -->
+      <div class="flex gap-1.5 flex-wrap">
+        {% for label, days in presets %}
+        <button type="button" @click="applyPreset({{ days }})"
+                class="text-[11px] font-semibold px-3 py-1.5 rounded-lg border transition-all text-slate-500 border-slate-200 hover:border-emerald-300 hover:text-emerald-700" style="background:var(--color-surface)">
+          {{ label }}
+        </button>
+        {% empty %}
+        <button type="button" @click="applyPreset(7)"  class="text-[11px] font-semibold px-3 py-1.5 rounded-lg border text-slate-500 border-slate-200 hover:border-emerald-300 hover:text-emerald-700" style="background:var(--color-surface)">7 Hari</button>
+        <button type="button" @click="applyPreset(30)" class="text-[11px] font-semibold px-3 py-1.5 rounded-lg border text-slate-500 border-slate-200 hover:border-emerald-300 hover:text-emerald-700" style="background:var(--color-surface)">30 Hari</button>
+        <button type="button" @click="applyPreset(0)"  class="text-[11px] font-semibold px-3 py-1.5 rounded-lg border text-slate-500 border-slate-200 hover:border-emerald-300 hover:text-emerald-700" style="background:var(--color-surface)">Bulan Ini</button>
+        {% endfor %}
+      </div>
+
+      <input type="hidden" name="from"      value="{{ from_page }}">
+      <button type="submit" class="btn-apply ml-auto flex-shrink-0">
+        <i class="fas fa-arrow-right text-[10px] mr-1.5"></i>Terapkan
+      </button>
+    </div>
+  </form>
+
+  <!-- ══ SECTION TABS ══ -->
+  <div class="reveal flex gap-1 backdrop-blur-sm border border-white/80 rounded-xl p-1 w-fit" style="background:var(--color-surface)">
+    <button class="nav-tab" :class="tab==='target'?'active':''"   @click="scrollTo('target')">
+      <i class="fas fa-bullseye text-[10px] mr-1.5"></i>Target
+    </button>
+    <button class="nav-tab" :class="tab==='trend'?'active':''"    @click="scrollTo('trend')">
+      <i class="fas fa-chart-line text-[10px] mr-1.5"></i>Trend
+    </button>
+    <button class="nav-tab" :class="tab==='customer'?'active':''" @click="scrollTo('customer')">
+      <i class="fas fa-users text-[10px] mr-1.5"></i>Customer
+    </button>
+  </div>
+
+
+  <!-- ══════════════════════════════════
+     SECTION 1 — TARGET VS REALISASI
+  ══════════════════════════════════ -->
+  <div id="section-target" class="reveal space-y-3">
+
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-1.5 h-5 bg-emerald-500 rounded-full"></div>
+        <p class="section-label">📊 Target vs Realisasi</p>
+      </div>
+      {% if request.user.is_staff %}
+      <button @click="targetModal=true"
+              class="flex items-center gap-2 text-[11px] font-bold text-emerald-600 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-100 hover:bg-emerald-100 transition-all">
+        <i class="fas fa-pen text-[9px]"></i>
+        Set Target
+      </button>
+      {% endif %}
+    </div>
+
+    <!-- Monthly target cards -->
+    {% if target_chart %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      {% for item in target_chart %}
+      <div class="glass-card p-5">
+        <div class="flex items-start justify-between mb-3">
+          <p class="text-sm font-bold text-slate-700">{{ item.label }}</p>
+          {% if item.pct is not None %}
+            <span class="status-pill {{ item.status }}">
+              {% if item.status == 'achieved' %}<i class="fas fa-check text-[8px]"></i> Achieved
+              {% elif item.status == 'on_track' %}<i class="fas fa-clock text-[8px]"></i> On Track
+              {% else %}<i class="fas fa-exclamation text-[8px]"></i> Behind{% endif %}
+            </span>
+          {% else %}
+            <span class="status-pill no_target">No Target</span>
+          {% endif %}
+        </div>
+
+        {% if item.pct is not None %}
+        <!-- Progress bar -->
+        <div class="progress-track mb-2">
+          <div class="progress-fill {% if item.status == 'achieved' %}bg-emerald-500{% elif item.status == 'on_track' %}bg-amber-400{% else %}bg-rose-400{% endif %}"
+               style="width:{{ item.pct|floatformat:0 }}%"></div>
+        </div>
+        <p class="text-[11px] text-slate-400 mb-3">
+          <span class="font-bold {% if item.status == 'achieved' %}text-emerald-600{% elif item.status == 'on_track' %}text-amber-600{% else %}text-rose-600{% endif %}">
+            {{ item.pct }}%
+          </span>
+          dari target
+        </p>
+        {% endif %}
+
+        <div class="flex justify-between text-xs">
+          <div>
+            <p class="text-slate-400 text-[10px] uppercase tracking-wider mb-0.5">Realisasi</p>
+            <p class="font-bold text-slate-800">{{ item.realisasi|rupiah }}</p>
+          </div>
+          {% if item.target %}
+          <div class="text-right">
+            <p class="text-slate-400 text-[10px] uppercase tracking-wider mb-0.5">Target</p>
+            <p class="font-bold text-slate-500">{{ item.target|rupiah }}</p>
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="mt-2 pt-2 border-t border-slate-100/60">
+          <p class="text-[10px] text-slate-400">{{ item.order_count }} transaksi</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Total summary bar -->
+    {% if total_target > 0 %}
+    <div class="glass-card p-5">
+      <div class="flex items-center justify-between mb-3 flex-wrap gap-3">
+        <p class="text-sm font-bold text-slate-700">Total Periode</p>
+        <div class="flex items-center gap-4 text-xs">
+          <div class="text-center">
+            <p class="text-slate-400 text-[10px] mb-0.5">Realisasi</p>
+            <p class="font-bold text-emerald-600">{{ total_realisasi|rupiah }}</p>
+          </div>
+          <div class="w-px h-8" style="background:var(--color-surface)"></div>
+          <div class="text-center">
+            <p class="text-slate-400 text-[10px] mb-0.5">Target</p>
+            <p class="font-bold text-slate-500">{{ total_target|rupiah }}</p>
+          </div>
+          {% if total_pct is not None %}
+          <div class="w-px h-8" style="background:var(--color-surface)"></div>
+          <div class="text-center">
+            <p class="text-slate-400 text-[10px] mb-0.5">Pencapaian</p>
+            <p class="text-xl font-black {% if total_pct >= 100 %}text-emerald-600{% elif total_pct >= 70 %}text-amber-600{% else %}text-rose-600{% endif %}">
+              {{ total_pct }}%
+            </p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill {% if total_pct >= 100 %}bg-emerald-500{% elif total_pct >= 70 %}bg-amber-400{% else %}bg-rose-400{% endif %}"
+             style="width:{% if total_pct %}{{ total_pct|floatformat:0 }}{% else %}0{% endif %}%">
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <!-- Empty state — no data for period -->
+    <div class="glass-card p-12 text-center">
+      <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background:var(--color-bg)">
+        <i class="fas fa-chart-bar text-slate-200 text-2xl"></i>
+      </div>
+      <p class="text-slate-500 font-semibold">Tidak ada data transaksi untuk periode ini</p>
+      <p class="text-slate-400 text-sm mt-1">Ubah rentang tanggal di atas</p>
+    </div>
+    {% endif %}
+  </div>
+
+
+  <!-- ══════════════════════════════════
+     SECTION 2 — TREND HARIAN
+  ══════════════════════════════════ -->
+  <div id="section-trend" class="reveal space-y-3">
+    <div class="flex items-center gap-2">
+      <div class="w-1.5 h-5 bg-blue-500 rounded-full"></div>
+      <p class="section-label">📈 Trend Harian</p>
+    </div>
+
+    <div class="glass-card p-5">
+      <!-- Chart toggle: revenue / orders -->
+      <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <p class="text-sm font-bold text-slate-700">Revenue per Hari</p>
+        <div class="flex gap-1.5">
+          <button @click="trendMode='revenue'; renderTrend()"
+                  class="text-[11px] font-bold px-3 py-1.5 rounded-lg border transition-all"
+                  :class="trendMode==='revenue'?'bg-blue-500 text-white border-blue-500':'bg-white text-slate-500 border-slate-200 hover:border-blue-300'">
+            Revenue
+          </button>
+          <button @click="trendMode='orders'; renderTrend()"
+                  class="text-[11px] font-bold px-3 py-1.5 rounded-lg border transition-all"
+                  :class="trendMode==='orders'?'bg-blue-500 text-white border-blue-500':'bg-white text-slate-500 border-slate-200 hover:border-blue-300'">
+            Orders
+          </button>
+        </div>
+      </div>
+
+      <div style="height:260px;position:relative;">
+        <canvas id="trendChart"></canvas>
+      </div>
+
+      {% if not trend_labels_json or trend_labels_json == '[]' %}
+      <div class="text-center py-8 text-slate-400 text-sm">Tidak ada data trend untuk periode ini</div>
+      {% endif %}
+
+      <!-- Mini stats bawah chart -->
+      <div class="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-slate-100/60">
+        <div class="text-center">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Hari Terbaik</p>
+          <p class="text-xs font-bold text-slate-700" id="bestDay">—</p>
+        </div>
+        <div class="text-center border-x border-slate-100">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Rata-rata Harian</p>
+          <p class="text-xs font-bold text-slate-700" id="avgDaily">—</p>
+        </div>
+        <div class="text-center">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Trend</p>
+          <p class="text-xs font-bold" id="trendDir">—</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════
+     SECTION 3 — CUSTOMER PERFORMANCE
+  ══════════════════════════════════ -->
+  <div id="section-customer" class="reveal space-y-3">
+    <div class="flex items-center gap-2">
+      <div class="w-1.5 h-5 bg-violet-500 rounded-full"></div>
+      <p class="section-label">👥 Performa Customer</p>
+    </div>
+
+    <!-- New vs Returning + Repeat buyers stats -->
+    <div class="grid grid-cols-3 gap-3">
+      <div class="glass-card p-4 text-center">
+        <div class="w-9 h-9 bg-emerald-50 rounded-xl flex items-center justify-center mx-auto mb-2">
+          <i class="fas fa-user-plus text-emerald-500 text-sm"></i>
+        </div>
+        <p class="text-xl font-black text-slate-800">{{ new_customers }}</p>
+        <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider mt-0.5">Customer Baru</p>
+      </div>
+      <div class="glass-card p-4 text-center">
+        <div class="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-2">
+          <i class="fas fa-user-check text-blue-500 text-sm"></i>
+        </div>
+        <p class="text-xl font-black text-slate-800">{{ returning_customers }}</p>
+        <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider mt-0.5">Returning</p>
+      </div>
+      <div class="glass-card p-4 text-center">
+        <div class="w-9 h-9 bg-violet-50 rounded-xl flex items-center justify-center mx-auto mb-2">
+          <i class="fas fa-repeat text-violet-500 text-sm"></i>
+        </div>
+        <p class="text-xl font-black text-slate-800">{{ repeat_buyers }}</p>
+        <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider mt-0.5">Repeat Buyers</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+
+      <!-- Top 10 customers -->
+      <div class="glass-card p-5">
+        <p class="text-sm font-bold text-slate-700 mb-4">Top Customer — Periode Ini</p>
+        <div class="space-y-3" id="topCustomersEl">
+          <!-- Rendered by JS -->
+        </div>
+        {% if not top_customers_json or top_customers_json == '[]' %}
+        <p class="text-center text-slate-400 text-sm py-8">Tidak ada data customer terdaftar</p>
+        {% endif %}
+      </div>
+
+      <!-- Tier donut chart -->
+      <div class="glass-card p-5">
+        <p class="text-sm font-bold text-slate-700 mb-4">Distribusi Tier Customer</p>
+        {% if tier_labels_json and tier_labels_json != '[]' %}
+        <div style="height:200px;position:relative;" class="mb-4">
+          <canvas id="tierChart"></canvas>
+        </div>
+        {% else %}
+        <div class="text-center py-10 text-slate-400 text-sm">
+          <i class="fas fa-users text-slate-200 text-3xl mb-3 block"></i>
+          Tidak ada data tier untuk periode ini
+        </div>
+        {% endif %}
+        <!-- Tier legend (rendered by JS) -->
+        <div id="tierLegend" class="space-y-2"></div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- end main wrapper -->
+
+
+<!-- ══ TARGET MODAL ══ -->
+{% if request.user.is_staff %}
+<div x-show="targetModal"
+     x-transition:enter="transition duration-200"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     @click.self="targetModal=false"
+     class="modal-overlay"
+     style="display:none;">
+  <div class="modal-card" @click.stop>
+    <div class="flex items-center justify-between mb-5">
+      <h3 class="text-base font-black text-slate-800">Set Sales Target</h3>
+      <button @click="targetModal=false" class="w-7 h-7 rounded-lg hover:bg-slate-200 flex items-center justify-center transition-colors" style="background:var(--color-bg)">
+        <i class="fas fa-times text-slate-400 text-[11px]"></i>
+      </button>
+    </div>
+
+    <form method="post" action="{{ request.path }}?date_start={{ date_start }}&date_end={{ date_end }}">
+      {% csrf_token %}
+      <div class="space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Tahun</label>
+            <input type="number" name="target_year" value="{{ current_year }}" min="2020" max="2030"
+                   class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Bulan</label>
+            <select name="target_month"
+                    class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100">
+              {% for val, label in month_choices %}
+              <option value="{{ val }}" {% if val == current_month %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Target Revenue (Rp)</label>
+          <input type="number" name="target_amount" placeholder="contoh: 10000000" min="0" step="100000" required
+                 class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100">
+          <p class="text-[10px] text-slate-400 mt-1">Masukkan angka tanpa titik/koma. Contoh: 10000000 = Rp 10 juta</p>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Catatan (opsional)</label>
+          <textarea name="notes" rows="2" placeholder="Target Q1 2026..."
+                    class="w-full px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 resize-none"></textarea>
+        </div>
+      </div>
+
+      <div class="flex gap-2 mt-5">
+        <button type="button" @click="targetModal=false"
+                class="flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-slate-500 hover:bg-slate-50 transition-colors">
+          Batal
+        </button>
+        <button type="submit"
+                class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-sm font-bold text-white shadow-sm hover:shadow-md transition-all">
+          Simpan Target
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+
+<script>
+// ── Data dari Django ──────────────────────────────
+const TARGET_DATA  = {{ target_chart_json|safe }};
+const TREND_LABELS = {{ trend_labels_json|safe }};
+const TREND_REV    = {{ trend_revenue_json|safe }};
+const TREND_ORDERS = {{ trend_orders_json|safe }};
+const TREND_MA3    = {{ trend_ma3_json|safe }};
+const TOP_CUSTS    = {{ top_customers_json|safe }};
+const TIER_LABELS  = {{ tier_labels_json|safe }};
+const TIER_REV     = {{ tier_revenue_json|safe }};
+const HIGHLIGHT    = '{{ highlight }}';
+
+function perfApp() {
+  return {
+    tab        : 'target',
+    trendMode  : 'revenue',
+    targetModal: false,
+    _fp        : null,
+    _trendChart: null,
+    _tierChart : null,
+
+    init() {
+      // Scroll reveal
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i * 80);
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.06 });
+      document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+      // Charts after a tick so canvas is visible
+      this.$nextTick(() => {
+        this.renderTrend();
+        this.renderTier();
+        this.renderTopCustomers();
+        this.calcTrendStats();
+
+        // Auto-scroll to highlighted section
+        if (HIGHLIGHT) {
+          setTimeout(() => this.scrollTo(HIGHLIGHT), 400);
+        }
+      });
+
+      // Progress bar animation
+      document.querySelectorAll('.progress-fill').forEach(el => {
+        const w = el.style.width;
+        el.style.width = '0%';
+        setTimeout(() => { el.style.width = w; }, 300);
+      });
+    },
+
+    scrollTo(section) {
+      this.tab = section;
+      const el = document.getElementById('section-' + section);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        el.classList.add('highlight-pulse');
+        setTimeout(() => el.classList.remove('highlight-pulse'), 2800);
+      }
+    },
+
+    toggleFp() {
+      if (!this._fp) {
+        this._fp = flatpickr('#fpAnchor', {
+          mode: 'range', dateFormat: 'Y-m-d',
+          defaultDate: [
+            document.getElementById('date_start').value,
+            document.getElementById('date_end').value,
+          ].filter(Boolean),
+          onClose([s, e]) {
+            const fmt = d => d ? d.toISOString().slice(0,10) : '';
+            document.getElementById('date_start').value = fmt(s);
+            document.getElementById('date_end').value   = fmt(e);
+          },
+        });
+      }
+      this._fp.open();
+    },
+
+    applyPreset(days) {
+      const fmt  = d => d.toISOString().slice(0,10);
+      const today = new Date();
+      if (days === 0) {
+        // Bulan ini
+        const first = new Date(today.getFullYear(), today.getMonth(), 1);
+        document.getElementById('date_start').value = fmt(first);
+        document.getElementById('date_end').value   = fmt(today);
+      } else {
+        const start = new Date(today);
+        start.setDate(today.getDate() - (days - 1));
+        document.getElementById('date_start').value = fmt(start);
+        document.getElementById('date_end').value   = fmt(today);
+      }
+      document.getElementById('perfForm').submit();
+    },
+
+    renderTrend() {
+      const ctx = document.getElementById('trendChart');
+      if (!ctx || !TREND_LABELS.length) return;
+      if (this._trendChart) this._trendChart.destroy();
+
+      const isRev = this.trendMode === 'revenue';
+      const mainData = isRev ? TREND_REV : TREND_ORDERS;
+
+      this._trendChart = new Chart(ctx, {
+        data: {
+          labels: TREND_LABELS,
+          datasets: [
+            {
+              type      : 'bar',
+              label     : isRev ? 'Revenue' : 'Orders',
+              data      : mainData,
+              backgroundColor: isRev
+                ? 'rgba(5,150,105,0.15)'
+                : 'rgba(59,130,246,0.15)',
+              borderColor: isRev ? 'rgba(5,150,105,0.4)' : 'rgba(59,130,246,0.4)',
+              borderWidth: 1,
+              borderRadius: 4,
+              yAxisID   : 'y',
+            },
+            ...(isRev ? [{
+              type      : 'line',
+              label     : 'MA 3-hari',
+              data      : TREND_MA3,
+              borderColor: '#047857',
+              borderWidth: 2,
+              pointRadius: 0,
+              tension   : 0.4,
+              fill      : false,
+              yAxisID   : 'y',
+            }] : []),
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => isRev
+                  ? 'Rp ' + ctx.raw.toLocaleString('id-ID')
+                  : ctx.raw + ' orders',
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 10 }, color: '#94a3b8' }
+            },
+            y: {
+              grid: { color: 'rgba(241,245,249,1)', lineWidth: 1 },
+              ticks: {
+                font: { size: 10 }, color: '#94a3b8',
+                callback: v => isRev
+                  ? 'Rp ' + (v/1000).toLocaleString('id-ID') + 'k'
+                  : v,
+              }
+            }
+          }
+        }
+      });
+    },
+
+    renderTier() {
+      const ctx = document.getElementById('tierChart');
+      if (!ctx || !TIER_LABELS.length) return;
+      if (this._tierChart) this._tierChart.destroy();
+
+      const COLORS = {
+        'Platinum': '#6366f1', 'Gold': '#f59e0b',
+        'Silver'  : '#94a3b8', 'Bronze': '#92400e',
+      };
+      const colors = TIER_LABELS.map(l => COLORS[l] || '#059669');
+
+      this._tierChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels  : TIER_LABELS,
+          datasets: [{
+            data           : TIER_REV,
+            backgroundColor: colors.map(c => c + '22'),
+            borderColor    : colors,
+            borderWidth    : 2,
+            hoverOffset    : 6,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '68%',
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => 'Rp ' + ctx.raw.toLocaleString('id-ID'),
+              }
+            }
+          }
+        }
+      });
+
+      // Legend
+      const leg = document.getElementById('tierLegend');
+      if (!leg) return;
+      const total = TIER_REV.reduce((a,b) => a+b, 0);
+      leg.innerHTML = TIER_LABELS.map((lbl, i) => {
+        const pct = total ? Math.round(TIER_REV[i] / total * 100) : 0;
+        return `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background:${colors[i]}"></div>
+              <span class="text-xs font-semibold text-slate-600">${lbl}</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-[11px] text-slate-400">${pct}%</span>
+              <span class="text-xs font-bold text-slate-700">Rp ${TIER_REV[i].toLocaleString('id-ID')}</span>
+            </div>
+          </div>`;
+      }).join('');
+    },
+
+    renderTopCustomers() {
+      const el = document.getElementById('topCustomersEl');
+      if (!el || !TOP_CUSTS.length) return;
+
+      const maxRev = Math.max(...TOP_CUSTS.map(c => c.revenue));
+      const TIER_CLS = {
+        platinum: 'tier-platinum', gold: 'tier-gold',
+        silver: 'tier-silver', bronze: 'tier-bronze',
+      };
+
+      el.innerHTML = TOP_CUSTS.map((c, i) => {
+        const pct = maxRev ? Math.round(c.revenue / maxRev * 100) : 0;
+        return `
+          <div class="flex items-center gap-3">
+            <div class="w-5 h-5 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600
+                        flex items-center justify-center flex-shrink-0 text-white font-black text-[9px]">
+              ${c.name.charAt(0).toUpperCase()}
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-xs font-semibold text-slate-700 truncate">${c.name}</span>
+                <span class="tier-badge ${TIER_CLS[c.tier] || 'tier-bronze'} ml-2 flex-shrink-0">${c.tier}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="cust-bar-wrap">
+                  <div class="cust-bar-fill" style="width:${pct}%"></div>
+                </div>
+                <span class="text-[11px] font-bold text-slate-700 flex-shrink-0 w-28 text-right">
+                  Rp ${c.revenue.toLocaleString('id-ID')}
+                </span>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    },
+
+    calcTrendStats() {
+      if (!TREND_LABELS.length) return;
+      const maxIdx = TREND_REV.indexOf(Math.max(...TREND_REV));
+      const avg    = TREND_REV.reduce((a,b) => a+b, 0) / TREND_REV.length;
+      const lastN  = TREND_REV.slice(-3);
+      const first3 = TREND_REV.slice(0, 3);
+      const trendUp = lastN.reduce((a,b)=>a+b,0) > first3.reduce((a,b)=>a+b,0);
+
+      const bd = document.getElementById('bestDay');
+      const ad = document.getElementById('avgDaily');
+      const td = document.getElementById('trendDir');
+      if (bd) bd.textContent = TREND_LABELS[maxIdx] + ' (Rp ' + TREND_REV[maxIdx].toLocaleString('id-ID') + ')';
+      if (ad) ad.textContent = 'Rp ' + Math.round(avg).toLocaleString('id-ID');
+      if (td) {
+        td.textContent = trendUp ? '↑ Naik' : '↓ Turun';
+        td.className   = 'text-xs font-bold ' + (trendUp ? 'text-emerald-600' : 'text-rose-500');
+      }
+    },
+  };
+}
+</script>
+
+{% endblock %}
+
+{% block scripts %}{% endblock %}

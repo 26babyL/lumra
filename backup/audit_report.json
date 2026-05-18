@@ -1,0 +1,1687 @@
+{
+  "generated": "2026-03-16T11:18:31.995670",
+  "root": "D:\\APPS\\Project\\lumra\\lumra_config\\templates",
+  "total_files": 99,
+  "files": [
+    {
+      "rel_path": "base\\activity_drawer.html",
+      "folder": "base",
+      "extends": null,
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "base\\alert.html",
+      "folder": "base",
+      "extends": null,
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 0,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "base\\alert_inner.html",
+      "folder": "base",
+      "extends": null,
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 0,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "base\\approval_modal.html",
+      "folder": "base",
+      "extends": null,
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "base\\base.html",
+      "folder": "base",
+      "extends": null,
+      "has_tailwind_css": true,
+      "has_design_system": true,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+      ],
+      "block_css_content": [],
+      "inline_style_count": 2,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "base\\footer.html",
+      "folder": "base",
+      "extends": null,
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 0,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "base\\kpi_card.html",
+      "folder": "base",
+      "extends": null,
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 0,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "base\\kpi_card_inner.html",
+      "folder": "base",
+      "extends": null,
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 0,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "base\\kpi_card_white.html",
+      "folder": "base",
+      "extends": null,
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 0,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "base\\navbar.html",
+      "folder": "base",
+      "extends": null,
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "base\\sidebar.html",
+      "folder": "base",
+      "extends": null,
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "base\\sidebar_item.html",
+      "folder": "base",
+      "extends": null,
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 0,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "base\\sidebar_right.html",
+      "folder": "base",
+      "extends": null,
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\auth\\login.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\auth\\register.html",
+      "folder": "lumra_pages",
+      "extends": null,
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\etc\\error_403.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 0,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\etc\\error_404.html",
+      "folder": "lumra_pages",
+      "extends": null,
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.tailwindcss.com"
+      ],
+      "block_css_content": [],
+      "inline_style_count": 0,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\etc\\error_500.html",
+      "folder": "lumra_pages",
+      "extends": null,
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.tailwindcss.com"
+      ],
+      "block_css_content": [],
+      "inline_style_count": 0,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\inventory\\add_stock_movement.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap"
+      ],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<link href=\"https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap\" rel=\"stylesheet\">\n<style>\n  [x-cloak]{display:v"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\inventory\\product_details.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display: var(--shadow-sm-16) !important; }\n\n  /* ── BACKGROUND BLOBS ── */\n  .bg-blob {\n    position: fixed;\n    border-radius: 50%;\n    filter: blur(90px);\n    opacity: .18;\n   "
+      ],
+      "inline_style_count": 2,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\inventory\\product_list.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display: var(--shadow-sm-16) !important; }\n\n  /* ══ BLOBS ══ */\n  .blob {\n    position:fixed; border-radius:50%;\n    filter:blur(100px); opacity:.07;\n    pointer-events:var(--sha"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\inventory\\products.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display: var(--shadow-sm-16) !important; }\n\n  /* ══ BLOBS ══ */\n  .blob {\n    position:fixed; border-radius:50%;\n    filter:blur(100px); opacity:.07;\n    pointer-events:var(--sha"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\inventory\\stock_movement.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display: var(--shadow-sm-16) !important; }\n\n  /* ══ DESIGN TOKENS ══ */\n  :root {\n    --glass-bg    : var(--color-white-a074);\n    --glass-blur  : var(--backdrop-blur-20px-satura"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\inventory\\stock_movement_form.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap"
+      ],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<link href=\"https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap\" rel=\"stylesheet\">\n<style>\n  [x-cloak]{display:v"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\inventory\\stock_opname_approval_detail.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\inventory\\stock_opname_approvals.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\inventory\\stock_opname_form.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\inventory\\stock_opname_locations.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\inventory\\stock_overview.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display: var(--shadow-sm-16) !important; }\n\n  /* ── BACKGROUND BLOBS ── */\n  .bg-blob {\n    position: fixed;\n    border-radius: 50%;\n    filter: blur(90px);\n    opacity: .18;\n   "
+      ],
+      "inline_style_count": 2,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\inventory\\stock_planning.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display: var(--shadow-sm-16) !important; }\n\n  /* ══ AMBIENT BLOBS ══ */\n  .blob {\n    position: fixed; border-radius: 50%;\n    filter: blur(100px); opacity: .07;\n    pointer-even"
+      ],
+      "inline_style_count": 2,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\inventory\\stock_purchasing.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display: var(--shadow-sm-16) !important; }\n\n  /* ══ AMBIENT BLOBS ══ */\n  .blob {\n    position: fixed; border-radius: 50%;\n    filter: blur(100px); opacity: .07;\n    pointer-even"
+      ],
+      "inline_style_count": 2,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\inventory\\supplier_price_confirm_delete.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\inventory\\supplier_price_form.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\inventory\\supplier_price_list.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\marketing\\add_campaign.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display:var(--shadow-sm-16) !important; }\n\n  /* ══ BLOBS ══ */\n  .blob { position:fixed; border-radius:50%; filter:blur(110px); pointer-events:var(--shadow-sm-16); z-index:0; ani"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\marketing\\campaign.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display:var(--shadow-sm-16) !important; }\n\n  /* ══ BLOBS ══ */\n  .blob { position:fixed; border-radius:50%; filter:blur(110px); pointer-events:var(--shadow-sm-16); z-index:0; ani"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\marketing\\campaign_list.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display:var(--shadow-sm-16) !important; }\n\n  /* ══ BLOBS ══ */\n  .blob { position:fixed; border-radius:50%; filter:blur(110px); pointer-events:var(--shadow-sm-16); z-index:0; ani"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\marketing\\discount.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 0,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\marketing\\loyalty_members.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 0,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\master_data\\categories_list.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display: var(--shadow-sm-16) !important; }\n\n  /* ══ BLOBS ══ */\n  .blob {\n    position:fixed; border-radius:50%;\n    filter:blur(100px); opacity:.07;\n    pointer-events:var(--sha"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\master_data\\category_form.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display: var(--shadow-sm-16) !important; }\n\n  /* ══ BLOBS ══ */\n  .blob {\n    position:fixed; border-radius:50%;\n    filter:blur(110px); opacity:.07;\n    pointer-events:var(--sha"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\master_data\\customer.html",
+      "folder": "lumra_pages",
+      "extends": null,
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\master_data\\customer_detail.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display:var(--shadow-sm-16) !important; }\n\n  .bg-blob{position:fixed;border-radius:50%;filter:blur(100px);opacity:.08;pointer-events:var(--shadow-sm-16);z-index:0;animation:drift"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\master_data\\customer_form.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/flatpickr"
+      ],
+      "block_css_content": [
+        "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css\">\n<script src=\"https://cdn.jsdelivr.net/npm/flatpickr\"></script>\n<style>\n  [x-cloak] { display:var(--shadow-s"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\master_data\\customers.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display:var(--shadow-sm-16) !important; }\n\n  /* ── Ambient blobs ── */\n  .bg-blob {\n    position:fixed; border-radius:50%;\n    filter:blur(100px); opacity:.08;\n    pointer-events"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\master_data\\customers_list.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display:var(--shadow-sm-16) !important; }\n\n  /* ── Ambient blobs ── */\n  .bg-blob {\n    position:fixed; border-radius:50%;\n    filter:blur(100px); opacity:.08;\n    pointer-events"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\master_data\\location_list.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [
+        "https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places&callback=initMap",
+        "https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places,visualization&callback=initMap"
+      ],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display: var(--shadow-sm-16) !important; }\n\n  /* ── Ambient blobs ── */\n  .bg-blob {\n    position: fixed; border-radius: 50%;\n    filter: blur(100px); opacity: .09;\n    pointer-e"
+      ],
+      "inline_style_count": 2,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\master_data\\locations.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [
+        "https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places&callback=initMap",
+        "https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places,visualization&callback=initMap"
+      ],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display: var(--shadow-sm-16) !important; }\n\n  /* ── Ambient blobs ── */\n  .bg-blob {\n    position: fixed; border-radius: 50%;\n    filter: blur(100px); opacity: .09;\n    pointer-e"
+      ],
+      "inline_style_count": 2,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\master_data\\stock_opname.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\master_data\\stock_opname_session_detail.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\master_data\\unit_form.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap"
+      ],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<link href=\"https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap\" rel=\"stylesheet\">\n<style>\n  [x-cloak] { display"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\master_data\\units_list.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap"
+      ],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<link href=\"https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap\" rel=\"stylesheet\">\n<style>\n  [x-cloak] { display"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\master_data\\vendor_form.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"
+      ],
+      "block_css_content": [
+        "<style>\n  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap');\n\n  [x-cloak]{display:var(--shadow-sm-16) !important"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\master_data\\vendor_list.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<style>\n  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap');\n\n  [x-cloak] { display:var(--shadow-sm-16) !importa"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\master_data\\vendors_list.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<style>\n  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap');\n\n  [x-cloak] { display:var(--shadow-sm-16) !importa"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\messages\\inbox.html",
+      "folder": "lumra_pages",
+      "extends": null,
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 0,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\messages\\notification.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display: var(--shadow-sm-16) !important; }\n\n  /* ── Background blobs ── */\n  .bg-blob {\n    position: fixed; border-radius: 50%;\n    filter: blur(100px); opacity: .10;\n    pointe"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\production\\recipe_detail.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+      ],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\production\\recipe_form.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+      ],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\production\\recipe_list.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+      ],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\reports\\activity_log.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 0,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\reports\\base_report.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\reports\\purchasing_report.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/flatpickr"
+      ],
+      "block_css_content": [
+        "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css\">\n<script src=\"https://cdn.jsdelivr.net/npm/flatpickr\"></script>\n<style>\n  [x-cloak] { display:var(--shadow-s"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\reports\\report_activity_log.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 0,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\reports\\report_inventory_log.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/flatpickr"
+      ],
+      "block_css_content": [
+        "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css\">\n<script src=\"https://cdn.jsdelivr.net/npm/flatpickr\"></script>\n<style>\n  [x-cloak] { display:var(--shadow-s"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\reports\\report_inventory_low.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/flatpickr"
+      ],
+      "block_css_content": [
+        "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css\">\n<script src=\"https://cdn.jsdelivr.net/npm/flatpickr\"></script>\n<style>\n  [x-cloak] { display:var(--shadow-s"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\reports\\report_inventory_stock.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/flatpickr"
+      ],
+      "block_css_content": [
+        "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css\">\n<script src=\"https://cdn.jsdelivr.net/npm/flatpickr\"></script>\n<style>\n  [x-cloak] { display:var(--shadow-s"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\reports\\report_profit_loss_detail.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/flatpickr"
+      ],
+      "block_css_content": [
+        "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css\">\n<script src=\"https://cdn.jsdelivr.net/npm/flatpickr\"></script>\n<style>\n  [x-cloak] { display:var(--shadow-s"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\reports\\report_sales_by_outlet.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/flatpickr"
+      ],
+      "block_css_content": [
+        "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css\">\n<script src=\"https://cdn.jsdelivr.net/npm/flatpickr\"></script>\n<style>\n  [x-cloak] { display:var(--shadow-s"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\reports\\report_sales_by_payment.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/flatpickr"
+      ],
+      "block_css_content": [
+        "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css\">\n<script src=\"https://cdn.jsdelivr.net/npm/flatpickr\"></script>\n<style>\n  [x-cloak] { display:var(--shadow-s"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\reports\\report_sales_by_product.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/flatpickr"
+      ],
+      "block_css_content": [
+        "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css\">\n<script src=\"https://cdn.jsdelivr.net/npm/flatpickr\"></script>\n<style>\n  [x-cloak] { display:var(--shadow-s"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\reports\\report_sales_summary.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/flatpickr"
+      ],
+      "block_css_content": [
+        "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css\">\n<script src=\"https://cdn.jsdelivr.net/npm/flatpickr\"></script>\n<style>\n  [x-cloak] { display:var(--shadow-s"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\reports\\reporting.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/chart.js",
+        "https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+      ],
+      "block_css_content": [],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\reports\\requisition_report.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/flatpickr"
+      ],
+      "block_css_content": [
+        "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css\">\n<script src=\"https://cdn.jsdelivr.net/npm/flatpickr\"></script>\n<style>\n  [x-cloak] { display:var(--shadow-s"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\reports\\sales_history.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/flatpickr"
+      ],
+      "block_css_content": [
+        "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css\">\n<script src=\"https://cdn.jsdelivr.net/npm/flatpickr\"></script>\n<style>\n  [x-cloak] { display:var(--shadow-s"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\reports\\sales_history_product.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/flatpickr"
+      ],
+      "block_css_content": [
+        "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css\">\n<script src=\"https://cdn.jsdelivr.net/npm/flatpickr\"></script>\n<style>\n  [x-cloak] { display:var(--shadow-s"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\reports\\sales_report.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/flatpickr"
+      ],
+      "block_css_content": [
+        "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css\">\n<script src=\"https://cdn.jsdelivr.net/npm/flatpickr\"></script>\n<style>\n  [x-cloak] { display:var(--shadow-s"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\reports\\transaction_summary.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/flatpickr"
+      ],
+      "block_css_content": [
+        "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css\">\n<script src=\"https://cdn.jsdelivr.net/npm/flatpickr\"></script>\n<style>\n  [x-cloak] { display:var(--shadow-s"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\reports\\transfer_report.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/flatpickr"
+      ],
+      "block_css_content": [
+        "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css\">\n<script src=\"https://cdn.jsdelivr.net/npm/flatpickr\"></script>\n<style>\n  [x-cloak] { display:var(--shadow-s"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\sales_insight\\dashboard.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"
+      ],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display: var(--shadow-sm-16) !important; }\n\n  /* ══════════════════════════════════════════════\n     BACKGROUND — soft ambient, tidak agresif\n  ══════════════════════════════════"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\sales_insight\\financial_reports.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/flatpickr",
+        "https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"
+      ],
+      "block_css_content": [
+        "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css\">\n<script src=\"https://cdn.jsdelivr.net/npm/flatpickr\"></script>\n<script src=\"https://cdn.jsdelivr.net/npm/ch"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\sales_insight\\market_insights.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/flatpickr",
+        "https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"
+      ],
+      "block_css_content": [
+        "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css\">\n<script src=\"https://cdn.jsdelivr.net/npm/flatpickr\"></script>\n<script src=\"https://cdn.jsdelivr.net/npm/ch"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\sales_insight\\pos.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<!--{# ══════════════════════════════════════════════════════════════\n   POS — \"The Driver's Seat\"\n   Alpine.js + Tailwind + Glass Design System\n   Context vars expected:\n     products         → list "
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\sales_insight\\sales_intelligence.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/flatpickr",
+        "https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"
+      ],
+      "block_css_content": [
+        "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css\">\n<script src=\"https://cdn.jsdelivr.net/npm/flatpickr\"></script>\n<script src=\"https://cdn.jsdelivr.net/npm/ch"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\sales_insight\\sales_performance.html",
+      "folder": "lumra_pages",
+      "extends": "lumra_pages/reports/base_report.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/flatpickr",
+        "https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"
+      ],
+      "block_css_content": [
+        "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css\">\n<script src=\"https://cdn.jsdelivr.net/npm/flatpickr\"></script>\n<script src=\"https://cdn.jsdelivr.net/npm/ch"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\sales_insight\\trends_analysis.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/chart.js"
+      ],
+      "block_css_content": [],
+      "inline_style_count": 0,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\settings\\about.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap"
+      ],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link href=\"https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@300;400;500;700;"
+      ],
+      "inline_style_count": 2,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\settings\\business_feature_matrix.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap"
+      ],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<link href=\"https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap\" rel=\"stylesheet\">\n<style>\n  [x-cloak]{display:v"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\settings\\business_form_general.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap"
+      ],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<link href=\"https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap\" rel=\"stylesheet\">\n<style>\n  [x-cloak]{display:v"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\settings\\business_profile.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap"
+      ],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<link href=\"https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap\" rel=\"stylesheet\">\n<style>\n  [x-cloak]{display:v"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\settings\\business_settings.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap"
+      ],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<link href=\"https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap\" rel=\"stylesheet\">\n<style>\n  [x-cloak]{display:v"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\settings\\contact.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 0,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\settings\\profile.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display: var(--shadow-sm-16) !important; }\n\n  /* ══ AMBIENT BLOBS ══ */\n  .blob {\n    position:fixed; border-radius:50%;\n    filter:blur(110px); opacity:.07;\n    pointer-events:v"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\settings\\search.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 0,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\settings\\settings.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [],
+      "block_css_content": [],
+      "inline_style_count": 0,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\settings\\system_status.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [],
+      "extra_scripts": [
+        "https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"
+      ],
+      "block_css_content": [
+        "<style>\n  [x-cloak] { display: var(--shadow-sm-16) !important; }\n\n  /* ══ BLOBS ══ */\n  .blob {\n    position:fixed; border-radius:50%;\n    filter:blur(110px); opacity:.07;\n    pointer-events:var(--sha"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\settings\\user_list.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap"
+      ],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<link href=\"https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap\" rel=\"stylesheet\">\n<style>\n  [x-cloak]{display:v"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\settings\\user_roles_permissions.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap"
+      ],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<link href=\"https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap\" rel=\"stylesheet\">\n<style>\n  [x-cloak]{display:v"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    },
+    {
+      "rel_path": "lumra_pages\\settings\\users.html",
+      "folder": "lumra_pages",
+      "extends": "base/base.html",
+      "has_tailwind_css": false,
+      "has_design_system": false,
+      "css_order_ok": true,
+      "extra_links": [
+        "https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap"
+      ],
+      "extra_scripts": [],
+      "block_css_content": [
+        "<link href=\"https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap\" rel=\"stylesheet\">\n<style>\n  [x-cloak]{display:v"
+      ],
+      "inline_style_count": 1,
+      "issues": [],
+      "error": false
+    }
+  ],
+  "folder_analysis": {
+    "base": {
+      "file_count": 13,
+      "needs_base": false,
+      "reason": [],
+      "shared_links": [],
+      "shared_scripts": [],
+      "extends_targets": {}
+    },
+    "lumra_pages": {
+      "file_count": 86,
+      "needs_base": true,
+      "reason": [
+        "shared CSS: ['https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css', 'https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap', 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css']",
+        "shared JS: ['https://cdn.tailwindcss.com', 'https://cdn.jsdelivr.net/npm/flatpickr', 'https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places&callback=initMap']",
+        "sudah extend ke: ['lumra_pages/reports/base_report.html']"
+      ],
+      "shared_links": [
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css",
+        "https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap",
+        "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      ],
+      "shared_scripts": [
+        "https://cdn.tailwindcss.com",
+        "https://cdn.jsdelivr.net/npm/flatpickr",
+        "https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places&callback=initMap",
+        "https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places,visualization&callback=initMap",
+        "https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js",
+        "https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js",
+        "https://cdn.jsdelivr.net/npm/chart.js"
+      ],
+      "extends_targets": {
+        "base/base.html": 58,
+        "lumra_pages/reports/base_report.html": 23
+      }
+    }
+  }
+}

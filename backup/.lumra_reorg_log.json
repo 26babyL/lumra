@@ -1,0 +1,49 @@
+{
+  "moves": [],
+  "view_fixes": [
+    {
+      "file": "D:\\APPS\\Project\\lumra\\lumra_config\\views\\misc_views.py",
+      "bak": "D:\\APPS\\Project\\lumra\\.lumra_reorg_backup\\20260313_111548\\views\\misc_views.py",
+      "changes": [
+        {
+          "old": "lumra_pages/customers.html",
+          "new": "lumra_pages/master_data/customers.html"
+        },
+        {
+          "old": "lumra_pages/customers.html",
+          "new": "lumra_pages/master_data/customers.html"
+        }
+      ]
+    },
+    {
+      "file": "D:\\APPS\\Project\\lumra\\lumra_config\\views\\stock_movement_views.py",
+      "bak": "D:\\APPS\\Project\\lumra\\.lumra_reorg_backup\\20260313_111548\\views\\stock_movement_views.py",
+      "changes": [
+        {
+          "old": "lumra_pages/stock_movement.html",
+          "new": "lumra_pages/inventory/stock_movement.html"
+        },
+        {
+          "old": "lumra_pages/stock_movement.html",
+          "new": "lumra_pages/inventory/stock_movement.html"
+        },
+        {
+          "old": "lumra_pages/stock_movement.html",
+          "new": "lumra_pages/inventory/stock_movement.html"
+        },
+        {
+          "old": "lumra_pages/stock_movement.html",
+          "new": "lumra_pages/inventory/stock_movement.html"
+        },
+        {
+          "old": "lumra_pages/add_stock_movement.html",
+          "new": "lumra_pages/inventory/add_stock_movement.html"
+        },
+        {
+          "old": "lumra_pages/add_stock_movement.html",
+          "new": "lumra_pages/inventory/add_stock_movement.html"
+        }
+      ]
+    }
+  ]
+}

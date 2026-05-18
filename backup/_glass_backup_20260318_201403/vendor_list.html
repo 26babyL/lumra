@@ -1,0 +1,812 @@
+{% extends 'base/base.html' %}
+{% block title %}Vendors — CoffeeShop{% endblock %}
+{% load i18n %}
+
+{% block extra_css %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap');
+
+  [x-cloak] { display:var(--shadow-sm-16) !important; }
+
+  * { font-family:'DM Sans',sans-serif; }
+
+  .mono { font-family:'DM Mono',monospace; }
+
+  @keyframes drift{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(24px,20px) scale(1.05)}}
+
+  .glass-deep {
+    background:linear-gradient(135deg,var(--color-rgba-239-246-255-a82),var(--color-rgba-238-242-255-a78));
+    backdrop-filter: var(--glass-blur-lg);
+    -webkit-backdrop-filter: var(--glass-blur-lg);
+    border:1px solid var(--color-rgba-199-210-254-a6);
+    border-radius:20px;
+    box-shadow:0 4px 20px var(--color-rgba-99-102-241-a08);
+  }
+
+  .v-avatar {
+    width:44px; height:44px; border-radius:14px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:15px; font-weight:900;
+    box-shadow:0 4px 12px var(--color-rgba-59-130-246-a22);
+    position:relative; overflow:hidden;
+  }
+
+  .v-avatar::after {
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(135deg,var(--color-white-a2),transparent);
+  }
+
+  .badge-verified {
+    display:inline-flex; align-items:center; gap:4px;
+    padding:3px 8px; border-radius:99px;
+    background:linear-gradient(135deg,var(--color-rgba-59-130-246-a12),var(--color-rgba-37-99-235-a08));
+    border:1px solid var(--color-rgba-59-130-246-a25);
+    font-size:9px; font-weight:900; color:var(--color-2563eb);
+    text-transform:uppercase; letter-spacing:.08em;
+  }
+
+  .badge-preferred {
+    display:inline-flex; align-items:center; gap:4px;
+    padding:3px 8px; border-radius:99px;
+    background:linear-gradient(135deg,var(--color-rgba-99-102-241-a12),var(--color-rgba-79-70-229-a08));
+    border:1px solid var(--color-rgba-99-102-241-a25);
+    font-size:9px; font-weight:900; color:var(--color-6366f1);
+    text-transform:uppercase; letter-spacing:.08em;
+  }
+
+  .badge-pending {
+    display:inline-flex; align-items:center; gap:4px;
+    padding:3px 8px; border-radius:99px;
+    background:var(--color-rgba-245-158-11-a1);
+    border:1px solid var(--color-rgba-245-158-11-a2);
+    font-size:9px; font-weight:900; color:var(--color-b45309);
+    text-transform:uppercase; letter-spacing:.08em;
+  }
+
+  .perf-track {
+    height:3px; border-radius:99px; background:var(--color-slate-300-a4);
+    overflow:hidden;
+  }
+
+  .perf-fill {
+    height:100%; border-radius:99px;
+    transition:width .8s cubic-bezier(.4,0,.2,1);
+  }
+
+  .tbl-head {
+    background:var(--color-rgba-239-246-255-a85);
+    backdrop-filter: var(--glass-blur-sm);
+    position:sticky; top:0; z-index:10;
+    border-bottom:1px solid var(--color-rgba-199-210-254-a5);
+  }
+
+  .tbl-th {
+    padding:12px 18px;
+    font-size:9px; font-weight:900; text-transform:uppercase; letter-spacing:.12em;
+    color:var(--color-slate-400); white-space:nowrap; user-select:var(--shadow-sm-16);
+  }
+
+  .tbl-th.s { cursor:pointer; }
+
+  .tbl-th.s:hover { color:var(--color-6366f1); }
+
+  .tbl-row {
+    border-bottom:1px solid var(--color-slate-200-a4);
+    transition:background .14s;
+  }
+
+  .tbl-row:last-of-type { border-bottom:var(--shadow-sm-16); }
+
+  .tbl-row:hover td { background:var(--color-rgba-239-246-255-a5) !important; }
+
+  .cat-chip {
+    padding:2px 8px; border-radius:6px;
+    font-size:8px; font-weight:900; text-transform:uppercase; letter-spacing:.08em;
+  }
+
+  .s-input {
+    background:var(--color-white-a55);
+    border:1px solid var(--color-rgba-199-210-254-a5);
+    border-radius:12px;
+    transition:background .15s,border-color .15s,box-shadow .15s;
+    font-size:13px; font-weight:600; color:var(--color-slate-800);
+  }
+
+  .s-input:focus {
+    background:var(--color-fff); border-color:var(--color-rgba-99-102-241-a45);
+    box-shadow:0 0 0 3px var(--color-rgba-99-102-241-a07); outline:var(--shadow-sm-16);
+  }
+
+  .s-input::placeholder { color:var(--color-slate-400); }
+
+  .btn-indigo {
+    background:linear-gradient(135deg,var(--color-4f46e5),var(--color-6366f1));
+    border:var(--shadow-sm-16); border-radius:12px; color:var(--color-fff);
+    font-size:12px; font-weight:800; cursor:pointer;
+    padding:10px 20px; display:flex; align-items:center; gap:7px;
+    box-shadow:0 4px 16px var(--color-rgba-99-102-241-a30);
+    transition:opacity .13s,transform .13s; text-decoration:var(--shadow-sm-16);
+  }
+
+  .btn-indigo:hover { opacity:.9; transform:translateY(-1px); }
+
+  .btn-ghost {
+    border:1.5px solid var(--color-rgba-199-210-254-a7);
+    border-radius:11px; background:var(--color-white-a55);
+    color:var(--color-slate-500); font-size:11px; font-weight:700;
+    padding:9px 16px; cursor:pointer;
+    transition:background .12s,border-color .12s;
+    display:flex; align-items:center; gap:6px;
+    text-decoration:var(--shadow-sm-16);
+  }
+
+  .btn-ghost:hover { background:var(--color-rgba-239-246-255-a8); border-color:var(--color-rgba-99-102-241-a3); }
+
+  .v-card {
+    background:var(--color-white-a72);
+    backdrop-filter: var(--glass-blur-sm);
+    border:1px solid var(--color-white-a85);
+    border-radius:18px;
+    box-shadow:0 2px 14px var(--color-rgba-59-130-246-a05);
+    padding:20px;
+    transition:transform .18s,box-shadow .18s,border-color .18s;
+    cursor:pointer;
+    position:relative; overflow:hidden;
+  }
+
+  .v-card:hover {
+    transform:translateY(-3px);
+    box-shadow:0 8px 28px var(--color-rgba-99-102-241-a14);
+    border-color:var(--color-rgba-99-102-241-a3);
+  }
+
+  .v-card::before {
+    content:''; position:absolute;
+    top:0; left:0; right:0; height:3px;
+    border-radius:18px 18px 0 0;
+  }
+
+  .bulk-bar {
+    background:var(--color-rgba-79-70-229-a92); backdrop-filter: var(--glass-blur-sm);
+    border-radius:14px; padding:10px 16px;
+    display:flex; align-items:center; gap:10px;
+    box-shadow:0 4px 20px var(--color-rgba-99-102-241-a30);
+    animation:slideUp .2s ease;
+  }
+
+  @keyframes slideUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:var(--shadow-sm-16)}}
+
+  .row-check {
+    width:16px; height:16px; border-radius:5px; cursor:pointer;
+    border:1.5px solid var(--color-c7d2fe); background:var(--color-white-a7);
+    display:flex; align-items:center; justify-content:center;
+    transition:border-color .1s,background .1s; flex-shrink:0;
+  }
+
+  .row-check.on { border-color:var(--color-6366f1); background:var(--color-6366f1); }
+
+  @keyframes mIn{from{opacity:0;transform:scale(.93) translateY(14px)}to{opacity:1;transform:var(--shadow-sm-16)}}
+
+  .modal-box { animation:mIn .22s cubic-bezier(.4,0,.2,1); }
+
+  @keyframes tIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:var(--shadow-sm-16)}}
+
+  @keyframes tOut{from{opacity:1}to{opacity:0;pointer-events:var(--shadow-sm-16)}}
+
+  .kbd {
+    display:inline-block; padding:1px 5px;
+    background:var(--color-eff6ff); border:1px solid var(--color-bfdbfe); border-bottom-width:2px;
+    border-radius:5px; font-size:9px; font-weight:700; color:var(--color-6366f1); font-family:'DM Mono',monospace;
+  }
+
+  .custom-scroll::-webkit-scrollbar { width:3px; }
+
+  .custom-scroll::-webkit-scrollbar-thumb { background:var(--color-slate-200); border-radius:99px; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+{{ vendors_json|json_script:"vendors-data" }}
+
+<div class="blob blob-a"></div>
+<div class="blob blob-b"></div>
+<div class="blob blob-c"></div>
+
+<div class="w-full flex-1 space-y-5 relative z-10"
+     x-data="vendorList()"
+     x-init="init()"
+     x-cloak
+     @keydown.window="handleKey($event)">
+
+  <!--{# ══ HEADER ══ #}-->
+  <div class="reveal flex items-end justify-between gap-3 flex-wrap">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-indigo-400 mb-1">
+        <a href="{% url 'dashboard' %}" class="hover:text-indigo-700 transition-colors">Dashboard</a>
+        <span class="text-slate-300">/</span>
+        <span class="text-slate-600 font-medium">Vendors</span>
+      </nav>
+      <h1 class="text-2xl font-black text-slate-800 tracking-tight">
+        Partner <span class="text-indigo-600">Vendors</span>
+      </h1>
+      <p class="text-sm text-slate-400 mt-0.5">
+        Kelola mitra pemasok ·
+        <span class="kbd">/</span> cari ·
+        <span class="kbd">N</span> tambah ·
+        <span class="kbd">G</span> / <span class="kbd">L</span> ganti view
+      </p>
+    </div>
+    <a href="{% url 'vendors_list' %}?action=add" class="btn-indigo">
+      <i class="fas fa-plus text-[11px]"></i> Tambah Vendor
+    </a>
+  </div>
+
+  <!--{# ══ STAT STRIP ══ #}-->
+  <div class="reveal grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div class="glass px-4 py-3.5 flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-indigo-50 border border-indigo-100/60 flex items-center justify-center flex-shrink-0">
+        <i class="fas fa-handshake text-indigo-500 text-[13px]"></i>
+      </div>
+      <div>
+        <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Total</p>
+        <p class="text-[18px] font-black text-slate-800">{{ total_vendors|default:0 }}</p>
+      </div>
+    </div>
+    <div class="glass px-4 py-3.5 flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-blue-50 border border-blue-100/60 flex items-center justify-center flex-shrink-0">
+        <i class="fas fa-check-circle text-blue-500 text-[13px]"></i>
+      </div>
+      <div>
+        <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Aktif</p>
+        <p class="text-[18px] font-black text-blue-600">{{ active_vendors|default:0 }}</p>
+      </div>
+    </div>
+    <div class="glass px-4 py-3.5 flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-blue-50 border border-blue-100/60 flex items-center justify-center flex-shrink-0">
+        <i class="fas fa-star text-blue-500 text-[13px]"></i>
+      </div>
+      <div>
+        <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Preferred</p>
+        <p class="text-[18px] font-black text-blue-600">{{ preferred_vendors|default:0 }}</p>
+      </div>
+    </div>
+    <div class="glass px-4 py-3.5 flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-violet-50 border border-violet-100/60 flex items-center justify-center flex-shrink-0">
+        <i class="fas fa-boxes text-violet-500 text-[13px]"></i>
+      </div>
+      <div>
+        <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Total SKU</p>
+        <p class="text-[18px] font-black text-slate-800">{{ total_vendor_sku|default:0 }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!--{# ══ TOOLBAR ══ #}-->
+  <div class="reveal glass px-5 py-4">
+    <form method="GET" action="" class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <div class="relative flex-1 w-full">
+        <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-indigo-300 text-[11px] pointer-events-none"></i>
+        <input
+          id="searchInput" x-ref="searchInput"
+          type="text" name="q" value="{{ query|default:'' }}"
+          x-model="searchQuery"
+          @input="filter()"
+          placeholder="Cari nama, kode, kota, atau kategori vendor…"
+          class="s-input w-full pl-10 pr-14 py-2.5"
+        >
+        <span class="absolute right-3 top-1/2 -translate-y-1/2 kbd pointer-events-none">/</span>
+      </div>
+
+      <!--{# Status filter #}-->
+      <select name="status" x-model="filterStatus" @change="filter()"
+              class="s-input px-3 py-2.5 text-[12px] rounded-xl border border-indigo-200/60 bg-white/55 text-slate-600 font-semibold cursor-pointer min-w-[130px]">
+        <option value="">Semua Status</option>
+        <option value="active">Aktif</option>
+        <option value="preferred">Preferred</option>
+        <option value="verified">Verified</option>
+        <option value="pending">Pending</option>
+        <option value="inactive">Nonaktif</option>
+      </select>
+
+      <button type="submit" class="btn-indigo">
+        <i class="fas fa-search text-[10px]"></i> Cari
+      </button>
+      <a href="{% url 'vendors_list' %}" class="btn-ghost">
+        <i class="fas fa-times text-[10px]"></i>
+      </a>
+
+      <!--{# View toggle #}-->
+      <div class="flex items-center gap-1 ml-auto border border-indigo-100/60 rounded-xl p-1" style="background:var(--color-surface)">
+        <div class="view-btn" :class="{active: view==='grid'}" @click="view='grid'" title="Grid view">
+          <i class="fas fa-th-large text-[12px]"></i>
+        </div>
+        <div class="view-btn" :class="{active: view==='list'}" @click="view='list'" title="List view">
+          <i class="fas fa-list text-[12px]"></i>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!--{# ══ BULK BAR ══ #}-->
+  <div x-show="selected.length>0" x-cloak style="display:none">
+    <div class="bulk-bar">
+      <span class="text-white text-[12px] font-black" x-text="selected.length+' dipilih'"></span>
+      <button @click="bulkAction('deactivate')"
+              class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/20 border border-white/25 text-white text-[11px] font-black hover:bg-white/30 transition">
+        <i class="fas fa-ban text-[10px]"></i> Nonaktifkan
+      </button>
+      <button @click="bulkAction('delete')"
+              class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-rose-500/70 border border-rose-400/40 text-white text-[11px] font-black hover:bg-rose-500/90 transition">
+        <i class="fas fa-trash text-[10px]"></i> Hapus
+      </button>
+      <button @click="selected=[]"
+              class="ml-auto w-7 h-7 rounded-xl flex items-center justify-center text-white/60 hover:text-white hover:bg-white/20 transition text-[10px]">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <!--{# ══ GRID VIEW ══ #}-->
+  <div x-show="view==='grid'" class="reveal">
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+      <template x-for="v in filtered" :key="v.id">
+        <div class="v-card group"
+             :style="'--accent:'+v.color"
+             @click="goDetail(v.id)">
+          <!--{# Top accent stripe #}-->
+          <div class="absolute top-0 left-0 right-0 h-[3px] rounded-t-[18px]"
+               :style="'background:linear-gradient(90deg,'+v.color+','+v.color+'99)'"></div>
+
+          <div class="flex items-start gap-3 mb-4 mt-1">
+            <!--{# Avatar #}-->
+            <div class="v-avatar" :style="'background:linear-gradient(135deg,'+v.color+'dd,'+v.color+'88)'">
+              <span class="text-white text-[14px] font-black z-10 relative" x-text="v.initials"></span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[12px] font-black text-slate-800 uppercase tracking-tight leading-tight truncate"
+                 x-text="v.name"></p>
+              <p class="text-[9px] mono text-slate-400 mt-0.5" x-text="'ID: '+v.code"></p>
+            </div>
+            <!--{# Badge #}-->
+            <template x-if="v.tier==='preferred'">
+              <span class="badge-preferred flex-shrink-0">
+                <i class="fas fa-star text-[7px]"></i> Preferred
+              </span>
+            </template>
+            <template x-if="v.tier==='verified'">
+              <span class="badge-verified flex-shrink-0">
+                <i class="fas fa-check text-[7px]"></i> Verified
+              </span>
+            </template>
+            <template x-if="v.tier==='pending'">
+              <span class="badge-pending flex-shrink-0">
+                <i class="fas fa-clock text-[7px]"></i> Pending
+              </span>
+            </template>
+          </div>
+
+          <!--{# Contact #}-->
+          <div class="space-y-1 mb-4">
+            <div class="flex items-center gap-2 text-[10px] text-slate-500">
+              <i class="fas fa-envelope text-slate-300 w-3"></i>
+              <span class="truncate" x-text="v.email||'—'"></span>
+            </div>
+            <div class="flex items-center gap-2 text-[10px] text-slate-500">
+              <i class="fas fa-map-marker-alt text-slate-300 w-3"></i>
+              <span class="truncate" x-text="v.city||'—'"></span>
+            </div>
+          </div>
+
+          <!--{# Category chips #}-->
+          <div class="flex flex-wrap gap-1 mb-4">
+            <template x-for="cat in (v.categories||[]).slice(0,3)" :key="cat">
+              <span class="cat-chip"
+                    :style="'background:'+v.color+'14;color:'+v.color+';border:1px solid '+v.color+'28'"
+                    x-text="cat"></span>
+            </template>
+            <template x-if="v.categories && v.categories.length>3">
+              <span class="cat-chip text-slate-400"
+                    style="background:var(--color-slate-100);border:1px solid var(--color-slate-200)"
+                    x-text="'+'+(v.categories.length-3)"></span>
+            </template>
+          </div>
+
+          <!--{# Performance bar #}-->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-[9px] font-black text-slate-400 uppercase tracking-wider">On-Time Delivery</span>
+              <span class="text-[10px] font-black" :style="'color:'+v.color" x-text="v.ontime_pct+'%'"></span>
+            </div>
+            <div class="perf-track">
+              <div class="perf-fill" :style="'width:'+v.ontime_pct+'%;background:'+v.color"></div>
+            </div>
+          </div>
+
+          <!--{# Footer #}-->
+          <div class="flex items-center justify-between mt-4 pt-3 border-t border-slate-100/60">
+            <div class="flex items-center gap-1.5">
+              <div class="w-5 h-5 rounded-md flex items-center justify-center"
+                   :style="'background:'+v.color+'15'">
+                <i class="fas fa-box text-[8px]" :style="'color:'+v.color"></i>
+              </div>
+              <span class="text-[10px] font-bold text-slate-500"
+                    x-text="v.sku_count+' SKU'"></span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <template x-if="v.status==='active'">
+                <span class="flex items-center gap-1 text-[9px] font-black text-blue-600">
+                  <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span> Aktif
+                </span>
+              </template>
+              <template x-if="v.status!=='active'">
+                <span class="text-[9px] font-black text-slate-300 uppercase" x-text="v.status"></span>
+              </template>
+              <i class="fas fa-chevron-right text-[9px] text-slate-200 group-hover:text-indigo-400 group-hover:translate-x-0.5 transition-all ml-2"></i>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <!--{# Empty grid #}-->
+      <template x-if="filtered.length===0">
+        <div class="col-span-3 flex flex-col items-center justify-center py-20 opacity-50 select-none">
+          <i class="fas fa-handshake text-4xl text-slate-200 mb-3"></i>
+          <p class="text-[13px] font-black text-slate-400">Tidak Ada Vendor</p>
+          <p class="text-[11px] text-slate-300 mt-1">Coba ubah filter atau tambah vendor baru</p>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <!--{# ══ LIST VIEW ══ #}-->
+  <div x-show="view==='list'" class="reveal glass overflow-hidden" style="display:none">
+
+    <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100/60 bg-gradient-to-r from-blue-50/40 to-indigo-50/30">
+      <div class="flex items-center gap-3">
+        <div class="w-1.5 h-6 bg-indigo-500 rounded-full"></div>
+        <p class="text-[10px] font-black text-slate-500 uppercase tracking-[.12em]">
+          <span x-text="filtered.length"></span> Vendor
+        </p>
+      </div>
+      <!--{# Select all #}-->
+      <div class="flex items-center gap-2">
+        <span class="text-[10px] text-slate-400 font-semibold hidden sm:block">Pilih Semua</span>
+        <div class="row-check" :class="{on: allSelected}"
+             @click="toggleAll()">
+          <template x-if="allSelected"><i class="fas fa-check text-white text-[8px]"></i></template>
+        </div>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full border-separate border-spacing-0">
+        <thead class="tbl-head">
+          <tr>
+            <th class="tbl-th w-8"></th>
+            <th class="tbl-th s" @click="sortBy('name')">
+              <span class="flex items-center gap-1">Vendor <i :class="si('name')" class="text-[10px]"></i></span>
+            </th>
+            <th class="tbl-th">Kontak</th>
+            <th class="tbl-th hidden md:table-cell">Kategori</th>
+            <th class="tbl-th s hidden lg:table-cell" @click="sortBy('sku_count')">
+              <span class="flex items-center gap-1">SKU <i :class="si('sku_count')" class="text-[10px]"></i></span>
+            </th>
+            <th class="tbl-th s" @click="sortBy('ontime_pct')">
+              <span class="flex items-center gap-1">On-Time <i :class="si('ontime_pct')" class="text-[10px]"></i></span>
+            </th>
+            <th class="tbl-th">Status</th>
+            <th class="tbl-th text-right">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="v in filtered" :key="v.id">
+            <tr class="tbl-row group">
+              <!--{# Check #}-->
+              <td class="px-4 py-3.5">
+                <div class="row-check" :class="{on: selected.includes(v.id)}"
+                     @click.stop="toggleRow(v.id)">
+                  <template x-if="selected.includes(v.id)"><i class="fas fa-check text-white text-[8px]"></i></template>
+                </div>
+              </td>
+              <!--{# Vendor identity #}-->
+              <td class="px-4 py-3.5">
+                <div class="flex items-center gap-3">
+                  <div class="v-avatar w-10 h-10 rounded-2xl" :style="'background:linear-gradient(135deg,'+v.color+'dd,'+v.color+'88)'">
+                    <span class="text-white text-[11px] font-black z-10 relative" x-text="v.initials"></span>
+                  </div>
+                  <div>
+                    <p class="text-[11px] font-black text-slate-800 uppercase tracking-tight" x-text="v.name"></p>
+                    <p class="text-[9px] mono text-slate-400 mt-0.5" x-text="'ID: '+v.code"></p>
+                  </div>
+                </div>
+              </td>
+              <!--{# Contact #}-->
+              <td class="px-4 py-3.5">
+                <p class="text-[11px] font-bold text-slate-700 truncate max-w-[160px]" x-text="v.email||'—'"></p>
+                <p class="text-[9px] text-slate-400 uppercase tracking-tight mt-0.5" x-text="v.city||''"></p>
+              </td>
+              <!--{# Categories #}-->
+              <td class="px-4 py-3.5 hidden md:table-cell">
+                <div class="flex flex-wrap gap-1 max-w-[180px]">
+                  <template x-for="cat in (v.categories||[]).slice(0,2)" :key="cat">
+                    <span class="cat-chip"
+                          :style="'background:'+v.color+'14;color:'+v.color"
+                          x-text="cat"></span>
+                  </template>
+                  <template x-if="v.categories && v.categories.length>2">
+                    <span class="cat-chip text-slate-400" style="background:var(--color-slate-100)"
+                          x-text="'+'+(v.categories.length-2)"></span>
+                  </template>
+                </div>
+              </td>
+              <!--{# SKU count #}-->
+              <td class="px-4 py-3.5 hidden lg:table-cell">
+                <div class="flex items-center gap-1.5">
+                  <i class="fas fa-box text-[9px] text-indigo-300"></i>
+                  <span class="text-[11px] font-bold text-slate-600 mono" x-text="v.sku_count"></span>
+                </div>
+              </td>
+              <!--{# On-time #}-->
+              <td class="px-4 py-3.5">
+                <div class="w-20">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-[10px] font-black" :style="'color:'+v.color" x-text="v.ontime_pct+'%'"></span>
+                  </div>
+                  <div class="perf-track">
+                    <div class="perf-fill" :style="'width:'+v.ontime_pct+'%;background:'+v.color"></div>
+                  </div>
+                </div>
+              </td>
+              <!--{# Status + tier #}-->
+              <td class="px-4 py-3.5">
+                <template x-if="v.tier==='preferred'"><span class="badge-preferred"><i class="fas fa-star text-[7px]"></i> Preferred</span></template>
+                <template x-if="v.tier==='verified' && v.tier!=='preferred'"><span class="badge-verified"><i class="fas fa-check text-[7px]"></i> Verified</span></template>
+                <template x-if="v.tier==='pending'"><span class="badge-pending"><i class="fas fa-clock text-[7px]"></i> Pending</span></template>
+                <template x-if="v.status==='inactive'"><span class="badge-inactive">Nonaktif</span></template>
+              </td>
+              <!--{# Actions #}-->
+              <td class="px-4 py-3.5 text-right">
+                <div class="flex items-center justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <a :href="v.detailUrl"
+                     class="w-7 h-7 rounded-xl flex items-center justify-center text-slate-300 hover:text-indigo-600 hover:bg-indigo-50 transition"
+                     title="Detail">
+                    <i class="fas fa-eye text-[10px]"></i>
+                  </a>
+                  <a :href="v.editUrl"
+                     class="w-7 h-7 rounded-xl flex items-center justify-center text-slate-300 hover:text-blue-600 hover:bg-blue-50 transition"
+                     title="Edit">
+                    <i class="fas fa-pen text-[10px]"></i>
+                  </a>
+                  <button @click.stop="confirmDelete(v)"
+                          class="w-7 h-7 rounded-xl flex items-center justify-center text-slate-300 hover:text-rose-400 hover:bg-rose-50 transition"
+                          title="Hapus">
+                    <i class="fas fa-trash text-[10px]"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </template>
+          <template x-if="filtered.length===0">
+            <tr>
+              <td colspan="8">
+                <div class="flex flex-col items-center py-20 opacity-50 select-none">
+                  <i class="fas fa-handshake text-3xl text-slate-200 mb-3"></i>
+                  <p class="text-[12px] font-black text-slate-400">Tidak ada vendor ditemukan</p>
+                </div>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+
+    <!--{# Pagination #}-->
+    {% if page_obj.has_other_pages %}
+    <nav class="flex justify-center px-5 py-4 border-t border-slate-100/60">
+      <div class="flex items-center gap-1.5">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query|urlencode }}{% endif %}"
+           class="w-8 h-8 flex items-center justify-center rounded-lg border border-indigo-200/60 text-slate-500 hover:border-indigo-400 hover:text-indigo-600 transition text-[10px]" style="background:var(--color-surface)">
+          <i class="fas fa-angle-left"></i>
+        </a>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+          {% with c=page_obj.number %}
+            {% if num >= c|add:"-2" and num <= c|add:"2" %}
+              {% if page_obj.number == num %}
+                <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-600 text-white text-[11px] font-black">{{ num }}</span>
+              {% else %}
+                <a href="?page={{ num }}{% if query %}&q={{ query|urlencode }}{% endif %}"
+                   class="w-8 h-8 flex items-center justify-center rounded-lg border border-indigo-200/60 text-[11px] font-semibold text-slate-500 hover:border-indigo-400 hover:text-indigo-600 transition" style="background:var(--color-surface)">{{ num }}</a>
+              {% endif %}
+            {% endif %}
+          {% endwith %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query|urlencode }}{% endif %}"
+           class="w-8 h-8 flex items-center justify-center rounded-lg border border-indigo-200/60 text-slate-500 hover:border-indigo-400 hover:text-indigo-600 transition text-[10px]" style="background:var(--color-surface)">
+          <i class="fas fa-angle-right"></i>
+        </a>
+        {% endif %}
+      </div>
+    </nav>
+    {% endif %}
+  </div>
+
+  <div class="fixed top-5 right-5 z-[100] flex flex-col gap-2" id="toastEl"></div>
+
+  <!--{# ══ MODAL — Delete ══ #}-->
+  <div x-show="showDel"
+       x-transition:enter="transition ease-out duration-200"
+       x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+       class="fixed inset-0 z-50 flex items-center justify-center p-4"
+       style="background:rgba(15,23,42,.38);backdrop-filter: var(--glass-blur-sm);display:none;"
+       @click.self="showDel=false">
+    <div class="modal-box glass w-full max-w-sm p-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center">
+          <i class="fas fa-trash text-rose-400 text-[13px]"></i>
+        </div>
+        <div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.12em]">Konfirmasi</p>
+          <p class="text-[14px] font-black text-slate-800">Hapus Vendor</p>
+        </div>
+      </div>
+      <p class="text-[12px] text-slate-500 leading-relaxed mb-5">
+        Hapus vendor <span class="font-black text-slate-700" x-text="delTarget?'\"'+delTarget.name+'\"':''"></span>?
+        Semua data terkait termasuk riwayat PO akan terpengaruh.
+      </p>
+      <div class="flex gap-2.5">
+        <button @click="showDel=false"
+                class="flex-1 py-2.5 rounded-xl border border-slate-200 text-[12px] font-bold text-slate-500 hover:bg-slate-50 transition">
+          Batal
+        </button>
+        <button @click="doDelete()" :disabled="isDeleting"
+                class="flex-1 py-2.5 rounded-xl text-white text-[12px] font-black transition disabled:opacity-50
+                       bg-gradient-to-r from-rose-500 to-rose-600 shadow-[0_4px_14px_rgba(244,63,94,.28)] hover:opacity-90">
+          <span x-text="isDeleting?'Menghapus…':'Ya, Hapus'"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function vendorList() {
+  return {
+    vendors  : [],
+    filtered : [],
+    view     : 'grid',
+    searchQuery  : '{{ query|default:""|escapejs }}',
+    filterStatus : '{{ status|default:""|escapejs }}',
+    sortCol  : 'name',
+    sortDir  : 'asc',
+    selected : [],
+    showDel  : false,
+    delTarget: null,
+    isDeleting: false,
+
+    init() {
+      const el = document.getElementById('vendors-data');
+      if (el) {
+        try { this.vendors = JSON.parse(el.textContent); }
+        catch(e) { this.vendors=[]; }
+      }
+      this.filter();
+
+      const io = new IntersectionObserver(entries=>{
+        entries.forEach((e,i)=>{
+          if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*60);io.unobserve(e.target);}
+        });
+      },{threshold:.08});
+      document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+    },
+
+    handleKey(e) {
+      const typing=['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName);
+      if(e.key==='/'&&!typing){e.preventDefault();this.$refs.searchInput?.focus();}
+      if(e.key==='n'&&!typing){e.preventDefault();window.location.href='{% url "vendors_list" %}?action=add';}
+      if(e.key==='g'&&!typing){e.preventDefault();this.view='grid';}
+      if(e.key==='l'&&!typing){e.preventDefault();this.view='list';}
+      if(e.key==='Escape'){this.showDel=false;}
+    },
+
+    filter() {
+      const q = this.searchQuery.toLowerCase().trim();
+      const s = this.filterStatus.toLowerCase();
+      let list = this.vendors.filter(v=>{
+        const mq = !q || v.name.toLowerCase().includes(q)
+          || (v.code||'').toLowerCase().includes(q)
+          || (v.city||'').toLowerCase().includes(q)
+          || (v.categories||[]).some(c=>c.toLowerCase().includes(q));
+        const ms = !s || v.status===s || v.tier===s;
+        return mq&&ms;
+      });
+      list.sort((a,b)=>{
+        let av=a[this.sortCol]??'', bv=b[this.sortCol]??'';
+        if(typeof av==='string'){av=av.toLowerCase();bv=bv.toLowerCase();}
+        if(av<bv)return this.sortDir==='asc'?-1:1;
+        if(av>bv)return this.sortDir==='asc'?1:-1;
+        return 0;
+      });
+      this.filtered=list;
+    },
+
+    sortBy(c){
+      if(this.sortCol===c){this.sortDir=this.sortDir==='asc'?'desc':'asc';}
+      else{this.sortCol=c;this.sortDir='asc';}
+      this.filter();
+    },
+    si(c){
+      if(this.sortCol!==c)return 'fas fa-sort text-slate-200';
+      return this.sortDir==='asc'?'fas fa-sort-up text-indigo-500':'fas fa-sort-down text-indigo-500';
+    },
+
+    toggleRow(id){
+      const i=this.selected.indexOf(id);
+      i>=0?this.selected.splice(i,1):this.selected.push(id);
+    },
+    get allSelected(){return this.selected.length>0&&this.selected.length>=this.filtered.length;},
+    toggleAll(){
+      if(this.allSelected){this.selected=[];}
+      else{this.selected=this.filtered.map(v=>v.id);}
+    },
+
+    goDetail(id){
+      const v=this.vendors.find(x=>x.id===id);
+      if(v?.detailUrl) window.location.href=v.detailUrl;
+    },
+
+    confirmDelete(v){this.delTarget=v;this.showDel=true;},
+    async doDelete(){
+      if(!this.delTarget||this.isDeleting)return;
+      this.isDeleting=true;
+      const res=await this._post(this.delTarget.deleteUrl,{});
+      if(res.success){
+        this.vendors=this.vendors.filter(v=>v.id!==this.delTarget.id);
+        this.filter();
+        this._toast('"'+this.delTarget.name+'" dihapus','warn');
+        this.showDel=false; this.delTarget=null;
+      }else{this._toast(res.error||'Gagal','error');}
+      this.isDeleting=false;
+    },
+
+    async bulkAction(action){
+      if(!this.selected.length)return;
+      const ok=confirm(`${action==='delete'?'Hapus':'Nonaktifkan'} ${this.selected.length} vendor?`);
+      if(!ok)return;
+      const res=await this._post('/api/vendors/bulk/',{action,ids:this.selected});
+      if(res.success){
+        if(action==='delete'){this.vendors=this.vendors.filter(v=>!this.selected.includes(v.id));}
+        else{this.vendors=this.vendors.map(v=>this.selected.includes(v.id)?{...v,status:'inactive'}:v);}
+        this._toast(`${this.selected.length} vendor ${action==='delete'?'dihapus':'dinonaktifkan'}`,'warn');
+        this.selected=[];this.filter();
+      }else{this._toast(res.error||'Gagal','error');}
+    },
+
+    _post(url,body){
+      return fetch(url,{
+        method:'POST',
+        headers:{'Content-Type':'application/json','X-CSRFToken':document.cookie.match(/csrftoken=([^;]+)/)?.[1]||''},
+        body:JSON.stringify(body),
+      }).then(r=>r.ok?r.json():{success:false,error:'Network error'})
+        .catch(()=>({success:false,error:'Error'}));
+    },
+    _toast(msg,type='success'){
+      const c=document.getElementById('toastEl');if(!c)return;
+      const col={success:'border-indigo-400',warn:'border-amber-400',error:'border-rose-400'};
+      const ico={success:'check-circle',warn:'exclamation-triangle',error:'times-circle'};
+      const el=document.createElement('div');
+      el.className=`toast flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl min-w-52 max-w-xs text-white text-[12px] font-semibold border-l-4 ${col[type]||col.success}`;
+      el.style.cssText='background:rgba(15,23,42,.92);backdrop-filter: var(--glass-blur-sm);';
+      el.innerHTML=`<i class="fas fa-${ico[type]||ico.success} text-xs flex-shrink-0"></i><span>${msg}</span>`;
+      c.appendChild(el);setTimeout(()=>el.remove(),3100);
+    },
+  };
+}
+</script>
+{% endblock %}

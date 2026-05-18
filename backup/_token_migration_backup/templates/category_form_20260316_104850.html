@@ -1,0 +1,380 @@
+{% extends 'base/base.html' %}
+{% block title %}{% if is_edit %}Edit{% else %}Tambah{% endif %} Category — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+
+  @keyframes drift { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(20px,16px) scale(1.04)} }
+
+  .f-error {
+    font-size:10px; font-weight:700; color:#f43f5e;
+    margin-top:5px; display:flex; align-items:center; gap:4px;
+  }
+
+  .char-counter { font-size:9px; font-weight:700; color:#cbd5e1; text-align:right; margin-top:4px; }
+
+  .char-counter.warn { color:#f59e0b; }
+
+  .slug-badge {
+    display:inline-flex; align-items:center; gap:5px;
+    padding:5px 10px; border-radius:8px;
+    background:rgba(241,245,249,.7);
+    border:1px solid rgba(226,232,240,.6);
+    font-size:10px; font-weight:700; font-family:monospace; color:#64748b;
+    transition:background .12s;
+  }
+
+  .color-swatch {
+    width:28px; height:28px; border-radius:8px; cursor:pointer;
+    border:3px solid transparent; transition:transform .1s,border-color .1s;
+  }
+
+  .color-swatch:hover { transform:scale(1.15); }
+
+  .color-swatch.selected { border-color:#1e293b; box-shadow:0 0 0 2px rgba(0,0,0,.08); }
+
+  .preview-card {
+    border-radius:14px; padding:16px 18px;
+    border:1px solid rgba(255,255,255,.9);
+    box-shadow:0 2px 12px rgba(0,0,0,.06);
+    transition:all .2s;
+  }
+
+  .btn-ghost {
+    border:1.5px solid rgba(226,232,240,.8);
+    border-radius:12px; background:rgba(255,255,255,.6);
+    color:#64748b; font-size:12px; font-weight:700;
+    padding:11px 20px; cursor:pointer;
+    transition:background .12s,border-color .12s;
+    display:flex; align-items:center; gap:6px;
+    letter-spacing:.03em; text-transform:uppercase;
+    text-decoration:none;
+  }
+
+  .btn-ghost:hover { background:#fff; border-color:#cbd5e1; }
+
+  @keyframes toastIn  { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:none} }
+
+  @keyframes toastOut { from{opacity:1} to{opacity:0;pointer-events:none} }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="blob blob-a"></div>
+<div class="blob blob-b"></div>
+
+<div class="w-full flex-1 relative z-10"
+     x-data="catForm()"
+     x-init="init()"
+     x-cloak>
+
+  <div class="max-w-2xl mx-auto space-y-5 py-2">
+
+    <!--{# ══ HEADER ══ #}-->
+    <div class="reveal">
+      <nav class="flex items-center gap-2 text-xs text-emerald-500 mb-1">
+        <a href="{% url 'dashboard' %}" class="hover:text-emerald-700 transition-colors">Dashboard</a>
+        <span class="text-slate-300">/</span>
+        <a href="{% url 'categories_list' %}" class="hover:text-emerald-700 transition-colors">Categories</a>
+        <span class="text-slate-300">/</span>
+        <span class="text-slate-600 font-medium">{% if is_edit %}Edit{% else %}Tambah{% endif %}</span>
+      </nav>
+      <h1 class="text-2xl font-black text-slate-800 tracking-tight">
+        {% if is_edit %}Edit{% else %}Tambah{% endif %}
+        <span class="text-emerald-600">Kategori</span>
+      </h1>
+      <p class="text-sm text-slate-400 mt-0.5">
+        {% if is_edit %}Perbarui detail kategori yang sudah ada{% else %}Buat kategori produk baru{% endif %}
+      </p>
+    </div>
+
+    <!--{# ══ PREVIEW CARD ══ #}-->
+    <div class="reveal">
+      <div class="preview-card flex items-center gap-4"
+           :style="'background:linear-gradient(135deg,'+hex+'18,'+hex+'08);border-color:'+hex+'30'">
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0"
+             :style="'background:'+hex+'25;color:'+hex">
+          <i :class="'fas fa-'+(icon||'folder')"></i>
+        </div>
+        <div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Preview</p>
+          <p class="text-[15px] font-black text-slate-800 mt-0.5 leading-tight"
+             x-text="name || 'Nama Kategori'"></p>
+          <div class="slug-badge mt-1" x-show="slug">
+            <i class="fas fa-link text-[9px]"></i>
+            <span x-text="slug"></span>
+          </div>
+        </div>
+        <div class="ml-auto w-4 h-4 rounded-full flex-shrink-0" :style="'background:'+hex"></div>
+      </div>
+    </div>
+
+    <!--{# ══ FORM CARD ══ #}-->
+    <div class="reveal glass p-6">
+
+      <form @submit.prevent="submitForm()" novalidate class="space-y-5">
+        {% csrf_token %}
+
+        <!--{# ── Name ── #}-->
+        <div>
+          <label class="f-label">Nama Kategori <span class="text-rose-400">*</span></label>
+          <input
+            type="text" name="name"
+            x-model="name"
+            @input="autoSlug(); errors.name && validateName()"
+            @blur="validateName()"
+            :class="errors.name ? 'error' : ''"
+            class="f-input"
+            placeholder="cth. Biji Kopi Aceh Gayo"
+            maxlength="100"
+            id="catName"
+            autocomplete="off"
+            :aria-invalid="!!errors.name"
+          >
+          <p class="f-error" x-show="errors.name">
+            <i class="fas fa-exclamation-circle text-[10px]"></i>
+            <span x-text="errors.name"></span>
+          </p>
+          <p class="char-counter" :class="{warn: name.length>=85}" x-text="name.length+'/100'"></p>
+        </div>
+
+        <!--{# ── Slug (auto) ── #}-->
+        <div>
+          <label class="f-label">Slug (URL) <span class="text-slate-300 font-normal normal-case tracking-normal">— otomatis</span></label>
+          <div class="relative">
+            <i class="fas fa-link absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-300 text-[11px] pointer-events-none"></i>
+            <input
+              type="text" name="slug"
+              x-model="slug"
+              class="f-input pl-10 font-mono text-[12px]"
+              placeholder="nama-kategori"
+              readonly
+              tabindex="-1"
+            >
+          </div>
+        </div>
+
+        <!--{# ── Description ── #}-->
+        <div>
+          <label class="f-label">Deskripsi <span class="text-slate-300 font-normal normal-case tracking-normal">(opsional)</span></label>
+          <textarea
+            name="description"
+            x-model="description"
+            @input="errors.description && validateDescription()"
+            @blur="validateDescription()"
+            :class="errors.description ? 'error' : ''"
+            class="f-input resize-none"
+            style="min-height:88px;"
+            placeholder="Deskripsi singkat tentang kategori ini…"
+            maxlength="500"
+          ></textarea>
+          <p class="f-error" x-show="errors.description">
+            <i class="fas fa-exclamation-circle text-[10px]"></i>
+            <span x-text="errors.description"></span>
+          </p>
+          <p class="char-counter" :class="{warn: description.length>=450}" x-text="description.length+'/500'"></p>
+        </div>
+
+        <!--{# ── Color Picker ── #}-->
+        <div>
+          <label class="f-label">Warna Label</label>
+          <div class="flex items-center gap-2 flex-wrap">
+            <template x-for="c in COLORS" :key="c">
+              <div class="color-swatch" :class="{selected: hex===c}"
+                   :style="'background:'+c"
+                   @click="hex=c"
+                   :title="c"></div>
+            </template>
+            <!--{# Custom hex input #}-->
+            <div class="relative ml-1">
+              <input type="color" x-model="hex"
+                     class="w-8 h-8 rounded-xl cursor-pointer border-none outline-none"
+                     title="Custom color"
+                     style="padding:2px;">
+            </div>
+            <span class="text-[10px] font-mono text-slate-400" x-text="hex"></span>
+          </div>
+          <input type="hidden" name="color" :value="hex">
+        </div>
+
+        <!--{# ── Icon Picker ── #}-->
+        <div>
+          <label class="f-label">Ikon</label>
+          <div class="flex flex-wrap gap-1.5">
+            <template x-for="ic in ICONS" :key="ic">
+              <div class="icon-btn" :class="{selected: icon===ic}"
+                   @click="icon=ic"
+                   :style="icon===ic ? 'color:'+hex : ''"
+                   :title="ic">
+                <i :class="'fas fa-'+ic"></i>
+              </div>
+            </template>
+          </div>
+          <input type="hidden" name="icon" :value="icon">
+        </div>
+
+        <!--{# ── Server error banner ── #}-->
+        <div x-show="serverError"
+             class="flex items-center gap-3 px-4 py-3 rounded-xl bg-rose-50/60 border border-rose-200/60">
+          <i class="fas fa-times-circle text-rose-400 text-[13px]"></i>
+          <p class="text-[12px] font-semibold text-rose-600" x-text="serverError"></p>
+        </div>
+
+        <!--{# ── Actions ── #}-->
+        <div class="flex gap-2.5 pt-2 border-t border-slate-100/60">
+          <a href="{% url 'categories_list' %}" class="btn-ghost">
+            <i class="fas fa-arrow-left text-[10px]"></i> Batal
+          </a>
+          <button type="submit" class="btn-primary flex-1 justify-center"
+                  :disabled="isSubmitting">
+            <i class="fas" :class="isSubmitting?'fa-circle-notch fa-spin':'{% if is_edit %}fa-save{% else %}fa-plus{% endif %}'"
+               style="font-size:11px;"></i>
+            <span x-text="isSubmitting ? 'Menyimpan…' : '{% if is_edit %}Simpan Perubahan{% else %}Buat Kategori{% endif %}'"></span>
+          </button>
+        </div>
+
+      </form>
+
+    </div><!--{# end form glass card #}-->
+
+  </div>
+</div>
+
+<div class="fixed top-5 right-5 z-[100] flex flex-col gap-2" id="toastEl"></div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function catForm() {
+  return {
+
+    /* ── State ── */
+    name       : '{{ form.name.value|default:""|escapejs }}',
+    slug       : '{{ form.slug.value|default:""|escapejs }}',
+    description: '{{ form.description.value|default:""|escapejs }}',
+    hex        : '{{ form.color.value|default:"#047857"|escapejs }}',
+    icon       : '{{ form.icon.value|default:"folder"|escapejs }}',
+
+    isEdit     : {% if is_edit %}true{% else %}false{% endif %},
+    isSubmitting: false,
+    serverError: '',
+
+    errors: { name:'', description:'' },
+
+    /* ── Palettes ── */
+    COLORS: [
+      '#047857','#059669','#0ea5e9','#3b82f6','#6366f1','#8b5cf6',
+      '#ec4899','#f43f5e','#f97316','#f59e0b','#84cc16','#14b8a6',
+      '#64748b','#1e293b',
+    ],
+    ICONS: [
+      'folder','tag','box','coffee','leaf','seedling','store','mug-hot',
+      'bread-slice','apple-alt','fish','cheese','carrot','pepper-hot',
+      'wine-bottle','ice-cream','cookie','candy-cane','star','fire',
+      'globe','truck','warehouse',
+    ],
+
+    /* ── Init ── */
+    init() {
+      const io = new IntersectionObserver(entries=>{
+        entries.forEach((e,i)=>{
+          if (e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*60);io.unobserve(e.target);}
+        });
+      },{threshold:.08});
+      document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+      /* Focus name on load */
+      setTimeout(()=>document.getElementById('catName')?.focus(), 150);
+    },
+
+    /* ── Auto slug ── */
+    autoSlug() {
+      this.slug = this.name
+        .toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+        .replace(/\s+/g,'-')
+        .replace(/[^\w-]+/g,'')
+        .replace(/--+/g,'-')
+        .replace(/^-|-$/g,'');
+    },
+
+    /* ── Validation ── */
+    validateName() {
+      const v = this.name.trim();
+      if (!v)         { this.errors.name='Nama kategori wajib diisi.'; return false; }
+      if (v.length<2) { this.errors.name='Minimal 2 karakter.'; return false; }
+      if (v.length>100){this.errors.name='Maksimal 100 karakter.'; return false; }
+      this.errors.name=''; return true;
+    },
+    validateDescription() {
+      if (this.description.length>500){ this.errors.description='Maksimal 500 karakter.'; return false; }
+      this.errors.description=''; return true;
+    },
+
+    /* ── Submit ── */
+    async submitForm() {
+      this.serverError='';
+      const okName = this.validateName();
+      const okDesc = this.validateDescription();
+      if (!okName||!okDesc) {
+        if (!okName) document.getElementById('catName')?.focus();
+        return;
+      }
+
+      this.isSubmitting=true;
+      const csrf = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+      const fd = new FormData();
+      fd.append('name',        this.name.trim());
+      fd.append('slug',        this.slug);
+      fd.append('description', this.description);
+      fd.append('color',       this.hex);
+      fd.append('icon',        this.icon);
+      fd.append('csrfmiddlewaretoken', csrf);
+
+      try {
+        const res = await fetch(window.location.href, {
+          method:'POST', body:fd,
+          headers:{'X-Requested-With':'XMLHttpRequest'},
+        });
+        const ct = res.headers.get('content-type')||'';
+        if (!ct.includes('application/json')) throw new Error('Non-JSON response');
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          this._toast(this.isEdit?'Kategori diperbarui ✓':'Kategori dibuat ✓');
+          setTimeout(()=>window.location.href='{% url "categories_list" %}', 1000);
+        } else if (data.errors) {
+          Object.entries(data.errors).forEach(([f,m])=>{
+            if (f in this.errors) this.errors[f]=Array.isArray(m)?m[0]:m;
+          });
+          this._toast('Perbaiki error yang ada','error');
+        } else {
+          this.serverError = data.message||data.error||'Terjadi kesalahan.';
+        }
+      } catch(e) {
+        this.serverError = 'Network error. Coba lagi.';
+      } finally {
+        this.isSubmitting=false;
+      }
+    },
+
+    /* ── Toast ── */
+    _toast(msg,type='success') {
+      const c = document.getElementById('toastEl');
+      if (!c) return;
+      const col = {success:'border-emerald-400',warn:'border-amber-400',error:'border-rose-400'};
+      const ico = {success:'check-circle',warn:'exclamation-triangle',error:'times-circle'};
+      const el = document.createElement('div');
+      el.className=`toast flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl min-w-52 max-w-xs text-white text-[12px] font-semibold border-l-4 ${col[type]||col.success}`;
+      el.style.cssText='background:rgba(15,23,42,.92);backdrop-filter:blur(12px);';
+      el.innerHTML=`<i class="fas fa-${ico[type]||ico.success} text-xs flex-shrink-0"></i><span>${msg}</span>`;
+      c.appendChild(el);
+      setTimeout(()=>el.remove(),3100);
+    },
+  };
+}
+</script>
+{% endblock %}

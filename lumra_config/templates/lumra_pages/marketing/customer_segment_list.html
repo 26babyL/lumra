@@ -1,0 +1,46 @@
+{% extends 'base/base_hybrid.html' %}
+
+{% block title %}{{ page_title }} - LUMRA{% endblock %}
+
+{% block content %}
+  {% include 'base/navbar.html' %}
+  {% include 'base/sidebar.html' %}
+
+  <div class="main-content px-6 py-6">
+    <!-- Breadcrumb -->
+    {% include 'base/partials/breadcrumb.html' with breadcrumb_items=breadcrumb %}
+
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-3xl font-bold text-slate-100">{{ page_title }}</h1>
+        <p class="text-slate-400">{{ page_description }}</p>
+      </div>
+      {% if add_button_url %}
+        <a href="{{ add_button_url }}" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition">
+          <i class="fas fa-plus mr-2"></i> Tambah Baru
+        </a>
+      {% endif %}
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="mb-6 flex gap-4">
+      <input type="text" placeholder="Cari..." class="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 focus:outline-none focus:border-emerald-500">
+      <button class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-100 rounded-lg transition">
+        <i class="fas fa-search"></i>
+      </button>
+    </div>
+
+    <!-- Data Table -->
+    {% if items %}
+      {% include 'base/partials/data_table.html' with table_columns=columns table_rows=items %}
+      
+      <!-- Pagination -->
+      {% if page_obj %}
+        {% include 'base/partials/pagination.html' %}
+      {% endif %}
+    {% else %}
+      {% include 'base/partials/empty_state.html' with title="Tidak ada data" message="Mulai dengan membuat item baru." button_text="Tambah Item" button_url=add_button_url %}
+    {% endif %}
+  </div>
+{% endblock %}

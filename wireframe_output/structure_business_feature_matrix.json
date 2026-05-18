@@ -1,0 +1,430 @@
+{
+  "filename": "business_feature_matrix.html",
+  "title": "V-SeriesEngine",
+  "components": [
+    {
+      "type": "metric",
+      "tag": "div",
+      "label": "METRIC CARD",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "kpi-glass {% if not kpi_value %}is-loading{% endif %}",
+      "text_preview": "#} {% block content %} {% if not can_access_settings %} Anda tidak memiliki izin…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 5,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "fm-page w-full flex-1 space-y-5 relative z-10",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 7,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": "featureMatrix()"
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "rv d1 flex items-end justify-between gap-4 flex-wrap",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h1",
+      "label": "HEADING (H1)",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/h1",
+      "classes": "",
+      "text_preview": "V-Series Engine",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "classes": "flex items-center gap-2 flex-wrap",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 4,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: Batalkan",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/button",
+      "classes": "",
+      "text_preview": "Batalkan",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: [icon]",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/button",
+      "classes": "",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "hero",
+      "tag": "div",
+      "label": "HERO / BANNER",
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "classes": "eng-banner",
+      "text_preview": "Terkunci di paket ini: + lainnya Upgrade",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "hero",
+      "tag": "div",
+      "label": "HERO / BANNER",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/div",
+      "classes": "eng-banner-head",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "badge",
+      "tag": "div",
+      "label": "BADGE / STATUS",
+      "depth": 7,
+      "path": "root/body/div/div/div/div/div/div/div",
+      "classes": "eng-sku-pill",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "hero",
+      "tag": "div",
+      "label": "HERO / BANNER",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/div",
+      "classes": "eng-banner-body",
+      "text_preview": "Terkunci di paket ini: + lainnya Upgrade",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "hero",
+      "tag": "div",
+      "label": "HERO / BANNER",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "rv d4 upgrade-banner",
+      "text_preview": "Unlock More Power Upgrade Sekarang",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "filter",
+      "tag": "div",
+      "label": "FILTER / TAB",
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "classes": "cat-tab",
+      "text_preview": "Semua",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "filter",
+      "tag": "div",
+      "label": "FILTER / TAB",
+      "depth": 5,
+      "path": "root/body/div/div/div/template/div",
+      "classes": "cat-tab",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 5,
+      "path": "root/body/div/div/div/template/div",
+      "classes": "feat-card",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 6,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "badge",
+      "tag": "span",
+      "label": "BADGE / STATUS",
+      "depth": 7,
+      "path": "root/body/div/div/div/template/div/div/span",
+      "classes": "lock-pill",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h2",
+      "label": "HEADING (H2)",
+      "depth": 6,
+      "path": "root/body/div/div/div/template/div/h2",
+      "classes": "",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "metric",
+      "label": "METRIC CARD",
+      "text_preview": "#} {% block content %} {% if not can_access_settings %} Anda tidak memiliki izin…"
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/h1",
+      "type": "heading",
+      "label": "HEADING (H1)",
+      "text_preview": "V-Series Engine"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/button",
+      "type": "button",
+      "label": "BUTTON: Batalkan",
+      "text_preview": "Batalkan"
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/button",
+      "type": "button",
+      "label": "BUTTON: [icon]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "type": "hero",
+      "label": "HERO / BANNER",
+      "text_preview": "Terkunci di paket ini: + lainnya Upgrade"
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/div",
+      "type": "hero",
+      "label": "HERO / BANNER",
+      "text_preview": ""
+    },
+    {
+      "depth": 7,
+      "path": "root/body/div/div/div/div/div/div/div",
+      "type": "badge",
+      "label": "BADGE / STATUS",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/div",
+      "type": "hero",
+      "label": "HERO / BANNER",
+      "text_preview": "Terkunci di paket ini: + lainnya Upgrade"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "hero",
+      "label": "HERO / BANNER",
+      "text_preview": "Unlock More Power Upgrade Sekarang"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "type": "filter",
+      "label": "FILTER / TAB",
+      "text_preview": "Semua"
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/template/div",
+      "type": "filter",
+      "label": "FILTER / TAB",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/template/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": ""
+    },
+    {
+      "depth": 7,
+      "path": "root/body/div/div/div/template/div/div/span",
+      "type": "badge",
+      "label": "BADGE / STATUS",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/div/template/div/h2",
+      "type": "heading",
+      "label": "HEADING (H2)",
+      "text_preview": ""
+    }
+  ],
+  "issues": [
+    {
+      "type": "alpine_xcloak",
+      "severity": "info",
+      "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template",
+      "path": ""
+    }
+  ],
+  "stats": {
+    "total_components": 17,
+    "by_type": {
+      "metric": 1,
+      "layout": 3,
+      "heading": 2,
+      "button": 2,
+      "hero": 4,
+      "badge": 2,
+      "filter": 2,
+      "card": 1
+    },
+    "interactive": 3,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 1,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 1
+    }
+  }
+}

@@ -1,0 +1,781 @@
+{
+  "filename": "activity_drawer.html",
+  "title": "activity_drawer",
+  "components": [
+    {
+      "type": "alpine-root",
+      "tag": "div",
+      "label": "ALPINE COMPONENT [activityDrawer()]",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "",
+      "text_preview": "{# Backdrop #} {# Panel #} {# ── HEADER ── #} {# Status chip…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "activity-drawer",
+      "x_data": "activityDrawer()"
+    },
+    {
+      "type": "modal",
+      "tag": "div",
+      "label": "MODAL / DRAWER",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "drawer-backdrop",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "modal",
+      "tag": "div",
+      "label": "MODAL / DRAWER",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "drawer-panel",
+      "text_preview": "{# ── HEADER ── #} {# Status chip #} {# ── CONTENT (scrollable) ── #} {# Locatio…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "flex-shrink-0 px-6 pt-5 pb-4 border-b border-slate-100/70",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "classes": "flex items-start justify-between gap-3",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/div",
+      "classes": "flex-1 min-w-0",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 6,
+      "path": "root/body/div/div/div/div/div/div",
+      "classes": "flex items-center gap-2 mb-2",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "span",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 7,
+      "path": "root/body/div/div/div/div/div/div/span",
+      "classes": "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold border",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h2",
+      "label": "HEADING (H2)",
+      "depth": 6,
+      "path": "root/body/div/div/div/div/div/h2",
+      "classes": "text-[15px] font-bold text-slate-800 leading-snug",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "drawer-title",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: [icon]",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/button",
+      "classes": "flex-shrink-0 p-2 rounded-xl text-slate-300 hover:text-slate-600 hover:bg-slate-100 transition-all",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "modal",
+      "tag": "div",
+      "label": "MODAL / DRAWER",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "drawer-scroll flex-1 overflow-y-auto px-6 py-5 space-y-6",
+      "text_preview": "{# Location chip #} {# Detail info grid #} {# Timeline / History #} Riwayat Akti…",
+      "has_scroll": true,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 4,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "classes": "flex items-center gap-2",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/div",
+      "classes": "w-6 h-6 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "timeline",
+      "tag": "div",
+      "label": "TIMELINE",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/div",
+      "classes": "detail-timeline space-y-4",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "timeline",
+      "tag": "div",
+      "label": "TIMELINE",
+      "depth": 8,
+      "path": "root/body/div/div/div/div/div/template/div/div",
+      "classes": "timeline-dot",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "flex-shrink-0 px-6 py-4 border-t border-slate-100/70",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 5,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 6,
+      "path": "root/body/div/div/div/template/div/div",
+      "classes": "flex gap-2.5",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "modal",
+      "tag": "button",
+      "label": "MODAL / DRAWER",
+      "depth": 7,
+      "path": "root/body/div/div/div/template/div/div/button",
+      "classes": "drawer-btn-reject",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "modal",
+      "tag": "button",
+      "label": "MODAL / DRAWER",
+      "depth": 7,
+      "path": "root/body/div/div/div/template/div/div/button",
+      "classes": "drawer-btn-approve",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "modal",
+      "tag": "button",
+      "label": "MODAL / DRAWER",
+      "depth": 6,
+      "path": "root/body/div/div/div/template/div/button",
+      "classes": "drawer-btn-secondary w-full",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 5,
+      "path": "root/body/div/div/div/template/div",
+      "classes": "flex gap-2.5",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "modal",
+      "tag": "button",
+      "label": "MODAL / DRAWER",
+      "depth": 6,
+      "path": "root/body/div/div/div/template/div/button",
+      "classes": "drawer-btn-secondary",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "modal",
+      "tag": "button",
+      "label": "MODAL / DRAWER",
+      "depth": 6,
+      "path": "root/body/div/div/div/template/div/button",
+      "classes": "drawer-btn-approve",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 5,
+      "path": "root/body/div/div/div/template/div",
+      "classes": "flex gap-2.5",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "modal",
+      "tag": "button",
+      "label": "MODAL / DRAWER",
+      "depth": 6,
+      "path": "root/body/div/div/div/template/div/button",
+      "classes": "drawer-btn-secondary",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "modal",
+      "tag": "button",
+      "label": "MODAL / DRAWER",
+      "depth": 6,
+      "path": "root/body/div/div/div/template/div/button",
+      "classes": "drawer-btn-approve",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 5,
+      "path": "root/body/div/div/div/template/div",
+      "classes": "flex gap-2.5",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "modal",
+      "tag": "button",
+      "label": "MODAL / DRAWER",
+      "depth": 6,
+      "path": "root/body/div/div/div/template/div/button",
+      "classes": "drawer-btn-secondary w-full",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "modal",
+      "tag": "a",
+      "label": "MODAL / DRAWER",
+      "depth": 6,
+      "path": "root/body/div/div/div/template/div/a",
+      "classes": "drawer-btn-approve text-center no-underline",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "modal",
+      "tag": "button",
+      "label": "MODAL / DRAWER",
+      "depth": 5,
+      "path": "root/body/div/div/div/template/button",
+      "classes": "drawer-btn-secondary w-full",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "alpine-root",
+      "label": "ALPINE COMPONENT [activityDrawer()]",
+      "text_preview": "{# Backdrop #} {# Panel #} {# ── HEADER ── #} {# Status chip…"
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "modal",
+      "label": "MODAL / DRAWER",
+      "text_preview": ""
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "modal",
+      "label": "MODAL / DRAWER",
+      "text_preview": "{# ── HEADER ── #} {# Status chip #} {# ── CONTENT (scrollable) ── #} {# Locatio…"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 7,
+      "path": "root/body/div/div/div/div/div/div/span",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/div/div/div/h2",
+      "type": "heading",
+      "label": "HEADING (H2)",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/button",
+      "type": "button",
+      "label": "BUTTON: [icon]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "modal",
+      "label": "MODAL / DRAWER",
+      "text_preview": "{# Location chip #} {# Detail info grid #} {# Timeline / History #} Riwayat Akti…"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/div",
+      "type": "timeline",
+      "label": "TIMELINE",
+      "text_preview": ""
+    },
+    {
+      "depth": 8,
+      "path": "root/body/div/div/div/div/div/template/div/div",
+      "type": "timeline",
+      "label": "TIMELINE",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/div/template/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 7,
+      "path": "root/body/div/div/div/template/div/div/button",
+      "type": "modal",
+      "label": "MODAL / DRAWER",
+      "text_preview": ""
+    },
+    {
+      "depth": 7,
+      "path": "root/body/div/div/div/template/div/div/button",
+      "type": "modal",
+      "label": "MODAL / DRAWER",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/div/template/div/button",
+      "type": "modal",
+      "label": "MODAL / DRAWER",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/template/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/div/template/div/button",
+      "type": "modal",
+      "label": "MODAL / DRAWER",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/div/template/div/button",
+      "type": "modal",
+      "label": "MODAL / DRAWER",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/template/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/div/template/div/button",
+      "type": "modal",
+      "label": "MODAL / DRAWER",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/div/template/div/button",
+      "type": "modal",
+      "label": "MODAL / DRAWER",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/template/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/div/template/div/button",
+      "type": "modal",
+      "label": "MODAL / DRAWER",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/div/template/div/a",
+      "type": "modal",
+      "label": "MODAL / DRAWER",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/template/button",
+      "type": "modal",
+      "label": "MODAL / DRAWER",
+      "text_preview": ""
+    }
+  ],
+  "issues": [
+    {
+      "type": "empty_button",
+      "severity": "warning",
+      "message": "Tombol tanpa teks/aria-label: <button> id='' class='drawer-btn-reject'",
+      "path": ""
+    },
+    {
+      "type": "empty_button",
+      "severity": "warning",
+      "message": "Tombol tanpa teks/aria-label: <button> id='' class='drawer-btn-approve'",
+      "path": ""
+    },
+    {
+      "type": "empty_button",
+      "severity": "warning",
+      "message": "Tombol tanpa teks/aria-label: <button> id='' class='drawer-btn-secondary w-full'",
+      "path": ""
+    },
+    {
+      "type": "empty_button",
+      "severity": "warning",
+      "message": "Tombol tanpa teks/aria-label: <button> id='' class='drawer-btn-secondary'",
+      "path": ""
+    },
+    {
+      "type": "empty_button",
+      "severity": "warning",
+      "message": "Tombol tanpa teks/aria-label: <button> id='' class='drawer-btn-approve'",
+      "path": ""
+    },
+    {
+      "type": "empty_button",
+      "severity": "warning",
+      "message": "Tombol tanpa teks/aria-label: <button> id='' class='drawer-btn-secondary'",
+      "path": ""
+    },
+    {
+      "type": "empty_button",
+      "severity": "warning",
+      "message": "Tombol tanpa teks/aria-label: <button> id='' class='drawer-btn-approve'",
+      "path": ""
+    },
+    {
+      "type": "empty_button",
+      "severity": "warning",
+      "message": "Tombol tanpa teks/aria-label: <button> id='' class='drawer-btn-secondary w-full'",
+      "path": ""
+    },
+    {
+      "type": "empty_button",
+      "severity": "warning",
+      "message": "Tombol tanpa teks/aria-label: <button> id='' class='drawer-btn-secondary w-full'",
+      "path": ""
+    },
+    {
+      "type": "alpine_xcloak",
+      "severity": "info",
+      "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template",
+      "path": ""
+    }
+  ],
+  "stats": {
+    "total_components": 30,
+    "by_type": {
+      "alpine-root": 1,
+      "modal": 13,
+      "layout": 12,
+      "heading": 1,
+      "button": 1,
+      "timeline": 2
+    },
+    "interactive": 3,
+    "with_scroll": 1,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 10,
+    "issues_by_severity": {
+      "warning": 9,
+      "info": 1
+    }
+  }
+}

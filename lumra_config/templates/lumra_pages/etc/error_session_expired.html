@@ -1,0 +1,98 @@
+{% extends 'base/base_hybrid.html' %}
+
+{% block title %}Session Expired - Lumra ERP{% endblock %}
+
+{% block content %}
+
+<div class="min-h-screen py-12 px-6 lg:px-12 flex items-center justify-center bg-gradient-to-br from-warning/10 to-error/10">
+  <div class="max-w-md mx-auto text-center">
+    <div class="card bg-base-100 shadow-2xl border border-warning/20">
+      <div class="card-body p-8">
+        <!-- Session Expired Icon -->
+        <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-warning/10 flex items-center justify-center">
+          <i class="fas fa-clock text-warning text-3xl"></i>
+        </div>
+        
+        <!-- Title -->
+        <h1 class="text-3xl font-bold text-base-content mb-4">Session Expired</h1>
+        
+        <!-- Message -->
+        <p class="text-base-content/60 mb-8">Your session has expired for security reasons. Please log in again to continue.</p>
+        
+        <!-- Login Form -->
+        <form method="post" action="{% url 'auth:login' %}" class="mb-6">
+          {% csrf_token %}
+          
+          <!-- Email/Username -->
+          <div class="form-control mb-4">
+            <label class="label">
+              <span class="label-text">Email or Username</span>
+            </label>
+            <input 
+              type="text" 
+              name="username" 
+              required 
+              class="input input-bordered input-primary w-full" 
+              placeholder="Enter your email or username"
+            >
+          </div>
+          
+          <!-- Password -->
+          <div class="form-control mb-6">
+            <label class="label">
+              <span class="label-text">Password</span>
+            </label>
+            <input 
+              type="password" 
+              name="password" 
+              required 
+              class="input input-bordered input-primary w-full" 
+              placeholder="Enter your password"
+            >
+          </div>
+          
+          <!-- Remember Me -->
+          <div class="form-control mb-6">
+            <label class="label cursor-pointer justify-start gap-3">
+              <input type="checkbox" name="remember_me" class="checkbox checkbox-primary">
+              <span class="label-text">Remember me for 30 days</span>
+            </label>
+          </div>
+          
+          <!-- Login Button -->
+          <button type="submit" class="btn btn-primary w-full mb-4">
+            <i class="fas fa-sign-in-alt mr-2"></i>
+            Sign In Again
+          </button>
+        </form>
+        
+        <!-- Additional Options -->
+        <div class="space-y-3">
+          <a href="{% url 'auth:forgot_password' %}" class="link link-primary text-sm">
+            <i class="fas fa-key mr-2"></i>
+            Forgot your password?
+          </a>
+          
+          <div class="text-sm text-base-content/60">
+            Don't have an account? 
+            <a href="{% url 'auth:register' %}" class="link link-primary font-semibold">
+              Sign up here
+            </a>
+          </div>
+        </div>
+        
+        <!-- Security Notice -->
+        <div class="mt-8 p-4 bg-warning/10 border border-warning/20 rounded-lg">
+          <div class="flex items-start gap-3">
+            <i class="fas fa-shield-alt text-warning mt-1"></i>
+            <div class="text-left text-sm text-base-content/60">
+              <p class="font-semibold text-base-content mb-1">Security Notice</p>
+              <p>For your protection, sessions automatically expire after 2 hours of inactivity.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

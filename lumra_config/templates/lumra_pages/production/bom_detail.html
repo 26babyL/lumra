@@ -1,0 +1,402 @@
+{% extends "base/base_hybrid.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Detail BOM — Lumra{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root { --card-radius:12px; --card-shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04); --card-border:rgba(0,0,0,.06); }
+
+    .bom-detail-page { padding:1.25rem; display:flex; flex-direction:column; gap:1rem; max-width:1200px; margin:0 auto; }
+
+    /* ── Shared cards ── */
+    .section-card { background:oklch(var(--b1)); border:.5px solid var(--card-border); border-radius:var(--card-radius); box-shadow:var(--card-shadow); overflow:hidden; }
+    .section-card-header { padding:1rem 1.25rem; border-bottom:.5px solid oklch(var(--bc)/.06); display:flex; align-items:center; justify-content:space-between; gap:.5rem; flex-wrap:wrap; }
+    .section-card-title { font-size:.85rem; font-weight:700; color:oklch(var(--bc)); text-transform:uppercase; letter-spacing:.07em; }
+
+    /* ── KPI tiles ── */
+    .kpi-strip { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:.875rem; }
+    .kpi-tile { background:oklch(var(--b1)); border:.5px solid var(--card-border); border-radius:var(--card-radius); box-shadow:var(--card-shadow); padding:1rem 1.25rem; transition:box-shadow 180ms,transform 180ms; }
+    .kpi-tile:hover { box-shadow:0 4px 20px rgba(0,0,0,.08); transform:translateY(-1px); }
+    .kpi-tile-val { font-size:1.45rem; font-weight:800; letter-spacing:-.02em; color:oklch(var(--bc)); }
+    .kpi-tile-lbl { font-size:.72rem; font-weight:600; color:oklch(var(--bc)/.5); text-transform:uppercase; letter-spacing:.06em; margin-top:.25rem; }
+
+    /* ── 2-col layout ── */
+    .detail-layout { display:grid; grid-template-columns:1fr 320px; gap:1rem; align-items:start; }
+    @media(max-width:900px){ .detail-layout{grid-template-columns:1fr} }
+
+    /* ── Status badges ── */
+    .status-badge { display:inline-flex; align-items:center; gap:4px; padding:2px 9px; border-radius:20px; font-size:.67rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
+    .status-badge::before { content:''; width:5px; height:5px; border-radius:50%; background:currentColor; display:inline-block; }
+    .sb-active { background:rgba(0,168,107,.1); color:#065f46; }
+    .sb-draft  { background:rgba(100,116,139,.1); color:#334155; }
+    .sb-rnd    { background:rgba(59,130,246,.1); color:#1e40af; }
+    [data-theme="dark"] .sb-active { background:rgba(0,168,107,.2); color:#34d399; }
+    [data-theme="dark"] .sb-rnd    { background:rgba(59,130,246,.2); color:#60a5fa; }
+
+    /* ── Cost breakdown bars ── */
+    .cost-bar-row { display:flex; align-items:center; gap:.75rem; }
+    .cost-bar-track { flex:1; height:8px; background:oklch(var(--b3)); border-radius:99px; overflow:hidden; }
+    .cost-bar-fill  { height:100%; border-radius:99px; transition:width 600ms ease; }
+
+    /* ── Table (dashboard-identical) ── */
+    .dash-table { width:100%; border-collapse:collapse; font-size:.82rem; }
+    .dash-table th { padding:.625rem 1rem; text-align:left; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:oklch(var(--bc)/.4); border-bottom:.5px solid oklch(var(--bc)/.07); }
+    .dash-table td { padding:.75rem 1rem; border-bottom:.5px solid oklch(var(--bc)/.05); color:oklch(var(--bc)/.8); vertical-align:middle; }
+    .dash-table tr:last-child td { border-bottom:none; }
+    .dash-table tr:hover td { background:oklch(var(--b2)); }
+    .dash-table th.right, .dash-table td.right { text-align:right; }
+
+    /* ── Shortage badge ── */
+    .shortage-badge { display:inline-flex; align-items:center; gap:3px; padding:2px 8px; border-radius:20px; font-size:.67rem; font-weight:700; background:rgba(239,68,68,.1); color:#991b1b; }
+    .ok-badge       { display:inline-flex; align-items:center; gap:3px; padding:2px 8px; border-radius:20px; font-size:.67rem; font-weight:700; background:rgba(0,168,107,.1); color:#065f46; }
+    [data-theme="dark"] .shortage-badge { background:rgba(239,68,68,.2); color:#f87171; }
+    [data-theme="dark"] .ok-badge       { background:rgba(0,168,107,.2); color:#34d399; }
+
+    /* ── Version timeline ── */
+    .version-timeline { display:flex; flex-direction:column; gap:.375rem; }
+    .version-item { display:flex; align-items:flex-start; gap:.75rem; padding:.75rem; border-radius:9px; border:.5px solid var(--card-border); background:oklch(var(--b2)); }
+    .version-item.active { background:rgba(0,168,107,.06); border-color:rgba(0,168,107,.2); }
+    .version-dot { width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:.65rem; font-weight:800; flex-shrink:0; }
+
+    /* ── Cost dark ── */
+    .cost-dark { background:oklch(20% .02 240); border-radius:var(--card-radius); overflow:hidden; color:#e2e8f0; }
+    [data-theme="dark"] .cost-dark { background:oklch(12% .02 240); }
+    .cost-dark-row { display:flex; justify-content:space-between; align-items:center; padding:.625rem 1.125rem; font-size:.82rem; border-bottom:.5px solid rgba(255,255,255,.07); }
+    .cost-dark-row:last-child { border-bottom:none; }
+    .cost-dark-label { color:rgba(255,255,255,.45); }
+
+    /* ── Shortage alert ── */
+    .shortage-alert { padding:.875rem 1rem; border-radius:9px; background:rgba(239,68,68,.07); border:.5px solid rgba(239,68,68,.2); font-size:.8rem; color:#991b1b; display:flex; align-items:flex-start; gap:.625rem; }
+    [data-theme="dark"] .shortage-alert { color:#f87171; }
+
+    /* ── Qty input ── */
+    .qty-input { background:oklch(var(--b2)); border:.5px solid oklch(var(--bc)/.12); border-radius:8px; padding:.5rem .75rem; font-size:.82rem; color:oklch(var(--bc)); width:90px; text-align:right; outline:none; transition:border-color 150ms; }
+    .qty-input:focus { border-color:var(--jade,#00a86b); }
+
+    /* Skeleton */
+    .skel { background:linear-gradient(90deg,oklch(var(--b2)) 25%,oklch(var(--b3)) 50%,oklch(var(--b2)) 75%); background-size:200% 100%; animation:skel-anim 1.4s ease infinite; border-radius:6px; }
+    @keyframes skel-anim{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    @media(max-width:640px){ .bom-detail-page{padding:.875rem;gap:.875rem} .kpi-tile-val{font-size:1.2rem} }
+</style>
+{% endblock %}
+
+{% block content %}
+{{ bom_data|json_script:"bom-data" }}
+
+<div class="bom-detail-page" x-data="bomDetailApp()" x-init="init()" x-cloak>
+
+    <!-- ── Header ── -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.875rem;">
+        <div>
+            <nav style="display:flex;align-items:center;gap:.5rem;font-size:.75rem;color:oklch(var(--bc)/.5);margin-bottom:.5rem;">
+                <a href="{% url 'bom_list' %}" style="color:inherit;text-decoration:none;">BOM</a>
+                <span>/</span>
+                <span style="color:oklch(var(--bc));font-weight:600;" x-text="bom.name"></span>
+            </nav>
+            <div style="display:flex;align-items:center;gap:.625rem;flex-wrap:wrap;margin-bottom:.375rem;">
+                <span class="status-badge" :class="bom.is_active?'sb-active':'sb-draft'" x-text="bom.is_active?'Aktif':'Draft'"></span>
+                <span x-show="bom.rnd_id" class="status-badge sb-rnd">dari R&amp;D</span>
+            </div>
+            <h1 style="font-size:1.3rem;font-weight:800;color:oklch(var(--bc));margin:0 0 .25rem;" x-text="bom.name"></h1>
+            <p style="font-size:.8rem;color:oklch(var(--bc)/.5);margin:0;">
+                SKU <span style="font-family:ui-monospace,monospace;font-weight:600;" x-text="bom.sku||'—'"></span>
+                &bull; Versi <span style="font-weight:700;" x-text="'v' + (bom.version||1)"></span>
+            </p>
+        </div>
+        <div style="display:flex;gap:.625rem;flex-wrap:wrap;">
+            <template x-if="bom.rnd_id">
+                <a :href="`{% url 'rnd_detail' 0 %}`.replace('/0/',`/${bom.rnd_id}/`)"
+                   style="height:34px;padding:0 14px;border-radius:9px;border:.5px solid rgba(59,130,246,.3);background:rgba(59,130,246,.06);color:#1e40af;font-size:.8rem;font-weight:700;display:inline-flex;align-items:center;gap:6px;text-decoration:none;">
+                    <svg style="width:13px;height:13px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                    Lihat R&amp;D Asal
+                </a>
+            </template>
+            <a :href="editUrl" style="height:34px;padding:0 14px;border-radius:9px;border:.5px solid oklch(var(--bc)/.15);background:oklch(var(--b2));font-size:.8rem;font-weight:600;color:oklch(var(--bc)/.7);display:inline-flex;align-items:center;text-decoration:none;">Edit Resep</a>
+            <button @click="duplicateBOM()"
+                    style="height:34px;padding:0 14px;border-radius:9px;background:var(--jade,#00a86b);border:none;color:#fff;font-size:.8rem;font-weight:700;cursor:pointer;">
+                Duplikat
+            </button>
+        </div>
+    </div>
+
+    <!-- ── KPI strip ── -->
+    <div class="kpi-strip">
+        <div class="kpi-tile">
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.375rem;">
+                <div style="width:30px;height:30px;border-radius:8px;background:rgba(0,168,107,.1);display:flex;align-items:center;justify-content:center;">
+                    <svg style="width:14px;height:14px;color:#00a86b;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+            </div>
+            <div class="kpi-tile-val" style="color:#00a86b;" x-text="formatCurrency(bom.total_cost)"></div>
+            <div class="kpi-tile-lbl">Est. HPP / Unit</div>
+        </div>
+        <div class="kpi-tile">
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.375rem;">
+                <div style="width:30px;height:30px;border-radius:8px;background:rgba(59,130,246,.1);display:flex;align-items:center;justify-content:center;">
+                    <svg style="width:14px;height:14px;color:#3b82f6;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                </div>
+            </div>
+            <div class="kpi-tile-val" x-text="bom.ingredients.length + ' bahan'"></div>
+            <div class="kpi-tile-lbl">Komponen Resep</div>
+        </div>
+        <div class="kpi-tile">
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.375rem;">
+                <div style="width:30px;height:30px;border-radius:8px;background:rgba(168,85,247,.1);display:flex;align-items:center;justify-content:center;">
+                    <svg style="width:14px;height:14px;color:#a855f7;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                </div>
+            </div>
+            <div class="kpi-tile-val" x-text="'v' + (bom.version||1)"></div>
+            <div class="kpi-tile-lbl">Versi Aktif</div>
+        </div>
+        <div class="kpi-tile">
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.375rem;">
+                <div style="width:30px;height:30px;border-radius:8px;background:rgba(245,158,11,.1);display:flex;align-items:center;justify-content:center;">
+                    <svg style="width:14px;height:14px;color:#f59e0b;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                </div>
+            </div>
+            <div class="kpi-tile-val" :style="hasShortage?'color:#ef4444':'color:#00a86b'" x-text="hasShortage ? 'Kurang Stok' : 'Stok Cukup'"></div>
+            <div class="kpi-tile-lbl">Status Produksi</div>
+        </div>
+    </div>
+
+    <!-- ── Main 2-col ── -->
+    <div class="detail-layout">
+
+        <!-- ════ LEFT ════ -->
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+
+            <!-- Cost Breakdown -->
+            <div class="section-card">
+                <div class="section-card-header">
+                    <span class="section-card-title">Struktur Biaya Bahan</span>
+                    <span style="font-size:.82rem;font-weight:800;color:#00a86b;" x-text="formatCurrency(bom.total_cost)"></span>
+                </div>
+                <div style="padding:1.125rem 1.25rem;display:flex;flex-direction:column;gap:.875rem;">
+                    <template x-for="(item,i) in costCategories" :key="item.name">
+                        <div>
+                            <div style="display:flex;align-items:center;justify-content:space-between;font-size:.78rem;margin-bottom:.4rem;">
+                                <span style="font-weight:600;color:oklch(var(--bc));" x-text="item.name"></span>
+                                <span style="color:oklch(var(--bc)/.5);" x-text="formatCurrency(item.amount) + ' · ' + item.pct + '%'"></span>
+                            </div>
+                            <div class="cost-bar-row">
+                                <div class="cost-bar-track">
+                                    <div class="cost-bar-fill" :style="`width:${item.pct}%;background:${item.color}`"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <div x-show="costCategories.length===0" style="text-align:center;padding:1.5rem;font-size:.8rem;color:oklch(var(--bc)/.35);">
+                        Tidak ada data biaya
+                    </div>
+                </div>
+            </div>
+
+            <!-- Production Simulator -->
+            <div class="section-card">
+                <div class="section-card-header">
+                    <div>
+                        <span class="section-card-title">Simulasi Produksi</span>
+                        <p style="font-size:.72rem;color:oklch(var(--bc)/.45);margin-top:.2rem;">Masukkan qty produksi untuk melihat kebutuhan aktual dan status stok</p>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:.625rem;">
+                        <span style="font-size:.72rem;color:oklch(var(--bc)/.5);">Qty:</span>
+                        <input type="number" class="qty-input" min="1" step="1" x-model.number="productionQty">
+                        <span style="font-size:.72rem;color:oklch(var(--bc)/.5);">unit</span>
+                    </div>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="dash-table">
+                        <thead>
+                            <tr>
+                                <th>Bahan</th>
+                                <th class="right">Qty Resep</th>
+                                <th class="right">Dibutuhkan</th>
+                                <th class="right">Stok</th>
+                                <th class="right">Harga Satuan</th>
+                                <th class="right">% Biaya</th>
+                                <th class="right">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template x-for="item in scaledIngredients" :key="item.id">
+                                <tr>
+                                    <td>
+                                        <div style="font-weight:600;color:oklch(var(--bc));" x-text="item.name"></div>
+                                        <div style="font-size:.7rem;font-family:ui-monospace,monospace;color:oklch(var(--bc)/.4);" x-text="item.sku||'—'"></div>
+                                    </td>
+                                    <td class="right" style="font-size:.8rem;" x-text="fmtQty(item.qty) + ' ' + item.uom"></td>
+                                    <td class="right">
+                                        <span :class="item.shortage>0?'shortage-badge':'ok-badge'" x-text="fmtQty(item.requiredQty) + ' ' + item.uom"></span>
+                                    </td>
+                                    <td class="right" style="font-size:.8rem;color:oklch(var(--bc)/.5);" x-text="item.stock > 0 ? fmtQty(item.stock) + ' ' + item.uom : '—'"></td>
+                                    <td class="right" style="font-size:.8rem;" x-text="formatCurrency(item.unit_price)"></td>
+                                    <td class="right" style="font-size:.78rem;color:oklch(var(--bc)/.5);" x-text="item.sharePct + '%'"></td>
+                                    <td class="right" style="font-weight:700;" :style="item.shortage>0?'color:#ef4444':''" x-text="formatCurrency(item.requiredTotal)"></td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Shortage alert -->
+                <div x-show="hasShortage" style="padding:1rem 1.25rem;border-top:.5px solid oklch(var(--bc)/.05);">
+                    <div class="shortage-alert">
+                        <svg style="width:16px;height:16px;flex-shrink:0;margin-top:1px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                        <span>Beberapa bahan tidak mencukupi untuk qty produksi ini. Cek stok inventory sebelum menurunkan SPK.</span>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end left -->
+
+        <!-- ════ RIGHT sidebar ════ -->
+        <div style="position:sticky;top:1.25rem;display:flex;flex-direction:column;gap:1rem;">
+
+            <!-- HPP Calculator dark -->
+            <div class="cost-dark">
+                <div style="padding:.75rem 1.125rem;border-bottom:.5px solid rgba(255,255,255,.07);">
+                    <span style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.4);">Kalkulasi HPP</span>
+                </div>
+                <div class="cost-dark-row"><span class="cost-dark-label">Biaya bahan (scaled)</span><span style="font-weight:700;" x-text="formatCurrency(scaledMaterialCost)"></span></div>
+                <div class="cost-dark-row" style="flex-direction:column;align-items:flex-start;gap:.375rem;">
+                    <span class="cost-dark-label" style="font-size:.75rem;">Biaya tenaga / packing</span>
+                    <input type="number" min="0" step="100" x-model.number="laborCost"
+                           style="width:100%;background:rgba(255,255,255,.08);border:.5px solid rgba(255,255,255,.15);border-radius:7px;padding:.5rem .75rem;text-align:right;font-size:.82rem;color:#e2e8f0;outline:none;">
+                </div>
+                <div class="cost-dark-row" style="border-top:.5px solid rgba(255,255,255,.12);">
+                    <span class="cost-dark-label">Total HPP</span>
+                    <span style="font-weight:800;font-size:.95rem;" x-text="formatCurrency(totalHPP)"></span>
+                </div>
+                <div style="padding:.875rem 1.125rem;border-top:.5px solid rgba(255,255,255,.07);">
+                    <div style="font-size:.68rem;color:rgba(255,255,255,.4);margin-bottom:.5rem;">Target margin (%)</div>
+                    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.625rem;">
+                        <input type="range" min="10" max="85" step="5" x-model.number="marginPct"
+                               style="flex:1;accent-color:#00a86b;cursor:pointer;">
+                        <span style="font-weight:800;color:#34d399;font-size:.88rem;min-width:2.5rem;text-align:right;" x-text="marginPct + '%'"></span>
+                    </div>
+                    <div style="background:rgba(0,168,107,.12);border:.5px solid rgba(0,168,107,.2);border-radius:8px;padding:.75rem;">
+                        <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#34d399;margin-bottom:.25rem;">Harga Jual Disarankan</div>
+                        <div style="font-size:1.1rem;font-weight:800;color:#34d399;" x-text="formatCurrency(suggestedPrice)"></div>
+                        <div style="font-size:.68rem;color:rgba(255,255,255,.3);margin-top:.25rem;" x-text="'Qty ' + fmtQty(productionQty) + ' unit'"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Version history timeline -->
+            <div class="section-card">
+                <div class="section-card-header">
+                    <span class="section-card-title">Riwayat Versi</span>
+                    <span style="font-size:.72rem;color:oklch(var(--bc)/.4);" x-text="bom.versions.length + ' versi'"></span>
+                </div>
+                <div style="padding:.875rem 1.125rem;">
+                    <div class="version-timeline">
+                        <template x-for="(ver,i) in bom.versions" :key="ver.id||ver.version">
+                            <div class="version-item" :class="ver.is_active?'active':''">
+                                <div class="version-dot" :style="ver.is_active ? 'background:rgba(0,168,107,.12);color:#00a86b;' : 'background:oklch(var(--b3));color:oklch(var(--bc)/.4);'">
+                                    v<span x-text="ver.version"></span>
+                                </div>
+                                <div style="flex:1;min-width:0;">
+                                    <div style="font-size:.82rem;font-weight:700;color:oklch(var(--bc));" x-text="'Versi ' + ver.version + (ver.is_active ? ' (Aktif)' : '')"></div>
+                                    <div style="font-size:.7rem;color:oklch(var(--bc)/.4);margin-top:.125rem;" x-text="(ver.created_at||'—') + ' · ' + (ver.created_by||'System')"></div>
+                                </div>
+                                <svg x-show="ver.is_active" style="width:14px;height:14px;color:#00a86b;flex-shrink:0;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            </div>
+                        </template>
+                        <div x-show="!bom.versions.length"
+                             style="padding:1.25rem;text-align:center;font-size:.78rem;color:oklch(var(--bc)/.35);border:.5px dashed oklch(var(--bc)/.12);border-radius:9px;">
+                            Riwayat versi belum tersedia
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end right -->
+    </div><!-- end detail-layout -->
+
+</div>
+
+<script>
+function bomDetailApp() {
+    return {
+        bom        : { ingredients:[], versions:[], total_cost:0 },
+        productionQty: 1,
+        laborCost  : 2000,
+        marginPct  : 55,
+
+        /* Computed */
+        get editUrl() { return `{% url 'bom_edit' 0 %}`.replace('/0/',`/${this.bom.id}/edit/`); },
+
+        get costCategories() {
+            const total = Number(this.bom.total_cost||0);
+            if (!total) return [];
+            const palette = ['#00a86b','#3b82f6','#f59e0b','#8b5cf6','#ef4444','#06b6d4'];
+            const sorted = [...(this.bom.ingredients||[])].sort((a,b)=>Number(b.total||0)-Number(a.total||0));
+            const top = sorted.slice(0,5).map((item,i)=>({
+                name  : item.name,
+                amount: Number(item.total||0),
+                pct   : Math.round((Number(item.total||0)/total)*100),
+                color : palette[i%palette.length],
+            }));
+            const rest = sorted.slice(5).reduce((s,i)=>s+Number(i.total||0),0);
+            if (rest>0) top.push({name:'Lainnya',amount:rest,pct:Math.round((rest/total)*100),color:'#94a3b8'});
+            return top;
+        },
+
+        get scaledIngredients() {
+            const qty = Math.max(1, Number(this.productionQty||1));
+            const mat = this.scaledMaterialCost;
+            return (this.bom.ingredients||[]).map(item => {
+                const rq = Number(item.qty||0) * qty;
+                const rt = rq * Number(item.unit_price||0);
+                return { ...item, requiredQty:rq, requiredTotal:rt, shortage:Math.max(rq-Number(item.stock||0),0), sharePct: mat>0 ? Math.round((rt/mat)*100):0 };
+            });
+        },
+        get scaledMaterialCost() { return this.scaledIngredients.reduce((s,i)=>s+Number(i.requiredTotal||0),0); },
+        get hasShortage() { return this.scaledIngredients.some(i=>i.shortage>0); },
+        get totalHPP()    { return this.scaledMaterialCost + Number(this.laborCost||0); },
+        get suggestedPrice() {
+            const d = 1 - Number(this.marginPct||0)/100;
+            return d > 0 ? this.totalHPP / d : this.totalHPP;
+        },
+
+        duplicateBOM() { window.location.href = this.editUrl; },
+
+        formatCurrency(n) { return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',minimumFractionDigits:0}).format(n||0); },
+        fmtQty(n) { return Number(n||0).toLocaleString('id-ID',{maximumFractionDigits:2}); },
+
+        init() {
+            const el = document.getElementById('bom-data');
+            if (!el?.textContent) return;
+            try {
+                const raw = JSON.parse(el.textContent)||{};
+                this.bom = {
+                    id         : raw.id,
+                    code       : raw.code||'',
+                    name       : raw.name||raw.code||'—',
+                    sku        : raw.finished_sku||raw.sku||'',
+                    version    : Number(raw.version||1),
+                    is_active  : !!raw.is_active,
+                    rnd_id     : raw.rnd_id||null,
+                    total_cost : Number(raw.estimated_cost||0),
+                    versions   : Array.isArray(raw.versions) ? raw.versions : [],
+                    ingredients: (raw.items||[]).map(item=>({
+                        id        : item.id,
+                        sku       : item.sku||'',
+                        name      : item.name||item.sku||'—',
+                        qty       : Number(item.quantity||0),
+                        uom       : item.unit||'',
+                        unit_price: Number(item.unit_price||0),
+                        total     : Number(item.total||Number(item.quantity||0)*Number(item.unit_price||0)),
+                        stock     : Number(item.stock||0),
+                    })),
+                };
+            } catch(e) {
+                this.bom = {ingredients:[],versions:[],total_cost:0};
+            }
+        },
+    };
+}
+</script>
+{% endblock %}

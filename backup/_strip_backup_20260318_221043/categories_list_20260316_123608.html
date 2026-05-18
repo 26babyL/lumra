@@ -1,0 +1,691 @@
+{% extends 'base/base.html' %}
+{% block title %}Categories — CoffeeShop{% endblock %}
+{% load i18n %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: var(--shadow-sm-16) !important; }
+
+  /* ══ BLOBS ══ */
+  .blob {
+    position:fixed; border-radius:50%;
+    filter:blur(100px); opacity:.07;
+    pointer-events:var(--shadow-sm-16); z-index:0;
+    animation:drift 22s ease-in-out infinite;
+  }
+  .blob-a { width:480px; height:480px; background:var(--color-emerald-700); top:-80px; left:-60px; animation-delay:0s; }
+  .blob-b { width:340px; height:340px; background:var(--color-0ea5e9); bottom:-60px; right:-40px; animation-delay:-8s; }
+  .blob-c { width:220px; height:220px; background:var(--color-8b5cf6); top:42%; left:60%; animation-delay:-4s; }
+  @keyframes drift { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(22px,18px) scale(1.04)} }
+
+  /* ══ REVEAL ══ */
+  .reveal { opacity:0; transform:translateY(14px); transition:opacity .4s ease,transform .4s ease; }
+  .reveal.visible { opacity:1; transform:var(--shadow-sm-16); }
+
+  /* ══ GLASS ══ */
+  .glass {
+    background:var(--color-white-a74);
+    backdrop-filter:var(--backdrop-blur-20px-saturate-160);
+    -webkit-backdrop-filter:var(--backdrop-blur-20px-saturate-160);
+    border:1px solid var(--color-white-a92);
+    border-radius:18px;
+    box-shadow:0 2px 14px var(--color-black-a06),0 0 0 .5px var(--color-black-a03);
+  }
+
+  /* ══ SEARCH INPUT ══ */
+  .s-input {
+    background:var(--color-white-a6);
+    border:1px solid var(--color-slate-300-a5);
+    border-radius:12px;
+    transition:background .15s,border-color .15s,box-shadow .15s;
+  }
+  .s-input:focus {
+    background:var(--color-fff); border-color:var(--color-emerald-700-a4);
+    box-shadow:0 0 0 3px var(--color-emerald-700-a07); outline:var(--shadow-sm-16);
+  }
+
+  /* ══ TABLE ══ */
+  .tbl-head {
+    background:var(--color-slate-50-a8);
+    backdrop-filter:var(--backdrop-blur-12px);
+    position:sticky; top:0; z-index:10;
+  }
+  .tbl-th {
+    padding:11px 18px;
+    font-size:9px; font-weight:900; text-transform:uppercase; letter-spacing:.12em;
+    color:var(--color-slate-400); white-space:nowrap;
+    user-select:var(--shadow-sm-16);
+  }
+  .tbl-th.sortable { cursor:pointer; }
+  .tbl-th.sortable:hover { color:var(--color-slate-600); }
+  .tbl-row { border-bottom:1px solid var(--color-slate-200-a5); transition:background .12s; }
+  .tbl-row:last-of-type { border-bottom:var(--shadow-sm-16); }
+  .tbl-row:hover td { background:var(--color-rgba-240-253-248-a5) !important; }
+  .tbl-row.flash-green td { animation:flashGreen .6s ease; }
+  @keyframes flashGreen {
+    0%  { background:var(--color-emerald-600-a15); }
+    100%{ background:transparent; }
+  }
+  .tbl-row.flash-red td { animation:flashRed .4s ease; }
+  @keyframes flashRed {
+    0%  { background:var(--color-rgba-244-63-94-a12); }
+    100%{ background:transparent; }
+  }
+
+  /* ══ COLOR SWATCH ══ */
+  .swatch {
+    width:18px; height:18px; border-radius:5px;
+    border:2px solid var(--color-white-a8);
+    box-shadow:0 1px 4px var(--color-black-a12);
+    flex-shrink:0;
+  }
+
+  /* ══ BADGE CHIP ══ */
+  .count-chip {
+    display:inline-flex; align-items:center; gap:4px;
+    padding:3px 8px; border-radius:99px;
+    font-size:9px; font-weight:900;
+    background:var(--color-emerald-700-a1);
+    border:1px solid var(--color-emerald-700-a2);
+    color:var(--color-emerald-700);
+  }
+
+  /* ══ CHECKBOX ══ */
+  .row-check {
+    width:15px; height:15px; border-radius:4px; cursor:pointer;
+    border:1.5px solid var(--color-slate-300); background:var(--color-white-a7);
+    display:flex; align-items:center; justify-content:center;
+    transition:border-color .1s,background .1s; flex-shrink:0;
+  }
+  .row-check.on { border-color:var(--color-emerald-700); background:var(--color-emerald-700); }
+
+  /* ══ BULK BAR ══ */
+  .bulk-bar {
+    background:var(--color-emerald-700-a92); backdrop-filter:var(--backdrop-blur-12px);
+    border-radius:13px; padding:9px 15px;
+    display:flex; align-items:center; gap:10px;
+    box-shadow:0 4px 18px var(--color-emerald-700-a28);
+    animation:slideUp .2s ease;
+  }
+  @keyframes slideUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:var(--shadow-sm-16)} }
+
+  /* ══ MODAL ══ */
+  @keyframes modalIn { from{opacity:0;transform:scale(.94) translateY(12px)} to{opacity:1;transform:var(--shadow-sm-16)} }
+  .modal-box { animation:modalIn .22s cubic-bezier(.4,0,.2,1); }
+
+  /* ══ BTN ══ */
+  .btn-primary {
+    background:linear-gradient(135deg,var(--color-emerald-700),var(--color-0d9488));
+    border:var(--shadow-sm-16); border-radius:11px; color:var(--color-fff);
+    font-size:12px; font-weight:800; cursor:pointer;
+    padding:9px 18px; display:flex; align-items:center; gap:7px;
+    box-shadow:0 4px 14px var(--color-emerald-700-a28);
+    transition:opacity .13s,transform .13s;
+    text-decoration:var(--shadow-sm-16);
+  }
+  .btn-primary:hover { opacity:.9; transform:translateY(-1px); }
+
+  .btn-ghost {
+    border:1.5px solid var(--color-slate-200-a8);
+    border-radius:10px; background:var(--color-white-a6);
+    color:var(--color-slate-500); font-size:11px; font-weight:700;
+    padding:8px 14px; cursor:pointer;
+    transition:background .12s,border-color .12s;
+    display:flex; align-items:center; gap:6px;
+    text-decoration:var(--shadow-sm-16);
+  }
+  .btn-ghost:hover { background:var(--color-fff); border-color:var(--color-slate-300); }
+
+  /* ══ TOAST ══ */
+  .toast { animation:toastIn .25s ease,toastOut .25s ease 2.7s forwards; }
+  @keyframes toastIn  { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:var(--shadow-sm-16)} }
+  @keyframes toastOut { from{opacity:1} to{opacity:0;pointer-events:var(--shadow-sm-16)} }
+
+  /* ══ KBD ══ */
+  .kbd {
+    display:inline-block; padding:1px 5px;
+    background:var(--color-slate-100); border:1px solid var(--color-slate-200); border-bottom-width:2px;
+    border-radius:5px; font-size:9px; font-weight:700; color:var(--color-slate-400); font-family:monospace;
+  }
+
+  /* ══ SCROLL ══ */
+  .custom-scroll::-webkit-scrollbar { width:4px; }
+  .custom-scroll::-webkit-scrollbar-track { background:transparent; }
+  .custom-scroll::-webkit-scrollbar-thumb { background:var(--color-slate-200); border-radius:99px; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+{{ categories_json|json_script:"categories-data" }}
+
+<div class="blob blob-a"></div>
+<div class="blob blob-b"></div>
+<div class="blob blob-c"></div>
+
+<div class="w-full flex-1 space-y-5 relative z-10"
+     x-data="catList()"
+     x-init="init()"
+     x-cloak
+     @keydown.window="handleKey($event)">
+
+  <!--{# ══ HEADER ══ #}-->
+  <div class="reveal flex items-end justify-between gap-3 flex-wrap">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-emerald-500 mb-1">
+        <a href="{% url 'dashboard' %}" class="hover:text-emerald-700 transition-colors">Dashboard</a>
+        <span class="text-slate-300">/</span>
+        <span class="text-slate-600 font-medium">Categories</span>
+      </nav>
+      <h1 class="text-2xl font-black text-slate-800 tracking-tight">
+        Product <span class="text-emerald-600">Categories</span>
+      </h1>
+      <p class="text-sm text-slate-400 mt-0.5">
+        Kelola kategori produk ·
+        <span class="kbd">/</span> cari ·
+        <span class="kbd">N</span> tambah baru
+      </p>
+    </div>
+    <a href="{% url 'category_create' %}" class="btn-primary">
+      <i class="fas fa-plus text-[11px]"></i> Tambah Kategori
+    </a>
+  </div>
+
+  <!--{# ══ STAT STRIP ══ #}-->
+  <div class="reveal grid grid-cols-2 sm:grid-cols-4 gap-3">
+
+    <div class="glass px-4 py-3.5 flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 flex-shrink-0">
+        <i class="fas fa-folder text-[13px]"></i>
+      </div>
+      <div>
+        <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Total</p>
+        <p class="text-[18px] font-black text-slate-800">{{ total_categories|default:0 }}</p>
+      </div>
+    </div>
+
+    <div class="glass px-4 py-3.5 flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 flex-shrink-0">
+        <i class="fas fa-box text-[13px]"></i>
+      </div>
+      <div>
+        <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Total SKU</p>
+        <p class="text-[18px] font-black text-slate-800">{{ total_sku|default:0 }}</p>
+      </div>
+    </div>
+
+    <div class="glass px-4 py-3.5 flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center text-amber-500 flex-shrink-0">
+        <i class="fas fa-folder-open text-[13px]"></i>
+      </div>
+      <div>
+        <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Terbesar</p>
+        <p class="text-[12px] font-black text-slate-700 leading-tight truncate">{{ largest_category|default:"—" }}</p>
+      </div>
+    </div>
+
+    <div class="glass px-4 py-3.5 flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-rose-50 flex items-center justify-center text-rose-400 flex-shrink-0">
+        <i class="fas fa-exclamation-triangle text-[13px]"></i>
+      </div>
+      <div>
+        <p class="text-[9px] font-black text-slate-400 uppercase tracking-wider">Kosong</p>
+        <p class="text-[18px] font-black text-rose-500">{{ empty_categories|default:0 }}</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!--{# ══ SEARCH + FILTER TOOLBAR ══ #}-->
+  <div class="reveal glass px-5 py-4">
+    <form method="GET" action="" class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+      <div class="relative flex-1 w-full">
+        <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-300 text-[12px] pointer-events-none"></i>
+        <input
+          id="searchInput" x-ref="searchInput"
+          type="text" name="q" value="{{ query|default:'' }}"
+          x-model="searchQuery"
+          @input="filterCategories()"
+          placeholder="Cari nama atau deskripsi kategori…"
+          class="s-input w-full pl-10 pr-14 py-2.5 text-[13px] font-semibold text-slate-700 placeholder-slate-300"
+        >
+        <span class="absolute right-3 top-1/2 -translate-y-1/2 kbd pointer-events-none">/</span>
+      </div>
+      <button type="submit"
+              class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white
+                     bg-gradient-to-r from-emerald-600 to-teal-600
+                     shadow-[0_4px_14px_rgba(4,120,87,.28)]
+                     hover:opacity-90 transition">
+        <i class="fas fa-search text-[10px]"></i> Cari
+      </button>
+      <a href="{% url 'categories_list' %}" class="btn-ghost">
+        <i class="fas fa-times text-[10px]"></i> Reset
+      </a>
+    </form>
+  </div>
+
+  <!--{# ══ BULK BAR ══ #}-->
+  <div x-show="selected.length > 0" x-cloak style="display:none;">
+    <div class="bulk-bar">
+      <span class="text-white text-[12px] font-black" x-text="selected.length+' dipilih'"></span>
+      <button @click="bulkDelete()"
+              class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/20 border border-white/30 text-white text-[11px] font-black hover:bg-white/30 transition">
+        <i class="fas fa-trash text-[10px]"></i> Hapus Terpilih
+      </button>
+      <button @click="selected=[]"
+              class="ml-auto w-6 h-6 rounded-xl flex items-center justify-center text-white/60 hover:text-white hover:bg-white/20 transition text-[10px]">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <!--{# ══ TABLE ══ #}-->
+  <div class="reveal glass overflow-hidden">
+
+    <!--{# Table header info #}-->
+    <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100/60 bg-white/30">
+      <div class="flex items-center gap-3">
+        <div class="w-1.5 h-6 bg-emerald-500 rounded-full"></div>
+        <div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.12em]">Categories</p>
+          <p class="text-[12px] font-bold text-slate-700 mt-0.5">
+            {{ categories|length }} kategori
+            {% if query %} · cari "<span class="text-emerald-600">{{ query }}</span>"{% endif %}
+          </p>
+        </div>
+      </div>
+      <!--{# Select all #}-->
+      <div class="flex items-center gap-2">
+        <span class="text-[10px] text-slate-400 font-semibold hidden sm:block">Pilih Semua</span>
+        <div class="row-check" :class="{on: allSelected}"
+             @click="toggleAll()" role="checkbox" :aria-checked="allSelected.toString()">
+          <template x-if="allSelected">
+            <i class="fas fa-check text-white text-[8px]"></i>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full border-separate border-spacing-0">
+        <thead class="tbl-head">
+          <tr>
+            <th class="tbl-th w-8"></th>
+            <th class="tbl-th sortable" @click="sortBy('id')">
+              <span class="flex items-center gap-1">
+                ID <i :class="sortIcon('id')" class="text-[10px]"></i>
+              </span>
+            </th>
+            <th class="tbl-th">Warna / Ikon</th>
+            <th class="tbl-th sortable" @click="sortBy('name')">
+              <span class="flex items-center gap-1">
+                Nama <i :class="sortIcon('name')" class="text-[10px]"></i>
+              </span>
+            </th>
+            <th class="tbl-th sortable hidden md:table-cell" @click="sortBy('product_count')">
+              <span class="flex items-center gap-1">
+                Produk <i :class="sortIcon('product_count')" class="text-[10px]"></i>
+              </span>
+            </th>
+            <th class="tbl-th hidden lg:table-cell">Deskripsi</th>
+            <th class="tbl-th sortable hidden sm:table-cell" @click="sortBy('created_at')">
+              <span class="flex items-center gap-1">
+                Dibuat <i :class="sortIcon('created_at')" class="text-[10px]"></i>
+              </span>
+            </th>
+            <th class="tbl-th text-right">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="cat in filteredCategories" :key="cat.id">
+            <tr class="tbl-row group" :id="'row-'+cat.id">
+
+              <!--{# Checkbox #}-->
+              <td class="px-4 py-4">
+                <div class="row-check" :class="{on: selected.includes(cat.id)}"
+                     @click="toggleRow(cat.id)"
+                     role="checkbox" :aria-checked="selected.includes(cat.id).toString()">
+                  <template x-if="selected.includes(cat.id)">
+                    <i class="fas fa-check text-white text-[8px]"></i>
+                  </template>
+                </div>
+              </td>
+
+              <!--{# ID #}-->
+              <td class="px-4 py-4">
+                <span class="text-[10px] font-mono text-slate-400" x-text="'#'+cat.id"></span>
+              </td>
+
+              <!--{# Color swatch + icon #}-->
+              <td class="px-4 py-4">
+                <div class="flex items-center gap-1.5">
+                  <div class="swatch" :style="'background:'+cat.color"></div>
+                  <div class="w-7 h-7 rounded-xl flex items-center justify-center text-[12px]"
+                       :style="'background:'+cat.color+'20;color:'+cat.color">
+                    <i :class="'fas fa-'+(cat.icon||'folder')"></i>
+                  </div>
+                </div>
+              </td>
+
+              <!--{# Name + slug #}-->
+              <td class="px-4 py-4">
+                <p class="text-[12px] font-black text-slate-700 group-hover:text-emerald-700 transition-colors" x-text="cat.name"></p>
+                <p class="text-[9px] font-mono text-slate-300 mt-0.5" x-text="cat.slug||''"></p>
+              </td>
+
+              <!--{# Product count #}-->
+              <td class="px-4 py-4 hidden md:table-cell">
+                <span class="count-chip">
+                  <i class="fas fa-box text-[8px]"></i>
+                  <span x-text="cat.product_count+' SKU'"></span>
+                </span>
+              </td>
+
+              <!--{# Description #}-->
+              <td class="px-4 py-4 hidden lg:table-cell">
+                <p class="text-[11px] text-slate-400 truncate max-w-[180px]" x-text="cat.description||'—'"></p>
+              </td>
+
+              <!--{# Created at #}-->
+              <td class="px-4 py-4 hidden sm:table-cell">
+                <span class="text-[10px] text-slate-400 font-mono" x-text="cat.created_at"></span>
+              </td>
+
+              <!--{# Actions #}-->
+              <td class="px-4 py-4 text-right">
+                <div class="flex items-center justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <a :href="cat.editUrl"
+                     class="w-7 h-7 rounded-xl flex items-center justify-center text-slate-300 hover:text-emerald-600 hover:bg-emerald-50 transition"
+                     title="Edit">
+                    <i class="fas fa-pen text-[10px]"></i>
+                  </a>
+                  <button @click="confirmDelete(cat)"
+                          class="w-7 h-7 rounded-xl flex items-center justify-center text-slate-300 hover:text-rose-400 hover:bg-rose-50 transition"
+                          title="Hapus">
+                    <i class="fas fa-trash text-[10px]"></i>
+                  </button>
+                </div>
+              </td>
+
+            </tr>
+          </template>
+
+          <!--{# Empty state #}-->
+          <template x-if="filteredCategories.length===0 && !isLoading">
+            <tr>
+              <td colspan="8">
+                <div class="flex flex-col items-center justify-center py-20 text-center select-none opacity-60">
+                  <svg width="110" height="80" viewBox="0 0 110 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-4">
+                    <rect x="20" y="28" width="70" height="42" rx="8" stroke="#bbf7d0" stroke-width="2" fill="rgba(240,253,248,.7)"/>
+                    <path d="M20 36c0-4.4 3.6-8 8-8h14l6 8H82c4.4 0 8 3.6 8 8v18c0 4.4-3.6 8-8 8H28c-4.4 0-8-3.6-8-8V36z" stroke="#86efac" stroke-width="1.5" fill="rgba(240,253,248,.5)"/>
+                    <circle cx="82" cy="24" r="14" stroke="#a7f3d0" stroke-width="2" fill="rgba(240,253,248,.9)"/>
+                    <line x1="92" y1="34" x2="100" y2="42" stroke="#a7f3d0" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="77" y1="19" x2="87" y2="29" stroke="#bbf7d0" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="87" y1="19" x2="77" y2="29" stroke="#bbf7d0" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                  <p class="text-[14px] font-black text-slate-400">Tidak Ada Kategori</p>
+                  <p class="text-[11px] text-slate-300 mt-1 max-w-xs">Belum ada kategori yang sesuai filter, atau belum ada data sama sekali.</p>
+                  <a href="{% url 'category_create' %}"
+                     class="mt-5 flex items-center gap-2 px-5 py-2.5 rounded-xl
+                            bg-gradient-to-r from-emerald-600 to-teal-600
+                            text-white text-[12px] font-bold
+                            shadow-[0_4px_14px_rgba(4,120,87,.25)]
+                            hover:opacity-90 transition">
+                    <i class="fas fa-plus text-[10px]"></i> Tambah Kategori Pertama
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </template>
+
+          <!--{# Loading #}-->
+          <template x-if="isLoading">
+            <tr>
+              <td colspan="8" class="px-6 py-12 text-center">
+                <i class="fas fa-circle-notch fa-spin text-emerald-400 text-xl"></i>
+              </td>
+            </tr>
+          </template>
+
+        </tbody>
+      </table>
+    </div>
+
+    <!--{# ── Pagination ── #}-->
+    {% if page_obj.has_other_pages %}
+    <nav class="flex justify-center px-5 py-4 border-t border-slate-100/60">
+      <div class="flex items-center gap-1.5">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query|urlencode }}{% endif %}"
+           class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200/80 bg-white/70 text-slate-500 hover:border-emerald-400 hover:text-emerald-600 transition text-[10px]">
+          <i class="fas fa-angle-left"></i>
+        </a>
+        {% endif %}
+        {% with c=page_obj.number t=page_obj.paginator.num_pages %}
+          {% for num in page_obj.paginator.page_range %}
+            {% if num >= c|add:"-3" and num <= c|add:"3" %}
+              {% if page_obj.number == num %}
+                <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-emerald-600 text-white text-[11px] font-black">{{ num }}</span>
+              {% else %}
+                <a href="?page={{ num }}{% if query %}&q={{ query|urlencode }}{% endif %}"
+                   class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200/80 bg-white/70 text-[11px] font-semibold text-slate-500 hover:border-emerald-400 hover:text-emerald-600 transition">{{ num }}</a>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        {% endwith %}
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query|urlencode }}{% endif %}"
+           class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200/80 bg-white/70 text-slate-500 hover:border-emerald-400 hover:text-emerald-600 transition text-[10px]">
+          <i class="fas fa-angle-right"></i>
+        </a>
+        {% endif %}
+      </div>
+    </nav>
+    {% endif %}
+
+  </div><!--{# end table glass #}-->
+
+  <div class="fixed top-5 right-5 z-[100] flex flex-col gap-2" id="toastEl"></div>
+
+  <!--<!--{# ══ MODAL — Delete Confirm ══ #}-->
+  <div x-show="showDeleteModal"
+       x-transition:enter="transition ease-out duration-200"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       class="fixed inset-0 z-50 flex items-center justify-center p-4"
+       style="background:rgba(15,23,42,.35);backdrop-filter:blur(14px);display:none;"
+       @click.self="showDeleteModal=false">
+    <div class="modal-box glass w-full max-w-sm p-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-rose-50 border border-rose-200/60 flex items-center justify-center">
+          <i class="fas fa-trash text-rose-400 text-[13px]"></i>
+        </div>
+        <div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.12em]">Konfirmasi</p>
+          <p class="text-[14px] font-black text-slate-800">Hapus Kategori</p>
+        </div>
+      </div>
+      <p class="text-[12px] text-slate-500 leading-relaxed mb-5">
+        Anda akan menghapus kategori
+        <span class="font-black text-slate-700" x-text="catToDelete ? '\"'+catToDelete.name+'\"' : ''"></span>.
+        Aksi ini tidak dapat dibatalkan.
+        <template x-if="catToDelete && catToDelete.product_count > 0">
+          <span class="block mt-2 text-amber-600 font-bold">
+            ⚠️ Kategori ini memiliki <span x-text="catToDelete.product_count"></span> produk terkait!
+          </span>
+        </template>
+      </p>
+      <div class="flex gap-2.5">
+        <button @click="showDeleteModal=false"
+                class="flex-1 py-2.5 rounded-xl border border-slate-200 text-[12px] font-bold text-slate-500 hover:bg-slate-50 transition">
+          Batal
+        </button>
+        <button @click="doDelete()" :disabled="isDeleting"
+                class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-rose-600
+                       text-white text-[12px] font-black
+                       shadow-[0_4px_14px_rgba(244,63,94,.30)]
+                       hover:opacity-90 transition disabled:opacity-50">
+          <span x-text="isDeleting?'Menghapus…':'Ya, Hapus'"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function catList() {
+  return {
+
+    categories        : [],
+    filteredCategories: [],
+    searchQuery       : '{{ query|default:""|escapejs }}',
+    sortColumn        : 'id',
+    sortDir           : 'asc',
+    selected          : [],
+    isLoading         : false,
+
+    showDeleteModal   : false,
+    catToDelete       : null,
+    isDeleting        : false,
+
+    /* ── Init ── */
+    init() {
+      const el = document.getElementById('categories-data');
+      if (el) {
+        try { this.categories = JSON.parse(el.textContent); }
+        catch(e) { this.categories = []; }
+      }
+      this.filterCategories();
+
+      const io = new IntersectionObserver(entries => {
+        entries.forEach((e,i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i*60);
+            io.unobserve(e.target);
+          }
+        });
+      }, {threshold:.08});
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    },
+
+    /* ── Keyboard ── */
+    handleKey(e) {
+      const typing = ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName);
+      if (e.key==='/' && !typing)  { e.preventDefault(); this.$refs.searchInput?.focus(); }
+      if (e.key==='n' && !typing)  { e.preventDefault(); window.location.href='{% url "category_create" %}'; }
+      if (e.key==='Escape')        { this.showDeleteModal=false; }
+    },
+
+    /* ── Filter ── */
+    filterCategories() {
+      const q = this.searchQuery.toLowerCase().trim();
+      let list = q
+        ? this.categories.filter(c =>
+            c.name.toLowerCase().includes(q) ||
+            (c.description||'').toLowerCase().includes(q))
+        : [...this.categories];
+
+      list.sort((a,b) => {
+        let av = a[this.sortColumn] ?? '';
+        let bv = b[this.sortColumn] ?? '';
+        if (typeof av==='string') { av=av.toLowerCase(); bv=bv.toLowerCase(); }
+        if (av<bv) return this.sortDir==='asc'?-1:1;
+        if (av>bv) return this.sortDir==='asc'?1:-1;
+        return 0;
+      });
+      this.filteredCategories = list;
+    },
+
+    sortBy(col) {
+      if (this.sortColumn===col) { this.sortDir = this.sortDir==='asc'?'desc':'asc'; }
+      else { this.sortColumn=col; this.sortDir='asc'; }
+      this.filterCategories();
+    },
+    sortIcon(col) {
+      if (this.sortColumn!==col) return 'fas fa-sort text-slate-200';
+      return this.sortDir==='asc' ? 'fas fa-sort-up text-emerald-500' : 'fas fa-sort-down text-emerald-500';
+    },
+
+    /* ── Selection ── */
+    toggleRow(id) {
+      const i = this.selected.indexOf(id);
+      i>=0 ? this.selected.splice(i,1) : this.selected.push(id);
+    },
+    get allSelected() {
+      return this.selected.length>0 && this.selected.length>=this.filteredCategories.length;
+    },
+    toggleAll() {
+      if (this.allSelected) { this.selected=[]; }
+      else { this.selected = this.filteredCategories.map(c=>c.id); }
+    },
+
+    /* ── Delete single ── */
+    confirmDelete(cat) { this.catToDelete=cat; this.showDeleteModal=true; },
+    async doDelete() {
+      if (!this.catToDelete||this.isDeleting) return;
+      this.isDeleting = true;
+      const res = await this._post(this.catToDelete.deleteUrl, {});
+      if (res.success) {
+        const row = document.getElementById('row-'+this.catToDelete.id);
+        if (row) { row.classList.add('flash-red'); await this._sleep(400); }
+        this.categories = this.categories.filter(c=>c.id!==this.catToDelete.id);
+        this.filterCategories();
+        this._toast('"'+this.catToDelete.name+'" dihapus', 'warn');
+        this.showDeleteModal = false;
+        this.catToDelete = null;
+      } else { this._toast(res.error||'Gagal menghapus','error'); }
+      this.isDeleting = false;
+    },
+
+    /* ── Bulk delete ── */
+    async bulkDelete() {
+      if (!this.selected.length) return;
+      const ok = confirm(`Hapus ${this.selected.length} kategori terpilih?`);
+      if (!ok) return;
+      const res = await this._post('/api/categories/bulk-delete/', {ids: this.selected});
+      if (res.success) {
+        this.categories = this.categories.filter(c=>!this.selected.includes(c.id));
+        this._toast(`${this.selected.length} kategori dihapus`,'warn');
+        this.selected = [];
+        this.filterCategories();
+      } else { this._toast(res.error||'Gagal','error'); }
+    },
+
+    /* ── Flash a row green (called after category_form.html add) ── */
+    flashRow(id) {
+      const row = document.getElementById('row-'+id);
+      if (row) row.classList.add('flash-green');
+    },
+
+    /* ── Helpers ── */
+    _sleep(ms) { return new Promise(r=>setTimeout(r,ms)); },
+    _post(url, body) {
+      return fetch(url, {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'X-CSRFToken': document.cookie.match(/csrftoken=([^;]+)/)?.[1]||'',
+        },
+        body: JSON.stringify(body),
+      }).then(r=>r.ok?r.json():{success:false,error:'Network error'})
+        .catch(()=>({success:false,error:'Koneksi error'}));
+    },
+    _toast(msg,type='success') {
+      const c = document.getElementById('toastEl');
+      if (!c) return;
+      const col = {success:'border-emerald-400',warn:'border-amber-400',error:'border-rose-400'};
+      const ico = {success:'check-circle',warn:'exclamation-triangle',error:'times-circle'};
+      const el = document.createElement('div');
+      el.className = `toast flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl min-w-52 max-w-xs text-white text-[12px] font-semibold border-l-4 ${col[type]||col.success}`;
+      el.style.cssText = 'background:rgba(15,23,42,.92);backdrop-filter:blur(12px);';
+      el.innerHTML = `<i class="fas fa-${ico[type]||ico.success} text-xs flex-shrink-0"></i><span>${msg}</span>`;
+      c.appendChild(el);
+      setTimeout(()=>el.remove(),3100);
+    },
+  };
+}
+</script>
+{% endblock %}

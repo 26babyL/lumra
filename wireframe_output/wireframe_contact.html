@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireframe: 📞 Contact Us</title>
+  <style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Courier New', monospace;
+    background: #F5F5F5;
+    color: #333;
+    padding: 16px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* ── Komponen utama ── */
+.wf-page        { max-width: 1100px; margin: 0 auto; }
+.wf-header      { background: #2C2C2C; color: #fff; padding: 12px 16px; border-radius: 4px; margin-bottom: 12px; font-weight: bold; font-size: 14px; }
+.wf-nav         { background: #444; color: #fff; padding: 10px 16px; border-radius: 4px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; }
+.wf-nav-item    { background: #666; color: #ddd; padding: 4px 10px; border-radius: 3px; font-size: 11px; }
+.wf-breadcrumb  { color: #888; font-size: 11px; margin-bottom: 8px; }
+.wf-breadcrumb span { margin: 0 4px; }
+
+/* ── Sections & Cards ── */
+.wf-section     { border: 1.5px solid #CCC; border-radius: 6px; padding: 12px; margin-bottom: 12px; background: #FFF; }
+.wf-card        { border: 1px solid #CCC; border-radius: 4px; padding: 10px; background: #FAFAFA; margin-bottom: 8px; }
+.wf-card-dark   { border: 1px solid #888; border-radius: 4px; padding: 10px; background: #2C2C2C; color: #EEE; margin-bottom: 8px; }
+.wf-metric      { border: 1px solid #CCC; border-radius: 4px; padding: 10px; background: #F0F0F0; text-align: center; }
+.wf-metric .val { font-size: 22px; font-weight: bold; margin: 4px 0; }
+.wf-metric .lbl { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+.wf-sidebar     { border: 1.5px dashed #AAA; border-radius: 4px; padding: 10px; background: #F8F8F8; }
+
+/* ── Layout ── */
+.wf-grid        { display: grid; gap: 10px; margin-bottom: 10px; }
+.wf-grid-2      { grid-template-columns: 1fr 1fr; }
+.wf-grid-3      { grid-template-columns: 1fr 1fr 1fr; }
+.wf-grid-4      { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.wf-grid-23     { grid-template-columns: 2fr 1fr; }
+.wf-grid-32     { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
+.wf-flex        { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+
+/* ── Form Elements ── */
+.wf-input       { border: 1px solid #BBB; background: #FFF; border-radius: 3px; padding: 7px 10px; font-size: 12px; font-family: inherit; display: block; width: 100%; color: #555; }
+.wf-select      { border: 1px solid #BBB; background: #FFF url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6"><path d="M0 0l5 6 5-6z" fill="%23888"/></svg>') no-repeat right 8px center; border-radius: 3px; padding: 7px 28px 7px 10px; font-size: 12px; font-family: inherit; display: block; width: 100%; appearance: none; color: #555; }
+.wf-textarea    { border: 1px solid #BBB; background: #FFF; border-radius: 3px; padding: 7px 10px; font-size: 12px; font-family: inherit; display: block; width: 100%; color: #555; min-height: 60px; resize: vertical; }
+.wf-label       { font-size: 10px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; display: block; }
+.wf-field-group { margin-bottom: 10px; }
+
+/* ── Buttons ── */
+.wf-btn         { border: 1.5px solid #888; background: #E8E8E8; color: #333; padding: 7px 14px; border-radius: 3px; font-size: 12px; font-family: inherit; cursor: default; display: inline-block; font-weight: bold; }
+.wf-btn-primary { border-color: #333; background: #333; color: #FFF; }
+.wf-btn-danger  { border-color: #AA0000; background: #FFEEEE; color: #AA0000; }
+.wf-btn-success { border-color: #006600; background: #EEFFEE; color: #006600; }
+.wf-btn-sm      { padding: 4px 10px; font-size: 11px; }
+
+/* ── Filters & Tabs ── */
+.wf-filter-row  { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; }
+.wf-chip        { border: 1px solid #CCC; background: #F0F0F0; color: #555; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+.wf-chip-active { border-color: #333; background: #333; color: #FFF; }
+.wf-tab-row     { display: flex; gap: 4px; margin-bottom: 10px; border-bottom: 1px solid #CCC; padding-bottom: 6px; }
+.wf-tab         { border: 1px solid #CCC; background: #F5F5F5; color: #888; padding: 5px 14px; border-radius: 3px 3px 0 0; font-size: 11px; font-weight: bold; }
+.wf-tab-active  { border-bottom-color: #FFF; background: #FFF; color: #333; }
+
+/* ── Table ── */
+.wf-table       { width: 100%; border-collapse: collapse; font-size: 12px; }
+.wf-table th    { background: #EAEAEA; color: #555; padding: 7px 10px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1.5px solid #CCC; }
+.wf-table td    { padding: 7px 10px; border-bottom: 1px solid #EEE; color: #333; }
+.wf-table tr:hover td { background: #F8F8F8; }
+
+/* ── Progress & Charts ── */
+.wf-progress-bg  { background: #E8E8E8; border-radius: 99px; height: 8px; overflow: hidden; margin: 4px 0; }
+.wf-progress-fill{ background: #555; height: 100%; border-radius: 99px; }
+.wf-circle       { width: 80px; height: 80px; border-radius: 50%; border: 8px solid #CCC; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: #555; }
+
+/* ── Image Placeholder ── */
+.wf-img         { background: #E0E0E0; border: 1.5px dashed #AAA; border-radius: 4px; display: flex; align-items: center; justify-content: center; min-height: 60px; color: #888; font-size: 11px; text-align: center; padding: 8px; }
+
+/* ── Badge / Status ── */
+.wf-badge       { display: inline-block; border: 1px solid #AAA; background: #EEE; color: #555; padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+
+/* ── Timeline ── */
+.wf-timeline    { padding-left: 20px; border-left: 2px solid #CCC; }
+.wf-tl-item     { position: relative; padding: 6px 0 6px 12px; }
+.wf-tl-item::before { content:''; position: absolute; left: -7px; top: 12px; width: 12px; height: 12px; border-radius: 50%; background: #CCC; border: 2px solid #FFF; box-shadow: 0 0 0 1px #CCC; }
+.wf-tl-title    { font-size: 12px; font-weight: bold; color: #333; }
+.wf-tl-meta     { font-size: 10px; color: #888; }
+
+/* ── Scroll nesting warning ── */
+.wf-scroll-warn { border: 2px dashed #FFC107; background: #FFFDE7; padding: 8px; border-radius: 4px; margin-bottom: 6px; }
+.wf-scroll-label{ font-size: 10px; color: #856404; font-weight: bold; margin-bottom: 4px; }
+
+/* ── Footer ── */
+.wf-footer      { background: #EAEAEA; border: 1px solid #CCC; border-radius: 4px; padding: 10px 16px; margin-top: 12px; color: #888; font-size: 11px; text-align: center; }
+
+/* ── Alpine root marker ── */
+.wf-alpine      { border: 1.5px dotted #AAA; border-radius: 4px; padding: 10px; margin-bottom: 10px; position: relative; }
+.wf-alpine::before { content: 'Alpine Component'; position: absolute; top: -9px; left: 8px; background: #FFF; padding: 0 4px; font-size: 9px; color: #AAA; font-weight: bold; }
+
+/* ── Section label ── */
+.wf-section-label { font-size: 10px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid #EEE; }
+
+/* ── Heading styles ── */
+.wf-h1 { font-size: 20px; font-weight: bold; color: #111; margin-bottom: 6px; }
+.wf-h2 { font-size: 16px; font-weight: bold; color: #222; margin-bottom: 5px; }
+.wf-h3 { font-size: 13px; font-weight: bold; color: #333; margin-bottom: 4px; }
+.wf-h4 { font-size: 12px; font-weight: bold; color: #444; margin-bottom: 3px; }
+
+/* ── Empty state ── */
+.wf-empty { border: 1.5px dashed #CCC; border-radius: 6px; padding: 24px; text-align: center; color: #AAA; font-size: 12px; background: #FAFAFA; }
+
+/* ── Annotations ── */
+.wf-annotation  { font-size: 10px; color: #999; font-style: italic; margin-top: 3px; }
+.wf-components  { margin-top: 20px; border-top: 2px solid #DDD; padding-top: 12px; }
+.wf-comp-item   { font-size: 11px; color: #666; padding: 2px 0; }
+.wf-comp-type   { display: inline-block; background: #EAEAEA; border-radius: 3px; padding: 1px 6px; font-size: 10px; font-weight: bold; color: #555; margin-right: 6px; }
+.wf-issues      { margin-top: 12px; border-top: 1px solid #EEE; padding-top: 10px; }
+.wf-issue       { font-size: 11px; padding: 3px 0 3px 16px; position: relative; color: #666; }
+.wf-issue::before { position: absolute; left: 0; }
+.wf-issue.warning::before { content: '⚠'; color: #CC8800; }
+.wf-issue.info::before    { content: 'ℹ'; color: #0066CC; }
+    
+  </style>
+</head>
+<body>
+<div class="wf-page">
+
+  <!-- ── WIREFRAME HEADER INFO ───────────────────────── -->
+  <div class="wf-header">
+    ▦ WIREFRAME: 📞 Contact Us
+    <span style="float:right;font-size:11px;font-weight:normal;color:#AAA">
+      Generated: 27 Apr 2026 09:43 &nbsp;|&nbsp;
+      26 komponen &nbsp;|&nbsp;
+      0 isu terdeteksi
+    </span>
+  </div>
+
+  <!-- ── STAT SUMMARY ───────────────────────────────── -->
+  <div class="wf-grid wf-grid-4" style="margin-bottom:12px">
+    <div class="wf-metric">
+      <div class="wf-metric val">26</div>
+      <div class="wf-metric lbl">Total Komponen</div>
+    </div>
+    <div class="wf-metric">
+      <div class="wf-metric val">11</div>
+      <div class="wf-metric lbl">Interaktif</div>
+    </div>
+    <div class="wf-metric">
+      <div class="wf-metric val">0</div>
+      <div class="wf-metric lbl">Scroll Nesting</div>
+    </div>
+    <div class="wf-metric">
+      <div class="wf-metric val">0</div>
+      <div class="wf-metric lbl">⚠ Warnings</div>
+    </div>
+  </div>
+
+  <!-- ── SCROLL NESTING WARNINGS ────────────────────── -->
+  
+
+  <!-- ══ WIREFRAME CONTENT ══════════════════════════════ -->
+  <div class="wf-section">
+    <div class="wf-section-label">Wireframe Struktur Halaman</div>
+    <p style="font-size:12px;color:#555;margin-bottom:6px;">{% extends 'base/base.html' %} {% block title %}Contact Us - Lumra ERP{% endblock %} {% block content %}</p><span style="font-size:12px;color:#555">Background Pattern (subtle)</span><span style="font-size:12px;color:#555">Page Title</span><div class="wf-h1">📞 Contact Us</div><p style="font-size:12px;color:#555;margin-bottom:6px;">Get in touch with our team for support and inquiries</p><span style="font-size:12px;color:#555">Contact Information</span><div class="wf-grid wf-grid-1" style="margin-bottom:8px"><span style="font-size:12px;color:#555">Contact Form</span><div class="wf-h2">Send Message</div><div class="wf-section" style="border-color:#AAA"><div class="wf-section-label">[ FORM ]</div><label class="wf-label">Name *</label><input class="wf-input" type="text" placeholder="Your name" disabled><label class="wf-label">Email *</label><input class="wf-input" type="text" placeholder="Your email" disabled><label class="wf-label">Subject *</label><input class="wf-input" type="text" placeholder="Subject" disabled><label class="wf-label">Message *</label><textarea class="wf-textarea" placeholder="Your message" rows="5" disabled></textarea><button class="wf-btn " style="margin:2px">Send Message</button></div><span style="font-size:12px;color:#555">Contact Info</span><div class="wf-h3">📍 Address</div><p style="font-size:12px;color:#555;margin-bottom:6px;">123 Business Street City, Country 12345</p><div class="wf-h3">📱 Phone</div><p style="font-size:12px;color:#555;margin-bottom:6px;">+1 (555) 123-4567</p><p style="font-size:12px;color:#555;margin-bottom:6px;">Mon-Fri 9AM-6PM</p><div class="wf-h3">📧 Email</div><p style="font-size:12px;color:#555;margin-bottom:6px;">support@lumra.com</p><p style="font-size:12px;color:#555;margin-bottom:6px;">We respond within 24 hours</p><div class="wf-h3">🕐 Business Hours</div><p style="font-size:12px;color:#555;margin-bottom:6px;">Monday - Friday: 9:00 AM - 6:00 PM Saturday - Sunday: Closed</p></div><span style="font-size:12px;color:#555">Map Section</span><div class="wf-h2">Find Us</div><span style="font-size:12px;color:#555">FAQ Section</span><div class="wf-h2">Frequently Asked Questions</div><button class="wf-btn " style="margin:2px">How quickly do you respond to inquiries?</button><p style="font-size:12px;color:#555;margin-bottom:6px;">We typically respond to all inquiries within 24 hours during business days.</p><button class="wf-btn " style="margin:2px">Do you offer free trials?</button><p style="font-size:12px;color:#555;margin-bottom:6px;">Yes, we offer a 14-day free trial for all our plans. No credit card required.</p><button class="wf-btn " style="margin:2px">What kind of support do you provide?</button><p style="font-size:12px;color:#555;margin-bottom:6px;">We provide 24 email support, live chat during business hours, and phone support for premium plans.</p><button class="wf-btn " style="margin:2px">Can I cancel my subscription anytime?</button><p style="font-size:12px;color:#555;margin-bottom:6px;">Yes, you can cancel your subscription at any time. No long-term contracts required.</p><span style="font-size:12px;color:#555">Social Media & Newsletter</span><div class="wf-grid wf-grid-1" style="margin-bottom:8px"><span style="font-size:12px;color:#555">Social Media</span><div class="wf-h3">Follow Us</div><p style="font-size:12px;color:#555;margin-bottom:6px;">Stay connected and get the latest updates</p><div class="wf-grid wf-grid-2" style="margin-bottom:8px"></div><span style="font-size:12px;color:#555">Newsletter</span><div class="wf-h3">Newsletter</div><p style="font-size:12px;color:#555;margin-bottom:6px;">Subscribe to get updates on new features and tips</p><div class="wf-grid wf-grid-2" style="margin-bottom:8px"><input class="wf-input" type="text" placeholder="Your email" disabled><button class="wf-btn " style="margin:2px">Subscribe</button></div></div><span style="font-size:12px;color:#555">Testimonial</span><span style="font-size:12px;color:#555">"Lumra ERP has transformed our business operations. The support team is amazing!</span><span style="font-size:12px;color:#555">- John Doe, CEO of CoffeeShop Inc.</span>
+  </div>
+
+  <!-- ── COMPONENT INDEX ────────────────────────────── -->
+  <div class="wf-components">
+    <div class="wf-section-label">Indeks Komponen Terdeteksi (26)</div>
+    <div class='wf-comp-item'><span class='wf-comp-type'>heading</span>HEADING (H1)  <em style='color:#AAA;font-size:10px'> — 📞 Contact Us</em></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [GRID 1 cols]</div><div class='wf-comp-item'><span class='wf-comp-type'>heading</span>HEADING (H2)  <em style='color:#AAA;font-size:10px'> — Send Message</em></div><div class='wf-comp-item'><span class='wf-comp-type'>form</span>[ FORM ]  <em style='color:#AAA;font-size:10px'> — {% csrf_token %} Name * Email * Subject * Message * Send Message</em></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [text] Your name  <em style='color:#AAA;font-size:10px'> — Your name</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [email] Your email  <em style='color:#AAA;font-size:10px'> — Your email</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [text] Subject  <em style='color:#AAA;font-size:10px'> — Subject</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [textarea] Your message  <em style='color:#AAA;font-size:10px'> — Your message</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: Send Message  <em style='color:#AAA;font-size:10px'> — Send Message</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>heading</span>HEADING (H3)  <em style='color:#AAA;font-size:10px'> — 📍 Address</em></div><div class='wf-comp-item'><span class='wf-comp-type'>heading</span>HEADING (H3)  <em style='color:#AAA;font-size:10px'> — 📱 Phone</em></div><div class='wf-comp-item'><span class='wf-comp-type'>heading</span>HEADING (H3)  <em style='color:#AAA;font-size:10px'> — 📧 Email</em></div><div class='wf-comp-item'><span class='wf-comp-type'>heading</span>HEADING (H3)  <em style='color:#AAA;font-size:10px'> — 🕐 Business Hours</em></div><div class='wf-comp-item'><span class='wf-comp-type'>heading</span>HEADING (H2)  <em style='color:#AAA;font-size:10px'> — Find Us</em></div><div class='wf-comp-item'><span class='wf-comp-type'>heading</span>HEADING (H2)  <em style='color:#AAA;font-size:10px'> — Frequently Asked Questions</em></div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: How quickly do you respond to inquiries?  <em style='color:#AAA;font-size:10px'> — How quickly do you respond to inquiries?</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: Do you offer free trials?  <em style='color:#AAA;font-size:10px'> — Do you offer free trials?</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: What kind of support do you provide?  <em style='color:#AAA;font-size:10px'> — What kind of support do you provide?</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: Can I cancel my subscription anytime?  <em style='color:#AAA;font-size:10px'> — Can I cancel my subscription anytime?</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [GRID 1 cols]</div><div class='wf-comp-item'><span class='wf-comp-type'>heading</span>HEADING (H3)  <em style='color:#AAA;font-size:10px'> — Follow Us</em></div><div class='wf-comp-item'><span class='wf-comp-type'>layout</span>LAYOUT CONTAINER [FLEX (row)]</div><div class='wf-comp-item'><span class='wf-comp-type'>heading</span>HEADING (H3)  <em style='color:#AAA;font-size:10px'> — Newsletter</em></div><div class='wf-comp-item'><span class='wf-comp-type'>form</span>[ FORM ]  <em style='color:#AAA;font-size:10px'> — Subscribe</em></div><div class='wf-comp-item'><span class='wf-comp-type'>input</span>INPUT [email] Your email  <em style='color:#AAA;font-size:10px'> — Your email</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div><div class='wf-comp-item'><span class='wf-comp-type'>button</span>BUTTON: Subscribe  <em style='color:#AAA;font-size:10px'> — Subscribe</em>  <span class='wf-badge' style='font-size:9px;border-color:#888'>⚡</span></div>
+  </div>
+
+  <!-- ── ISSUES ─────────────────────────────────────── -->
+  
+
+</div>
+</body>
+</html>

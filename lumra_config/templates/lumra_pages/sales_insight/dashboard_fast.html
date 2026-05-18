@@ -1,0 +1,326 @@
+{% extends "base/base_simple.html" %}
+{% load i18n %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+{% block page_subtitle %}Monitor performa bisnis real-time Anda{% endblock %}
+
+{% block extra_head %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+
+  body {
+    font-family: "DM Sans", sans-serif;
+    background:
+      radial-gradient(circle at top left, rgba(0,168,107,0.08), transparent 26%),
+      radial-gradient(circle at top right, rgba(239,191,4,0.05), transparent 24%),
+      #f8fafc !important;
+  }
+
+  .app-shell {
+    background: transparent !important;
+  }
+
+  /* Loading skeleton animation */
+  .skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+  }
+
+  @keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .loading-text {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    height: 1rem;
+    width: 6rem;
+    border-radius: 0.25rem;
+  }
+
+  .loading-number {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    height: 2rem;
+    width: 4rem;
+    border-radius: 0.25rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-base-200" x-data="dashboardApp()" x-init="init()" x-cloak>
+  
+  <!-- Header Section -->
+  <div class="bg-base-100 border-b border-base-300 p-6 mb-6">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div>
+          <h1 class="text-3xl font-bold text-base-content mb-2">Dashboard Operasional</h1>
+          <p class="text-base-content/60">Monitor performa bisnis real-time Anda</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <select class="select select-bordered select-primary select-sm" x-model="selectedPeriod">
+            <option value="today">Hari Ini</option>
+            <option value="week">Minggu Ini</option>
+            <option value="month">Bulan Ini</option>
+            <option value="year">Tahun Ini</option>
+          </select>
+          <button class="btn btn-primary btn-sm" @click="refreshData()" :disabled="loading">
+            <i class="fas fa-sync-alt mr-2" :class="{'fa-spin': loading}"></i>
+            <span x-show="!loading">Refresh</span>
+            <span x-show="loading">Loading...</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-6 pb-6">
+    
+    <!-- Quick Stats (Load Instantly) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="stat bg-base-100 rounded-lg shadow">
+        <div class="stat-figure text-primary">
+          <i class="fas fa-box text-3xl"></i>
+        </div>
+        <div class="stat-title">Active Products</div>
+        <div class="stat-value text-primary">{{ quick_stats.active_products }}</div>
+        <div class="stat-desc">Total produk aktif</div>
+      </div>
+      
+      <div class="stat bg-base-100 rounded-lg shadow">
+        <div class="stat-figure text-secondary">
+          <i class="fas fa-map-marker-alt text-3xl"></i>
+        </div>
+        <div class="stat-title">Locations</div>
+        <div class="stat-value text-secondary">{{ quick_stats.total_locations }}</div>
+        <div class="stat-desc">Total lokasi</div>
+      </div>
+      
+      <div class="stat bg-base-100 rounded-lg shadow">
+        <div class="stat-figure text-accent">
+          <i class="fas fa-users text-3xl"></i>
+        </div>
+        <div class="stat-title">Customers</div>
+        <div class="stat-value text-accent">{{ quick_stats.total_customers }}</div>
+        <div class="stat-desc">Total pelanggan</div>
+      </div>
+    </div>
+    
+    <!-- KPI Cards Grid (Lazy Loaded) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      
+      <!-- Total Sales Card -->
+      <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow">
+        <div class="card-body p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 rounded-lg bg-success/20 flex items-center justify-center">
+              <i class="fas fa-chart-line text-success text-xl"></i>
+            </div>
+            <div class="badge badge-success badge-sm" x-text="kpis.sales_growth || '+0.0%'">+0.0%</div>
+          </div>
+          <h3 class="text-2xl font-bold text-base-content mb-1" x-text="kpis.today_sales || 'Rp 0'">Rp 0</h3>
+          <p class="text-sm text-base-content/60">Total Penjualan</p>
+        </div>
+      </div>
+
+      <!-- Orders Card -->
+      <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow">
+        <div class="card-body p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 rounded-lg bg-info/20 flex items-center justify-center">
+              <i class="fas fa-shopping-cart text-info text-xl"></i>
+            </div>
+            <div class="badge badge-info badge-sm" x-text="kpis.transaction_growth || '+0.0%'">+0.0%</div>
+          </div>
+          <h3 class="text-2xl font-bold text-base-content mb-1" x-text="kpis.total_transactions || 0">0</h3>
+          <p class="text-sm text-base-content/60">Total Orders</p>
+        </div>
+      </div>
+
+      <!-- Revenue Card -->
+      <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow">
+        <div class="card-body p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 rounded-lg bg-warning/20 flex items-center justify-center">
+              <i class="fas fa-dollar-sign text-warning text-xl"></i>
+            </div>
+            <div class="badge badge-warning badge-sm" x-text="kpis.monthly_growth || '+0.0%'">+0.0%</div>
+          </div>
+          <h3 class="text-2xl font-bold text-base-content mb-1" x-text="kpis.total_revenue || 'Rp 0'">Rp 0</h3>
+          <p class="text-sm text-base-content/60">Pendapatan Bersih</p>
+        </div>
+      </div>
+
+      <!-- Pending Orders Card -->
+      <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow">
+        <div class="card-body p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 rounded-lg bg-secondary/20 flex items-center justify-center">
+              <i class="fas fa-clock text-secondary text-xl"></i>
+            </div>
+            <div class="badge badge-secondary badge-sm">Pending</div>
+          </div>
+          <h3 class="text-2xl font-bold text-base-content mb-1" x-text="kpis.pending_orders || 0">0</h3>
+          <p class="text-sm text-base-content/60">Orders Pending</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Performance Metrics -->
+    <div class="card bg-base-100 shadow-lg mb-8">
+      <div class="card-body p-6">
+        <h3 class="text-lg font-semibold text-base-content mb-4">Performance Metrics</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="text-center">
+            <div class="text-2xl font-bold text-primary" x-text="kpis.conversion_rate || '0.0%'">0.0%</div>
+            <div class="text-sm text-base-content/60">Conversion Rate</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-secondary" x-text="kpis.avg_order_value || 'Rp 0'">Rp 0</div>
+            <div class="text-sm text-base-content/60">Avg Order Value</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-accent" x-text="kpis.profit_margin || '0.0%'">0.0%</div>
+            <div class="text-sm text-base-content/60">Profit Margin</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-warning" x-text="kpis.return_rate || '0.0%'">0.0%</div>
+            <div class="text-sm text-base-content/60">Return Rate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="card bg-base-100 shadow-lg">
+      <div class="card-body p-6">
+        <h3 class="text-lg font-semibold text-base-content mb-4">Recent Activity</h3>
+        <div class="overflow-x-auto">
+          <table class="table table-compact w-full">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="hover:bg-base-200">
+                <td class="font-mono">#ORD-001234</td>
+                <td>John Doe</td>
+                <td>Rp 1,250,000</td>
+                <td><span class="badge badge-success badge-sm">Completed</span></td>
+                <td>2024-01-15</td>
+              </tr>
+              <tr class="hover:bg-base-200">
+                <td class="font-mono">#ORD-001235</td>
+                <td>Jane Smith</td>
+                <td>Rp 850,000</td>
+                <td><span class="badge badge-warning badge-sm">Processing</span></td>
+                <td>2024-01-15</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function dashboardApp() {
+  return {
+    selectedPeriod: 'today',
+    loading: false,
+    kpis: {
+      today_sales: 'Loading...',
+      sales_growth: '+0.0%',
+      sales_trend_up: true,
+      total_transactions: 'Loading...',
+      transaction_growth: '+0.0%',
+      transaction_trend_up: true,
+      best_seller_name: 'Loading...',
+      best_seller_count: 'Loading...',
+      low_stock_count: 0,
+      monthly_growth: '+0.0%',
+      customer_retention: '0.0%',
+      avg_order_value: 'Loading...',
+      inventory_turnover: '0.0x/month',
+      total_revenue: 'Loading...',
+      profit_margin: '0.0%',
+      return_rate: '0.0%',
+      inventory_value: 'Loading...',
+      order_frequency: '0.00/month',
+      conversion_rate: '0.0%',
+      repeat_purchase_rate: '0.0%',
+      pending_orders: 0,
+    },
+    
+    init() {
+      console.log('Dashboard initialized - Fast Loading Version');
+      // Load KPI data after page loads (non-blocking)
+      setTimeout(() => this.loadKpiData(), 100);
+    },
+    
+    async loadKpiData() {
+      try {
+        this.loading = true;
+        const response = await fetch('/api/dashboard/data/');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        // Update KPIs with real data
+        Object.keys(data.kpis).forEach(key => {
+          if (this.kpis.hasOwnProperty(key)) {
+            this.kpis[key] = data.kpis[key];
+          }
+        });
+        
+        console.log('KPI data loaded successfully:', data);
+      } catch (error) {
+        console.error('Error loading KPI data:', error);
+        // Set fallback values
+        this.kpis.today_sales = 'Rp 0';
+        this.kpis.total_transactions = 0;
+        this.kpis.total_revenue = 'Rp 0';
+        this.kpis.avg_order_value = 'Rp 0';
+        this.showNotification('Gagal memuat data KPI', 'error');
+      } finally {
+        this.loading = false;
+      }
+    },
+    
+    async refreshData() {
+      await this.loadKpiData();
+      this.showNotification('Data berhasil diperbarui', 'success');
+    },
+    
+    showNotification(message, type) {
+      // Simple notification using console for now
+      console.log(`${type}: ${message}`);
+      // You can implement toast notification here
+    }
+  }
+}
+</script>
+{% endblock %}

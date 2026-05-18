@@ -1,0 +1,101 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}Manajemen Roles — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-card { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.95); border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: all 0.2s; }
+  .glass-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+  
+  .role-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  
+  .badge-type { font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .type-admin { background: #1e293b; color: #f8fafc; }
+  .type-staff { background: #e0f2fe; color: #0369a1; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="rolesApp()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex items-end justify-between">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+        <a href="#" class="hover:text-slate-800">System</a>
+        <span>/</span>
+        <span class="text-slate-800 font-medium">Roles & Access</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800">Manajemen Roles</h1>
+      <p class="text-sm text-slate-400 mt-0.5">Mengatur hak akses pengguna berdasarkan jabatan.</p>
+    </div>
+    <a href="role_form.html" class="bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:bg-slate-700 transition flex items-center gap-2">
+      <i class="fas fa-user-shield"></i> Buat Role Baru
+    </a>
+  </div>
+
+  <!-- Grid Roles -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <template x-for="role in roles" :key="role.id">
+      <div class="glass-card p-6 relative group cursor-pointer">
+        
+        <div class="flex justify-between items-start mb-4">
+          <div class="role-icon" :class="role.type === 'admin' ? 'bg-slate-800 text-white' : 'bg-blue-50 text-blue-500'">
+            <i :class="role.icon"></i>
+          </div>
+          <span class="badge-type" :class="role.type === 'admin' ? 'type-admin' : 'type-staff'" x-text="role.type"></span>
+        </div>
+
+        <h3 class="font-bold text-slate-800 text-lg mb-1" x-text="role.name"></h3>
+        <p class="text-xs text-slate-400 mb-4 line-clamp-2" x-text="role.description"></p>
+
+        <div class="flex items-center justify-between pt-4 border-t border-slate-100 mt-auto">
+          <div class="text-xs">
+            <span class="text-slate-400 block">Jumlah User</span>
+            <span class="font-bold text-slate-700" x-text="role.user_count + ' User'"></span>
+          </div>
+          
+          <div class="flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
+            <button @click="editRole(role)" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-700 flex items-center justify-center transition">
+              <i class="fas fa-pen text-xs"></i>
+            </button>
+            <button @click="deleteRole(role.id)" class="w-8 h-8 rounded-full bg-rose-50 text-rose-500 hover:bg-rose-100 flex items-center justify-center transition" x-show="role.type !== 'admin'">
+              <i class="fas fa-trash text-xs"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </template>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function rolesApp() {
+  return {
+    roles: [
+      { id: 1, name: 'Super Admin', type: 'admin', description: 'Akses penuh ke seluruh sistem termasuk pengaturan.', icon: 'fas fa-crown', user_count: 2 },
+      { id: 2, name: 'Finance Manager', type: 'staff', description: 'Akses penuh ke modul Keuangan dan Laporan.', icon: 'fas fa-chart-pie', user_count: 3 },
+      { id: 3, name: 'Store Manager', type: 'staff', description: 'Akses ke Operasional Toko, Stok, dan Sales.', icon: 'fas fa-store', user_count: 5 },
+      { id: 4, name: 'Warehouse Staff', type: 'staff', description: 'Akses ke Inventory dan Penerimaan Barang.', icon: 'fas fa-warehouse', user_count: 8 },
+      { id: 5, name: 'Cashier', type: 'staff', description: 'Hanya akses ke POS dan Transaksi Harian.', icon: 'fas fa-cash-register', user_count: 12 },
+    ],
+    
+    editRole(role) {
+      window.location.href = 'role_form.html';
+    },
+
+    deleteRole(id) {
+      if(confirm('Hapus role ini? User yang terkait akan kehilangan akses.')) {
+        alert('Role dihapus');
+      }
+    },
+
+    init(){}
+  }
+}
+</script>
+{% endblock %}

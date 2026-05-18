@@ -1,0 +1,96 @@
+{
+  "filename": "metric_card.html",
+  "title": "metric_card",
+  "components": [
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "metric-card",
+      "text_preview": "{% if badge %} {% endif %} {{ title }} {% if status %} {{ status }} {% endif %}…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "badge",
+      "tag": "div",
+      "label": "BADGE / STATUS",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "metric-badge",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "progressbar",
+      "tag": "div",
+      "label": "PROGRESS BAR",
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "classes": "metric-progress-bar",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "{% if badge %} {% endif %} {{ title }} {% if status %} {{ status }} {% endif %}…"
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "badge",
+      "label": "BADGE / STATUS",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "type": "progressbar",
+      "label": "PROGRESS BAR",
+      "text_preview": ""
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 3,
+    "by_type": {
+      "card": 1,
+      "badge": 1,
+      "progressbar": 1
+    },
+    "interactive": 0,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

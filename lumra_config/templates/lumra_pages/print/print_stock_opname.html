@@ -1,0 +1,25 @@
+{% extends 'base/base_hybrid.html' %}
+
+{% block title %}{{ dashboard_title }} - LUMRA{% endblock %}
+
+{% block content %}
+  {% include 'base/navbar.html' %}
+  {% include 'base/sidebar.html' %}
+
+  <div class="main-content px-6 py-6">
+    <h1 class="text-3xl font-bold text-slate-100 mb-6">{{ dashboard_title }}</h1>
+
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      {% include 'base/kpi_card.html' with kpi_title="Total" kpi_value=total %}
+      {% include 'base/kpi_card.html' with kpi_title="Active" kpi_value=active %}
+      {% include 'base/kpi_card.html' with kpi_title="Pending" kpi_value=pending %}
+      {% include 'base/kpi_card.html' with kpi_title="Completed" kpi_value=completed %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="bg-gradient-to-b from-slate-900 to-slate-800 rounded-lg border border-slate-700 p-8">
+      <!-- Content goes here -->
+    </div>
+  </div>
+{% endblock %}

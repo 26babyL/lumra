@@ -1,0 +1,188 @@
+{% extends 'base/base.html' %}
+{% block title %}Hutang Usaha — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-card { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.95); border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+  
+  .aging-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+  .aging-table th { text-align: right; padding: 12px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; border-bottom: 2px solid #f1f5f9; }
+  .aging-table td { padding: 12px; border-bottom: 1px solid #f8fafc; font-size: 13px; }
+  .aging-table tr:hover td { background: #f8fafc; }
+  .text-left { text-align: left; }
+  .text-right { text-align: right; font-family: monospace; }
+  
+  .aging-pos { background: #dcfce7; color: #166534; }
+  .aging-neg { background: #fee2e2; color: #991b1b; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="apApp()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex items-end justify-between">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+        <a href="#" class="hover:text-slate-800">Keuangan</a>
+        <span>/</span>
+        <span class="text-slate-800 font-medium">Hutang Usaha (AP)</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800">Accounts Payable</h1>
+      <p class="text-sm text-slate-400 mt-0.5">Monitoring kewajiban pembayaran kepada supplier.</p>
+    </div>
+    <a href="{% url 'payment_voucher_form' %}" class="bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:bg-slate-700 transition flex items-center gap-2">
+      <i class="fas fa-money-bill-wave"></i> Buat Pembayaran
+    </a>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="glass-card p-5 border-l-4 border-slate-300">
+      <p class="text-xs font-bold text-slate-400 uppercase">Total Hutang</p>
+      <p class="text-xl font-bold text-slate-800 mt-1" x-text="formatCurrency(totalAP)"></p>
+    </div>
+    <div class="glass-card p-5 border-l-4 border-emerald-500">
+      <p class="text-xs font-bold text-slate-400 uppercase">Jatuh Tempo (0-30 Hari)</p>
+      <p class="text-xl font-bold text-emerald-600 mt-1" x-text="formatCurrency(aging.current)"></p>
+    </div>
+    <div class="glass-card p-5 border-l-4 border-amber-500">
+      <p class="text-xs font-bold text-slate-400 uppercase">Jatuh Tempo (31-60 Hari)</p>
+      <p class="text-xl font-bold text-amber-600 mt-1" x-text="formatCurrency(aging.m1_30)"></p>
+    </div>
+    <div class="glass-card p-5 border-l-4 border-rose-500">
+      <p class="text-xs font-bold text-slate-400 uppercase">Telat Bayar (>60 Hari)</p>
+      <p class="text-xl font-bold text-rose-600 mt-1" x-text="formatCurrency(aging.m60)"></p>
+    </div>
+  </div>
+
+  <!-- Aging Table -->
+  <div class="glass-card overflow-hidden">
+    <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+      <h3 class="font-bold text-slate-700 text-sm">Aging Schedule per Supplier</h3>
+      <div class="flex gap-2">
+        <button class="text-xs font-bold text-slate-500 hover:text-slate-800 bg-white border border-slate-200 px-3 py-1 rounded-lg">Export Excel</button>
+      </div>
+    </div>
+    
+    <div class="overflow-x-auto">
+      <table class="aging-table">
+        <thead>
+          <tr>
+            <th class="text-left" style="width: 25%">Supplier</th>
+            <th class="text-right">Total Balance</th>
+            <th>0 - 30 Hari</th>
+            <th>31 - 60 Hari</th>
+            <th>61 - 90 Hari</th>
+            <th>> 90 Hari</th>
+            <th style="padding-right: 20px;">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="sup in suppliers" :key="sup.id">
+            <tr>
+              <td class="text-left">
+                <div class="font-bold text-slate-800" x-text="sup.name"></div>
+                <div class="text-xs text-slate-400" x-text="sup.invoices_count + ' Faktur'"></div>
+              </td>
+              <td class="text-right font-bold text-slate-700" x-text="formatCurrency(sup.total)"></td>
+              <td class="text-right" :class="sup.aging.current > 0 ? 'text-slate-800' : 'text-slate-300'" x-text="formatCurrency(sup.aging.current)"></td>
+              <td class="text-right" :class="sup.aging.m1_30 > 0 ? 'text-slate-800' : 'text-slate-300'" x-text="formatCurrency(sup.aging.m1_30)"></td>
+              <td class="text-right" :class="sup.aging.m31_60 > 0 ? 'text-slate-800' : 'text-slate-300'" x-text="formatCurrency(sup.aging.m31_60)"></td>
+              <td class="text-right" :class="sup.aging.m60 > 0 ? 'text-slate-800' : 'text-slate-300'" x-text="formatCurrency(sup.aging.m60)"></td>
+              <td class="text-right pr-5">
+                <button @click="paySupplier(sup)" class="text-xs font-bold text-slate-500 hover:text-emerald-600 bg-white border border-slate-200 px-3 py-1 rounded-lg shadow-sm">
+                  Bayar
+                </button>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+        <tfoot class="font-bold bg-slate-50 border-t-2 border-slate-200">
+          <tr>
+            <td class="text-left text-slate-700">GRAND TOTAL</td>
+            <td class="text-right text-slate-800" x-text="formatCurrency(totalAP)"></td>
+            <td class="text-right text-emerald-600" x-text="formatCurrency(aging.current)"></td>
+            <td class="text-right text-amber-600" x-text="formatCurrency(aging.m1_30)"></td>
+            <td class="text-right text-orange-600" x-text="formatCurrency(aging.m31_60)"></td>
+            <td class="text-right text-rose-600" x-text="formatCurrency(aging.m60)"></td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script id="suppliers-data" type="application/json">
+{{ suppliers_json|safe }}
+</script>
+
+<script id="aging-data" type="application/json">
+{{ aging_json|safe }}
+</script>
+
+<!-- JSON injection for Accounts Payable data -->
+<script id="suppliers-data" type="application/json">
+{{ suppliers_json|safe }}
+</script>
+
+<script id="aging-data" type="application/json">
+{{ aging_json|safe }}
+</script>
+
+<script>
+function apApp() {
+  return {
+    suppliers: [],  // Populated by init()
+    aging: {},      // Populated by init()
+    
+    get totalAP() {
+      if (!this.suppliers.length) return 0;
+      return this.suppliers.reduce((sum, sup) => sum + (sup.total || 0), 0);
+    },
+
+    formatCurrency(num) {
+      return new Intl.NumberFormat('id-ID', { 
+        style: 'currency', 
+        currency: 'IDR', 
+        minimumFractionDigits: 0 
+      }).format(num || 0);
+    },
+
+    paySupplier(sup) {
+      // Navigate to payment form with vendor parameter
+      window.location.href = `{% url 'payment_voucher_form' %}?vendor=${sup.id}`;
+    },
+
+    init() {
+      // Load suppliers JSON data
+      const suppliersRaw = document.getElementById('suppliers-data');
+      if (suppliersRaw) {
+        try {
+          this.suppliers = JSON.parse(suppliersRaw.textContent);
+        } catch(e) {
+          console.error('Failed to parse suppliers JSON:', e);
+          this.suppliers = [];
+        }
+      }
+      
+      // Load aging JSON data
+      const agingRaw = document.getElementById('aging-data');
+      if (agingRaw) {
+        try {
+          this.aging = JSON.parse(agingRaw.textContent);
+        } catch(e) {
+          console.error('Failed to parse aging JSON:', e);
+          this.aging = { current: 0, m1_30: 0, m31_60: 0, m60: 0 };
+        }
+      }
+    }
+  }
+}
+</script>
+{% endblock %}

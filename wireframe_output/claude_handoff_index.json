@@ -1,0 +1,114 @@
+[
+  {
+    "module_name": "accounting",
+    "json_file": "wireframe_output/claude_handoff/accounting.json",
+    "markdown_file": "wireframe_output/claude_handoff/accounting.md",
+    "template_total": 13,
+    "view_total": 13
+  },
+  {
+    "module_name": "auth",
+    "json_file": "wireframe_output/claude_handoff/auth.json",
+    "markdown_file": "wireframe_output/claude_handoff/auth.md",
+    "template_total": 8,
+    "view_total": 8
+  },
+  {
+    "module_name": "etc",
+    "json_file": "wireframe_output/claude_handoff/etc.json",
+    "markdown_file": "wireframe_output/claude_handoff/etc.md",
+    "template_total": 5,
+    "view_total": 1
+  },
+  {
+    "module_name": "inventory",
+    "json_file": "wireframe_output/claude_handoff/inventory.json",
+    "markdown_file": "wireframe_output/claude_handoff/inventory.md",
+    "template_total": 27,
+    "view_total": 32
+  },
+  {
+    "module_name": "invoice_and_billing",
+    "json_file": "wireframe_output/claude_handoff/invoice_and_billing.json",
+    "markdown_file": "wireframe_output/claude_handoff/invoice_and_billing.md",
+    "template_total": 5,
+    "view_total": 5
+  },
+  {
+    "module_name": "marketing",
+    "json_file": "wireframe_output/claude_handoff/marketing.json",
+    "markdown_file": "wireframe_output/claude_handoff/marketing.md",
+    "template_total": 11,
+    "view_total": 24
+  },
+  {
+    "module_name": "master_data",
+    "json_file": "wireframe_output/claude_handoff/master_data.json",
+    "markdown_file": "wireframe_output/claude_handoff/master_data.md",
+    "template_total": 24,
+    "view_total": 40
+  },
+  {
+    "module_name": "messages",
+    "json_file": "wireframe_output/claude_handoff/messages.json",
+    "markdown_file": "wireframe_output/claude_handoff/messages.md",
+    "template_total": 6,
+    "view_total": 7
+  },
+  {
+    "module_name": "onboarding",
+    "json_file": "wireframe_output/claude_handoff/onboarding.json",
+    "markdown_file": "wireframe_output/claude_handoff/onboarding.md",
+    "template_total": 5,
+    "view_total": 5
+  },
+  {
+    "module_name": "print",
+    "json_file": "wireframe_output/claude_handoff/print.json",
+    "markdown_file": "wireframe_output/claude_handoff/print.md",
+    "template_total": 12,
+    "view_total": 11
+  },
+  {
+    "module_name": "production",
+    "json_file": "wireframe_output/claude_handoff/production.json",
+    "markdown_file": "wireframe_output/claude_handoff/production.md",
+    "template_total": 17,
+    "view_total": 20
+  },
+  {
+    "module_name": "reports",
+    "json_file": "wireframe_output/claude_handoff/reports.json",
+    "markdown_file": "wireframe_output/claude_handoff/reports.md",
+    "template_total": 25,
+    "view_total": 22
+  },
+  {
+    "module_name": "retur_and_refund",
+    "json_file": "wireframe_output/claude_handoff/retur_and_refund.json",
+    "markdown_file": "wireframe_output/claude_handoff/retur_and_refund.md",
+    "template_total": 3,
+    "view_total": 3
+  },
+  {
+    "module_name": "sales_insight",
+    "json_file": "wireframe_output/claude_handoff/sales_insight.json",
+    "markdown_file": "wireframe_output/claude_handoff/sales_insight.md",
+    "template_total": 7,
+    "view_total": 10
+  },
+  {
+    "module_name": "salesorder_and_quotation",
+    "json_file": "wireframe_output/claude_handoff/salesorder_and_quotation.json",
+    "markdown_file": "wireframe_output/claude_handoff/salesorder_and_quotation.md",
+    "template_total": 6,
+    "view_total": 6
+  },
+  {
+    "module_name": "settings",
+    "json_file": "wireframe_output/claude_handoff/settings.json",
+    "markdown_file": "wireframe_output/claude_handoff/settings.md",
+    "template_total": 21,
+    "view_total": 32
+  }
+]

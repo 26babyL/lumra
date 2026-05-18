@@ -1,0 +1,820 @@
+
+<style>
+/* Glass Minimal — lumra_glass_fix.py fase 5 (konservatif) */
+.modal-overlay {
+  background: var(--glass-dark-bg, var(--color-slate-900-a040));
+  backdrop-filter: var(--glass-dark-blur);
+  -webkit-backdrop-filter: var(--glass-dark-blur);
+}
+.panel-glass {
+  background: var(--glass-bg, var(--color-white-a072));
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid var(--glass-border, var(--color-white-a020));
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow, 0 2px 12px var(--color-black-a06));
+}
+
+</style>
+{% extends 'base/base.html' %}
+{% block title %}Inventory Planner — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: var(--shadow-sm-16) !important; }
+
+  .bg-blob-4 { width: 160px; height: 160px; background: var(--color-emerald-300); top: 18%; right: 12%; animation-delay: -8s; }
+
+  @keyframes drift {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(22px, 32px) scale(1.07); }
+  }
+
+  @keyframes toastIn  { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: var(--shadow-sm-16); } }
+
+  @keyframes toastOut { from { opacity: 1; } to { opacity: 0; pointer-events: var(--shadow-sm-16); } }
+
+  .modal-box {
+    animation: modalIn .25s cubic-bezier(.4,0,.2,1);
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(.93) translateY(14px); }
+    to   { opacity: 1; transform: var(--shadow-sm-16); }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+{{ inventory_items|json_script:"inventory-items-data" }}
+{{ inventory_metrics|json_script:"inventory-metrics-data" }}
+
+<!-- Background blobs -->
+<div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-3" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-4" aria-hidden="true"></div>
+
+<div class="relative z-10"
+     x-data="inventoryPlanner()"
+     x-init="init()">
+<div class="max-w-7xl mx-auto space-y-8">
+
+  {# ── HEADER ── #}
+  <div class="reveal">
+    <nav aria-label="Breadcrumb" class="mb-2">
+      <ol class="flex items-center gap-2 text-sm text-emerald-600">
+        <li><a href="{% url 'dashboard' %}" class="hover:text-emerald-800 transition-colors">Dashboard</a></li>
+        <li aria-hidden="true"><span class="text-emerald-300">/</span></li>
+        <li class="text-emerald-800 font-medium" aria-current="page">Inventory Planner</li>
+      </ol>
+    </nav>
+    <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
+      Inventory Planner
+    </h1>
+    <p class="text-sm text-emerald-700 mt-0.5">Prediksi dan optimasi stok bahan baku CoffeeShop</p>
+  </div>
+
+  {# ── METRIC WIDGETS ── #}
+  <div class="reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+    <div class="p-6 rounded-2xl shadow-xl border border-emerald-100 hover:shadow-2xl transition-all duration-300 hover:scale-105 group" style="background:var(--color-surface)">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <p class="text-xs font-semibold text-emerald-600 uppercase tracking-wide group-hover:text-emerald-800 transition-colors">Status Restock</p>
+          <p class="text-3xl font-bold text-red-600 mt-1">{{ metrics.restock_count|default:"—" }}</p>
+          <p class="text-xs text-slate-400 mt-1">Items need attention</p>
+        </div>
+        <div class="bg-gradient-to-br from-red-100 to-red-200 p-4 rounded-full shadow-md group-hover:scale-110 transition-transform" aria-hidden="true">
+          <i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-6 rounded-2xl shadow-xl border border-emerald-100 hover:shadow-2xl transition-all duration-300 hover:scale-105 group" style="background:var(--color-surface)">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <p class="text-xs font-semibold text-emerald-600 uppercase tracking-wide group-hover:text-emerald-800 transition-colors">Saran Pembelian</p>
+          <p class="text-3xl font-bold text-purple-600 mt-1 truncate">{{ metrics.purchase_recommendation|default:"—" }}</p>
+          <p class="text-xs text-slate-400 mt-1">Total recommendation</p>
+        </div>
+        <div class="bg-gradient-to-br from-purple-100 to-purple-200 p-4 rounded-full shadow-md group-hover:scale-110 transition-transform" aria-hidden="true">
+          <i class="fas fa-shopping-cart text-purple-500 text-2xl"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-6 rounded-2xl shadow-xl border border-emerald-100 hover:shadow-2xl transition-all duration-300 hover:scale-105 group" style="background:var(--color-surface)">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <p class="text-xs font-semibold text-emerald-600 uppercase tracking-wide group-hover:text-emerald-800 transition-colors">Produksi Hari Ini</p>
+          <p class="text-3xl font-bold text-green-600 mt-1">{{ metrics.production_today|default:"—" }}</p>
+          <p class="text-xs text-slate-400 mt-1">Active productions</p>
+        </div>
+        <div class="bg-gradient-to-br from-green-100 to-green-200 p-4 rounded-full shadow-md group-hover:scale-110 transition-transform" aria-hidden="true">
+          <i class="fas fa-industry text-green-500 text-2xl"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-6 rounded-2xl shadow-xl border border-emerald-100 hover:shadow-2xl transition-all duration-300 hover:scale-105 group" style="background:var(--color-surface)">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <p class="text-xs font-semibold text-emerald-600 uppercase tracking-wide group-hover:text-emerald-800 transition-colors">Konversi Aktif</p>
+          <p class="text-3xl font-bold text-blue-600 mt-1">{{ metrics.active_conversions|default:"—" }}</p>
+          <p class="text-xs text-slate-400 mt-1">Ongoing conversions</p>
+        </div>
+        <div class="bg-gradient-to-br from-blue-100 to-blue-200 p-4 rounded-full shadow-md group-hover:scale-110 transition-transform" aria-hidden="true">
+          <i class="fas fa-exchange-alt text-blue-500 text-2xl"></i>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  {# ── TOOLBAR ── #}
+  <div class="reveal p-6 rounded-2xl shadow-xl border border-emerald-100" style="background:var(--color-surface)">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+
+      <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full sm:w-auto">
+        <div class="relative w-full sm:w-64">
+          <label for="searchInput" class="sr-only">Cari bahan baku</label>
+          <input type="search"
+                 id="searchInput"
+                 placeholder="Cari bahan baku…"
+                 class="w-full pl-12 pr-4 py-3 border border-emerald-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-emerald-50 placeholder-emerald-400 transition-all duration-300">
+          <i class="fas fa-search absolute left-4 top-4 text-emerald-400" aria-hidden="true"></i>
+        </div>
+
+        <label for="statusFilter" class="sr-only">Filter status</label>
+        <select id="statusFilter"
+                class="px-4 py-3 border border-emerald-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-emerald-50 text-emerald-700 transition-all duration-300">
+          <option value="">Semua Status</option>
+          <option value="critical">Kritis</option>
+          <option value="warning">Peringatan</option>
+          <option value="normal">Normal</option>
+        </select>
+      </div>
+
+      <div class="flex gap-2 flex-shrink-0">
+        <button @click="openModal('conversion')"
+                class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg">
+          <i class="fas fa-exchange-alt text-xs" aria-hidden="true"></i>
+          Start Conversion
+        </button>
+        <button @click="openModal('bulkPurchase')"
+                class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold py-2 px-4 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg">
+          <i class="fas fa-shopping-cart text-xs" aria-hidden="true"></i>
+          Bulk Purchase
+        </button>
+      </div>
+    </div>
+  </div>
+
+  {# ── INVENTORY TABLE ── #}
+  <section class="reveal rounded-2xl shadow-xl border border-emerald-100 overflow-hidden hover:shadow-2xl transition-shadow duration-300" style="background:var(--color-surface)"
+           aria-labelledby="inventory-table-heading">
+
+    <div class="px-6 py-4 border-b border-emerald-100 flex items-center justify-between">
+      <h2 id="inventory-table-heading" class="text-sm font-semibold text-emerald-800">Inventory Items</h2>
+      <span class="text-xs text-emerald-500 font-medium">
+        <span x-text="visibleCount"></span> item ditampilkan
+      </span>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-emerald-50" role="table">
+        <thead>
+          <tr class="bg-emerald-50/60">
+            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-emerald-600 uppercase tracking-wider">Item</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-emerald-600 uppercase tracking-wider">Stok</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-emerald-600 uppercase tracking-wider">Pemakaian/Hari</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-emerald-600 uppercase tracking-wider">Sisa Hari</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-emerald-600 uppercase tracking-wider">Rekomendasi</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-emerald-600 uppercase tracking-wider">Aksi</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-emerald-50" style="background:var(--color-surface)">
+          <template x-for="item in filteredItems" :key="item.id">
+            <tr class="hover:bg-emerald-50/40 transition-colors duration-150">
+
+              <td class="px-6 py-4">
+                <div class="text-sm font-semibold text-slate-900" x-text="item.name"></div>
+                <div class="text-xs text-emerald-600 mt-0.5" x-text="item.location"></div>
+              </td>
+
+              <td class="px-6 py-4 text-sm text-slate-600" x-text="item.stock_display"></td>
+              <td class="px-6 py-4 text-sm text-slate-600" x-text="item.usage_display"></td>
+
+              <td class="px-6 py-4">
+                <span class="text-sm font-semibold"
+                      :class="{
+                        'text-red-600':   item.status === 'critical',
+                        'text-amber-600': item.status === 'warning',
+                        'text-green-600': item.status === 'normal'
+                      }"
+                      x-text="item.days_left + ' Hari'">
+                </span>
+              </td>
+
+              <td class="px-6 py-4">
+                <span class="px-2.5 py-1 inline-flex text-xs font-semibold rounded-full"
+                      :class="{
+                        'bg-red-100 text-red-700':     item.status === 'critical',
+                        'bg-amber-100 text-amber-700': item.status === 'warning',
+                        'bg-emerald-100 text-emerald-700': item.status === 'normal'
+                      }"
+                      x-text="item.recommendation">
+                </span>
+              </td>
+
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-1">
+                  <button @click="openModal('conversion', item.id)"
+                          class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          :aria-label="'Konversi ' + item.name">
+                    <i class="fas fa-exchange-alt text-xs" aria-hidden="true"></i>
+                  </button>
+                  <button @click="openModal('purchase', item.id)"
+                          class="p-1.5 text-slate-400 hover:text-emerald-400 hover:bg-emerald-50 rounded-lg transition-colors"
+                          :aria-label="'Beli ' + item.name">
+                    <i class="fas fa-shopping-cart text-xs" aria-hidden="true"></i>
+                  </button>
+                  <button @click="openDetailModal(item.id)"
+                          class="p-1.5 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+                          :aria-label="'Detail ' + item.name">
+                    <i class="fas fa-info-circle text-xs" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </td>
+
+            </tr>
+          </template>
+
+          <tr x-show="filteredItems.length === 0">
+            <td colspan="6" class="px-6 py-12 text-center text-emerald-400">
+              <i class="fas fa-box-open text-4xl mb-3 block opacity-50" aria-hidden="true"></i>
+              <p class="text-sm">Tidak ada item yang sesuai filter</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>
+</div>
+
+{# ================================================================
+   MODALS
+================================================================= #}
+
+{# ── Conversion Modal ── #}
+<div x-show="activeModal === 'conversion'"
+     x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+     class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+     @keydown.escape.window="closeModal()" @click.self="closeModal()"
+     role="dialog" aria-modal="true" aria-labelledby="modal-conversion-title"
+     x-cloak>
+  <div class="modal-box rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto" style="background:var(--color-surface)">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-emerald-100">
+      <h2 id="modal-conversion-title" class="text-lg font-bold text-slate-900">Start Conversion</h2>
+      <button @click="closeModal()" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg transition-colors" aria-label="Tutup modal">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
+    </div>
+    <form @submit.prevent="handleConversionSubmit" class="p-6 space-y-4" novalidate>
+      {% csrf_token %}
+      <div>
+        <label for="sourceItem" class="block text-sm font-medium text-slate-700 mb-1">Source Item</label>
+        <select id="sourceItem" name="source_item" x-model="conversionForm.source_item"
+                class="w-full px-4 py-2.5 border border-emerald-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-emerald-50 transition-all" required>
+          <option value="">Pilih item sumber</option>
+          {% for item in inventory_items %}
+          <option value="{{ item.id }}">{{ item.name }} — {{ item.stock_display }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="targetItem" class="block text-sm font-medium text-slate-700 mb-1">Target Item</label>
+        <select id="targetItem" name="target_item" x-model="conversionForm.target_item"
+                class="w-full px-4 py-2.5 border border-emerald-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-emerald-50 transition-all" required>
+          <option value="">Pilih target konversi</option>
+          {% for product in conversion_targets %}
+          <option value="{{ product.id }}">{{ product.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label for="conversionAmount" class="block text-sm font-medium text-slate-700 mb-1">Jumlah</label>
+          <input type="number" id="conversionAmount" name="amount" step="0.01" min="0.01"
+                 x-model="conversionForm.amount"
+                 class="w-full px-4 py-2.5 border border-emerald-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-emerald-50 transition-all" required>
+        </div>
+        <div>
+          <label for="conversionDate" class="block text-sm font-medium text-slate-700 mb-1">Tanggal</label>
+          <input type="date" id="conversionDate" name="date"
+                 x-model="conversionForm.date"
+                 class="w-full px-4 py-2.5 border border-emerald-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-emerald-50 transition-all" required>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" @click="closeModal()"
+                class="px-4 py-2 text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+          Batal
+        </button>
+        <button type="submit" :disabled="submitting"
+                class="px-4 py-2 text-sm text-white bg-blue-500 hover:bg-blue-600 rounded-xl transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg">
+          <i x-show="submitting" class="fas fa-circle-notch fa-spin text-xs" aria-hidden="true"></i>
+          Start Conversion
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{# ── Purchase Modal ── #}
+<div x-show="activeModal === 'purchase'"
+     x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+     class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+     @keydown.escape.window="closeModal()" @click.self="closeModal()"
+     role="dialog" aria-modal="true" aria-labelledby="modal-purchase-title"
+     x-cloak>
+  <div class="modal-box rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto" style="background:var(--color-surface)">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-emerald-100">
+      <h2 id="modal-purchase-title" class="text-lg font-bold text-slate-900">Purchase Item</h2>
+      <button @click="closeModal()" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg transition-colors" aria-label="Tutup modal">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
+    </div>
+    <form @submit.prevent="handlePurchaseSubmit" class="p-6 space-y-4" novalidate>
+      {% csrf_token %}
+      <div>
+        <label for="purchaseItem" class="block text-sm font-medium text-slate-700 mb-1">Item</label>
+        <select id="purchaseItem" name="item" x-model="purchaseForm.item"
+                class="w-full px-4 py-2.5 border border-emerald-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-emerald-50 transition-all" required>
+          <option value="">Pilih item</option>
+          {% for item in inventory_items %}
+          <option value="{{ item.id }}">{{ item.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label for="purchaseQuantity" class="block text-sm font-medium text-slate-700 mb-1">Jumlah</label>
+          <input type="number" id="purchaseQuantity" name="quantity" step="0.01" min="0.01"
+                 x-model="purchaseForm.quantity"
+                 class="w-full px-4 py-2.5 border border-emerald-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-emerald-50 transition-all" required>
+        </div>
+        <div>
+          <label for="purchaseUnitPrice" class="block text-sm font-medium text-slate-700 mb-1">Harga Satuan</label>
+          <input type="number" id="purchaseUnitPrice" name="unit_price" step="0.01" min="0"
+                 x-model="purchaseForm.unit_price"
+                 class="w-full px-4 py-2.5 border border-emerald-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-emerald-50 transition-all" required>
+        </div>
+      </div>
+      <div>
+        <label for="purchaseSupplier" class="block text-sm font-medium text-slate-700 mb-1">Supplier</label>
+        <select id="purchaseSupplier" name="supplier" x-model="purchaseForm.supplier"
+                class="w-full px-4 py-2.5 border border-emerald-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-emerald-50 transition-all" required>
+          <option value="">Pilih supplier</option>
+          {% for supplier in suppliers %}
+          <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="purchaseDate" class="block text-sm font-medium text-slate-700 mb-1">Estimasi Pengiriman</label>
+        <input type="date" id="purchaseDate" name="delivery_date"
+               x-model="purchaseForm.delivery_date"
+               class="w-full px-4 py-2.5 border border-emerald-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-emerald-50 transition-all" required>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" @click="closeModal()"
+                class="px-4 py-2 text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+          Batal
+        </button>
+        <button type="submit" :disabled="submitting"
+                class="px-4 py-2 text-sm text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg">
+          <i x-show="submitting" class="fas fa-circle-notch fa-spin text-xs" aria-hidden="true"></i>
+          Place Order
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{# ── Bulk Purchase Modal ── #}
+<div x-show="activeModal === 'bulkPurchase'"
+     x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+     class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+     @keydown.escape.window="closeModal()" @click.self="closeModal()"
+     role="dialog" aria-modal="true" aria-labelledby="modal-bulk-title"
+     x-cloak>
+  <div class="modal-box rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto" style="background:var(--color-surface)">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-emerald-100">
+      <h2 id="modal-bulk-title" class="text-lg font-bold text-slate-900">Bulk Purchase</h2>
+      <button @click="closeModal()" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg transition-colors" aria-label="Tutup modal">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="p-6">
+      <p class="text-sm text-slate-500 mb-4">Pilih item yang ingin dibeli secara massal:</p>
+      <div class="overflow-x-auto rounded-xl border border-emerald-100">
+        <table class="min-w-full divide-y divide-emerald-50">
+          <thead class="bg-emerald-50/60">
+            <tr>
+              <th scope="col" class="px-4 py-3 text-left">
+                <input type="checkbox" id="selectAll"
+                       @change="toggleSelectAll($event)"
+                       class="rounded border-emerald-300 text-emerald-500 focus:ring-emerald-400"
+                       aria-label="Pilih semua item">
+              </th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-emerald-600 uppercase">Item</th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-emerald-600 uppercase">Stok Saat Ini</th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-emerald-600 uppercase">Rekomendasi</th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-emerald-600 uppercase">Jumlah Beli</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-emerald-50" style="background:var(--color-surface)">
+            <template x-for="item in bulkItems" :key="item.id">
+              <tr class="hover:bg-emerald-50/40 transition-colors">
+                <td class="px-4 py-3">
+                  <input type="checkbox" :value="item.id" x-model="selectedBulkItems"
+                         class="rounded border-emerald-300 text-emerald-500 focus:ring-emerald-400"
+                         :aria-label="'Pilih ' + item.name">
+                </td>
+                <td class="px-4 py-3">
+                  <div class="text-sm font-semibold text-slate-900" x-text="item.name"></div>
+                  <div class="text-xs text-emerald-600" x-text="item.location"></div>
+                </td>
+                <td class="px-4 py-3 text-sm text-slate-600" x-text="item.stock_display"></td>
+                <td class="px-4 py-3 text-sm text-slate-600" x-text="item.recommended_amount"></td>
+                <td class="px-4 py-3">
+                  <input type="number" step="0.01" min="0.01"
+                         x-model="item.bulk_quantity"
+                         class="w-24 px-2 py-1.5 border border-emerald-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-emerald-50"
+                         :aria-label="'Jumlah beli ' + item.name">
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+      <div class="flex justify-between items-center mt-4">
+        <p class="text-sm text-emerald-600 font-medium">
+          <span x-text="selectedBulkItems.length"></span> item dipilih
+        </p>
+        <div class="flex gap-2">
+          <button @click="closeModal()"
+                  class="px-4 py-2 text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+            Batal
+          </button>
+          <button @click="handleBulkPurchaseSubmit()" :disabled="submitting || selectedBulkItems.length === 0"
+                  class="px-4 py-2 text-sm text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg">
+            <i x-show="submitting" class="fas fa-circle-notch fa-spin text-xs" aria-hidden="true"></i>
+            Place Bulk Order
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{# ── Item Detail Modal ── #}
+<div x-show="activeModal === 'detail'"
+     x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+     class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+     @keydown.escape.window="closeModal()" @click.self="closeModal()"
+     role="dialog" aria-modal="true" aria-labelledby="modal-detail-title"
+     x-cloak>
+  <div class="modal-box rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto" style="background:var(--color-surface)">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-emerald-100">
+      <h2 id="modal-detail-title" class="text-lg font-bold text-slate-900">
+        <span x-text="detailItem ? detailItem.name : 'Item Details'"></span>
+      </h2>
+      <button @click="closeModal()" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg transition-colors" aria-label="Tutup modal">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="p-6">
+      <div x-show="detailLoading" class="flex justify-center py-10">
+        <i class="fas fa-circle-notch fa-spin text-emerald-500 text-2xl" aria-label="Memuat data..."></i>
+      </div>
+
+      <div x-show="!detailLoading && detailItem" class="space-y-5">
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+            <p class="text-xs text-emerald-600 mb-0.5">Stok Saat Ini</p>
+            <p class="font-bold text-slate-900" x-text="detailItem?.stock_display"></p>
+          </div>
+          <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+            <p class="text-xs text-emerald-600 mb-0.5">Pemakaian/Hari</p>
+            <p class="font-bold text-slate-900" x-text="detailItem?.usage_display"></p>
+          </div>
+          <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+            <p class="text-xs text-emerald-600 mb-0.5">Sisa Hari</p>
+            <p class="font-bold"
+               :class="{
+                 'text-red-600':   detailItem?.status === 'critical',
+                 'text-amber-600': detailItem?.status === 'warning',
+                 'text-green-600': detailItem?.status === 'normal'
+               }"
+               x-text="(detailItem?.days_left ?? '—') + ' Hari'">
+            </p>
+          </div>
+          <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+            <p class="text-xs text-emerald-600 mb-0.5">Status</p>
+            <p class="font-bold capitalize"
+               :class="{
+                 'text-red-600':   detailItem?.status === 'critical',
+                 'text-amber-600': detailItem?.status === 'warning',
+                 'text-green-600': detailItem?.status === 'normal'
+               }"
+               x-text="detailItem?.status">
+            </p>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex justify-between px-3 py-2.5 bg-emerald-50 rounded-xl text-sm border border-emerald-100">
+            <span class="text-slate-600">Lokasi</span>
+            <span class="font-semibold text-slate-900" x-text="detailItem?.location"></span>
+          </div>
+          <div class="flex justify-between px-3 py-2.5 bg-emerald-50 rounded-xl text-sm border border-emerald-100">
+            <span class="text-slate-600">Restock Terakhir</span>
+            <span class="font-semibold text-slate-900" x-text="detailItem?.last_restock"></span>
+          </div>
+          <div class="flex justify-between px-3 py-2.5 bg-emerald-50 rounded-xl text-sm border border-emerald-100">
+            <span class="text-slate-600">Supplier</span>
+            <span class="font-semibold text-slate-900" x-text="detailItem?.supplier"></span>
+          </div>
+          <div class="flex justify-between px-3 py-2.5 bg-emerald-50 rounded-xl text-sm border border-emerald-100">
+            <span class="text-slate-600">Harga Satuan</span>
+            <span class="font-semibold text-slate-900" x-text="detailItem?.unit_price"></span>
+          </div>
+        </div>
+
+        <div x-show="detailItem?.notes">
+          <p class="text-xs font-semibold text-emerald-600 uppercase tracking-wide mb-1">Catatan</p>
+          <p class="text-sm text-slate-700" x-text="detailItem?.notes"></p>
+        </div>
+
+        <div class="flex gap-2 pt-2">
+          <button @click="openModal('purchase', detailItem?.id)"
+                  class="flex-1 py-2 text-sm text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all hover:scale-105 text-center shadow-sm">
+            Beli Item Ini
+          </button>
+          <button @click="openModal('conversion', detailItem?.id)"
+                  class="flex-1 py-2 text-sm text-white bg-blue-500 hover:bg-blue-600 rounded-xl transition-all hover:scale-105 text-center shadow-sm">
+            Konversi
+          </button>
+        </div>
+      </div>
+
+      <div x-show="!detailLoading && !detailItem" class="text-center py-8 text-emerald-400 text-sm">
+        <i class="fas fa-exclamation-circle text-2xl mb-2 block" aria-hidden="true"></i>
+        Gagal memuat data item
+      </div>
+    </div>
+  </div>
+</div>
+
+{# ── TOAST CONTAINER ── #}
+<div class="fixed bottom-4 right-4 z-50 space-y-2"
+     x-data
+     aria-live="polite"
+     aria-atomic="true">
+  <template x-for="t in $store.toasts.list" :key="t.id">
+    <div class="toast bg-emerald-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 min-w-64 max-w-sm"
+         :class="{
+           'border-l-4 border-emerald-400': t.type === 'success',
+           'border-l-4 border-teal-400':    t.type === 'info',
+           'border-l-4 border-amber-400':   t.type === 'warning',
+           'border-l-4 border-red-400':     t.type === 'error'
+         }">
+      <i :class="t.icon" aria-hidden="true"></i>
+      <span x-text="t.message"></span>
+    </div>
+  </template>
+</div>
+
+{% endblock %}
+
+{% block dashboard_scripts %}
+<script>
+document.addEventListener('alpine:init', () => {
+  if (!Alpine.store('toasts')) {
+    Alpine.store('toasts', {
+      list: [],
+      _id: 0,
+      show(message, type = 'success', icon = 'fas fa-check-circle') {
+        const id = ++this._id;
+        this.list.push({ id, message, type, icon });
+        setTimeout(() => { this.list = this.list.filter(t => t.id !== id); }, 4800);
+      }
+    });
+  }
+});
+</script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function inventoryPlanner() {
+  return {
+    /* ── State ── */
+    allItems:       [],
+    filteredItems:  [],
+    bulkItems:      [],
+    visibleCount:   0,
+    searchQuery:    '',
+    statusFilter:   '',
+    searchTimer:    null,
+    activeModal:    null,
+    previousFocus:  null,
+    submitting:     false,
+    detailItem:     null,
+    detailLoading:  false,
+    selectedBulkItems: [],
+    conversionForm: { source_item: '', target_item: '', amount: '', date: '' },
+    purchaseForm:   { item: '', quantity: '', unit_price: '', supplier: '', delivery_date: '' },
+
+    /* ── Init ── */
+    init() {
+      const raw = JSON.parse(document.getElementById('inventory-items-data').textContent || '[]');
+      this.allItems  = raw;
+      this.bulkItems = raw.map(item => ({ ...item, bulk_quantity: item.recommended_amount ?? 0 }));
+      this.applyFilter();
+
+      // Scroll reveal
+      const els = document.querySelectorAll('.reveal');
+      const io  = new IntersectionObserver((entries) => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i * 90);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.07 });
+      els.forEach(el => io.observe(el));
+
+      // Search & filter listeners
+      const searchEl = document.getElementById('searchInput');
+      const statusEl = document.getElementById('statusFilter');
+
+      if (searchEl) {
+        searchEl.addEventListener('input', () => {
+          clearTimeout(this.searchTimer);
+          this.searchTimer = setTimeout(() => {
+            this.searchQuery = searchEl.value;
+            this.applyFilter();
+          }, 280);
+        });
+      }
+      if (statusEl) {
+        statusEl.addEventListener('change', () => {
+          this.statusFilter = statusEl.value;
+          this.applyFilter();
+        });
+      }
+    },
+
+    /* ── Filter ── */
+    applyFilter() {
+      const q = this.searchQuery.toLowerCase().trim();
+      const s = this.statusFilter;
+      this.filteredItems = this.allItems.filter(item => {
+        const matchName   = !q || item.name.toLowerCase().includes(q);
+        const matchStatus = !s || item.status === s;
+        return matchName && matchStatus;
+      });
+      this.visibleCount = this.filteredItems.length;
+    },
+
+    /* ── Modal ── */
+    openModal(name, itemId = null) {
+      this.previousFocus = document.activeElement;
+      this.activeModal   = name;
+      if (itemId) {
+        if (name === 'conversion') this.conversionForm.source_item = String(itemId);
+        if (name === 'purchase')   this.purchaseForm.item = String(itemId);
+      }
+      this.$nextTick(() => {
+        const modal = document.querySelector('[role="dialog"]:not([style*="display: none"])');
+        if (modal) {
+          const first = modal.querySelector('button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
+          if (first) first.focus();
+        }
+      });
+    },
+
+    closeModal() {
+      this.activeModal  = null;
+      this.submitting   = false;
+      if (this.previousFocus) this.previousFocus.focus();
+    },
+
+    /* ── Detail Modal ── */
+    openDetailModal(itemId) {
+      this.previousFocus = document.activeElement;
+      this.activeModal   = 'detail';
+      this.detailItem    = null;
+      this.detailLoading = true;
+
+      fetch(`/api/inventory/items/${encodeURIComponent(itemId)}/`, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+      })
+        .then(res => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
+        .then(data  => { this.detailItem = data; this.detailLoading = false; })
+        .catch(err  => { console.error(err); this.detailItem = null; this.detailLoading = false; });
+    },
+
+    /* ── Bulk Purchase ── */
+    toggleSelectAll(event) {
+      this.selectedBulkItems = event.target.checked ? this.bulkItems.map(i => i.id) : [];
+    },
+
+    handleBulkPurchaseSubmit() {
+      if (this.selectedBulkItems.length === 0) {
+        this._toast('Pilih minimal satu item', 'error');
+        return;
+      }
+      const payload = this.bulkItems
+        .filter(i => this.selectedBulkItems.includes(i.id))
+        .map(i => ({ id: i.id, quantity: i.bulk_quantity }));
+
+      this.submitting = true;
+      fetch('/api/inventory/bulk-purchase/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': this.getCsrfToken(), 'X-Requested-With': 'XMLHttpRequest' },
+        body: JSON.stringify({ items: payload })
+      })
+        .then(res => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
+        .then(() => {
+          this._toast(`${payload.length} item berhasil dipesan`, 'success');
+          this.closeModal();
+          this.selectedBulkItems = [];
+        })
+        .catch(() => this._toast('Gagal memproses bulk order', 'error'))
+        .finally(() => { this.submitting = false; });
+    },
+
+    /* ── Form Submissions ── */
+    handleConversionSubmit() {
+      this.submitting = true;
+      fetch('/api/inventory/conversions/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': this.getCsrfToken(), 'X-Requested-With': 'XMLHttpRequest' },
+        body: JSON.stringify(this.conversionForm)
+      })
+        .then(res => { if (!res.ok) throw new Error(); return res.json(); })
+        .then(() => {
+          this._toast('Konversi berhasil dimulai', 'success');
+          this.closeModal();
+          this.conversionForm = { source_item: '', target_item: '', amount: '', date: '' };
+        })
+        .catch(() => this._toast('Gagal memulai konversi', 'error'))
+        .finally(() => { this.submitting = false; });
+    },
+
+    handlePurchaseSubmit() {
+      this.submitting = true;
+      fetch('/api/inventory/purchases/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': this.getCsrfToken(), 'X-Requested-With': 'XMLHttpRequest' },
+        body: JSON.stringify(this.purchaseForm)
+      })
+        .then(res => { if (!res.ok) throw new Error(); return res.json(); })
+        .then(() => {
+          this._toast('Purchase order berhasil dibuat', 'success');
+          this.closeModal();
+          this.purchaseForm = { item: '', quantity: '', unit_price: '', supplier: '', delivery_date: '' };
+        })
+        .catch(() => this._toast('Gagal membuat purchase order', 'error'))
+        .finally(() => { this.submitting = false; });
+    },
+
+    /* ── Helpers ── */
+    getCsrfToken() {
+      return document.querySelector('[name=csrfmiddlewaretoken]')?.value ?? '';
+    },
+
+    _toast(message, type = 'info') {
+      const icons = {
+        success: 'fas fa-check-circle',
+        error:   'fas fa-times-circle',
+        warning: 'fas fa-exclamation-triangle',
+        info:    'fas fa-info-circle',
+      };
+      Alpine.store('toasts').show(message, type, icons[type] ?? icons.info);
+    },
+  };
+}
+</script>
+{% endblock %}

@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Lumra Fixer Report v3 — 2026-04-07 13:45:23</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: #EEF3F0; color: #0D2018; font-size: 13px; }
+  .page { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+
+  /* Header */
+  .header { background: #00674F; border-radius: 14px; padding: 28px 32px; margin-bottom: 24px; color: #fff; }
+  .header-top { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+  .logo { width: 40px; height: 40px; background: rgba(255,255,255,.15); border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; }
+  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -.3px; }
+  .header-sub { font-size: 12px; color: rgba(255,255,255,.6); margin-top: 2px; }
+  .header-meta { display: flex; gap: 24px; margin-top: 16px; flex-wrap: wrap; }
+  .meta-item { background: rgba(255,255,255,.1); border-radius: 8px; padding: 8px 14px; }
+  .meta-label { font-size: 10px; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .06em; }
+  .meta-value { font-size: 18px; font-weight: 700; margin-top: 2px; }
+  .meta-value.green { color: #00C97E; }
+  .meta-value.gold  { color: #EFBF04; }
+  .meta-value.red   { color: #FF8080; }
+
+  /* Cards */
+  .card { background: rgba(255,255,255,.88); border: 0.5px solid rgba(255,255,255,.25);
+           backdrop-filter: blur(12px);
+           box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.06);
+           border-radius: 14px; padding: 20px 24px; margin-bottom: 20px; }
+  .card h2 { font-size: 14px; font-weight: 600; color: #0D2018; margin-bottom: 14px;
+              padding-bottom: 10px; border-bottom: 0.5px solid rgba(0,103,79,.12); }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; }
+  thead th { background: #00674F; color: #fff; font-size: 10px; font-weight: 600;
+              letter-spacing: .08em; text-transform: uppercase; padding: 10px 12px; text-align: left; }
+  tbody tr:nth-child(odd)  td { background: rgba(0,103,79,.035); }
+  tbody tr:nth-child(even) td { background: #fff; }
+  tbody tr:hover td { background: rgba(0,103,79,.06); }
+  td { padding: 9px 12px; font-size: 12px; border-bottom: 0.5px solid rgba(0,103,79,.07); vertical-align: top; }
+  .file-path { font-family: monospace; font-size: 11px; color: #00674F; }
+
+  /* Badges */
+  .cat-badge, .sev-badge { font-size: 10px; font-weight: 700; padding: 3px 8px;
+                             border-radius: 100px; display: inline-block; }
+
+  /* Dry run warning */
+  .dry-run-banner { background: #FFFBEA; border: 1px solid #EFBF04; border-radius: 10px;
+                     padding: 12px 16px; margin-bottom: 20px; color: #3A2000; font-size: 13px; }
+
+  /* Footer */
+  .footer { text-align: center; font-size: 11px; color: #8AAB97; margin-top: 32px; padding: 16px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-top">
+      <div class="logo">L</div>
+      <div>
+        <h1>Lumra Blueprint Auto-Fixer v3.0</h1>
+        <div class="header-sub">Emerald Odyssey — Fix Report · 2026-04-07 13:45:23</div>
+      </div>
+    </div>
+    <div class="header-meta">
+      <div class="meta-item">
+        <div class="meta-label">Total Fixes</div>
+        <div class="meta-value green">557</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Files Diproses</div>
+        <div class="meta-value">49</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Files Dilewati</div>
+        <div class="meta-value gold">0</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Kategori Aktif</div>
+        <div class="meta-value">15</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Mode</div>
+        <div class="meta-value green">APPLIED</div>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <div class="card">
+    <h2>Ringkasan per Kategori</h2>
+    <table>
+      <thead><tr><th>Kode</th><th>Deskripsi</th><th style="text-align:center">Severity</th><th style="text-align:center">Files</th><th style="text-align:center">Fixes</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="cat-badge" style="background:#FFFBEA;color:#8B6800">C2</span></td>
+          <td>Anti-Duplicate — DRY TODO injection</td>
+          <td style="text-align:center"><span class="sev-badge" style="background:#FFFBEA;color:#8B6800">HIGH</span></td>
+          <td style="text-align:center;font-weight:600;color:#00674F">15</td>
+          <td style="text-align:center;font-weight:700;color:#00A86B">69</td>
+        </tr>
+        <tr>
+          <td><span class="cat-badge" style="background:#EAF4EF;color:#00674F">C3</span></td>
+          <td>Anti-Long Method — function &gt; 30 baris TODO injection</td>
+          <td style="text-align:center"><span class="sev-badge" style="background:#EAF4EF;color:#00674F">MEDIUM</span></td>
+          <td style="text-align:center;font-weight:600;color:#00674F">17</td>
+          <td style="text-align:center;font-weight:700;color:#00A86B">57</td>
+        </tr>
+        <tr>
+          <td><span class="cat-badge" style="background:#EAF4EF;color:#00674F">C4</span></td>
+          <td>Naming — variabel/fungsi terlarang rename</td>
+          <td style="text-align:center"><span class="sev-badge" style="background:#EAF4EF;color:#00674F">MEDIUM</span></td>
+          <td style="text-align:center;font-weight:600;color:#00674F">3</td>
+          <td style="text-align:center;font-weight:700;color:#00A86B">8</td>
+        </tr>
+        <tr>
+          <td><span class="cat-badge" style="background:#FFFBEA;color:#8B6800">C5</span></td>
+          <td>Architecture — N+1 &amp; fat view TODO injection</td>
+          <td style="text-align:center"><span class="sev-badge" style="background:#FFFBEA;color:#8B6800">HIGH</span></td>
+          <td style="text-align:center;font-weight:600;color:#00674F">5</td>
+          <td style="text-align:center;font-weight:700;color:#00A86B">16</td>
+        </tr>
+        <tr>
+          <td><span class="cat-badge" style="background:#FFFBEA;color:#8B6800">D1</span></td>
+          <td>Palette — rgba/hex hardcode → CSS token</td>
+          <td style="text-align:center"><span class="sev-badge" style="background:#FFFBEA;color:#8B6800">HIGH</span></td>
+          <td style="text-align:center;font-weight:600;color:#00674F">29</td>
+          <td style="text-align:center;font-weight:700;color:#00A86B">407</td>
+        </tr>
+        <tr>
+          <td><span class="cat-badge" style="background:#EAF4EF;color:#00674F">D4</span></td>
+          <td>Typography — font-size, font-weight, tabular-nums</td>
+          <td style="text-align:center"><span class="sev-badge" style="background:#EAF4EF;color:#00674F">MEDIUM</span></td>
+          <td style="text-align:center;font-weight:600;color:#00674F">0</td>
+          <td style="text-align:center;font-weight:700;color:#00A86B">0</td>
+        </tr>
+        <tr>
+          <td><span class="cat-badge" style="background:#FFFBEA;color:#8B6800">D5</span></td>
+          <td>Shimmer — loading state template injection</td>
+          <td style="text-align:center"><span class="sev-badge" style="background:#FFFBEA;color:#8B6800">HIGH</span></td>
+          <td style="text-align:center;font-weight:600;color:#00674F">0</td>
+          <td style="text-align:center;font-weight:700;color:#00A86B">0</td>
+        </tr>
+        <tr>
+          <td><span class="cat-badge" style="background:#EAF4EF;color:#00674F">D7</span></td>
+          <td>CSS Token — inline style hex/rgba → token</td>
+          <td style="text-align:center"><span class="sev-badge" style="background:#EAF4EF;color:#00674F">MEDIUM</span></td>
+          <td style="text-align:center;font-weight:600;color:#00674F">2</td>
+          <td style="text-align:center;font-weight:700;color:#00A86B">0</td>
+        </tr></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Detail per File (75 files diproses)</h2>
+    <table>
+      <thead><tr><th>File</th><th style="text-align:center">Status</th><th style="text-align:center">Fixes</th><th>Perubahan</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="file-path">lumra_pages/inventory/add_stock_movement.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">6</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #047857→var(--color-primary-dark)</code> × 1</li><li><code>D1 #059669→var(--color-success)</code> × 1</li><li><code>D1 #e11d48→var(--color-danger)</code> × 1</li><li><code>D1 #f43f5e→var(--color-danger)</code> × 1</li><li><code>D1 #f59e0b→var(--color-warning)</code> × 1</li><li><code>D1 #d97706→var(--color-warning)</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/inventory/product_list.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">3</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #059669→var(--color-success)</code> × 1</li><li><code>D1 #f43f5e→var(--color-danger)</code> × 1</li><li><code>D1 #f59e0b→var(--color-warning)</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/inventory/products.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">3</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #059669→var(--color-success)</code> × 1</li><li><code>D1 #f43f5e→var(--color-danger)</code> × 1</li><li><code>D1 #f59e0b→var(--color-warning)</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/inventory/stock_movement.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">5</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #bfdbfe→var(--color-info-light)</code> × 5</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/inventory/stock_movement_form.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">6</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #047857→var(--color-primary-dark)</code> × 1</li><li><code>D1 #059669→var(--color-success)</code> × 1</li><li><code>D1 #e11d48→var(--color-danger)</code> × 1</li><li><code>D1 #f43f5e→var(--color-danger)</code> × 1</li><li><code>D1 #f59e0b→var(--color-warning)</code> × 1</li><li><code>D1 #d97706→var(--color-warning)</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/inventory/stock_planning.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">2</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #a5b4fc→var(--color-indigo-light)</code> × 2</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/inventory/stock_purchasing.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">2</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #a5b4fc→var(--color-indigo-light)</code> × 2</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/master_data/category_form.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">15</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #047857→var(--color-primary-dark)</code> × 2</li><li><code>D1 #059669→var(--color-success)</code> × 1</li><li><code>D1 #0ea5e9→var(--color-info)</code> × 1</li><li><code>D1 #3b82f6→var(--color-info)</code> × 1</li><li><code>D1 #6366f1→var(--color-indigo)</code> × 1</li><li><code>D1 #1e293b→var(--color-text-primary)</code> × 1</li><li><code>D1 #8b5cf6→var(--color-purple)</code> × 1</li><li><code>D1 #14b8a6→var(--color-teal)</code> × 1</li><li><code>D1 #f43f5e→var(--color-danger)</code> × 1</li><li><code>D1 #ec4899→var(--color-pink)</code> × 1</li><li><code>D1 #f59e0b→var(--color-warning)</code> × 1</li><li><code>D1 #f97316→var(--color-orange)</code> × 1</li><li><code>D1 #84cc16→var(--color-lime)</code> × 1</li><li><code>D1 #64748b→var(--color-text-secondary)</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/master_data/location_list.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">9</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #047857→var(--color-primary-dark)</code> × 1</li><li><code>D1 #059669→var(--color-success)</code> × 2</li><li><code>D1 #f5f5f0→var(--color-surface-faint)</code> × 1</li><li><code>D1 #e8ede6→var(--color-border-light)</code> × 1</li><li><code>D1 #c9e8f0→var(--color-info-faint)</code> × 1</li><li><code>D1 #ef4444→var(--color-danger)</code> × 1</li><li><code>D1 #f43f5e→var(--color-danger)</code> × 1</li><li><code>D1 #f59e0b→var(--color-warning)</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/master_data/locations.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">9</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #047857→var(--color-primary-dark)</code> × 1</li><li><code>D1 #059669→var(--color-success)</code> × 2</li><li><code>D1 #f5f5f0→var(--color-surface-faint)</code> × 1</li><li><code>D1 #e8ede6→var(--color-border-light)</code> × 1</li><li><code>D1 #c9e8f0→var(--color-info-faint)</code> × 1</li><li><code>D1 #ef4444→var(--color-danger)</code> × 1</li><li><code>D1 #f43f5e→var(--color-danger)</code> × 1</li><li><code>D1 #f59e0b→var(--color-warning)</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/master_data/unit_form.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">7</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #047857→var(--color-primary-dark)</code> × 1</li><li><code>D1 #0284c7→var(--color-info)</code> × 1</li><li><code>D1 #7c3aed→var(--color-purple)</code> × 1</li><li><code>D1 #be185d→var(--color-pink)</code> × 1</li><li><code>D1 #d97706→var(--color-warning)</code> × 1</li><li><code>D1 #475569→var(--color-text-secondary)</code> × 1</li><li><code>D1 #94a3b8→var(--color-text-muted)</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/master_data/vendor_form.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">17</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #eff6ff→var(--color-bg-info)</code> × 1</li><li><code>D1 #bfdbfe→var(--color-info-light)</code> × 1</li><li><code>D1 #4f46e5→var(--color-indigo)</code> × 6</li><li><code>D1 #6366f1→var(--color-indigo)</code> × 4</li><li><code>D1 #a5b4fc→var(--color-indigo-light)</code> × 1</li><li><code>D1 #94a3b8→var(--color-text-muted)</code> × 2</li><li><code>D1 #fff→var(--color-white)</code> × 2</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/reports/reporting.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">2</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #059669→var(--color-success)</code> × 2</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/sales_insight/dashboard.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">5</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #059669→var(--color-success)</code> × 2</li><li><code>D1 #94a3b8→var(--color-text-muted)</code> × 2</li><li><code>D1 #fff→var(--color-white)</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/sales_insight/financial_reports.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">4</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #3b82f6→var(--color-info)</code> × 2</li><li><code>D1 #94a3b8→var(--color-text-muted)</code> × 2</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/sales_insight/market_insights.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">20</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #047857→var(--color-primary-dark)</code> × 2</li><li><code>D1 #059669→var(--color-success)</code> × 1</li><li><code>D1 #6366f1→var(--color-indigo)</code> × 1</li><li><code>D1 #8b5cf6→var(--color-purple)</code> × 2</li><li><code>D1 #e11d48→var(--color-danger)</code> × 1</li><li><code>D1 #f59e0b→var(--color-warning)</code> × 1</li><li><code>D1 #d97706→var(--color-warning)</code> × 2</li><li><code>D1 #92400e→var(--color-warning-dark)</code> × 1</li><li><code>D1 #64748b→var(--color-text-secondary)</code> × 1</li><li><code>D1 #94a3b8→var(--color-text-muted)</code> × 6</li><li><code>D1 #fff→var(--color-white)</code> × 2</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/sales_insight/pos.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">7</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #047857→var(--color-primary-dark)</code> × 1</li><li><code>D1 #f1f5f9→var(--color-surface-faint)</code> × 1</li><li><code>D1 #4f3cc9→var(--color-indigo)</code> × 1</li><li><code>D1 #003087→var(--color-navy)</code> × 1</li><li><code>D1 #8b5cf6→var(--color-purple)</code> × 1</li><li><code>D1 #00aed6→var(--color-teal)</code> × 1</li><li><code>D1 #94a3b8→var(--color-text-muted)</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/sales_insight/sales_intelligence.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">3</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #047857→var(--color-primary-dark)</code> × 1</li><li><code>D1 #059669→var(--color-success)</code> × 1</li><li><code>D1 #fff→var(--color-white)</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/sales_insight/sales_performance.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">8</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #047857→var(--color-primary-dark)</code> × 1</li><li><code>D1 #059669→var(--color-success)</code> × 1</li><li><code>D1 #6366f1→var(--color-indigo)</code> × 1</li><li><code>D1 #f59e0b→var(--color-warning)</code> × 1</li><li><code>D1 #92400e→var(--color-warning-dark)</code> × 1</li><li><code>D1 #94a3b8→var(--color-text-muted)</code> × 3</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/settings/about.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">89</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 emerald rgba→var(--color-accent-a15)</code> × 8</li><li><code>D1 emerald rgba→var(--color-accent-alpha)</code> × 25</li><li><code>D1 emerald rgba→var(--color-contrast-a08)</code> × 5</li><li><code>D1 emerald rgba→var(--color-contrast-a10)</code> × 8</li><li><code>D1 emerald rgba→var(--color-contrast-alpha)</code> × 10</li><li><code>D1 #efbf04→var(--color-accent)</code> × 1</li><li><code>D1 #fdfbd4→var(--color-neutral)</code> × 6</li><li><code>D1 #000080→var(--color-contrast)</code> × 1</li><li><code>D1 #fff→var(--color-white)</code> × 25</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/settings/business_feature_matrix.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">63</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 emerald rgba→var(--color-accent-a15)</code> × 2</li><li><code>D1 emerald rgba→var(--color-accent-alpha)</code> × 13</li><li><code>D1 emerald rgba→var(--color-contrast-a08)</code> × 1</li><li><code>D1 emerald rgba→var(--color-contrast-alpha)</code> × 6</li><li><code>D1 #efbf04→var(--color-accent)</code> × 1</li><li><code>D1 #fdfbd4→var(--color-neutral)</code> × 9</li><li><code>D1 #000080→var(--color-contrast)</code> × 1</li><li><code>D1 #047857→var(--color-primary-dark)</code> × 7</li><li><code>D1 #1a2e24→var(--color-primary-dark)</code> × 1</li><li><code>D1 #0ea5e9→var(--color-info)</code> × 4</li><li><code>D1 #6366f1→var(--color-indigo)</code> × 5</li><li><code>D1 #dc2626→var(--color-danger)</code> × 4</li><li><code>D1 #e11d48→var(--color-danger)</code> × 1</li><li><code>D1 #d97706→var(--color-warning)</code> × 4</li><li><code>D1 #fff→var(--color-white)</code> × 4</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/settings/business_form_general.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">29</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #047857→var(--color-primary-dark)</code> × 12</li><li><code>D1 #059669→var(--color-success)</code> × 2</li><li><code>D1 #0ea5e9→var(--color-info)</code> × 1</li><li><code>D1 #6366f1→var(--color-indigo)</code> × 2</li><li><code>D1 #0f172a→var(--color-bg-deep)</code> × 5</li><li><code>D1 #1e293b→var(--color-text-primary)</code> × 1</li><li><code>D1 #8b5cf6→var(--color-purple)</code> × 1</li><li><code>D1 #f43f5e→var(--color-danger)</code> × 2</li><li><code>D1 #f59e0b→var(--color-warning)</code> × 2</li><li><code>D1 #475569→var(--color-text-secondary)</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/settings/business_profile.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">39</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 emerald rgba→var(--color-accent-alpha)</code> × 3</li><li><code>D1 emerald rgba→var(--color-contrast-a08)</code> × 1</li><li><code>D1 #00674f→var(--color-primary)</code> × 5</li><li><code>D1 #00a86b→var(--color-secondary)</code> × 1</li><li><code>D1 #efbf04→var(--color-accent)</code> × 2</li><li><code>D1 #fdfbd4→var(--color-neutral)</code> × 1</li><li><code>D1 #000080→var(--color-contrast)</code> × 6</li><li><code>D1 #0ea5e9→var(--color-info)</code> × 1</li><li><code>D1 #6366f1→var(--color-indigo)</code> × 2</li><li><code>D1 #0f172a→var(--color-bg-deep)</code> × 1</li><li><code>D1 #e11d48→var(--color-danger)</code> × 1</li><li><code>D1 #f43f5e→var(--color-danger)</code> × 1</li><li><code>D1 #f59e0b→var(--color-warning)</code> × 1</li><li><code>D1 #475569→var(--color-text-secondary)</code> × 1</li><li><code>D1 #fff→var(--color-white)</code> × 9</li><li><code>D1 #000→var(--color-text-primary)</code> × 3</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/settings/business_settings.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">12</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #047857→var(--color-primary-dark)</code> × 2</li><li><code>D1 #0ea5e9→var(--color-info)</code> × 2</li><li><code>D1 #1877f2→var(--color-info)</code> × 1</li><li><code>D1 #6366f1→var(--color-indigo)</code> × 1</li><li><code>D1 #e11d48→var(--color-danger)</code> × 1</li><li><code>D1 #e1306c→var(--color-pink)</code> × 1</li><li><code>D1 #d97706→var(--color-warning)</code> × 1</li><li><code>D1 #25d366→var(--color-whatsapp)</code> × 1</li><li><code>D1 #94a3b8→var(--color-text-muted)</code> × 2</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/settings/profile.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">4</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #059669→var(--color-success)</code> × 1</li><li><code>D1 #0ea5e9→var(--color-info)</code> × 1</li><li><code>D1 #f43f5e→var(--color-danger)</code> × 1</li><li><code>D1 #f59e0b→var(--color-warning)</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/settings/system_status.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">13</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #059669→var(--color-success)</code> × 3</li><li><code>D1 #0ea5e9→var(--color-info)</code> × 1</li><li><code>D1 #6366f1→var(--color-indigo)</code> × 2</li><li><code>D1 #f43f5e→var(--color-danger)</code> × 2</li><li><code>D1 #f59e0b→var(--color-warning)</code> × 2</li><li><code>D1 #94a3b8→var(--color-text-muted)</code> × 2</li><li><code>D1 #fff→var(--color-white)</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/settings/user_list.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">6</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #059669→var(--color-success)</code> × 1</li><li><code>D1 #0ea5e9→var(--color-info)</code> × 1</li><li><code>D1 #6366f1→var(--color-indigo)</code> × 1</li><li><code>D1 #e11d48→var(--color-danger)</code> × 1</li><li><code>D1 #94a3b8→var(--color-text-muted)</code> × 2</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/settings/user_roles_permissions.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">13</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #047857→var(--color-primary-dark)</code> × 2</li><li><code>D1 #0ea5e9→var(--color-info)</code> × 2</li><li><code>D1 #6366f1→var(--color-indigo)</code> × 2</li><li><code>D1 #7c3aed→var(--color-purple)</code> × 1</li><li><code>D1 #e11d48→var(--color-danger)</code> × 2</li><li><code>D1 #d97706→var(--color-warning)</code> × 1</li><li><code>D1 #475569→var(--color-text-secondary)</code> × 1</li><li><code>D1 #64748b→var(--color-text-secondary)</code> × 2</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">lumra_pages/settings/users.html</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">6</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>D1 #059669→var(--color-success)</code> × 1</li><li><code>D1 #0ea5e9→var(--color-info)</code> × 1</li><li><code>D1 #6366f1→var(--color-indigo)</code> × 1</li><li><code>D1 #e11d48→var(--color-danger)</code> × 1</li><li><code>D1 #94a3b8→var(--color-text-muted)</code> × 2</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">forms/__init__.py</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">1</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>C2 TODO DRY comments</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">middleware.py</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">1</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>C3 TODO &#x27;process_request&#x27; L30</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">models.py</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">11</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>C2 TODO DRY comments</code> × 11</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">signals.py</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">3</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>C2 TODO DRY comments</code> × 1</li><li><code>C3 TODO &#x27;deduct_stock_on_order&#x27; L18</code> × 1</li><li><code>C3 TODO &#x27;restore_stock_on_order_cancel&#x27; L68</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">templatetags/currency_filters.py</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">1</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>C3 TODO &#x27;rupiah&#x27; L9</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">templatetags/custom_filters_settings.py</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">3</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>C2 TODO DRY comments</code> × 1</li><li><code>C3 TODO &#x27;rupiah&#x27; L29</code> × 1</li><li><code>C3 TODO &#x27;rupiah_short&#x27; L65</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">tests/run_tests_report.py</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">4</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>C3 TODO &#x27;parse_test_results&#x27; L50</code> × 1</li><li><code>C3 TODO &#x27;parse_coverage&#x27; L107</code> × 1</li><li><code>C3 TODO &#x27;error_explanation&#x27; L152</code> × 1</li><li><code>C3 TODO &#x27;main&#x27; L210</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">utils.py</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">3</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>C2 TODO DRY comments</code> × 1</li><li><code>C3 TODO &#x27;_build_fallback_chain&#x27; L185</code> × 1</li><li><code>C3 TODO &#x27;resolve_template&#x27; L227</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">views/api_views.py</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">10</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>C2 TODO DRY comments</code> × 4</li><li><code>C3 TODO &#x27;_net_stock_all_locations&#x27; L70</code> × 1</li><li><code>C3 TODO &#x27;submit_requisition&#x27; L107</code> × 1</li><li><code>C3 TODO &#x27;approve_requisition&#x27; L218</code> × 1</li><li><code>C3 TODO &#x27;confirm_receipt&#x27; L271</code> × 1</li><li><code>C3 TODO &#x27;submit_stock_allocation&#x27; L376</code> × 1</li><li><code>C3 TODO &#x27;get_location_stock&#x27; L489</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">views/customer_views.py</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">2</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>C2 TODO DRY comments</code> × 1</li><li><code>C3 TODO &#x27;customer_list&#x27; L61</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">views/dashboard_views.py</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">7</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>C2 TODO DRY comments</code> × 1</li><li><code>C3 TODO &#x27;_fetch_dashboard_data&#x27; L91</code> × 1</li><li><code>C3 TODO &#x27;_build_kpis&#x27; L302</code> × 1</li><li><code>C3 TODO &#x27;_get_chart_data&#x27; L351</code> × 1</li><li><code>C3 TODO &#x27;dashboard_view&#x27; L419</code> × 1</li><li><code>C3 TODO &#x27;notification_view&#x27; L461</code> × 1</li><li><code>C5 TODO comments</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">views/helpers.py</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">1</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>C2 TODO DRY comments</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">views/inventory_views.py</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">9</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>C3 TODO &#x27;_net_stock_subquery&#x27; L39</code> × 1</li><li><code>C3 TODO &#x27;products_import_template&#x27; L76</code> × 1</li><li><code>C3 TODO &#x27;products_import&#x27; L128</code> × 1</li><li><code>C3 TODO &#x27;products_view&#x27; L356</code> × 1</li><li><code>C3 TODO &#x27;product_detail_view&#x27; L531</code> × 1</li><li><code>C3 TODO &#x27;stock_planning_view&#x27; L590</code> × 1</li><li><code>C3 TODO &#x27;locations_view&#x27; L672</code> × 1</li><li><code>C5 TODO comments</code> × 2</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">views/masterdata_views.py</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">20</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>C2 TODO DRY comments</code> × 12</li><li><code>C3 TODO &#x27;category_delete&#x27; L103</code> × 1</li><li><code>C3 TODO &#x27;units_list&#x27; L137</code> × 1</li><li><code>C3 TODO &#x27;unit_delete&#x27; L214</code> × 1</li><li><code>C3 TODO &#x27;vendors_list&#x27; L251</code> × 1</li><li><code>C3 TODO &#x27;vendor_delete&#x27; L334</code> × 1</li><li><code>C4 scan &#x27;q&#x27;→&#x27;queryset&#x27; L36</code> × 1</li><li><code>C4 scan &#x27;q&#x27;→&#x27;queryset&#x27; L140</code> × 1</li><li><code>C4 scan &#x27;q&#x27;→&#x27;queryset&#x27; L256</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">views/misc_views.py</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">24</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>C2 TODO DRY comments</code> × 4</li><li><code>C3 TODO &#x27;pos_view&#x27; L127</code> × 1</li><li><code>C3 TODO &#x27;purchasing_view&#x27; L223</code> × 1</li><li><code>C3 TODO &#x27;sales_history_view&#x27; L261</code> × 1</li><li><code>C3 TODO &#x27;sales_history_products_view&#x27; L417</code> × 1</li><li><code>C3 TODO &#x27;sales_performance_view&#x27; L488</code> × 1</li><li><code>C3 TODO &#x27;financial_reports_view&#x27; L949</code> × 1</li><li><code>C3 TODO &#x27;market_insights_view&#x27; L1160</code> × 1</li><li><code>C4 scan &#x27;v&#x27;→&#x27;value_item&#x27; L150</code> × 1</li><li><code>C4 scan &#x27;d&#x27;→&#x27;data_dict&#x27; L374</code> × 1</li><li><code>C4 scan &#x27;d&#x27;→&#x27;data_dict&#x27; L1249</code> × 1</li><li><code>C4 scan &#x27;v&#x27;→&#x27;value_item&#x27; L1406</code> × 1</li><li><code>C4 scan &#x27;p&#x27;→&#x27;page_obj&#x27; L1426</code> × 1</li><li><code>C5 TODO comments</code> × 8</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">views/pricing_views.py</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">4</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>C2 TODO DRY comments</code> × 2</li><li><code>C3 TODO &#x27;supplier_price_list&#x27; L23</code> × 1</li><li><code>C3 TODO &#x27;supplier_price_form&#x27; L105</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">views/production_views.py</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">6</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>C2 TODO DRY comments</code> × 4</li><li><code>C3 TODO &#x27;recipe_list&#x27; L46</code> × 1</li><li><code>C3 TODO &#x27;recipe_form&#x27; L121</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">views/report_views.py</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">29</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>C2 TODO DRY comments</code> × 24</li><li><code>C3 TODO &#x27;sales_report&#x27; L24</code> × 1</li><li><code>C3 TODO &#x27;transaction_summary&#x27; L114</code> × 1</li><li><code>C3 TODO &#x27;transfer_report&#x27; L193</code> × 1</li><li><code>C3 TODO &#x27;requisition_report&#x27; L264</code> × 1</li><li><code>C3 TODO &#x27;purchasing_report&#x27; L344</code> × 1</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">views/stock_movement_views.py</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">5</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>C3 TODO &#x27;stock_movement_view&#x27; L35</code> × 1</li><li><code>C3 TODO &#x27;add_stock_movement_view&#x27; L155</code> × 1</li><li><code>C5 TODO comments</code> × 3</li></ul></td>
+        </tr>
+        <tr>
+          <td class="file-path">views/stock_opname_views.py</td>
+          <td style="text-align:center">
+            <span class="sev-badge" style="background:#EAF4EF;color:#00A86B">FIXED</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#00674F">6</td>
+          <td><ul style="margin:0;padding-left:16px;font-size:11px"><li><code>C2 TODO DRY comments</code> × 1</li><li><code>C3 TODO &#x27;stock_opname_form&#x27; L78</code> × 1</li><li><code>C3 TODO &#x27;stock_opname_approvals&#x27; L268</code> × 1</li><li><code>C3 TODO &#x27;stock_opname_approval_detail&#x27; L311</code> × 1</li><li><code>C5 TODO comments</code> × 2</li></ul></td>
+        </tr></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Langkah Selanjutnya</h2>
+    <ul style="padding-left:20px;line-height:2">
+      <li>Search <code>TODO[C2]</code> — blok duplikat yang perlu di-extract ke template partial</li>
+      <li>Search <code>TODO[C3]</code> — function panjang yang perlu dipecah</li>
+      <li>Search <code>TODO[C1]</code> — God Class yang perlu di-split ke services.py</li>
+      <li>Search <code>TODO[C5]</code> — fat view yang perlu dipindah ke services</li>
+      <li>Search <code>TODO[C6]</code> — N+1 query yang perlu dioptimasi dengan select_related</li>
+      <li>Jalankan auditor ulang: <code>python lumra_blueprint_auditor.py --html audit_v4.html</code></li>
+      <li>Verifikasi visual di browser bahwa glass protocol, warna, dan spacing sudah benar</li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    Lumra ERP · Emerald Odyssey Blueprint v3 · Auto-Fixer Report · 2026-04-07 13:45:23
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,227 @@
+/* ============================================================
+   LUMRA FORM — lumra_form.css
+   Emerald Odyssey Blueprint v1.2
+   ============================================================
+   Style untuk semua elemen form.
+   Digunakan via partial: base/partials/form_field.html
+
+   Load order:
+     3. lumra_components.css
+     4. lumra_bg_blob.css
+     5. lumra_form.css    ← ini
+
+   Classes:
+     f-field          → wrapper div per field
+     f-field--error   → modifier saat ada error validasi
+     f-label          → label text
+     f-required       → tanda bintang wajib isi (*)
+     f-input          → base input / textarea / select
+     inp              → alias untuk f-input (backward compat)
+     err              → modifier input saat error
+     f-error          → pesan error
+     err-msg          → alias untuk f-error
+     f-help           → help text di bawah field
+   ============================================================ */
+
+@import './lumra_tokens.css';
+
+
+/* ══════════════════════════════════════════════════════════════
+   §1. FIELD WRAPPER
+   ══════════════════════════════════════════════════════════════ */
+.f-field {
+  display       : flex;
+  flex-direction: column;
+  gap           : 6px;
+}
+
+.f-field--error .f-input,
+.f-field--error .inp {
+  border-color: var(--color-danger, #EF4444);
+  background  : rgba(239, 68, 68, 0.03);
+}
+
+.f-field--error .f-input:focus,
+.f-field--error .inp:focus {
+  border-color: var(--color-danger, #EF4444);
+  box-shadow  : 0 0 0 3px rgba(239, 68, 68, 0.12);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §2. LABEL
+   ══════════════════════════════════════════════════════════════ */
+.f-label {
+  font-size  : 13px;
+  font-weight: 600;
+  color      : var(--color-text, #1E293B);
+  line-height: 1.4;
+  display    : flex;
+  align-items: center;
+  gap        : 4px;
+}
+
+[data-theme="dark"] .f-label {
+  color: var(--color-text, #E2E8F0);
+}
+
+.f-required {
+  color      : var(--color-danger, #EF4444);
+  font-size  : 13px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §3. INPUT — base (f-input / inp)
+   ══════════════════════════════════════════════════════════════ */
+.f-input,
+.inp {
+  width        : 100%;
+  height       : 40px;
+  padding      : 0 12px;
+  font-size    : 13.5px;
+  font-weight  : 450;
+  color        : var(--color-text, #1E293B);
+  background   : var(--glass-bg-subtle, rgba(255, 255, 255, 0.70));
+  border       : 1px solid var(--border-ui, rgba(203, 213, 225, 0.70));
+  border-radius: var(--radius-md, 10px);
+  outline      : none;
+  transition   : background 0.15s, border-color 0.15s, box-shadow 0.15s;
+  appearance   : none;
+  -webkit-appearance: none;
+}
+
+/* Textarea & select override height */
+textarea.f-input,
+textarea.inp {
+  height    : auto;
+  padding   : 10px 12px;
+  resize    : vertical;
+  min-height: 96px;
+  line-height: 1.6;
+}
+
+select.f-input,
+select.inp {
+  padding-right: 36px;
+  cursor       : pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394A3B8' stroke-width='2.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat  : no-repeat;
+  background-position: right 10px center;
+  background-size    : 14px 14px;
+}
+
+/* Focus */
+.f-input:focus,
+.inp:focus {
+  background  : var(--glass-bg-strong, rgba(255, 255, 255, 0.95));
+  border-color: var(--color-primary, #10B981);
+  box-shadow  : 0 0 0 3px rgba(16, 185, 129, 0.12);
+}
+
+/* Placeholder */
+.f-input::placeholder,
+.inp::placeholder {
+  color      : var(--color-text-muted, #94A3B8);
+  font-weight: 400;
+}
+
+/* Disabled */
+.f-input:disabled,
+.inp:disabled {
+  background: rgba(241, 245, 249, 0.80);
+  color     : #94A3B8;
+  cursor    : not-allowed;
+  border-color: rgba(203, 213, 225, 0.40);
+}
+
+/* Dark mode */
+[data-theme="dark"] .f-input,
+[data-theme="dark"] .inp {
+  background  : rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.10);
+  color       : #E2E8F0;
+}
+
+[data-theme="dark"] .f-input:focus,
+[data-theme="dark"] .inp:focus {
+  background  : rgba(255, 255, 255, 0.08);
+  border-color: var(--color-primary, #10B981);
+  box-shadow  : 0 0 0 3px rgba(16, 185, 129, 0.10);
+}
+
+[data-theme="dark"] .f-input::placeholder,
+[data-theme="dark"] .inp::placeholder {
+  color: rgba(148, 163, 184, 0.60);
+}
+
+[data-theme="dark"] .f-input:disabled,
+[data-theme="dark"] .inp:disabled {
+  background  : rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.06);
+  color       : rgba(148, 163, 184, 0.50);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §4. ERROR STATE — input modifier
+   ══════════════════════════════════════════════════════════════ */
+.f-input.err,
+.inp.err {
+  border-color: var(--color-danger, #EF4444);
+  background  : rgba(239, 68, 68, 0.03);
+}
+
+.f-input.err:focus,
+.inp.err:focus {
+  border-color: var(--color-danger, #EF4444);
+  box-shadow  : 0 0 0 3px rgba(239, 68, 68, 0.12);
+}
+
+[data-theme="dark"] .f-input.err,
+[data-theme="dark"] .inp.err {
+  background: rgba(239, 68, 68, 0.06);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §5. ERROR MESSAGE
+   ══════════════════════════════════════════════════════════════ */
+.f-error,
+.err-msg {
+  font-size  : 12px;
+  font-weight: 500;
+  color      : var(--color-danger, #EF4444);
+  display    : flex;
+  align-items: center;
+  gap        : 4px;
+  line-height: 1.4;
+}
+
+.f-error::before,
+.err-msg::before {
+  content     : '';
+  display     : inline-block;
+  width       : 4px;
+  height      : 4px;
+  border-radius: 50%;
+  background  : currentColor;
+  flex-shrink : 0;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §6. HELP TEXT
+   ══════════════════════════════════════════════════════════════ */
+.f-help {
+  font-size  : 11.5px;
+  font-weight: 400;
+  color      : var(--color-text-muted, #94A3B8);
+  line-height: 1.5;
+}
+
+[data-theme="dark"] .f-help {
+  color: rgba(148, 163, 184, 0.70);
+}

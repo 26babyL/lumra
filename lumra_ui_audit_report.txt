@@ -1,0 +1,776 @@
+======================================================================
+  LUMRA UI/UX TEMPLATE AUDIT REPORT
+  Generated: 2026-04-16 15:11
+  Template Root: D:\APPS\Project\lumra\lumra_config\templates\lumra_pages
+======================================================================
+
+📊 RINGKASAN
+   Total file    : 192
+   ✅ Clean       : 21 (10%)
+   🔴 Errors      : 45
+   ⚠️  Warnings    : 59
+   ℹ️  Info        : 266
+
+📌 MASALAH TERBANYAK
+   125x  ████████████████████████████████████████  Warna hardcoded (#hex / rgb) di dalam style/class
+   113x  ████████████████████████████████████████  Ada style="..." inline (sebaiknya pakai class)
+    45x  ████████████████████████████████████████  Ada <form> tapi tidak ada {% csrf_token %}
+    36x  ████████████████████████████████████  Tidak ada {% block title %} atau <title>
+    28x  ████████████████████████████  Tidak ada handling empty state ({% empty %} atau 'tidak ada data')
+    20x  ████████████████████  Memakai alert() bawaan browser (sebaiknya pakai toast/modal)
+     2x  ██  Tabel tanpa class standar (table, table-striped, dll)
+     1x  █  File extends tapi tidak punya block content/main
+
+🔴 TOP 15 FILE BUTUH PERBAIKAN
+   [ 17 pts] 🔶 MODERATE  marketing\campaign.html
+            ⚠️  Tidak ada {% block title %} atau <title>
+            🔴 Ada <form> tapi tidak ada {% csrf_token %}
+               → baris: [168]
+            ℹ️  Ada style="..." inline (sebaiknya pakai class)
+               → baris: [99, 101, 137, 138, 139]
+               → Total: 30 baris
+   [ 17 pts] 🔶 MODERATE  marketing\campaign_list.html
+            ⚠️  Tidak ada {% block title %} atau <title>
+            🔴 Ada <form> tapi tidak ada {% csrf_token %}
+               → baris: [168]
+            ℹ️  Ada style="..." inline (sebaiknya pakai class)
+               → baris: [99, 101, 137, 138, 139]
+               → Total: 30 baris
+   [ 17 pts] 🔶 MODERATE  master_data\customers.html
+            ⚠️  Tidak ada {% block title %} atau <title>
+            🔴 Ada <form> tapi tidak ada {% csrf_token %}
+               → baris: [236]
+            ℹ️  Ada style="..." inline (sebaiknya pakai class)
+               → baris: [118, 182, 183, 189, 217]
+               → Total: 36 baris
+   [ 17 pts] 🔶 MODERATE  master_data\customers_list.html
+            ⚠️  Tidak ada {% block title %} atau <title>
+            🔴 Ada <form> tapi tidak ada {% csrf_token %}
+               → baris: [236]
+            ℹ️  Ada style="..." inline (sebaiknya pakai class)
+               → baris: [118, 182, 183, 189, 217]
+               → Total: 36 baris
+   [ 17 pts] 🔶 MODERATE  production\production_scheduling.html
+            🔴 Ada <form> tapi tidak ada {% csrf_token %}
+               → baris: [159]
+            ℹ️  Ada style="..." inline (sebaiknya pakai class)
+               → baris: [125, 140]
+               → Total: 2 baris
+            ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class
+               → baris: [12, 28, 30, 44, 46]
+   [ 17 pts] 🔶 MODERATE  reports\purchasing_report.html
+            ⚠️  Tidak ada {% block title %} atau <title>
+            🔴 Ada <form> tapi tidak ada {% csrf_token %}
+               → baris: [316]
+            ℹ️  Ada style="..." inline (sebaiknya pakai class)
+               → baris: [295, 300, 305, 320, 365]
+               → Total: 11 baris
+   [ 17 pts] 🔶 MODERATE  reports\report_inventory_log.html
+            ⚠️  Tidak ada {% block title %} atau <title>
+            🔴 Ada <form> tapi tidak ada {% csrf_token %}
+               → baris: [316]
+            ℹ️  Ada style="..." inline (sebaiknya pakai class)
+               → baris: [200, 259, 260, 262, 268]
+               → Total: 52 baris
+   [ 17 pts] 🔶 MODERATE  reports\report_inventory_low.html
+            ⚠️  Tidak ada {% block title %} atau <title>
+            🔴 Ada <form> tapi tidak ada {% csrf_token %}
+               → baris: [316]
+            ℹ️  Ada style="..." inline (sebaiknya pakai class)
+               → baris: [200, 259, 260, 262, 268]
+               → Total: 52 baris
+   [ 17 pts] 🔶 MODERATE  reports\report_inventory_stock.html
+            ⚠️  Tidak ada {% block title %} atau <title>
+            🔴 Ada <form> tapi tidak ada {% csrf_token %}
+               → baris: [316]
+            ℹ️  Ada style="..." inline (sebaiknya pakai class)
+               → baris: [200, 259, 260, 262, 268]
+               → Total: 52 baris
+   [ 17 pts] 🔶 MODERATE  reports\report_profit_loss_detail.html
+            ⚠️  Tidak ada {% block title %} atau <title>
+            🔴 Ada <form> tapi tidak ada {% csrf_token %}
+               → baris: [316]
+            ℹ️  Ada style="..." inline (sebaiknya pakai class)
+               → baris: [200, 259, 260, 262, 268]
+               → Total: 52 baris
+   [ 17 pts] 🔶 MODERATE  reports\report_sales_by_outlet.html
+            ⚠️  Tidak ada {% block title %} atau <title>
+            🔴 Ada <form> tapi tidak ada {% csrf_token %}
+               → baris: [316]
+            ℹ️  Ada style="..." inline (sebaiknya pakai class)
+               → baris: [200, 259, 260, 262, 268]
+               → Total: 52 baris
+   [ 17 pts] 🔶 MODERATE  reports\report_sales_by_payment.html
+            ⚠️  Tidak ada {% block title %} atau <title>
+            🔴 Ada <form> tapi tidak ada {% csrf_token %}
+               → baris: [316]
+            ℹ️  Ada style="..." inline (sebaiknya pakai class)
+               → baris: [200, 259, 260, 262, 268]
+               → Total: 52 baris
+   [ 17 pts] 🔶 MODERATE  reports\report_sales_by_product.html
+            ⚠️  Tidak ada {% block title %} atau <title>
+            🔴 Ada <form> tapi tidak ada {% csrf_token %}
+               → baris: [316]
+            ℹ️  Ada style="..." inline (sebaiknya pakai class)
+               → baris: [200, 259, 260, 262, 268]
+               → Total: 52 baris
+   [ 17 pts] 🔶 MODERATE  reports\report_sales_summary.html
+            ⚠️  Tidak ada {% block title %} atau <title>
+            🔴 Ada <form> tapi tidak ada {% csrf_token %}
+               → baris: [316]
+            ℹ️  Ada style="..." inline (sebaiknya pakai class)
+               → baris: [200, 259, 260, 262, 268]
+               → Total: 52 baris
+   [ 17 pts] 🔶 MODERATE  reports\requisition_report.html
+            ⚠️  Tidak ada {% block title %} atau <title>
+            🔴 Ada <form> tapi tidak ada {% csrf_token %}
+               → baris: [316]
+            ℹ️  Ada style="..." inline (sebaiknya pakai class)
+               → baris: [200, 259, 260, 262, 268]
+               → Total: 52 baris
+
+──────────────────────────────────────────────────────────────────────
+  DETAIL PER SECTION
+──────────────────────────────────────────────────────────────────────
+
+⚙️ Settings  (21 file, total score: 103)
+  ──────────────────────────────────────────────────
+  🔶 MODERATE  email_settings.html  [16 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [33])
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [9, 12, 13])
+      ⚠️  Memakai alert() bawaan browser (sebaiknya pakai toast/modal) (baris: [117])
+  🔶 MODERATE  search.html  [12 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [37])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [23, 26, 36]) — Total: 33 baris
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  🔶 MODERATE  backup_restore.html  [11 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [10, 12])
+      ⚠️  Memakai alert() bawaan browser (sebaiknya pakai toast/modal) (baris: [108, 116, 122])
+  ⚠️  MINOR  user_list.html  [10 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      ⚠️  Extends 'lumra_pages/settings/users.html' tapi tidak ada block content/main. Blocks ada: ['(none)']
+  ⚠️  MINOR  user_roles_permissions.html  [7 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [112, 151, 152]) — Total: 18 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [16, 18, 22])
+  ⚠️  MINOR  api_keys.html  [6 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [9, 10, 13])
+      ⚠️  Memakai alert() bawaan browser (sebaiknya pakai toast/modal) (baris: [100])
+  ⚠️  MINOR  notification_settings.html  [6 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [10, 14, 16])
+      ⚠️  Memakai alert() bawaan browser (sebaiknya pakai toast/modal) (baris: [145])
+  ⚠️  MINOR  numbering_settings.html  [6 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [9])
+      ⚠️  Memakai alert() bawaan browser (sebaiknya pakai toast/modal) (baris: [151])
+  ⚠️  MINOR  role_form.html  [6 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [8, 10, 16])
+      ⚠️  Memakai alert() bawaan browser (sebaiknya pakai toast/modal) (baris: [154, 155])
+  ⚠️  MINOR  roles.html  [6 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [13, 14])
+      ⚠️  Memakai alert() bawaan browser (sebaiknya pakai toast/modal) (baris: [93])
+  ⚠️  MINOR  about.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [324, 325, 326]) — Total: 254 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [261, 375, 376])
+  ⚠️  MINOR  business_feature_matrix.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [264, 265, 281]) — Total: 48 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [153, 194, 246])
+  ⚠️  MINOR  business_form_general.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [122, 123, 161]) — Total: 32 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [19, 54, 71])
+  ⚠️  MINOR  business_profile.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [246, 247, 259]) — Total: 116 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [56, 95, 174])
+  ⚠️  MINOR  business_settings.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [143, 144, 166]) — Total: 33 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [38, 42, 46])
+  ⚠️  MINOR  profile.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [142, 144, 175]) — Total: 29 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [40, 46, 60])
+  ⚠️  MINOR  contact.html  [1 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [23, 26, 32]) — Total: 31 baris
+  ⚠️  MINOR  permission_matrix.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [11, 12, 15])
+  ⚠️  MINOR  settings.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [17])
+  ⚠️  MINOR  system_status.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [15])
+  ⚠️  MINOR  users.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [21, 22])
+
+⚠️ Error Pages  (5 file, total score: 27)
+  ──────────────────────────────────────────────────
+  🔶 MODERATE  error_session_expired.html  [12 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [73])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [79, 80]) — Total: 2 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [10, 31, 38])
+  🔶 MODERATE  error_404.html  [11 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [18])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [10, 11, 13]) — Total: 6 baris
+  ⚠️  MINOR  error_maintenance.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [64, 65, 66]) — Total: 3 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [10, 16, 29])
+  ⚠️  MINOR  error_403.html  [1 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [12, 17]) — Total: 2 baris
+  ⚠️  MINOR  error_500.html  [1 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [10, 11, 18]) — Total: 3 baris
+
+🏭 Production  (14 file, total score: 57)
+  ──────────────────────────────────────────────────
+  🔶 MODERATE  production_scheduling.html  [17 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [159])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [125, 140]) — Total: 2 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [12, 28, 30])
+      ⚠️  Memakai alert() bawaan browser (sebaiknya pakai toast/modal) (baris: [330])
+  ⚠️  MINOR  bom_form.html  [6 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [8, 11])
+      ⚠️  Memakai alert() bawaan browser (sebaiknya pakai toast/modal) (baris: [214, 222, 237])
+  ⚠️  MINOR  finished_goods_receipt.html  [6 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [9, 12])
+      ⚠️  Memakai alert() bawaan browser (sebaiknya pakai toast/modal) (baris: [135, 138, 140])
+  ⚠️  MINOR  production_order_form.html  [6 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [8, 10])
+      ⚠️  Memakai alert() bawaan browser (sebaiknya pakai toast/modal) (baris: [165, 201])
+  ⚠️  MINOR  production_waste.html  [6 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [10])
+      ⚠️  Memakai alert() bawaan browser (sebaiknya pakai toast/modal) (baris: [145])
+  ⚠️  MINOR  bom_detail.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [48]) — Total: 1 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [6, 9, 10])
+  ⚠️  MINOR  production_costing.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [86, 91]) — Total: 2 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [9, 13, 14])
+  ⚠️  MINOR  production_order_detail.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [52]) — Total: 1 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [10, 11, 12])
+  ⚠️  MINOR  production_order_list.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [100]) — Total: 1 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [11, 12, 13])
+  ⚠️  MINOR  recipe_detail.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [50, 53, 57]) — Total: 14 baris
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ⚠️  MINOR  recipe_form.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [51, 52, 53]) — Total: 16 baris
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ⚠️  MINOR  recipe_list.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [50, 53, 57]) — Total: 14 baris
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ⚠️  MINOR  bom_list.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [11, 12, 13])
+  ⚠️  MINOR  material_consumption.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [9])
+
+💬 Messages  (6 file, total score: 29)
+  ──────────────────────────────────────────────────
+  🔶 MODERATE  compose.html  [12 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [147])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [126, 271]) — Total: 2 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [42, 44, 63])
+  🔶 MODERATE  message_detail.html  [12 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [272])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [179, 264, 292]) — Total: 3 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [47, 60, 108])
+  ⚠️  MINOR  inbox.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [119, 129, 139]) — Total: 8 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [31, 32, 49])
+  ⚠️  MINOR  notification.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [145, 146, 158]) — Total: 24 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [35, 40, 52])
+  ⚠️  MINOR  broadcast.html  [1 pts]
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ✅  message_templates.html
+
+💰 Accounting  (13 file, total score: 41)
+  ──────────────────────────────────────────────────
+  🔶 MODERATE  general_ledger.html  [12 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [17])
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [8, 11])
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ⚠️  MINOR  chart_of_accounts_form.html  [6 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [8])
+      ⚠️  Memakai alert() bawaan browser (sebaiknya pakai toast/modal) (baris: [90])
+  ⚠️  MINOR  payment_voucher_form.html  [6 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [9, 12, 14])
+      ⚠️  Memakai alert() bawaan browser (sebaiknya pakai toast/modal) (baris: [197, 202, 207])
+  ⚠️  MINOR  journal_entry_form.html  [5 pts]
+      ⚠️  Memakai alert() bawaan browser (sebaiknya pakai toast/modal) (baris: [155, 160, 165])
+  ⚠️  MINOR  accounts_payable.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [79]) — Total: 1 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [10, 12, 16])
+  ⚠️  MINOR  accounts_receivable.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [85, 95]) — Total: 2 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [10, 12, 16])
+  ⚠️  MINOR  balance_sheet.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [57]) — Total: 1 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [10, 11, 16])
+  ⚠️  MINOR  cash_flow.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [10, 11, 13])
+  ⚠️  MINOR  chart_of_accounts.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [10, 11, 12])
+  ⚠️  MINOR  journal_entry_detail.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [8, 9])
+  ⚠️  MINOR  journal_entry_list.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [10, 11])
+  ⚠️  MINOR  profit_loss_statement.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [19, 30, 35])
+  ⚠️  MINOR  trial_balance.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [10, 11, 12])
+
+📈 Sales Insight  (7 file, total score: 78)
+  ──────────────────────────────────────────────────
+  🔶 MODERATE  financial_reports.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [127])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [101, 102, 108]) — Total: 47 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [64])
+  🔶 MODERATE  market_insights.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [103])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [89, 90, 96]) — Total: 26 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [42, 44, 54])
+  🔶 MODERATE  sales_intelligence.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [467])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [325, 326, 336]) — Total: 45 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [32, 34, 72])
+  🔶 MODERATE  trends_analysis.html  [11 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [31])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [23, 26, 30]) — Total: 33 baris
+  ⚠️  MINOR  pos.html  [7 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [168]) — Total: 1 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [32, 33, 34])
+  ⚠️  MINOR  sales_performance.html  [7 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [61, 92, 145]) — Total: 30 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [22, 30, 44])
+  ⚠️  MINOR  dashboard.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [633]) — Total: 1 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [17, 18, 34])
+
+📊 Reports  (25 file, total score: 283)
+  ──────────────────────────────────────────────────
+  🔶 MODERATE  purchasing_report.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [316])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [295, 300, 305]) — Total: 11 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [17, 22, 32])
+  🔶 MODERATE  report_inventory_log.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [316])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [200, 259, 260]) — Total: 52 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [17, 22, 32])
+  🔶 MODERATE  report_inventory_low.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [316])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [200, 259, 260]) — Total: 52 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [17, 22, 32])
+  🔶 MODERATE  report_inventory_stock.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [316])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [200, 259, 260]) — Total: 52 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [17, 22, 32])
+  🔶 MODERATE  report_profit_loss_detail.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [316])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [200, 259, 260]) — Total: 52 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [17, 22, 32])
+  🔶 MODERATE  report_sales_by_outlet.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [316])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [200, 259, 260]) — Total: 52 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [17, 22, 32])
+  🔶 MODERATE  report_sales_by_payment.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [316])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [200, 259, 260]) — Total: 52 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [17, 22, 32])
+  🔶 MODERATE  report_sales_by_product.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [316])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [200, 259, 260]) — Total: 52 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [17, 22, 32])
+  🔶 MODERATE  report_sales_summary.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [316])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [200, 259, 260]) — Total: 52 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [17, 22, 32])
+  🔶 MODERATE  requisition_report.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [316])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [200, 259, 260]) — Total: 52 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [17, 22, 32])
+  🔶 MODERATE  sales_history.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [342])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [226, 285, 286]) — Total: 52 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [17, 22, 32])
+  🔶 MODERATE  sales_history_product.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [316])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [200, 259, 260]) — Total: 52 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [17, 22, 32])
+  🔶 MODERATE  sales_report.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [342])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [226, 285, 286]) — Total: 52 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [17, 22, 32])
+  🔶 MODERATE  transaction_summary.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [316])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [200, 259, 260]) — Total: 52 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [17, 22, 32])
+  🔶 MODERATE  transfer_report.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [316])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [200, 259, 260]) — Total: 52 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [17, 22, 32])
+  🔶 MODERATE  base_report.html  [11 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [92])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [39, 42, 47]) — Total: 21 baris
+  ⚠️  MINOR  report_inventory_age.html  [7 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [85, 88, 91]) — Total: 4 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [9, 12, 13])
+      ⚠️  Memakai alert() bawaan browser (sebaiknya pakai toast/modal) (baris: [137])
+  ⚠️  MINOR  report_customer_lifetime.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [87]) — Total: 1 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [10, 11, 12])
+  ⚠️  MINOR  report_production.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [47, 65]) — Total: 2 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [17])
+  ⚠️  MINOR  report_staff_performance.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [59, 73]) — Total: 2 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [9, 10, 11])
+  ⚠️  MINOR  activity_log.html  [1 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [23, 26, 30]) — Total: 29 baris
+  ⚠️  MINOR  report_activity_log.html  [1 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [23, 26, 30]) — Total: 29 baris
+  ⚠️  MINOR  report_expiry.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [9, 10, 11])
+  ⚠️  MINOR  reporting.html  [1 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [35, 36, 37]) — Total: 38 baris
+  ✅  sales_report_after.html
+
+📣 Marketing  (11 file, total score: 81)
+  ──────────────────────────────────────────────────
+  🔶 MODERATE  campaign.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [168])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [99, 101, 137]) — Total: 30 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [16, 34, 46])
+  🔶 MODERATE  campaign_list.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [168])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [99, 101, 137]) — Total: 30 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [16, 34, 46])
+  🔶 MODERATE  voucher_form.html  [12 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [218])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [197, 248, 538]) — Total: 3 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [42, 44, 45])
+  🔶 MODERATE  discount.html  [11 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [90])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [24, 27, 30]) — Total: 33 baris
+  🔶 MODERATE  loyalty_members.html  [11 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [90])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [24, 27, 30]) — Total: 34 baris
+  ⚠️  MINOR  add_campaign.html  [8 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [139, 140, 141]) — Total: 25 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [11, 25, 45])
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ⚠️  MINOR  promotion_calendar.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [141, 160, 253]) — Total: 8 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [21, 39, 53])
+  ⚠️  MINOR  voucher_list.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [123, 138, 148]) — Total: 9 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [26, 29, 37])
+  ⚠️  MINOR  customer_segment_form.html  [1 pts]
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ✅  customer_segment_list.html
+  ✅  voucher_claim_log.html
+
+📦 Inventory  (27 file, total score: 106)
+  ──────────────────────────────────────────────────
+  🔶 MODERATE  batch_form.html  [16 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [23])
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [8, 10])
+      ⚠️  Memakai alert() bawaan browser (sebaiknya pakai toast/modal) (baris: [154, 188])
+  🔶 MODERATE  warehouse_zone_form.html  [16 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [24])
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [8, 10, 11])
+      ⚠️  Memakai alert() bawaan browser (sebaiknya pakai toast/modal) (baris: [119, 154])
+  🔶 MODERATE  stock_movement.html  [12 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [313])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [240, 241, 244]) — Total: 29 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [72, 93, 111])
+  🔶 MODERATE  stock_planning.html  [12 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [303])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [235, 262, 268]) — Total: 21 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [89, 97, 147])
+  🔶 MODERATE  stock_purchasing.html  [12 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [303])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [235, 275, 464]) — Total: 15 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [89, 97, 147])
+  ⚠️  MINOR  requisition_form.html  [6 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [8, 10])
+      ⚠️  Memakai alert() bawaan browser (sebaiknya pakai toast/modal) (baris: [145, 159, 193])
+  ⚠️  MINOR  product_list.html  [3 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [244, 246, 272]) — Total: 28 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [26, 61, 66])
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ⚠️  MINOR  products.html  [3 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [244, 246, 272]) — Total: 28 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [26, 61, 66])
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ⚠️  MINOR  add_stock_movement.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [239, 246, 266]) — Total: 21 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [56, 65, 88])
+  ⚠️  MINOR  expiry_tracking.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [43, 44, 45]) — Total: 3 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [10, 11])
+  ⚠️  MINOR  product_details.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [62, 64, 66]) — Total: 47 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [26])
+  ⚠️  MINOR  requisition_list.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [56, 60, 64]) — Total: 3 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [12, 13, 14])
+  ⚠️  MINOR  stock_movement_form.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [239, 246, 266]) — Total: 21 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [56, 65, 88])
+  ⚠️  MINOR  stock_overview.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [69, 71, 72]) — Total: 92 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [26])
+  ⚠️  MINOR  supplier_evaluation.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [80, 87, 94]) — Total: 3 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [10, 13, 14])
+  ⚠️  MINOR  adjustment_reasons.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [11, 12, 16])
+  ⚠️  MINOR  batch_detail.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [7])
+  ⚠️  MINOR  batch_list.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [9, 11, 17])
+  ⚠️  MINOR  requisition_detail.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [7, 8, 9])
+  ⚠️  MINOR  stock_opname_approval_detail.html  [1 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [72, 74, 76]) — Total: 24 baris
+  ⚠️  MINOR  stock_opname_approvals.html  [1 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [58, 60, 61]) — Total: 19 baris
+  ⚠️  MINOR  stock_opname_form.html  [1 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [58, 60, 62]) — Total: 20 baris
+  ⚠️  MINOR  stock_opname_locations.html  [1 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [49, 51, 52]) — Total: 20 baris
+  ⚠️  MINOR  supplier_price_confirm_delete.html  [1 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [97, 140, 161]) — Total: 15 baris
+  ⚠️  MINOR  supplier_price_form.html  [1 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [72, 358]) — Total: 2 baris
+  ⚠️  MINOR  supplier_price_list.html  [1 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [97, 140, 161]) — Total: 15 baris
+  ⚠️  MINOR  warehouse_zones.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [8, 10, 16])
+
+🔐 Auth  (8 file, total score: 14)
+  ──────────────────────────────────────────────────
+  ⚠️  MINOR  register.html  [6 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [17])
+  ⚠️  MINOR  two_factor.html  [5 pts]
+      ⚠️  Memakai alert() bawaan browser (sebaiknya pakai toast/modal) (baris: [56])
+  ⚠️  MINOR  login.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [49, 52, 53]) — Total: 20 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [17])
+  ⚠️  MINOR  forgot_password.html  [1 pts]
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ✅  lock_screen.html
+  ✅  reset_password.html
+  ✅  session_expired.html
+  ✅  verify_email.html
+
+🖨️ Print  (12 file, total score: 47)
+  ──────────────────────────────────────────────────
+  ⚠️  MINOR  print_quotation.html  [8 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [53, 86, 87]) — Total: 5 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [8, 17, 22])
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+      ⚠️  Tabel tanpa class standar (table, table-striped, dll) — 1 tabel tanpa class
+  ⚠️  MINOR  print_delivery_note.html  [7 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [5, 7, 18]) — Total: 7 baris
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ⚠️  MINOR  print_invoice.html  [7 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [9, 18, 37])
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+      ⚠️  Tabel tanpa class standar (table, table-striped, dll) — 1 tabel tanpa class
+  ⚠️  MINOR  print_packing_slip.html  [7 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [4, 6]) — Total: 2 baris
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ⚠️  MINOR  print_production_order.html  [6 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [5, 7]) — Total: 2 baris
+  ⚠️  MINOR  print_purchase_order.html  [6 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [5, 7, 8]) — Total: 5 baris
+  ⚠️  MINOR  print_receipt.html  [3 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [53]) — Total: 1 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [10, 20])
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ⚠️  MINOR  print_base.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [18, 44, 45])
+  ⚠️  MINOR  print_payment_receipt.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [8, 17, 32])
+  ⚠️  MINOR  print_sales_order.html  [1 pts]
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [11, 19, 23])
+  ✅  print_credit_note.html
+  ✅  print_stock_opname.html
+
+🗂️ Master Data  (24 file, total score: 127)
+  ──────────────────────────────────────────────────
+  🔶 MODERATE  customers.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [236])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [118, 182, 183]) — Total: 36 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [12, 14, 20])
+  🔶 MODERATE  customers_list.html  [17 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [236])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [118, 182, 183]) — Total: 36 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [12, 14, 20])
+  🔶 MODERATE  categories_list.html  [12 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [228])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [162, 163, 168]) — Total: 16 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [26, 39, 45])
+  🔶 MODERATE  location_list.html  [12 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [371])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [121, 122, 159]) — Total: 22 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [50, 89, 504])
+  🔶 MODERATE  locations.html  [12 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [371])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [121, 122, 159]) — Total: 22 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [50, 89, 504])
+  🔶 MODERATE  vendor_list.html  [12 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [303])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [336, 426, 554]) — Total: 7 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [93, 119, 123])
+  🔶 MODERATE  vendors_list.html  [12 pts]
+      🔴 Ada <form> tapi tidak ada {% csrf_token %} (baris: [303])
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [336, 426, 554]) — Total: 7 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [93, 119, 123])
+  ⚠️  MINOR  customer_form.html  [8 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [163, 164, 166]) — Total: 11 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [25, 35, 49])
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ⚠️  MINOR  customer_detail.html  [7 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [110, 111, 113]) — Total: 23 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [28, 32, 40])
+  ⚠️  MINOR  customer.html  [5 pts]
+      ⚠️  Tidak ada {% block title %} atau <title>
+  ⚠️  MINOR  category_form.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [90, 91, 93]) — Total: 7 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [22, 31, 42])
+  ⚠️  MINOR  unit_form.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [134, 135, 137]) — Total: 13 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [18, 22, 32])
+  ⚠️  MINOR  units_list.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [163, 164, 169]) — Total: 18 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [35, 40, 52])
+  ⚠️  MINOR  vendor_form.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [238, 258, 297]) — Total: 13 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [94, 100, 112])
+  ⚠️  MINOR  bank_account_form.html  [1 pts]
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ⚠️  MINOR  payment_terms_form.html  [1 pts]
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ⚠️  MINOR  stock_opname.html  [1 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [53, 54, 55]) — Total: 37 baris
+  ⚠️  MINOR  stock_opname_session_detail.html  [1 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [53, 54, 55]) — Total: 22 baris
+  ⚠️  MINOR  tax_form.html  [1 pts]
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ✅  bank_accounts.html
+  ✅  payment_terms_list.html
+  ✅  reason_codes.html
+  ✅  tags_list.html
+  ✅  tax_list.html
+
+🚀 Onboarding  (5 file, total score: 3)
+  ──────────────────────────────────────────────────
+  ⚠️  MINOR  step_business.html  [1 pts]
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ⚠️  MINOR  step_category.html  [1 pts]
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ⚠️  MINOR  step_location.html  [1 pts]
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ✅  step_complete.html
+  ✅  welcome.html
+
+🛒 Sales  (14 file, total score: 15)
+  ──────────────────────────────────────────────────
+  ⚠️  MINOR  invoice_list.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [110, 117, 124]) — Total: 3 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [29, 33, 34])
+  ⚠️  MINOR  payment_list.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [113, 120, 127]) — Total: 3 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [28, 32, 33])
+  ⚠️  MINOR  retur_list.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [112, 119, 126]) — Total: 3 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [29, 33, 34])
+  ⚠️  MINOR  quotation_list.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [112, 119, 126]) — Total: 3 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [28, 32, 33])
+  ⚠️  MINOR  sales_order_list.html  [2 pts]
+      ℹ️  Ada style="..." inline (sebaiknya pakai class) (baris: [112, 119, 126]) — Total: 3 baris
+      ℹ️  Warna hardcoded (#hex / rgb) di dalam style/class (baris: [28, 32, 33])
+  ⚠️  MINOR  invoice_form.html  [1 pts]
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ⚠️  MINOR  payment_form.html  [1 pts]
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ⚠️  MINOR  retur_form.html  [1 pts]
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ⚠️  MINOR  quotation_form.html  [1 pts]
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ⚠️  MINOR  sales_order_form.html  [1 pts]
+      ℹ️  Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'
+  ✅  invoice_detail.html
+  ✅  retur_detail.html
+  ✅  quotation_detail.html
+  ✅  sales_order_detail.html
+
+──────────────────────────────────────────────────────────────────────
+  BUTTON CLASS CONSISTENCY MAP
+──────────────────────────────────────────────────────────────────────
+
+  Varian tombol yang dipakai di seluruh project:
+    9x  .btn-primary
+
+  ✨ Rekomendasi standar: '.btn-primary' (paling banyak dipakai)
+
+──────────────────────────────────────────────────────────────────────
+  ✅ FILE YANG SUDAH BERSIH (21 file)
+──────────────────────────────────────────────────────────────────────
+  ✅  auth\lock_screen.html
+  ✅  auth\reset_password.html
+  ✅  auth\session_expired.html
+  ✅  auth\verify_email.html
+  ✅  marketing\customer_segment_list.html
+  ✅  marketing\voucher_claim_log.html
+  ✅  master_data\bank_accounts.html
+  ✅  master_data\payment_terms_list.html
+  ✅  master_data\reason_codes.html
+  ✅  master_data\tags_list.html
+  ✅  master_data\tax_list.html
+  ✅  messages\message_templates.html
+  ✅  onboarding\step_complete.html
+  ✅  onboarding\welcome.html
+  ✅  print\print_credit_note.html
+  ✅  print\print_stock_opname.html
+  ✅  reports\sales_report_after.html
+  ✅  sales\invoice_and_billing\invoice_detail.html
+  ✅  sales\retur_and_refund\retur_detail.html
+  ✅  sales\salesorder_and_quotation\quotation_detail.html
+  ✅  sales\salesorder_and_quotation\sales_order_detail.html
+
+======================================================================
+  END OF REPORT  |  Total issues: 370
+======================================================================

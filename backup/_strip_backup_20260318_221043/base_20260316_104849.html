@@ -1,0 +1,338 @@
+<!-- templates/base/base.html -->
+{% load tailwind_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/lumra_design_system.css' %}">
+
+    {% tailwind_css %}
+
+    {% block extra_head %}{% endblock %}
+    {% block extra_css %}{% endblock %}
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer">
+
+    {% block chart_scripts %}{% endblock %}
+
+    <style>
+        /* ── Skip link ── */
+        .skip-link {
+            position: absolute; left: -9999px; top: auto;
+            width: 1px; height: 1px; overflow: hidden;
+        }
+        .skip-link:focus {
+            position: static; left: auto; top: auto;
+            width: auto; height: auto; overflow: visible;
+            padding: 0.5rem; background: #fff; color: #111;
+            border-radius: 0.375rem;
+            box-shadow: 0 0 0 3px rgba(5,150,105,0.25);
+        }
+
+        /* ── Prevent scroll on mobile sidebar open ── */
+        @media (max-width: 767px) {
+            body.sidebar-open { overflow: hidden; }
+        }
+
+        /*
+         * ── Navbar header-shift ──────────────────────────────────────
+         *
+         * Sidebar baru:
+         *   collapsed : w-[60px]  = 3.75rem
+         *   expanded  : w-[220px] = 13.75rem
+         *
+         * Navbar sticky menggunakan `header-shift` agar tidak tertimpa
+         * sidebar di desktop. Nilai diupdate sesuai dimensi sidebar baru.
+         *
+         * Di mobile (< 768px) sidebar adalah overlay fixed — navbar
+         * tidak perlu digeser sama sekali.
+         * ────────────────────────────────────────────────────────────── */
+        @media (min-width: 768px) {
+            /* Default: sidebar collapsed (60px) */
+            .header-shift {
+                margin-left  : 60px;               /* sesuai w-[60px] sidebar */
+                transition   : margin-left .3s ease;
+                z-index      : 30; /* keep header above sidebar */
+            }
+            /* Expanded: sidebar 220px */
+            body.sidebar-open .header-shift {
+                margin-left  : 220px;              /* sesuai w-[220px] sidebar */
+            }
+        }
+        @media (max-width: 767px) {
+            .header-shift { margin-left: 0; }
+        }
+
+        /*
+         * ── Main content margin ──────────────────────────────────────
+         * Sama dengan header-shift agar konten tidak tertimpa sidebar.
+         * ────────────────────────────────────────────────────────────── */
+        @media (min-width: 768px) {
+            .content-shift {
+                margin-left  : 60px;
+                transition   : margin-left .3s ease;
+            }
+            body.sidebar-open .content-shift {
+                margin-left  : 220px;
+            }
+        }
+        @media (max-width: 767px) {
+            .content-shift { margin-left: 0; }
+        }
+
+        /* ── Screen-reader only ── */
+        .sr-only {
+            position: absolute; width: 1px; height: 1px;
+            padding: 0; margin: -1px; overflow: hidden;
+            clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+        }
+
+        /*
+         * ── Footer shift ────────────────────────────────────────────
+         * Footer sticky bottom mengikuti lebar sidebar.
+         * ────────────────────────────────────────────────────────────── */
+        .fixed-footer { box-shadow: 0 -1px 0 rgba(0,0,0,0.04); }
+        .footer-container { transition: margin-left .3s ease; }
+
+        @media (min-width: 768px) {
+            .fixed-footer .footer-container {
+                margin-left: 60px;
+            }
+            body.sidebar-open .fixed-footer .footer-container {
+                margin-left: 220px;
+            }
+        }
+        @media (max-width: 767px) {
+            .fixed-footer .footer-container { margin-left: 0; }
+        }
+
+        /* ── Misc ── */
+        .mini-tooltip { position: relative; z-index: 20; transition: opacity .15s ease; }
+        .card-heading i { width: 1.25rem; display: inline-block; text-align: center; }
+    </style>
+
+
+
+<style>
+/* ===========================================================
+   LUMRA GLASS DESIGN TOKENS — lumra_glass_fix.py
+   =========================================================== */
+:root {
+  --glass-blur      : blur(14px) saturate(180%);
+  --glass-bg        : rgba(255, 255, 255, 0.72);
+  --glass-border    : rgba(255, 255, 255, 0.20);
+  --glass-shadow    : 0 2px 12px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.04);
+  --glass-dark-bg   : rgba(15, 23, 42, 0.40);
+  --glass-dark-blur : blur(6px);
+  --color-primary        : #047857;
+  --color-primary-light  : #059669;
+  --color-primary-subtle : #D1FAE5;
+  --color-primary-dark   : #022C22;
+  --color-neutral-900 : #0F172A;
+  --color-neutral-800 : #1E293B;
+  --color-neutral-600 : #475569;
+  --color-neutral-400 : #94A3B8;
+  --color-neutral-200 : #E2E8F0;
+  --color-neutral-100 : #F1F5F9;
+  --color-success : #059669;
+  --color-warning : #F59E0B;
+  --color-danger  : #F43F5E;
+  --color-info    : #0EA5E9;
+  --color-accent  : #6366F1;
+}
+.lumra-glass {
+  background             : var(--glass-bg);
+  backdrop-filter        : var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border                 : 1px solid var(--glass-border);
+  border-radius          : 18px;
+  box-shadow             : var(--glass-shadow);
+  transition             : box-shadow 0.2s ease, transform 0.2s ease;
+}
+.lumra-glass:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.10); transform: translateY(-2px); }
+.lumra-glass-dark {
+  background: var(--glass-dark-bg);
+  backdrop-filter: var(--glass-dark-blur);
+  -webkit-backdrop-filter: var(--glass-dark-blur);
+}
+.lumra-kpi-glass {
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(255,255,255,0.90);
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.06), 0 0 0 0.5px rgba(0,0,0,.04);
+  transition: box-shadow .2s ease, transform .2s ease;
+  position: relative; overflow: hidden;
+}
+.lumra-kpi-glass:hover { box-shadow: 0 8px 28px rgba(0,0,0,.10); transform: translateY(-2px); }
+.bg-blob {
+  position: fixed; border-radius: 50%; filter: blur(100px);
+  opacity: 0.10; pointer-events: none; z-index: 0;
+  animation: drift 18s ease-in-out infinite alternate;
+}
+.bg-blob-1 { width:480px; height:480px; background:var(--color-primary); top:-120px; left:-160px; animation-delay:0s; }
+.bg-blob-2 { width:320px; height:320px; background:var(--color-primary-light); bottom:-80px; right:-80px; animation-delay:-7s; }
+.bg-blob-3 { width:220px; height:220px; background:#34d399; top:40%; left:55%; animation-delay:-3.5s; }
+@keyframes drift {
+  from { transform: translate(0,0) scale(1); }
+  to   { transform: translate(20px,28px) scale(1.06); }
+}
+
+</style>
+
+
+</head>
+
+<body class="bg-slate-50 font-sans antialiased">
+
+    <!-- Peringatan tanpa JavaScript -->
+    <noscript>
+        <div style="text-align:center;background:#f8d7da;color:#721c24;padding:15px;border-bottom:1px solid #f5c6cb;">
+            <strong>Peringatan:</strong> Aplikasi ini memerlukan JavaScript.
+        </div>
+    </noscript>
+
+    <!-- Skip link aksesibilitas -->
+    <a href="#main-content" class="skip-link">Lompat ke konten</a>
+
+    <!-- Live region untuk screen reader -->
+    <div id="sr-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+    <!--
+        ── ROOT LAYOUT ──────────────────────────────────────────────────
+        Sidebar : fixed (mobile) / static (desktop), lebar 60px atau 220px
+        Kanan   : flex-col → navbar (h-14 sticky) + main (scroll) + footer
+        ─────────────────────────────────────────────────────────────────
+    -->
+    <div class="flex h-screen" id="app-root">
+
+        {% include 'base/sidebar.html' %}
+
+        <!--
+            Right‑hand wrapper: fills remaining space beside fixed sidebar.
+            must be a flex‑1 child so it always stretches, otherwise the
+            container will collapse to its content width and leave a blank
+            gap on large screens (noticed at 100% zoom).
+            no margin shifting required because sidebar is fixed; mobile
+            overlay behavior remains the same.
+        -->
+        <div class="flex-1 flex flex-col h-screen overflow-hidden">
+
+            {% include 'base/navbar.html' %}
+
+            <main id="main-content"
+                  role="main"
+                  tabindex="-1"
+                  class="w-full flex-1 overflow-x-hidden bg-slate-50 px-4 py-6 sm:px-6 lg:px-8 pb-20 md:pb-16">
+                {% block content %}{% endblock %}
+            </main>
+
+            {% include 'base/footer.html' %}
+        </div>
+
+    </div>
+
+    {% block dashboard_scripts %}{% endblock %}
+    {% block scripts %}{% endblock %}
+
+    <!-- Alpine.js — defer agar DOM sudah siap -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <!-- uncloak fallback in case Alpine fails to load; also reveal elements that
+         rely on Alpine-init (e.g. .reveal) so page isn’t blank. -->
+    <script>
+    function showIfNoAlpine() {
+        if (!window.Alpine) {
+            document.querySelectorAll('[x-cloak]').forEach(el => el.removeAttribute('x-cloak'));
+            document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+        }
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        showIfNoAlpine();
+        // always uncloak after 500ms in case Alpine initialization fails later
+        setTimeout(showIfNoAlpine, 500);
+    });
+    window.addEventListener('error', e => {
+        if (e.target && e.target.tagName === 'SCRIPT' &&
+            e.target.src && e.target.src.includes('alpinejs')) {
+            showIfNoAlpine();
+        }
+    }, true);
+    </script>
+
+    <!--
+        ── GLOBAL SCRIPT ────────────────────────────────────────────────
+        Keyboard shortcuts + focus trap untuk aksesibilitas sidebar mobile.
+        Ctrl/Cmd+B → toggle sidebar (dikirim sebagai custom event karena
+        Alpine menangani state di dalam sidebar.html itu sendiri).
+        ─────────────────────────────────────────────────────────────────
+    -->
+    <script>
+    (function () {
+        var sr       = document.getElementById('sr-announcer');
+        var removeTrap = null;
+
+        function announce(msg) {
+            if (sr) sr.textContent = msg;
+        }
+
+        /* Focus trap untuk aksesibilitas sidebar mobile */
+        function enableFocusTrap(container) {
+            var sel = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+            var focusable = container.querySelectorAll(sel);
+            if (!focusable.length) return function () {};
+            var first = focusable[0];
+            var last  = focusable[focusable.length - 1];
+
+            function handler(e) {
+                if (e.key !== 'Tab') return;
+                if (e.shiftKey) {
+                    if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+                } else {
+                    if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
+                }
+            }
+            document.addEventListener('keydown', handler);
+            return function () { document.removeEventListener('keydown', handler); };
+        }
+
+        /* Watch body.sidebar-open untuk kelola focus trap di mobile */
+        var body    = document.body;
+        var sidebar = document.getElementById('sidebar');
+
+        var bodyObs = new MutationObserver(function () {
+            var isOpen  = body.classList.contains('sidebar-open');
+            var isMobile = window.innerWidth < 768;
+
+            if (isOpen && isMobile && sidebar) {
+                setTimeout(function () {
+                    removeTrap = enableFocusTrap(sidebar);
+                    announce('Sidebar terbuka');
+                }, 150);
+            } else {
+                if (typeof removeTrap === 'function') { removeTrap(); removeTrap = null; }
+                if (!isOpen) announce('Sidebar ditutup');
+            }
+        });
+        bodyObs.observe(body, { attributes: true, attributeFilter: ['class'] });
+
+        /* Hapus focus trap saat resize ke desktop */
+        window.addEventListener('resize', function () {
+            if (window.innerWidth >= 768 && typeof removeTrap === 'function') {
+                removeTrap(); removeTrap = null;
+            }
+        });
+
+    })();
+    </script>
+
+</body>
+</html>

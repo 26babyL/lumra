@@ -1,0 +1,1826 @@
+{
+  "recommended_order": [
+    {
+      "batch": "batch_1_static",
+      "total_templates": 59,
+      "templates": [
+        {
+          "template_name": "lumra_pages/auth/forgot_password.html",
+          "view_names": [
+            "forgot_password"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/auth/lock_screen.html",
+          "view_names": [
+            "lock_screen"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/auth/login.html",
+          "view_names": [
+            "login_view",
+            "login_view"
+          ],
+          "routes": [],
+          "complexity_score": 1,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/auth/register.html",
+          "view_names": [],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/auth/reset_password.html",
+          "view_names": [
+            "reset_password"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/auth/session_expired.html",
+          "view_names": [
+            "session_expired"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/auth/two_factor.html",
+          "view_names": [
+            "two_factor_setup"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/auth/verify_email.html",
+          "view_names": [
+            "verify_email"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/etc/error_404.html",
+          "view_names": [],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/etc/error_500.html",
+          "view_names": [],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/etc/error_maintenance.html",
+          "view_names": [],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/etc/error_session_expired.html",
+          "view_names": [],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/inventory/product_list.html",
+          "view_names": [],
+          "routes": [],
+          "complexity_score": 1,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/inventory/stock_overview.html",
+          "view_names": [],
+          "routes": [],
+          "complexity_score": 1,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/sales/invoice_and_billing/invoice_list.html",
+          "view_names": [
+            "invoice_list"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/sales/invoice_and_billing/payment_list.html",
+          "view_names": [
+            "payment_list"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/marketing/add_campaign.html",
+          "view_names": [],
+          "routes": [],
+          "complexity_score": 1,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/marketing/campaign_list.html",
+          "view_names": [
+            "campaign_list"
+          ],
+          "routes": [],
+          "complexity_score": 1,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/marketing/customer_segment_list.html",
+          "view_names": [
+            "customer_segment_list"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/marketing/discount.html",
+          "view_names": [
+            "discount_list",
+            "discount_form",
+            "discount_list_view",
+            "add_discount_view",
+            "edit_discount_view",
+            "delete_discount_view"
+          ],
+          "routes": [],
+          "complexity_score": 1,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/marketing/loyalty_members.html",
+          "view_names": [
+            "loyalty_members",
+            "loyalty_member_form",
+            "loyalty_members_view",
+            "add_loyalty_member_view",
+            "edit_loyalty_member_view",
+            "delete_loyalty_member_view"
+          ],
+          "routes": [],
+          "complexity_score": 1,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/marketing/promotion_calendar.html",
+          "view_names": [
+            "promotion_calendar"
+          ],
+          "routes": [],
+          "complexity_score": 1,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/marketing/voucher_claim_log.html",
+          "view_names": [
+            "voucher_claim_log"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/marketing/voucher_list.html",
+          "view_names": [
+            "voucher_list"
+          ],
+          "routes": [],
+          "complexity_score": 1,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/master_data/bank_accounts.html",
+          "view_names": [
+            "bank_accounts"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/master_data/customer.html",
+          "view_names": [
+            "customer"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/master_data/location_list.html",
+          "view_names": [
+            "location_list"
+          ],
+          "routes": [],
+          "complexity_score": 1,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/master_data/payment_terms_list.html",
+          "view_names": [
+            "payment_terms_list"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/master_data/reason_codes.html",
+          "view_names": [
+            "reason_codes"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/master_data/stock_opname.html",
+          "view_names": [
+            "stock_opname"
+          ],
+          "routes": [],
+          "complexity_score": 1,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/master_data/tags_list.html",
+          "view_names": [
+            "tags_list"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/master_data/tax_list.html",
+          "view_names": [
+            "tax_list"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/master_data/vendor_list.html",
+          "view_names": [],
+          "routes": [],
+          "complexity_score": 1,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/messages/broadcast.html",
+          "view_names": [
+            "broadcast_message"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/messages/compose.html",
+          "view_names": [
+            "compose_message"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/messages/inbox.html",
+          "view_names": [
+            "inbox"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/messages/message_templates.html",
+          "view_names": [
+            "message_templates"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/messages/notification.html",
+          "view_names": [
+            "notification_view",
+            "notification_center"
+          ],
+          "routes": [],
+          "complexity_score": 1,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/onboarding/step_business.html",
+          "view_names": [
+            "onboarding_step_business"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/onboarding/step_category.html",
+          "view_names": [
+            "onboarding_step_category"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/onboarding/step_complete.html",
+          "view_names": [
+            "onboarding_step_complete"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/onboarding/step_location.html",
+          "view_names": [
+            "onboarding_step_location"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/onboarding/welcome.html",
+          "view_names": [
+            "onboarding_welcome"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/production/rnd_list.html",
+          "view_names": [
+            "rnd_list"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/reports/activity_log.html",
+          "view_names": [
+            "activity_log_view"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/reports/sales_history.html",
+          "view_names": [],
+          "routes": [],
+          "complexity_score": 1,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/sales/retur_and_refund/retur_list.html",
+          "view_names": [
+            "retur_list"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/sales_insight/dashboard.html",
+          "view_names": [
+            "dashboard_view"
+          ],
+          "routes": [],
+          "complexity_score": 1,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/sales_insight/trends_analysis.html",
+          "view_names": [
+            "trends_analysis_view",
+            "export_trends_view"
+          ],
+          "routes": [],
+          "complexity_score": 1,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/sales/salesorder_and_quotation/quotation_list.html",
+          "view_names": [
+            "quotation_list"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/sales/salesorder_and_quotation/sales_order_list.html",
+          "view_names": [
+            "sales_order_list"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/settings/about.html",
+          "view_names": [
+            "about_view",
+            "about"
+          ],
+          "routes": [],
+          "complexity_score": 1,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/settings/business_feature_matrix.html",
+          "view_names": [
+            "business_feature_matrix_view",
+            "business_feature_matrix"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/settings/business_profile.html",
+          "view_names": [
+            "business_profile"
+          ],
+          "routes": [],
+          "complexity_score": 1,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/settings/business_settings.html",
+          "view_names": [
+            "business_settings_view",
+            "business_settings"
+          ],
+          "routes": [],
+          "complexity_score": 1,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/settings/contact.html",
+          "view_names": [
+            "contact_view",
+            "contact"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/settings/search.html",
+          "view_names": [
+            "search_view",
+            "search"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/settings/settings.html",
+          "view_names": [
+            "settings_view",
+            "settings_view"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        },
+        {
+          "template_name": "lumra_pages/settings/system_status.html",
+          "view_names": [
+            "system_status_view",
+            "system_status"
+          ],
+          "routes": [],
+          "complexity_score": 0,
+          "batch_reason": "Static page or light context, aman untuk mulai round-trip."
+        }
+      ]
+    },
+    {
+      "batch": "batch_2_listing",
+      "total_templates": 77,
+      "templates": [
+        {
+          "template_name": "lumra_pages/accounting/accounts_payable.html",
+          "view_names": [
+            "accounts_payable"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/accounting/accounts_receivable.html",
+          "view_names": [
+            "accounts_receivable"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/accounting/balance_sheet.html",
+          "view_names": [
+            "balance_sheet"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/accounting/cash_flow.html",
+          "view_names": [
+            "cash_flow_statement"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/accounting/chart_of_accounts.html",
+          "view_names": [
+            "chart_of_accounts"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/accounting/general_ledger.html",
+          "view_names": [
+            "general_ledger"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/accounting/journal_entry_list.html",
+          "view_names": [
+            "journal_entry_list"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/accounting/profit_loss_statement.html",
+          "view_names": [
+            "profit_loss_statement"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/accounting/trial_balance.html",
+          "view_names": [
+            "trial_balance"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/etc/error_403.html",
+          "view_names": [
+            "users_view"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/inventory/add_stock_movement.html",
+          "view_names": [
+            "add_stock_movement_view",
+            "add_stock_movement_view"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/inventory/adjustment_reasons.html",
+          "view_names": [
+            "adjustment_reasons"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/inventory/batch_list.html",
+          "view_names": [
+            "batch_list"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/inventory/expiry_tracking.html",
+          "view_names": [
+            "expiry_tracking"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/inventory/requisition_list.html",
+          "view_names": [
+            "requisition_list"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/inventory/stock_movement_form.html",
+          "view_names": [],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/inventory/stock_opname_approvals.html",
+          "view_names": [
+            "stock_opname_approvals"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/inventory/supplier_evaluation.html",
+          "view_names": [
+            "supplier_evaluation"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/inventory/supplier_price_confirm_delete.html",
+          "view_names": [
+            "supplier_price_delete"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/inventory/supplier_price_form.html",
+          "view_names": [
+            "supplier_price_form"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/inventory/warehouse_zones.html",
+          "view_names": [
+            "warehouse_zones"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/sales/invoice_and_billing/invoice_detail.html",
+          "view_names": [
+            "invoice_detail"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/sales/invoice_and_billing/invoice_form.html",
+          "view_names": [
+            "invoice_form"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/sales/invoice_and_billing/payment_form.html",
+          "view_names": [
+            "payment_form"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/marketing/campaign.html",
+          "view_names": [
+            "campaign_detail",
+            "campaign_list_view",
+            "add_campaign_view",
+            "edit_campaign_view",
+            "delete_campaign_view"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/marketing/customer_segment_form.html",
+          "view_names": [
+            "customer_segment_form"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/marketing/voucher_form.html",
+          "view_names": [
+            "voucher_form"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/master_data/bank_account_form.html",
+          "view_names": [
+            "bank_account_form"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/master_data/category_form.html",
+          "view_names": [
+            "category_create",
+            "category_update"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/master_data/customer_form.html",
+          "view_names": [
+            "customer_create",
+            "customer_update",
+            "customer_form"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/master_data/customers.html",
+          "view_names": [
+            "customers",
+            "customers_view",
+            "add_customer_view",
+            "view_customer_view",
+            "edit_customer_view",
+            "delete_customer_view"
+          ],
+          "routes": [
+            "customers/",
+            "customers/add/",
+            "customers/<int:customer_id>/",
+            "customers/<int:customer_id>/edit/",
+            "customers/<int:customer_id>/delete/"
+          ],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/master_data/payment_terms_form.html",
+          "view_names": [
+            "payment_terms_form"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/master_data/stock_opname_session_detail.html",
+          "view_names": [
+            "stock_opname_session_detail"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/master_data/tax_form.html",
+          "view_names": [
+            "tax_form"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/master_data/unit_form.html",
+          "view_names": [
+            "unit_create",
+            "unit_update"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/messages/message_detail.html",
+          "view_names": [
+            "message_detail"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/print/print_base.html",
+          "view_names": [],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/print/print_purchase_order.html",
+          "view_names": [
+            "print_purchase_order"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/production/bom_list.html",
+          "view_names": [
+            "bom_list"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/production/finished_goods_receipt.html",
+          "view_names": [
+            "finished_goods_receipt"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/production/material_consumption.html",
+          "view_names": [
+            "material_consumption"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/production/production_costing.html",
+          "view_names": [
+            "production_costing"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/production/production_order_list.html",
+          "view_names": [
+            "production_order_list"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/production/production_scheduling.html",
+          "view_names": [
+            "production_scheduling"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/production/production_waste.html",
+          "view_names": [
+            "production_waste"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/production/recipe_list.html",
+          "view_names": [
+            "recipe_list",
+            "recipe_list"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/production/rnd_detail.html",
+          "view_names": [
+            "rnd_detail",
+            "rnd_detail"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/reports/base_report.html",
+          "view_names": [],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/reports/report_activity_log.html",
+          "view_names": [],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/reports/report_inventory_log.html",
+          "view_names": [
+            "report_inventory_log"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/reports/report_inventory_low.html",
+          "view_names": [
+            "report_inventory_low"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/reports/report_inventory_stock.html",
+          "view_names": [
+            "report_inventory_stock"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/reports/report_sales_by_outlet.html",
+          "view_names": [
+            "report_sales_by_outlet"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/reports/report_sales_by_payment.html",
+          "view_names": [
+            "report_sales_by_payment"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/reports/report_sales_by_product.html",
+          "view_names": [
+            "report_sales_by_product"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/reports/report_sales_summary.html",
+          "view_names": [
+            "report_sales_summary"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/reports/reporting.html",
+          "view_names": [],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/reports/sales_report_after.html",
+          "view_names": [],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/sales/retur_and_refund/retur_detail.html",
+          "view_names": [
+            "retur_detail"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/sales/retur_and_refund/retur_form.html",
+          "view_names": [
+            "retur_form"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/sales_insight/pos.html",
+          "view_names": [
+            "pos_view",
+            "pos_view"
+          ],
+          "routes": [
+            "pos/"
+          ],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/sales/salesorder_and_quotation/quotation_detail.html",
+          "view_names": [
+            "quotation_detail"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/sales/salesorder_and_quotation/quotation_form.html",
+          "view_names": [
+            "quotation_form"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/sales/salesorder_and_quotation/sales_order_detail.html",
+          "view_names": [
+            "sales_order_detail"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/sales/salesorder_and_quotation/sales_order_form.html",
+          "view_names": [
+            "sales_order_form"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/settings/api_keys.html",
+          "view_names": [
+            "api_keys"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/settings/backup_restore.html",
+          "view_names": [
+            "backup_restore"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/settings/business_form_general.html",
+          "view_names": [
+            "business_form_general_view",
+            "business_form_general"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/settings/email_settings.html",
+          "view_names": [
+            "email_settings"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/settings/notification_settings.html",
+          "view_names": [
+            "notification_settings"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/settings/numbering_settings.html",
+          "view_names": [
+            "numbering_settings"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/settings/permission_matrix.html",
+          "view_names": [
+            "permission_matrix"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/settings/profile.html",
+          "view_names": [
+            "profile_view",
+            "profile_view"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/settings/roles.html",
+          "view_names": [
+            "roles"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/settings/user_list.html",
+          "view_names": [
+            "user_list"
+          ],
+          "routes": [],
+          "complexity_score": 2,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/settings/user_roles_permissions.html",
+          "view_names": [
+            "user_roles_permissions_view",
+            "user_roles_permissions"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        },
+        {
+          "template_name": "lumra_pages/settings/users.html",
+          "view_names": [
+            "users_view",
+            "users_list"
+          ],
+          "routes": [],
+          "complexity_score": 3,
+          "batch_reason": "Listing atau dashboard ringan dengan context sederhana."
+        }
+      ]
+    },
+    {
+      "batch": "batch_3_forms",
+      "total_templates": 51,
+      "templates": [
+        {
+          "template_name": "lumra_pages/accounting/chart_of_accounts_form.html",
+          "view_names": [
+            "chart_of_accounts_form"
+          ],
+          "routes": [],
+          "complexity_score": 5,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/accounting/journal_entry_detail.html",
+          "view_names": [
+            "journal_entry_detail"
+          ],
+          "routes": [],
+          "complexity_score": 5,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/accounting/journal_entry_form.html",
+          "view_names": [
+            "journal_entry_form"
+          ],
+          "routes": [],
+          "complexity_score": 5,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/accounting/payment_voucher_form.html",
+          "view_names": [
+            "payment_voucher_form"
+          ],
+          "routes": [],
+          "complexity_score": 5,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/inventory/batch_detail.html",
+          "view_names": [
+            "batch_detail"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/inventory/batch_form.html",
+          "view_names": [
+            "batch_form"
+          ],
+          "routes": [],
+          "complexity_score": 5,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/inventory/product_details.html",
+          "view_names": [
+            "product_detail_view"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/inventory/products.html",
+          "view_names": [
+            "products_view",
+            "products_view"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/inventory/requisition_detail.html",
+          "view_names": [
+            "requisition_detail"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/inventory/requisition_form.html",
+          "view_names": [
+            "requisition_form"
+          ],
+          "routes": [],
+          "complexity_score": 5,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/inventory/stock_movement.html",
+          "view_names": [
+            "stock_movement_view",
+            "stock_movement_view",
+            "export_stock_movement",
+            "export_stock_movement"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/inventory/stock_opname_approval_detail.html",
+          "view_names": [
+            "stock_opname_approval_detail"
+          ],
+          "routes": [],
+          "complexity_score": 5,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/inventory/stock_opname_form.html",
+          "view_names": [
+            "stock_opname_form"
+          ],
+          "routes": [],
+          "complexity_score": 5,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/inventory/stock_opname_locations.html",
+          "view_names": [
+            "stock_opname_locations",
+            "stock_opname_locations"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/inventory/stock_planning.html",
+          "view_names": [
+            "stock_planning_view",
+            "stock_planning_view"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/inventory/stock_purchasing.html",
+          "view_names": [
+            "purchasing_view"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/inventory/supplier_price_list.html",
+          "view_names": [
+            "supplier_price_list",
+            "supplier_price_list"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/inventory/warehouse_zone_form.html",
+          "view_names": [
+            "warehouse_zone_form"
+          ],
+          "routes": [],
+          "complexity_score": 5,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/master_data/categories_list.html",
+          "view_names": [
+            "categories_list",
+            "categories_list"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/master_data/customer_detail.html",
+          "view_names": [
+            "customer_detail",
+            "customer_detail"
+          ],
+          "routes": [],
+          "complexity_score": 5,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/master_data/customers_list.html",
+          "view_names": [
+            "customer_list",
+            "customers_list"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/master_data/locations.html",
+          "view_names": [
+            "locations_view",
+            "locations_view",
+            "locations"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/master_data/units_list.html",
+          "view_names": [
+            "units_list",
+            "units_list"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/master_data/vendor_form.html",
+          "view_names": [
+            "vendor_create",
+            "vendor_update"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/master_data/vendors_list.html",
+          "view_names": [
+            "vendors_list",
+            "vendors_list"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/print/print_credit_note.html",
+          "view_names": [
+            "print_credit_note"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/print/print_delivery_note.html",
+          "view_names": [
+            "print_delivery_note"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/print/print_invoice.html",
+          "view_names": [
+            "print_invoice"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/print/print_packing_slip.html",
+          "view_names": [
+            "print_packing_slip"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/print/print_payment_receipt.html",
+          "view_names": [
+            "print_payment_receipt"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/print/print_production_order.html",
+          "view_names": [
+            "print_production_order"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/print/print_quotation.html",
+          "view_names": [
+            "print_quotation"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/print/print_receipt.html",
+          "view_names": [
+            "print_receipt"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/print/print_sales_order.html",
+          "view_names": [
+            "print_sales_order"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/print/print_stock_opname.html",
+          "view_names": [
+            "print_stock_opname"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/production/bom_detail.html",
+          "view_names": [
+            "bom_detail"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/production/bom_form.html",
+          "view_names": [
+            "bom_form"
+          ],
+          "routes": [],
+          "complexity_score": 5,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/production/production_order_detail.html",
+          "view_names": [
+            "production_order_detail"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/production/production_order_form.html",
+          "view_names": [
+            "production_order_form"
+          ],
+          "routes": [],
+          "complexity_score": 5,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/production/recipe_detail.html",
+          "view_names": [
+            "recipe_detail"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/production/recipe_form.html",
+          "view_names": [
+            "recipe_form"
+          ],
+          "routes": [],
+          "complexity_score": 5,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/reports/report_customer_lifetime.html",
+          "view_names": [
+            "report_customer_lifetime"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/reports/report_expiry.html",
+          "view_names": [
+            "report_expiry"
+          ],
+          "routes": [],
+          "complexity_score": 5,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/reports/report_inventory_age.html",
+          "view_names": [
+            "report_inventory_age"
+          ],
+          "routes": [],
+          "complexity_score": 5,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/reports/report_production.html",
+          "view_names": [
+            "report_production"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/reports/report_profit_loss_detail.html",
+          "view_names": [
+            "report_profit_loss_detail"
+          ],
+          "routes": [],
+          "complexity_score": 5,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/reports/sales_history_product.html",
+          "view_names": [
+            "sales_history_products_view",
+            "sales_history_products_view"
+          ],
+          "routes": [
+            "history/products/",
+            "history/products/"
+          ],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/reports/transaction_summary.html",
+          "view_names": [
+            "transaction_summary"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/sales_insight/market_insights.html",
+          "view_names": [
+            "market_insights_view",
+            "download_report_view"
+          ],
+          "routes": [],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/sales_insight/sales_intelligence.html",
+          "view_names": [
+            "sales_history_view"
+          ],
+          "routes": [
+            "history/"
+          ],
+          "complexity_score": 4,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        },
+        {
+          "template_name": "lumra_pages/settings/role_form.html",
+          "view_names": [
+            "role_form"
+          ],
+          "routes": [],
+          "complexity_score": 5,
+          "batch_reason": "Form atau halaman detail dengan context/logika menengah."
+        }
+      ]
+    },
+    {
+      "batch": "batch_4_complex",
+      "total_templates": 8,
+      "templates": [
+        {
+          "template_name": "lumra_pages/production/rnd_form.html",
+          "view_names": [
+            "rnd_form",
+            "rnd_trial_new"
+          ],
+          "routes": [],
+          "complexity_score": 6,
+          "batch_reason": "Report/print/logic-heavy page, cocok setelah fondasi stabil."
+        },
+        {
+          "template_name": "lumra_pages/reports/purchasing_report.html",
+          "view_names": [
+            "purchasing_report"
+          ],
+          "routes": [],
+          "complexity_score": 6,
+          "batch_reason": "Report/print/logic-heavy page, cocok setelah fondasi stabil."
+        },
+        {
+          "template_name": "lumra_pages/reports/report_staff_performance.html",
+          "view_names": [
+            "report_staff_performance"
+          ],
+          "routes": [],
+          "complexity_score": 6,
+          "batch_reason": "Report/print/logic-heavy page, cocok setelah fondasi stabil."
+        },
+        {
+          "template_name": "lumra_pages/reports/requisition_report.html",
+          "view_names": [
+            "requisition_report"
+          ],
+          "routes": [],
+          "complexity_score": 6,
+          "batch_reason": "Report/print/logic-heavy page, cocok setelah fondasi stabil."
+        },
+        {
+          "template_name": "lumra_pages/reports/sales_report.html",
+          "view_names": [
+            "sales_report",
+            "sales_report"
+          ],
+          "routes": [],
+          "complexity_score": 6,
+          "batch_reason": "Report/print/logic-heavy page, cocok setelah fondasi stabil."
+        },
+        {
+          "template_name": "lumra_pages/reports/transfer_report.html",
+          "view_names": [
+            "transfer_report"
+          ],
+          "routes": [],
+          "complexity_score": 6,
+          "batch_reason": "Report/print/logic-heavy page, cocok setelah fondasi stabil."
+        },
+        {
+          "template_name": "lumra_pages/sales_insight/financial_reports.html",
+          "view_names": [
+            "financial_reports_view"
+          ],
+          "routes": [],
+          "complexity_score": 6,
+          "batch_reason": "Report/print/logic-heavy page, cocok setelah fondasi stabil."
+        },
+        {
+          "template_name": "lumra_pages/sales_insight/sales_performance.html",
+          "view_names": [
+            "sales_performance_view"
+          ],
+          "routes": [
+            "performance/"
+          ],
+          "complexity_score": 6,
+          "batch_reason": "Report/print/logic-heavy page, cocok setelah fondasi stabil."
+        }
+      ]
+    }
+  ]
+}

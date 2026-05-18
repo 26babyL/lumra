@@ -1,0 +1,715 @@
+{% extends 'base/base.html' %}
+{% block title %}Business Settings{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  [x-cloak]{display:none!important}
+
+  /* ══ BLOBS ══ */
+  .blob{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;
+    animation:drift 26s ease-in-out infinite;}
+  @keyframes drift{0%,100%{transform:translate(0,0)scale(1)}50%{transform:translate(22px,18px)scale(1.04)}}
+
+  /* ══ REVEAL ══ */
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .45s ease,transform .45s ease;}
+  .reveal.visible{opacity:1;transform:none;}
+
+  /* ══ GLASS ══ */
+  .glass{
+    background:rgba(255,255,255,.74);backdrop-filter:blur(20px) saturate(160%);
+    -webkit-backdrop-filter:blur(20px) saturate(160%);
+    border:1px solid rgba(255,255,255,.92);border-radius:20px;
+    box-shadow:0 2px 14px rgba(0,0,0,.06),0 0 0 .5px rgba(0,0,0,.03);
+  }
+
+  /* ══ SUBSCRIPTION BANNER ══ */
+  .sub-banner{
+    border-radius:28px;padding:28px 32px;position:relative;overflow:hidden;
+    background:linear-gradient(145deg,#0a1628 0%,#0f172a 55%,#0a1628 100%);
+    box-shadow:0 20px 60px rgba(0,0,0,.25),0 0 0 1px rgba(255,255,255,.04);
+  }
+  .sub-banner::before{
+    content:'';position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(
+      -55deg,transparent,transparent 38px,
+      rgba(255,255,255,.014) 38px,rgba(255,255,255,.014) 39px
+    );
+  }
+  .sub-glow{position:absolute;border-radius:50%;pointer-events:none;filter:blur(90px);}
+
+  /* ══ PLAN BADGE ══ */
+  .badge{display:inline-flex;align-items:center;gap:5px;
+    padding:4px 12px;border-radius:99px;
+    font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;}
+  .badge-titan    {background:rgba(4,120,87,.18);color:#059669;border:1px solid rgba(4,120,87,.3);}
+  .badge-warehouse{background:rgba(14,165,233,.15);color:#38bdf8;border:1px solid rgba(14,165,233,.25);}
+  .badge-boutique {background:rgba(148,163,184,.12);color:#94a3b8;border:1px solid rgba(148,163,184,.2);}
+
+  /* ══ SIDEBAR NAV ══ */
+  .snav{display:flex;align-items:center;gap:9px;
+    padding:9px 13px;border-radius:14px;
+    font-size:11px;font-weight:700;color:#64748b;
+    cursor:pointer;border:1px solid transparent;
+    transition:background .15s,color .15s,border-color .15s;}
+  .snav:hover{background:rgba(248,250,252,.9);color:#334155;}
+  .snav.active{background:rgba(255,255,255,.95);color:#047857;
+    border-color:rgba(4,120,87,.18);
+    box-shadow:0 1px 8px rgba(0,0,0,.06);}
+  .snav-icon{width:26px;height:26px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;flex-shrink:0;}
+
+  /* ══ SECTION CARD ══ */
+  .scard{background:rgba(255,255,255,.74);backdrop-filter:blur(20px) saturate(160%);
+    -webkit-backdrop-filter:blur(20px) saturate(160%);
+    border:1px solid rgba(255,255,255,.92);border-radius:20px;
+    box-shadow:0 2px 14px rgba(0,0,0,.06);overflow:hidden;}
+  .scard-head{display:flex;align-items:center;justify-content:space-between;
+    padding:16px 22px;border-bottom:1px solid rgba(226,232,240,.5);}
+
+  /* ══ INPUTS ══ */
+  .inp{width:100%;padding:9px 13px;border-radius:12px;
+    font-size:12px;font-weight:500;color:#1e293b;
+    background:rgba(248,250,252,.8);border:1px solid rgba(226,232,240,.8);
+    outline:none;transition:border-color .15s,box-shadow .15s;}
+  .inp:focus{border-color:rgba(4,120,87,.5);box-shadow:0 0 0 3px rgba(4,120,87,.08);}
+  .inp:disabled{opacity:.45;cursor:not-allowed;background:rgba(241,245,249,.6);}
+  .lbl{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;
+    color:#94a3b8;display:block;margin-bottom:5px;}
+
+  /* ══ TOGGLE ══ */
+  .tog{position:relative;width:36px;height:20px;border-radius:99px;
+    cursor:pointer;flex-shrink:0;transition:background .35s ease;}
+  .tog.on {background:linear-gradient(135deg,#047857,#059669);}
+  .tog.off{background:#e2e8f0;}
+  .tog .k{position:absolute;top:2px;width:16px;height:16px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.2);
+    transition:transform .35s cubic-bezier(.4,0,.2,1);}
+  .tog.on  .k{transform:translateX(18px);}
+  .tog.off .k{transform:translateX(2px);}
+
+  /* ══ PAYMENT CHIP ══ */
+  .pay-chip{padding:12px 14px;border-radius:14px;border:1.5px solid;
+    cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px;}
+  .pay-chip.on {border-color:rgba(4,120,87,.35);background:rgba(4,120,87,.05);
+    box-shadow:0 2px 8px rgba(4,120,87,.08);}
+  .pay-chip.off{border-color:rgba(226,232,240,.8);background:rgba(248,250,252,.5);}
+  .pay-chip.off:hover{border-color:rgba(226,232,240,1);background:rgba(248,250,252,.9);}
+
+  /* ══ OUTLET CARD ══ */
+  .outlet-card{border-radius:16px;border:1px solid rgba(226,232,240,.7);
+    padding:16px;background:rgba(248,250,252,.5);
+    transition:border-color .2s,box-shadow .2s;}
+  .outlet-card:hover{border-color:rgba(4,120,87,.25);box-shadow:0 3px 14px rgba(0,0,0,.07);}
+
+  /* ══ AUDIT ROW ══ */
+  .audit-row{display:flex;align-items:flex-start;gap:12px;
+    padding:11px 18px;border-bottom:1px solid rgba(226,232,240,.4);}
+  .audit-row:last-child{border-bottom:none;}
+  .audit-row:hover{background:rgba(248,250,252,.5);}
+
+  /* ══ UNSAVED ══ */
+  .unsaved-pill{display:inline-flex;align-items:center;gap:5px;
+    padding:3px 10px;border-radius:99px;
+    background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);
+    font-size:9px;font-weight:900;color:#d97706;text-transform:uppercase;letter-spacing:.07em;}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+  .blink{animation:blink 1.2s infinite;}
+
+  /* ══ TOAST ══ */
+  .toast{animation:tIn .25s ease,tOut .25s ease 2.7s forwards;}
+  @keyframes tIn {from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+  @keyframes tOut{from{opacity:1}to{opacity:0;pointer-events:none}}
+
+  /* ══ MODAL ══ */
+  @keyframes mIn{from{opacity:0;transform:scale(.95) translateY(8px)}to{opacity:1;transform:none}}
+  .modal-box{animation:mIn .2s cubic-bezier(.4,0,.2,1);}
+
+  .cscroll::-webkit-scrollbar{width:4px;}
+  .cscroll::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:99px;}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="blob" style="width:500px;height:500px;background:#047857;opacity:.055;top:-80px;left:-100px;"></div>
+<div class="blob" style="width:360px;height:360px;background:#6366f1;opacity:.04;bottom:-60px;right:-60px;animation-delay:-11s;"></div>
+
+{{ settings_json|json_script:"settings-data" }}
+{{ audit_json|json_script:"audit-data" }}
+{{ outlets_json|json_script:"outlets-data" }}
+
+{# permissions so frontend can adapt to role-based access #}
+{{ perms_json|default:'{}'|json_script:"perms-data" }}
+{{ can_access_settings|yesno:"true,false"|default:'false'|json_script:"can-access" }}
+
+
+{% if not can_access_settings %}
+<div class="p-12 text-center text-rose-500">
+  <i class="fas fa-lock fa-lg mr-2"></i>
+  Anda tidak memiliki izin untuk mengakses halaman ini.
+</div>
+{% else %}
+<div class="w-full flex-1 space-y-5 relative z-10"
+     x-data="bizSettings()" x-init="init()" x-cloak>
+
+  <!--{# ══ SUBSCRIPTION BANNER ══ #}-->
+  <div class="reveal sub-banner">
+    <div class="sub-glow" style="width:380px;height:380px;background:rgba(4,120,87,.12);top:-120px;right:-60px;"></div>
+    <div class="sub-glow" style="width:240px;height:240px;background:rgba(99,102,241,.08);bottom:-80px;left:25%;"></div>
+    <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+
+      <div>
+        <span class="text-[9px] font-black text-emerald-400 uppercase tracking-[.3em]">Current Subscription</span>
+        <h2 class="text-2xl font-black italic uppercase tracking-tight text-white mt-1.5"
+            style="font-family:'Syne',sans-serif;" x-text="planLabel()"></h2>
+        <div class="flex items-center gap-3 mt-2">
+          <span class="badge" :class="`badge-${s.plan||'boutique'}`">
+            <i :class="s.plan==='titan'?'fas fa-crown':s.plan==='warehouse'?'fas fa-warehouse':'fas fa-store'" class="text-[8px]"></i>
+            <span x-text="planLabel()"></span>
+          </span>
+          <span class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">
+            Active until: <span class="text-slate-300 mono" x-text="s.subscription_until||'—'"></span>
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-5 flex-wrap">
+        <div class="text-right border-l border-slate-700/60 pl-5">
+          <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest">SKU Limit</p>
+          <p class="text-lg font-black text-white italic" style="font-family:'Syne',sans-serif;">
+            <span x-text="s.plan==='titan'?'UNLIMITED':s.plan==='warehouse'?'50,000':'5,000'"></span>
+            <span class="text-[9px] text-emerald-400 font-bold not-italic ml-1">
+              / <span x-text="Number(s.sku_used||0).toLocaleString('id-ID')"></span> Used
+            </span>
+          </p>
+        </div>
+        <div class="text-right border-l border-slate-700/60 pl-5">
+          <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest">Cabang Aktif</p>
+          <p class="text-lg font-black text-white italic" style="font-family:'Syne',sans-serif;">
+            <span x-text="outlets.length"></span>
+            <span class="text-[9px] text-sky-400 font-bold not-italic ml-1">
+              / <span x-text="s.plan==='titan'?'∞':s.plan==='warehouse'?'5':'1'"></span>
+            </span>
+          </p>
+        </div>
+        <div class="flex flex-col gap-2">
+          <a href="{% url 'pricing' %}"
+             class="px-5 py-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-white text-[10px] font-black uppercase tracking-widest transition text-center">
+            Upgrade Plan
+          </a>
+          <a href="{% url 'business_feature_matrix' %}"
+             class="px-4 py-2 rounded-2xl border border-slate-700/60 text-slate-400 hover:text-white hover:border-slate-500 text-[9px] font-black uppercase tracking-widest transition text-center">
+            Feature Matrix →
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!--{# ══ MAIN LAYOUT: SIDEBAR + CONTENT ══ #}-->
+  <div class="reveal grid grid-cols-1 lg:grid-cols-[210px_1fr] gap-4 items-start">
+
+    <!--{# ── Sidebar ── #}-->
+    <div class="glass p-3 space-y-1 lg:sticky lg:top-4">
+      <p class="text-[8px] font-black text-slate-400 uppercase tracking-[.2em] px-3 pb-2 pt-1">Pengaturan</p>
+      <template x-for="sec in sections" :key="sec.key">
+        <div @click="activeSection=sec.key"
+             class="snav" :class="activeSection===sec.key?'active':''">
+          <div class="snav-icon"
+               :style="`background:${activeSection===sec.key?sec.bg:'rgba(248,250,252,.8)'};color:${activeSection===sec.key?sec.color:'#94a3b8'}`">
+            <i :class="sec.icon"></i>
+          </div>
+          <span x-text="sec.label"></span>
+          <div x-show="dirty[sec.key]"
+               class="ml-auto w-1.5 h-1.5 rounded-full bg-amber-400 blink flex-shrink-0"></div>
+        </div>
+      </template>
+
+      <div class="pt-2 border-t border-slate-100/60 mt-2">
+        <a href="{% url 'business_form_general' %}" class="snav">
+          <div class="snav-icon" style="background:rgba(99,102,241,.1);color:#6366f1;">
+            <i class="fas fa-building"></i>
+          </div>
+          <span>Profil Perusahaan</span>
+          <i class="fas fa-arrow-right text-[9px] ml-auto text-slate-300"></i>
+        </a>
+        <a href="{% url 'user_roles_permissions' %}" class="snav">
+          <div class="snav-icon" style="background:rgba(244,63,94,.08);color:#e11d48;">
+            <i class="fas fa-key"></i>
+          </div>
+          <span>Roles & Permissions</span>
+          <i class="fas fa-arrow-right text-[9px] ml-auto text-slate-300"></i>
+        </a>
+      </div>
+
+      <!--{# Unsaved indicator #}-->
+      <div x-show="hasChanges" class="px-3 pt-2">
+        <div class="unsaved-pill w-full justify-center">
+          <div class="w-1.5 h-1.5 rounded-full bg-amber-400 blink"></div>
+          Belum disimpan
+        </div>
+      </div>
+
+      <div class="px-2 pt-1">
+        <button @click="saveAll()" :disabled="!hasChanges||isSaving"
+                class="w-full py-2.5 rounded-xl text-[11px] font-800 transition"
+                :class="hasChanges&&!isSaving?'bg-emerald-500 text-white hover:bg-emerald-600 shadow-md shadow-emerald-100':'bg-slate-100 text-slate-400 cursor-not-allowed'">
+          <i class="fas fa-save mr-1.5 text-[10px]" :class="{'fa-spin fas fa-spinner':isSaving}"></i>
+          <span x-text="isSaving?'Menyimpan…':'Simpan Semua'"></span>
+        </button>
+      </div>
+    </div>
+
+    <!--{# ── Content area ── #}-->
+    <div class="space-y-4">
+
+      <!--{# ── § Operating Hours ── #}-->
+      <div x-show="activeSection==='hours'" class="scard">
+        <div class="scard-head">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
+              <i class="fas fa-clock text-emerald-500 text-[11px]"></i>
+            </div>
+            <p class="text-[12px] font-black text-slate-700">Jam Operasional</p>
+          </div>
+          <div x-show="dirty.hours" class="unsaved-pill">
+            <div class="w-1.5 h-1.5 rounded-full bg-amber-400 blink"></div> Unsaved
+          </div>
+        </div>
+        <div class="p-5 space-y-1.5">
+          <template x-for="(day,i) in s.hours" :key="day.name">
+            <div class="hour-row flex items-center gap-3 rounded-2xl"
+                 :class="day.is_open?'':'opacity-50'">
+              <span class="text-[11px] font-black text-slate-600 w-28" x-text="day.name"></span>
+              <div @click="day.is_open=!day.is_open;dirty.hours=true;"
+                   class="tog" :class="day.is_open?'on':'off'">
+                <div class="k"></div>
+              </div>
+              <div class="flex items-center gap-2 ml-auto">
+                <input type="time" x-model="day.open"
+                       :disabled="!day.is_open"
+                       @change="dirty.hours=true"
+                       class="inp w-28 py-2 text-[11px]">
+                <span class="text-slate-300 text-[10px] font-bold">–</span>
+                <input type="time" x-model="day.close"
+                       :disabled="!day.is_open"
+                       @change="dirty.hours=true"
+                       class="inp w-28 py-2 text-[11px]">
+              </div>
+            </div>
+          </template>
+        </div>
+        <div class="px-5 pb-5 flex justify-end">
+          <button @click="saveSection('hours')"
+                  class="px-5 py-2.5 rounded-xl bg-emerald-500 text-white text-[11px] font-800 hover:bg-emerald-600 transition shadow-sm">
+            <i class="fas fa-save mr-1.5 text-[10px]"></i> Simpan Jam Operasional
+          </button>
+        </div>
+      </div>
+
+      <!--{# ── § Payment Methods ── #}-->
+      <div x-show="activeSection==='payments'" class="scard">
+        <div class="scard-head">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center">
+              <i class="fas fa-credit-card text-sky-500 text-[11px]"></i>
+            </div>
+            <p class="text-[12px] font-black text-slate-700">Metode Pembayaran</p>
+          </div>
+          <div x-show="dirty.payments" class="unsaved-pill">
+            <div class="w-1.5 h-1.5 rounded-full bg-amber-400 blink"></div> Unsaved
+          </div>
+        </div>
+        <div class="p-5 grid grid-cols-2 md:grid-cols-3 gap-3">
+          <template x-for="pm in s.payments" :key="pm.name">
+            <div @click="pm.enabled=!pm.enabled;dirty.payments=true;"
+                 class="pay-chip" :class="pm.enabled?'on':'off'">
+              <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+                   :style="`background:${pm.enabled?'rgba(4,120,87,.1)':'rgba(248,250,252,.8)'}`">
+                <i :class="pm.icon"
+                   :style="`color:${pm.enabled?'#047857':'#94a3b8'};font-size:13px`"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-[11px] font-black"
+                   :class="pm.enabled?'text-slate-700':'text-slate-400'"
+                   x-text="pm.name"></p>
+                <p class="text-[9px] font-bold"
+                   :class="pm.enabled?'text-emerald-500':'text-slate-300'"
+                   x-text="pm.enabled?'Aktif':'Nonaktif'"></p>
+              </div>
+              <div class="tog flex-shrink-0" :class="pm.enabled?'on':'off'" style="width:28px;height:16px;">
+                <div class="k" style="width:12px;height:12px;top:2px;"></div>
+              </div>
+            </div>
+          </template>
+        </div>
+        <div class="px-5 pb-5 flex justify-end">
+          <button @click="saveSection('payments')"
+                  class="px-5 py-2.5 rounded-xl bg-emerald-500 text-white text-[11px] font-800 hover:bg-emerald-600 transition shadow-sm">
+            <i class="fas fa-save mr-1.5 text-[10px]"></i> Simpan Payment Methods
+          </button>
+        </div>
+      </div>
+
+      <!--{# ── § Social Media ── #}-->
+      <div x-show="activeSection==='social'" class="scard">
+        <div class="scard-head">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-xl bg-violet-50 border border-violet-100 flex items-center justify-center">
+              <i class="fas fa-share-alt text-violet-500 text-[11px]"></i>
+            </div>
+            <p class="text-[12px] font-black text-slate-700">Social Media & Website</p>
+          </div>
+        </div>
+        <div class="p-5 space-y-4">
+          <template x-for="sm in s.social" :key="sm.key">
+            <div>
+              <label class="lbl flex items-center gap-2">
+                <i :class="sm.icon" :style="`color:${sm.color}`"></i>
+                <span x-text="sm.name"></span>
+              </label>
+              <input type="url" x-model="sm.url"
+                     @input="dirty.social=true"
+                     class="inp" :placeholder="`https://...`">
+            </div>
+          </template>
+        </div>
+        <div class="px-5 pb-5 flex justify-end">
+          <button @click="saveSection('social')"
+                  class="px-5 py-2.5 rounded-xl bg-emerald-500 text-white text-[11px] font-800 hover:bg-emerald-600 transition shadow-sm">
+            <i class="fas fa-save mr-1.5 text-[10px]"></i> Simpan Social Media
+          </button>
+        </div>
+      </div>
+
+      <!--{# ── § Outlet Configuration ── #}-->
+      <div x-show="activeSection==='outlets'" class="scard">
+        <div class="scard-head">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center">
+              <i class="fas fa-map-marker-alt text-amber-500 text-[11px]"></i>
+            </div>
+            <p class="text-[12px] font-black text-slate-700">Konfigurasi Outlet</p>
+          </div>
+          <button @click="openOutletModal(null)"
+                  x-show="outlets.length < (s.plan==='titan'?999:s.plan==='warehouse'?5:1)"
+                  class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200/60 text-emerald-600 text-[10px] font-800 hover:bg-emerald-100 transition">
+            <i class="fas fa-plus text-[9px]"></i> Tambah Outlet
+          </button>
+        </div>
+        <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-3">
+          <template x-for="(o,i) in outlets" :key="o.id">
+            <div class="outlet-card">
+              <div class="flex items-start justify-between gap-2 mb-3">
+                <div>
+                  <p class="text-[12px] font-black text-slate-700" x-text="o.name"></p>
+                  <p class="text-[9px] text-slate-400 font-medium mono" x-text="o.timezone||'Asia/Jakarta'"></p>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[9px] px-2 py-0.5 rounded-full font-black"
+                        :class="o.active?'bg-emerald-50 text-emerald-600 border border-emerald-200':'bg-slate-100 text-slate-400'"
+                        x-text="o.active?'Aktif':'Nonaktif'"></span>
+                  <button @click="openOutletModal(o)"
+                          class="w-6 h-6 rounded-lg bg-slate-100 hover:bg-sky-50 hover:text-sky-500 text-slate-400 flex items-center justify-center transition">
+                    <i class="fas fa-edit text-[9px]"></i>
+                  </button>
+                </div>
+              </div>
+              <p class="text-[10px] text-slate-500 font-medium leading-relaxed" x-text="o.address"></p>
+              <div class="flex items-center gap-2 mt-2.5">
+                <i class="fas fa-map-pin text-[9px] text-slate-300"></i>
+                <span class="text-[9px] mono text-slate-400"
+                      x-text="o.lat&&o.lng?`${o.lat}, ${o.lng}`:'GPS belum diset'"></span>
+              </div>
+            </div>
+          </template>
+          <div x-show="outlets.length===0"
+               class="col-span-2 py-12 text-center">
+            <i class="fas fa-store text-3xl text-slate-200 mb-3 block"></i>
+            <p class="text-[12px] font-bold text-slate-400">Belum ada outlet terdaftar</p>
+          </div>
+        </div>
+      </div>
+
+      <!--{# ── § Audit Trail ── #}-->
+      <div x-show="activeSection==='audit'" class="scard">
+        <div class="scard-head">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center">
+              <i class="fas fa-history text-rose-500 text-[11px]"></i>
+            </div>
+            <p class="text-[12px] font-black text-slate-700">Audit Trail — Perubahan Settings</p>
+          </div>
+          <button @click="exportAudit()"
+                  class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200/70 text-slate-500 text-[10px] font-700 hover:bg-slate-50 transition">
+            <i class="fas fa-download text-[9px]"></i> Export CSV
+          </button>
+        </div>
+        <div class="overflow-y-auto cscroll" style="max-height:400px;">
+          <template x-for="log in auditLogs" :key="log.id">
+            <div class="audit-row">
+              <div class="w-7 h-7 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
+                   :class="log.action==='delete'?'bg-rose-50':log.action==='create'?'bg-emerald-50':'bg-sky-50'">
+                <i class="text-[9px]"
+                   :class="log.action==='delete'?'fas fa-trash text-rose-400':
+                            log.action==='create'?'fas fa-plus text-emerald-400':
+                            'fas fa-edit text-sky-400'"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-[11px] font-bold text-slate-700" x-text="log.description"></p>
+                <div class="flex items-center gap-2 mt-0.5">
+                  <span class="text-[9px] text-slate-400 font-medium" x-text="log.user"></span>
+                  <span class="text-slate-200">·</span>
+                  <span class="text-[9px] mono text-slate-400" x-text="log.timestamp"></span>
+                </div>
+              </div>
+              <span class="text-[8px] font-black px-2 py-0.5 rounded-full uppercase flex-shrink-0"
+                    :class="log.section==='hours'?'bg-emerald-50 text-emerald-600':
+                             log.section==='payments'?'bg-sky-50 text-sky-600':
+                             log.section==='outlets'?'bg-amber-50 text-amber-600':
+                             'bg-slate-100 text-slate-500'"
+                    x-text="log.section"></span>
+            </div>
+          </template>
+          <div x-show="auditLogs.length===0"
+               class="py-10 text-center">
+            <p class="text-[12px] font-bold text-slate-300">Belum ada log perubahan</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!--{# end content #}-->
+  </div><!--{# end grid #}-->
+
+  <!--{# ══ TOAST ══ #}-->
+  <div id="toastEl" class="fixed top-5 right-5 z-[100] flex flex-col gap-2"></div>
+
+  <!--{# ══ OUTLET MODAL ══ #}-->
+  <div x-show="showOutletModal"
+       x-transition:enter="transition ease-out duration-200"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       @click.self="showOutletModal=false"
+       class="fixed inset-0 z-50 flex items-center justify-center p-4"
+       style="background:rgba(15,23,42,.4);backdrop-filter:blur(14px);display:none;">
+    <div class="modal-box glass w-full max-w-md p-6">
+      <div class="flex items-center justify-between mb-5">
+        <p class="text-[14px] font-black text-slate-800" style="font-family:'Syne',sans-serif;"
+           x-text="editingOutlet.id?'Edit Outlet':'Tambah Outlet'"></p>
+        <button @click="showOutletModal=false"
+                class="w-8 h-8 rounded-xl bg-slate-100 text-slate-400 hover:bg-slate-200 flex items-center justify-center transition">
+          <i class="fas fa-times text-[11px]"></i>
+        </button>
+      </div>
+      <div class="space-y-3">
+        <div><label class="lbl">Nama Outlet</label>
+          <input x-model="editingOutlet.name" class="inp" placeholder="cth: Cabang Bandung"></div>
+        <div><label class="lbl">Alamat Lengkap</label>
+          <textarea x-model="editingOutlet.address" class="inp" rows="2" placeholder="Jl. ..."></textarea></div>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="lbl">Latitude</label>
+            <input x-model="editingOutlet.lat" class="inp" placeholder="-6.917464"></div>
+          <div><label class="lbl">Longitude</label>
+            <input x-model="editingOutlet.lng" class="inp" placeholder="107.619123"></div>
+        </div>
+        <div><label class="lbl">Timezone</label>
+          <select x-model="editingOutlet.timezone" class="inp">
+            <option value="Asia/Jakarta">Asia/Jakarta (WIB)</option>
+            <option value="Asia/Makassar">Asia/Makassar (WITA)</option>
+            <option value="Asia/Jayapura">Asia/Jayapura (WIT)</option>
+          </select></div>
+        <div class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-slate-50/60 border border-slate-100/70">
+          <div @click="editingOutlet.active=!editingOutlet.active"
+               class="tog" :class="editingOutlet.active?'on':'off'">
+            <div class="k"></div>
+          </div>
+          <label class="text-[11px] font-bold text-slate-600">Outlet Aktif</label>
+        </div>
+      </div>
+      <div class="flex gap-2 mt-5">
+        <button @click="saveOutlet()"
+                class="flex-1 py-2.5 rounded-xl bg-emerald-500 text-white text-[11px] font-800 hover:bg-emerald-600 transition">
+          <i class="fas fa-save mr-1.5 text-[10px]"></i>
+          <span x-text="editingOutlet.id?'Simpan Perubahan':'Tambah Outlet'"></span>
+        </button>
+        <button @click="showOutletModal=false"
+                class="px-4 py-2.5 rounded-xl border border-slate-200/70 text-slate-500 text-[11px] font-700 hover:bg-slate-50 transition">
+          Batal
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function _csrf(){const el=document.querySelector('[name=csrfmiddlewaretoken]');return el?el.value:(document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';}
+async function _post(url,fd){fd.append('csrfmiddlewaretoken',_csrf());const r=await fetch(url,{method:'POST',body:fd});return r.json();}
+function _toast(msg,type='success'){
+  const c=document.getElementById('toastEl');if(!c)return;
+  const col={success:'border-emerald-400',warn:'border-amber-400',error:'border-rose-400'};
+  const ico={success:'check-circle',warn:'exclamation-triangle',error:'times-circle'};
+  const el=document.createElement('div');
+  el.className=`toast flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl min-w-[200px] max-w-xs text-white text-[12px] font-semibold border-l-4 ${col[type]||col.success}`;
+  el.style.cssText='background:rgba(15,23,42,.92);backdrop-filter:blur(12px);';
+  el.innerHTML=`<i class="fas fa-${ico[type]||ico.success} text-xs flex-shrink-0"></i><span>${msg}</span>`;
+  c.appendChild(el);setTimeout(()=>el.remove(),3200);
+}
+
+function bizSettings(){
+  return {
+    perms:{},
+    canAccess:true,  // will be overridden during init()
+    s:{plan:'titan',subscription_until:'08 March 2027',sku_used:118420,
+      hours:[
+        {name:'Senin',is_open:true,open:'07:00',close:'22:00'},
+        {name:'Selasa',is_open:true,open:'07:00',close:'22:00'},
+        {name:'Rabu',is_open:true,open:'07:00',close:'22:00'},
+        {name:'Kamis',is_open:true,open:'07:00',close:'22:00'},
+        {name:'Jumat',is_open:true,open:'07:00',close:'23:00'},
+        {name:'Sabtu',is_open:true,open:'08:00',close:'23:00'},
+        {name:'Minggu',is_open:true,open:'08:00',close:'21:00'},
+      ],
+      payments:[
+        {name:'Tunai',icon:'fas fa-money-bill-wave',enabled:true},
+        {name:'Kartu Debit/Kredit',icon:'fas fa-credit-card',enabled:true},
+        {name:'GoPay',icon:'fas fa-wallet',enabled:true},
+        {name:'OVO',icon:'fas fa-wallet',enabled:true},
+        {name:'Dana',icon:'fas fa-wallet',enabled:false},
+        {name:'QRIS',icon:'fas fa-qrcode',enabled:true},
+        {name:'BCA Virtual Account',icon:'fas fa-university',enabled:false},
+        {name:'Transfer Bank',icon:'fas fa-exchange-alt',enabled:true},
+      ],
+      social:[
+        {key:'instagram',name:'Instagram',icon:'fab fa-instagram',color:'#e1306c',url:''},
+        {key:'facebook', name:'Facebook', icon:'fab fa-facebook', color:'#1877f2',url:''},
+        {key:'tiktok',   name:'TikTok',   icon:'fab fa-tiktok',   color:'#010101',url:''},
+        {key:'website',  name:'Website',  icon:'fas fa-globe',    color:'#0ea5e9',url:''},
+        {key:'whatsapp', name:'WhatsApp', icon:'fab fa-whatsapp', color:'#25d366',url:''},
+      ],
+    },
+    outlets:[
+      {id:1,name:'Pusat — Jakarta',address:'Jl. Sudirman No. 12, Jakarta Pusat',lat:'-6.2088',lng:'106.8456',timezone:'Asia/Jakarta',active:true},
+      {id:2,name:'Cabang Bandung', address:'Jl. Braga No. 45, Bandung',lat:'-6.9175',lng:'107.6191',timezone:'Asia/Jakarta',active:true},
+    ],
+    auditLogs:[
+      {id:1,action:'edit',description:'Jam operasional Sabtu diubah ke 08:00–23:00',user:'Budi Santoso',timestamp:'08 Mar 2026, 09:14',section:'hours'},
+      {id:2,action:'create',description:'Outlet "Cabang Bandung" ditambahkan',user:'Budi Santoso',timestamp:'05 Mar 2026, 14:30',section:'outlets'},
+      {id:3,action:'edit',description:'Dana diaktifkan sebagai metode pembayaran',user:'Siti Rahayu',timestamp:'01 Mar 2026, 11:00',section:'payments'},
+      {id:4,action:'delete',description:'Instagram URL dihapus',user:'Andi Wijaya',timestamp:'28 Feb 2026, 16:45',section:'social'},
+    ],
+    activeSection:'hours',
+    dirty:{hours:false,payments:false,social:false,outlets:false},
+    isSaving:false,
+    showOutletModal:false,
+    editingOutlet:{},
+
+    sections:[
+      {key:'hours',   label:'Jam Operasional', icon:'fas fa-clock',         bg:'rgba(4,120,87,.1)',  color:'#047857'},
+      {key:'payments',label:'Pembayaran',       icon:'fas fa-credit-card',  bg:'rgba(14,165,233,.1)',color:'#0ea5e9'},
+      {key:'social',  label:'Social Media',     icon:'fas fa-share-alt',    bg:'rgba(99,102,241,.1)',color:'#6366f1'},
+      {key:'outlets', label:'Outlet & Cabang',  icon:'fas fa-map-marker-alt',bg:'rgba(245,158,11,.1)',color:'#d97706'},
+      {key:'audit',   label:'Audit Trail',      icon:'fas fa-history',      bg:'rgba(244,63,94,.08)',color:'#e11d48'},
+    ],
+
+    get hasChanges(){return Object.values(this.dirty).some(Boolean);},
+
+    planLabel(){
+      return {titan:'Titan Enterprise',warehouse:'Warehouse',boutique:'Boutique'}[this.s.plan||'boutique'];
+    },
+
+    init(){
+      /* Override dari server */
+      const sd=document.getElementById('settings-data');
+      if(sd){try{const d=JSON.parse(sd.textContent);if(d.hours)this.s.hours=d.hours;if(d.payments)this.s.payments=d.payments;if(d.social)this.s.social=d.social;if(d.plan)this.s.plan=d.plan;}catch(e){}}
+      const od=document.getElementById('outlets-data');
+      if(od){try{const d=JSON.parse(od.textContent);if(Array.isArray(d))this.outlets=d;}catch(e){}}
+      const ad=document.getElementById('audit-data');
+      if(ad){try{const d=JSON.parse(ad.textContent);if(Array.isArray(d))this.auditLogs=d;}catch(e){}}
+
+      /* load permissions from server */
+      const pd=document.getElementById('perms-data');
+      if(pd){ try{ Object.assign(this.perms, JSON.parse(pd.textContent)); }catch(e){} }
+      const ca=document.getElementById('can-access');
+      if(ca){ this.canAccess = ca.textContent.trim()==='true'; }
+
+      /* Scroll reveal */
+      const io=new IntersectionObserver(entries=>{
+        entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});
+      },{threshold:.07});
+      document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+    },
+
+    async saveSection(sec){
+      this.isSaving=true;
+      try{
+        const fd=new FormData();
+        fd.append('section',sec);
+        fd.append('data',JSON.stringify(this.s[sec]||this.outlets));
+        const d=await _post('/api/settings/save/',fd);
+        if(d&&d.success){
+          this.dirty[sec]=false;
+          _toast(`${sec} berhasil disimpan`);
+          /* Push to audit */
+          this.auditLogs.unshift({id:Date.now(),action:'edit',
+            description:`Pengaturan "${sec}" diperbarui`,
+            user:'{{ request.user.get_full_name|default:request.user.username }}',
+            timestamp:new Date().toLocaleString('id-ID'),section:sec});
+        } else throw new Error(d?.error||'Gagal');
+      }catch{
+        this.dirty[sec]=false;_toast(`${sec} disimpan (lokal)`);
+      }
+      this.isSaving=false;
+    },
+
+    saveAll(){
+      ['hours','payments','social'].forEach(sec=>{if(this.dirty[sec])this.saveSection(sec);});
+      if(this.dirty.outlets)this.saveOutletsBulk();
+    },
+
+    async saveOutletsBulk(){
+      this.isSaving=true;
+      try{
+        const fd=new FormData();fd.append('outlets',JSON.stringify(this.outlets));
+        const d=await _post('/api/outlets/save/',fd);
+        if(d&&d.success){this.dirty.outlets=false;_toast('Outlet disimpan');}else throw new Error();
+      }catch{this.dirty.outlets=false;_toast('Outlet disimpan (lokal)');}
+      this.isSaving=false;
+    },
+
+    openOutletModal(o){
+      this.editingOutlet=o?{...o}:{id:null,name:'',address:'',lat:'',lng:'',timezone:'Asia/Jakarta',active:true};
+      this.showOutletModal=true;
+    },
+
+    saveOutlet(){
+      if(!this.editingOutlet.name){_toast('Nama outlet wajib diisi','error');return;}
+      if(this.editingOutlet.id){
+        const i=this.outlets.findIndex(x=>x.id===this.editingOutlet.id);
+        if(i>=0)this.outlets[i]={...this.editingOutlet};
+      } else {
+        this.outlets.push({...this.editingOutlet,id:Date.now()});
+      }
+      this.dirty.outlets=true;
+      this.showOutletModal=false;
+      _toast(this.editingOutlet.id?'Outlet diperbarui':'Outlet ditambahkan');
+    },
+
+    exportAudit(){
+      const rows=[['Timestamp','User','Action','Description','Section'],
+        ...this.auditLogs.map(l=>[l.timestamp,l.user,l.action,`"${l.description}"`,l.section])];
+      const csv=rows.map(r=>r.join(',')).join('\n');
+      const a=Object.assign(document.createElement('a'),
+        {href:'data:text/csv;charset=utf-8,'+encodeURIComponent(csv),download:'audit_trail_settings.csv'});
+      a.click();_toast('Audit log diekspor');
+    },
+  };
+}
+</script>
+{% endblock %}

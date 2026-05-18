@@ -1,0 +1,359 @@
+{
+  "filename": "chart_of_accounts_form.html",
+  "title": "Buat Akun Baru",
+  "components": [
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "w-full relative z-10 flex items-center justify-center min-h-[80vh]",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": "coaFormApp()"
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "glass-panel w-full",
+      "text_preview": "Buat Akun Baru Menambahkan struktur ke Chart of Accounts. {% csrf_token %} Kode…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h1",
+      "label": "HEADING (H1)",
+      "depth": 4,
+      "path": "root/body/div/div/div/h1",
+      "classes": "text-xl font-bold text-slate-800",
+      "text_preview": "Buat Akun Baru",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "form",
+      "tag": "form",
+      "label": "[ FORM ]",
+      "depth": 3,
+      "path": "root/body/div/div/form",
+      "classes": "space-y-5",
+      "text_preview": "{% csrf_token %} Kode Akun Cek Ketersediaan Nama Akun Tipe Akun Asset (Aset) Lia…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 5,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 5,
+      "path": "root/body/div/div/form/div/div",
+      "classes": "flex gap-2",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "input",
+      "label": "INPUT FIELD",
+      "depth": 6,
+      "path": "root/body/div/div/form/div/div/input",
+      "classes": "form-input font-mono font-bold",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: Cek Ketersediaan",
+      "depth": 6,
+      "path": "root/body/div/div/form/div/div/button",
+      "classes": "px-4 bg-slate-100 text-slate-600 rounded-lg font-bold text-sm hover:bg-slate-200",
+      "text_preview": "Cek Ketersediaan",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "input",
+      "label": "INPUT FIELD",
+      "depth": 5,
+      "path": "root/body/div/div/form/div/input",
+      "classes": "form-input",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [GRID 2 cols]",
+      "depth": 4,
+      "path": "root/body/div/div/form/div",
+      "classes": "grid grid-cols-2 gap-4",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "GRID 2 cols",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "select",
+      "label": "INPUT FIELD",
+      "depth": 6,
+      "path": "root/body/div/div/form/div/div/select",
+      "classes": "form-input",
+      "text_preview": "Asset (Aset) Liability (Kewajiban) Equity (Modal) Revenue (Pendapatan) Expense (…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 5,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "select",
+      "label": "INPUT FIELD",
+      "depth": 6,
+      "path": "root/body/div/div/form/div/div/select",
+      "classes": "form-input",
+      "text_preview": "Header (Kelompok) Detail (Aktif)",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "select",
+      "label": "INPUT FIELD",
+      "depth": 5,
+      "path": "root/body/div/div/form/div/select",
+      "classes": "form-input",
+      "text_preview": "-- Tidak Ada -- {% for parent in parent_accounts %} {{ parent.code }} {{ parent.…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 4,
+      "path": "root/body/div/div/form/div",
+      "classes": "pt-4 flex justify-end gap-3 border-t border-slate-100",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: Simpan Akun",
+      "depth": 5,
+      "path": "root/body/div/div/form/div/button",
+      "classes": "px-8 py-2.5 rounded-lg text-sm font-bold bg-slate-800 text-white shadow-lg hover:bg-slate-700 transition",
+      "text_preview": "Simpan Akun",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "Buat Akun Baru Menambahkan struktur ke Chart of Accounts. {% csrf_token %} Kode…"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/h1",
+      "type": "heading",
+      "label": "HEADING (H1)",
+      "text_preview": "Buat Akun Baru"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/form",
+      "type": "form",
+      "label": "[ FORM ]",
+      "text_preview": "{% csrf_token %} Kode Akun Cek Ketersediaan Nama Akun Tipe Akun Asset (Aset) Lia…"
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/form/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/form/div/div/input",
+      "type": "input",
+      "label": "INPUT FIELD",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/form/div/div/button",
+      "type": "button",
+      "label": "BUTTON: Cek Ketersediaan",
+      "text_preview": "Cek Ketersediaan"
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/form/div/input",
+      "type": "input",
+      "label": "INPUT FIELD",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/form/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [GRID 2 cols]",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/form/div/div/select",
+      "type": "input",
+      "label": "INPUT FIELD",
+      "text_preview": "Asset (Aset) Liability (Kewajiban) Equity (Modal) Revenue (Pendapatan) Expense (…"
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/form/div/div/select",
+      "type": "input",
+      "label": "INPUT FIELD",
+      "text_preview": "Header (Kelompok) Detail (Aktif)"
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/form/div/select",
+      "type": "input",
+      "label": "INPUT FIELD",
+      "text_preview": "-- Tidak Ada -- {% for parent in parent_accounts %} {{ parent.code }} {{ parent.…"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/form/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/form/div/button",
+      "type": "button",
+      "label": "BUTTON: Simpan Akun",
+      "text_preview": "Simpan Akun"
+    }
+  ],
+  "issues": [
+    {
+      "type": "alpine_xcloak",
+      "severity": "info",
+      "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template",
+      "path": ""
+    }
+  ],
+  "stats": {
+    "total_components": 14,
+    "by_type": {
+      "layout": 4,
+      "card": 1,
+      "heading": 1,
+      "form": 1,
+      "input": 5,
+      "button": 2
+    },
+    "interactive": 2,
+    "with_scroll": 0,
+    "with_form_fields": 5,
+    "scroll_nestings": 0,
+    "issues": 1,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 1
+    }
+  }
+}

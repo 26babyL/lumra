@@ -1,0 +1,792 @@
+{% extends 'base/base.html' %}
+{% block title %}Profil Perusahaan{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  [x-cloak]{display:var(--shadow-sm-16)!important}
+
+  .blob{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:var(--shadow-sm-16);z-index:0;
+    animation:drift 26s ease-in-out infinite;}
+  @keyframes drift{0%,100%{transform:translate(0,0)scale(1)}50%{transform:translate(22px,18px)scale(1.04)}}
+
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .45s ease,transform .45s ease;}
+  .reveal.visible{opacity:1;transform:var(--shadow-sm-16);}
+
+  .glass{background:var(--color-white-a74);backdrop-filter:var(--backdrop-blur-20px-saturate-160);
+    -webkit-backdrop-filter:var(--backdrop-blur-20px-saturate-160);
+    border:1px solid var(--color-white-a92);border-radius:20px;
+    box-shadow:0 2px 14px var(--color-black-a06),0 0 0 .5px var(--color-black-a03);}
+
+  /* ══ INPUTS ══ */
+  .inp{width:100%;padding:10px 14px;border-radius:13px;
+    font-size:12px;font-weight:500;color:var(--color-slate-800);
+    background:var(--color-slate-50-a85);border:1px solid var(--color-slate-200-a9);
+    outline:var(--shadow-sm-16);transition:border-color .18s,box-shadow .18s,background .18s;}
+  .inp:focus{border-color:var(--color-emerald-700-a55);box-shadow:0 0 0 3px var(--color-emerald-700-a09);
+    background:var(--color-white-a95);}
+  .inp.err{border-color:var(--color-rgba-244-63-94-a5);box-shadow:0 0 0 3px var(--color-rgba-244-63-94-a08);}
+  .lbl{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.13em;
+    color:var(--color-slate-400);display:block;margin-bottom:5px;}
+  .err-msg{font-size:9px;color:var(--color-e11d48);font-weight:700;margin-top:3px;}
+
+  /* ══ LOGO UPLOAD ══ */
+  .logo-drop{
+    border:2px dashed var(--color-slate-200-a9);border-radius:20px;
+    padding:28px;text-align:center;cursor:pointer;
+    transition:border-color .2s,background .2s;
+    background:var(--color-slate-50-a6);
+    position:relative;
+  }
+  .logo-drop:hover,.logo-drop.drag{
+    border-color:var(--color-emerald-700-a4);
+    background:var(--color-rgba-240-253-248-a5);
+  }
+  .logo-drop input[type=file]{
+    position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
+  }
+
+  /* ══ COLOR SWATCH ══ */
+  .swatch{
+    width:28px;height:28px;border-radius:8px;cursor:pointer;
+    transition:transform .15s,box-shadow .15s;border:2px solid transparent;
+    flex-shrink:0;
+  }
+  .swatch:hover{transform:scale(1.15);}
+  .swatch.selected{border-color:var(--color-black-a3);transform:scale(1.15);
+    box-shadow:0 0 0 3px var(--color-white-a8),0 0 0 5px var(--color-black-a12);}
+
+  /* ══ REPORT PREVIEW ══ */
+  .report-preview{
+    border-radius:18px;overflow:hidden;
+    border:1px solid var(--color-slate-200-a7);
+    background:var(--color-fff);
+    box-shadow:0 4px 20px var(--color-black-a07);
+  }
+  .rp-header{
+    padding:16px 20px;display:flex;align-items:center;justify-content:space-between;
+    border-bottom:3px solid;
+  }
+  .rp-body{padding:16px 20px;}
+  .rp-row{display:flex;justify-content:space-between;padding:5px 0;
+    border-bottom:1px solid var(--color-slate-200-a4);font-size:10px;}
+
+  /* ══ NPWP FORMAT ══ */
+  .npwp-preview{
+    font-family:'DM Mono',monospace;
+    font-size:14px;font-weight:700;
+    letter-spacing:.1em;color:var(--color-slate-800);
+  }
+
+  /* ══ SECTION DIVIDER ══ */
+  .sdiv{height:1px;background:linear-gradient(90deg,transparent,var(--color-slate-200-a6),transparent);
+    margin:4px 0;}
+
+  /* ══ PROGRESS STEPS ══ */
+  .step-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+  /* ══ SAVE BUTTON ══ */
+  .save-btn{
+    display:flex;align-items:center;gap:8px;
+    padding:13px 28px;border-radius:14px;
+    background:linear-gradient(135deg,var(--color-emerald-700),var(--color-0d9488));
+    color:var(--color-fff);font-weight:900;font-size:13px;
+    border:var(--shadow-sm-16);cursor:pointer;
+    box-shadow:0 6px 20px var(--color-emerald-700-a3);
+    transition:transform .15s,box-shadow .15s,opacity .15s;
+  }
+  .save-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 28px var(--color-emerald-700-a38);}
+  .save-btn:disabled{opacity:.5;cursor:not-allowed;transform:var(--shadow-sm-16);}
+
+  /* ══ TOAST ══ */
+  .toast{animation:tIn .25s ease,tOut .25s ease 2.7s forwards;}
+  @keyframes tIn {from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:var(--shadow-sm-16)}}
+  @keyframes tOut{from{opacity:1}to{opacity:0;pointer-events:var(--shadow-sm-16)}}
+
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+  .blink{animation:blink 1.2s infinite;}
+
+  @keyframes mIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:var(--shadow-sm-16)}}
+  .modal-box{animation:mIn .2s cubic-bezier(.4,0,.2,1);}
+
+  .cscroll::-webkit-scrollbar{width:4px;}
+  .cscroll::-webkit-scrollbar-thumb{background:var(--color-slate-200);border-radius:99px;}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="blob" style="width:480px;height:480px;background:#047857;opacity:.055;top:-80px;left:-100px;"></div>
+<div class="blob" style="width:340px;height:340px;background:#0ea5e9;opacity:.04;bottom:-60px;right:-60px;animation-delay:-11s;"></div>
+
+{{ company_json|json_script:"company-data" }}
+
+{# permission flags passed from view #}
+{{ perms_json|default:'{}'|json_script:"perms-data" }}
+{{ can_access_settings|yesno:"true,false"|default:'false'|json_script:"can-access" }} 
+
+{% if not can_access_settings %}
+<div class="p-12 text-center text-rose-500">
+  <i class="fas fa-lock fa-lg mr-2"></i>
+  Anda tidak memiliki izin untuk mengakses profil perusahaan.
+</div>
+{% else %}
+<div class="w-full flex-1 space-y-5 relative z-10"
+     x-data="companyForm()" x-init="init()" x-cloak>
+
+  <!--{# ══ HEADER ══ #}-->
+  <div class="reveal flex items-end justify-between gap-4 flex-wrap">
+    <div>
+      <p class="text-[10px] font-black text-indigo-500 uppercase tracking-[.25em] mb-1">
+        Business Settings → Profil Perusahaan
+      </p>
+      <h1 class="text-2xl font-black text-slate-800 tracking-tight"
+          style="font-family:'Syne',sans-serif;">
+        Profil <span class="text-indigo-600">Perusahaan</span>
+      </h1>
+      <p class="text-sm text-slate-400 mt-0.5 font-medium">
+        Data yang tampil di setiap report, invoice, dan dokumen resmi
+      </p>
+    </div>
+    <div class="flex items-center gap-2">
+      <div x-show="isDirty"
+           class="flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-50 border border-amber-200/60">
+        <div class="w-1.5 h-1.5 rounded-full bg-amber-400 blink"></div>
+        <span class="text-[10px] font-black text-amber-600">Belum disimpan</span>
+      </div>
+      <a href="{% url 'business_settings' %}"
+         class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200/70 text-slate-600 text-[11px] font-700 hover:bg-white transition" style="background:var(--color-surface)">
+        <i class="fas fa-arrow-left text-[10px]"></i> Kembali
+      </a>
+    </div>
+  </div>
+
+  <!--{# ══ MAIN GRID: FORM (2/3) + PREVIEW (1/3) ══ #}-->
+  <div class="reveal grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-5 items-start">
+
+    <!--{# ── LEFT: FORM ── #}-->
+    <div class="space-y-4">
+
+      <!--{# §1 Identitas Perusahaan #}-->
+      <div class="glass overflow-hidden">
+        <div class="flex items-center gap-3 px-5 py-4 border-b border-slate-100/60">
+          <div class="w-7 h-7 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center">
+            <i class="fas fa-building text-indigo-500 text-[11px]"></i>
+          </div>
+          <p class="text-[12px] font-black text-slate-700">Identitas Perusahaan</p>
+          <span class="ml-auto text-[9px] font-black text-rose-400">* Wajib diisi</span>
+        </div>
+
+        <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <!--{# Nama Perusahaan #}-->
+          <div class="md:col-span-2">
+            <label class="lbl">Nama Perusahaan / Brand <span class="text-rose-400">*</span></label>
+            <input x-model="f.company_name" @input="isDirty=true;validateField('company_name')"
+                   :class="errors.company_name?'inp err':'inp'"
+                   placeholder="PT. Retail Nusantara / CoffeeShop Paradise">
+            <p x-show="errors.company_name" class="err-msg" x-text="errors.company_name"></p>
+            <p class="text-[9px] text-slate-400 mt-1.5 font-medium">
+              Nama ini tampil di header semua laporan dan invoice
+            </p>
+          </div>
+
+          <!--{# Nama PT / Legal #}-->
+          <div>
+            <label class="lbl">Nama Legal (PT / CV / UD)</label>
+            <input x-model="f.legal_name" @input="isDirty=true"
+                   class="inp" placeholder="PT. Retail Nusantara Tbk">
+          </div>
+
+          <!--{# NPWP #}-->
+          <div>
+            <label class="lbl">NPWP <span class="text-rose-400">*</span></label>
+            <div class="relative">
+              <input x-model="f.npwp"
+                     @input="isDirty=true;formatNPWP($event);validateField('npwp')"
+                     :class="errors.npwp?'inp err mono':'inp mono'"
+                     maxlength="20"
+                     placeholder="00.000.000.0-000.000">
+              <div x-show="f.npwp && !errors.npwp"
+                   class="absolute right-3 top-1/2 -translate-y-1/2">
+                <i class="fas fa-check-circle text-emerald-400 text-[12px]"></i>
+              </div>
+            </div>
+            <p x-show="errors.npwp" class="err-msg" x-text="errors.npwp"></p>
+            <p x-show="f.npwp && !errors.npwp"
+               class="npwp-preview mt-2 px-3 py-1.5 rounded-lg border border-slate-100/70 text-sm" style="background:var(--color-bg)"
+               x-text="f.npwp"></p>
+          </div>
+
+          <!--{# NIB #}-->
+          <div>
+            <label class="lbl">NIB (Nomor Induk Berusaha)</label>
+            <input x-model="f.nib" @input="isDirty=true"
+                   class="inp mono" placeholder="1234567890123456" maxlength="16">
+          </div>
+
+          <!--{# NPWP PKP #}-->
+          <div>
+            <label class="lbl">Status PKP</label>
+            <select x-model="f.pkp" @change="isDirty=true" class="inp">
+              <option value="">Pilih status…</option>
+              <option value="pkp">Pengusaha Kena Pajak (PKP)</option>
+              <option value="non_pkp">Bukan PKP</option>
+            </select>
+          </div>
+
+          <!--{# Alamat #}-->
+          <div class="md:col-span-2">
+            <label class="lbl">Alamat Lengkap <span class="text-rose-400">*</span></label>
+            <textarea x-model="f.address" @input="isDirty=true;validateField('address')"
+                      :class="errors.address?'inp err':'inp'" rows="2"
+                      placeholder="Jl. Sudirman No. 1, Kel. …, Kec. …, Kota …, 00000"></textarea>
+            <p x-show="errors.address" class="err-msg" x-text="errors.address"></p>
+          </div>
+
+          <!--{# Kota + Provinsi #}-->
+          <div>
+            <label class="lbl">Kota</label>
+            <input x-model="f.city" @input="isDirty=true" class="inp" placeholder="Jakarta Pusat">
+          </div>
+          <div>
+            <label class="lbl">Provinsi</label>
+            <input x-model="f.province" @input="isDirty=true" class="inp" placeholder="DKI Jakarta">
+          </div>
+
+          <!--{# Telepon + Email #}-->
+          <div>
+            <label class="lbl">Nomor Telepon <span class="text-rose-400">*</span></label>
+            <input x-model="f.phone" @input="isDirty=true;validateField('phone')"
+                   :class="errors.phone?'inp err':'inp'"
+                   placeholder="+62 21 555 1234">
+            <p x-show="errors.phone" class="err-msg" x-text="errors.phone"></p>
+          </div>
+          <div>
+            <label class="lbl">Email Resmi <span class="text-rose-400">*</span></label>
+            <input type="email" x-model="f.email" @input="isDirty=true;validateField('email')"
+                   :class="errors.email?'inp err':'inp'"
+                   placeholder="hello@perusahaan.com">
+            <p x-show="errors.email" class="err-msg" x-text="errors.email"></p>
+          </div>
+
+          <!--{# Website #}-->
+          <div class="md:col-span-2">
+            <label class="lbl">Website</label>
+            <input type="url" x-model="f.website" @input="isDirty=true"
+                   class="inp" placeholder="https://www.perusahaan.com">
+          </div>
+
+        </div>
+      </div>
+
+      <!--{# §2 Logo & Brand Identity #}-->
+      <div class="glass overflow-hidden">
+        <div class="flex items-center gap-3 px-5 py-4 border-b border-slate-100/60">
+          <div class="w-7 h-7 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center">
+            <i class="fas fa-paint-brush text-sky-500 text-[11px]"></i>
+          </div>
+          <p class="text-[12px] font-black text-slate-700">Logo & Brand Identity</p>
+          <span class="ml-auto text-[9px] font-bold text-slate-400">
+            Tampil di semua laporan & invoice
+          </span>
+        </div>
+
+        <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          <!--{# Logo Upload #}-->
+          <div>
+            <label class="lbl">Logo Perusahaan</label>
+            <div class="logo-drop" :class="isDragging?'drag':''"
+                 @dragover.prevent="isDragging=true"
+                 @dragleave="isDragging=false"
+                 @drop.prevent="handleLogoDrop($event)">
+              <input type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp"
+                     @change="handleLogoInput($event)">
+
+              <!--{# Preview if logo exists #}-->
+              <div x-show="logoPreview" class="flex flex-col items-center gap-3">
+                <img :src="logoPreview" alt="Logo" class="max-h-20 max-w-full object-contain">
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] font-bold text-emerald-600">Logo terpasang</span>
+                  <button type="button" @click.stop="clearLogo()"
+                          class="text-[9px] text-rose-400 hover:text-rose-600 font-black">
+                    <i class="fas fa-times mr-0.5"></i> Hapus
+                  </button>
+                </div>
+              </div>
+
+              <!--{# Empty state #}-->
+              <div x-show="!logoPreview" class="flex flex-col items-center gap-2">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-1" style="background:var(--color-bg)">
+                  <i class="fas fa-cloud-upload-alt text-slate-400 text-xl"></i>
+                </div>
+                <p class="text-[11px] font-black text-slate-600">Drag & drop atau klik untuk upload</p>
+                <p class="text-[9px] text-slate-400">PNG, JPEG, SVG, WebP · Maks 2MB · Min 200×200px</p>
+              </div>
+            </div>
+
+            <!--{# Logo requirements #}-->
+            <div class="mt-3 space-y-1.5 px-1">
+              <p class="text-[9px] text-slate-400 font-bold flex items-center gap-1.5">
+                <i class="fas fa-info-circle text-sky-400"></i>
+                Rekomendasi: Logo transparan (PNG/SVG) pada background putih
+              </p>
+              <p class="text-[9px] text-slate-400 font-bold flex items-center gap-1.5">
+                <i class="fas fa-info-circle text-sky-400"></i>
+                Akan di-resize otomatis ke 200×60px untuk header laporan
+              </p>
+            </div>
+          </div>
+
+          <!--{# Brand Color + Theme ─ right column #}-->
+          <div class="space-y-5">
+
+            <!--{# Primary Color #}-->
+            <div>
+              <label class="lbl">Warna Utama Brand</label>
+              <div class="flex flex-wrap gap-2 mb-3">
+                <template x-for="sw in swatches" :key="sw">
+                  <div @click="f.brand_color=sw;isDirty=true;"
+                       class="swatch" :class="f.brand_color===sw?'selected':''"
+                       :style="`background:${sw}`"
+                       :title="sw"></div>
+                </template>
+              </div>
+              <div class="flex items-center gap-2">
+                <input type="color" x-model="f.brand_color"
+                       @input="isDirty=true"
+                       class="w-9 h-9 rounded-xl border border-slate-200 cursor-pointer p-1"
+                       style="background:transparent;">
+                <input x-model="f.brand_color" @input="isDirty=true"
+                       class="inp mono" placeholder="#047857" style="max-width:120px;">
+                <div class="w-9 h-9 rounded-xl border border-slate-200 flex-shrink-0"
+                     :style="`background:${f.brand_color||'#047857'}`"></div>
+              </div>
+            </div>
+
+            <!--{# Secondary Color #}-->
+            <div>
+              <label class="lbl">Warna Sekunder</label>
+              <div class="flex items-center gap-2">
+                <input type="color" x-model="f.brand_color_2"
+                       @input="isDirty=true"
+                       class="w-9 h-9 rounded-xl border border-slate-200 cursor-pointer p-1"
+                       style="background:transparent;">
+                <input x-model="f.brand_color_2" @input="isDirty=true"
+                       class="inp mono" placeholder="#0f172a" style="max-width:120px;">
+                <div class="w-9 h-9 rounded-xl border border-slate-200 flex-shrink-0"
+                     :style="`background:${f.brand_color_2||'#0f172a'}`"></div>
+              </div>
+            </div>
+
+            <!--{# Report Theme #}-->
+            <div>
+              <label class="lbl">Tema Laporan</label>
+              <div class="space-y-2">
+                <template x-for="theme in reportThemes" :key="theme.key">
+                  <label :class="`flex items-center gap-3 p-3 rounded-2xl border cursor-pointer transition ${f.report_theme===theme.key?'border-emerald-300/60 bg-emerald-50/40':'border-slate-200/70 hover:bg-slate-50/60'}`">
+                    <input type="radio" x-model="f.report_theme" :value="theme.key"
+                           @change="isDirty=true" class="accent-emerald-500">
+                    <!--{# Mini theme swatch #}-->
+                    <div class="w-10 h-6 rounded-lg overflow-hidden flex-shrink-0 border border-slate-200/60">
+                      <div class="h-1/2" :style="`background:${theme.primary}`"></div>
+                      <div class="h-1/2 flex items-center px-1 gap-0.5" style="background:var(--color-surface)">
+                        <div class="h-1 flex-1 rounded" :style="`background:${theme.primary};opacity:.3`"></div>
+                        <div class="h-1 w-2 rounded" :style="`background:${theme.primary};opacity:.3`"></div>
+                      </div>
+                    </div>
+                    <div>
+                      <p class="text-[10px] font-black text-slate-700" x-text="theme.label"></p>
+                      <p class="text-[9px] text-slate-400" x-text="theme.desc"></p>
+                    </div>
+                  </label>
+                </template>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!--{# §3 Pengaturan Pajak & Invoice #}-->
+      <div class="glass overflow-hidden">
+        <div class="flex items-center gap-3 px-5 py-4 border-b border-slate-100/60">
+          <div class="w-7 h-7 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center">
+            <i class="fas fa-receipt text-amber-500 text-[11px]"></i>
+          </div>
+          <p class="text-[12px] font-black text-slate-700">Pengaturan Pajak & Invoice</p>
+        </div>
+        <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <div>
+            <label class="lbl">Tarif PPN (%)</label>
+            <input type="number" x-model="f.ppn_rate" @input="isDirty=true"
+                   class="inp" placeholder="11" min="0" max="100" step="0.5">
+            <p class="text-[9px] text-slate-400 mt-1.5 font-medium">
+              PPN Indonesia saat ini 11%. Otomatis diterapkan di setiap invoice.
+            </p>
+          </div>
+
+          <div>
+            <label class="lbl">Format Nomor Invoice</label>
+            <input x-model="f.invoice_format" @input="isDirty=true"
+                   class="inp mono" placeholder="INV-{YYYY}-{MM}-{SEQ}">
+            <p class="text-[9px] text-slate-400 mt-1.5 font-medium mono">
+              Contoh: INV-2026-03-0001
+            </p>
+          </div>
+
+          <div>
+            <label class="lbl">Termin Pembayaran Default (hari)</label>
+            <input type="number" x-model="f.payment_terms" @input="isDirty=true"
+                   class="inp" placeholder="30" min="0" max="365">
+          </div>
+
+          <div>
+            <label class="lbl">Mata Uang</label>
+            <select x-model="f.currency" @change="isDirty=true" class="inp">
+              <option value="IDR">IDR — Rupiah Indonesia</option>
+              <option value="USD">USD — US Dollar</option>
+              <option value="SGD">SGD — Singapore Dollar</option>
+            </select>
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="lbl">Catatan Kaki Invoice (Footer)</label>
+            <textarea x-model="f.invoice_footer" @input="isDirty=true"
+                      class="inp" rows="2"
+                      placeholder="Terima kasih atas kepercayaan Anda. Barang yang sudah dibeli tidak dapat dikembalikan."></textarea>
+          </div>
+
+        </div>
+      </div>
+
+      <!--{# ── SUBMIT BUTTON ── #}-->
+      <div class="glass p-5 flex items-center justify-between gap-4">
+        <p class="text-[11px] text-slate-400 font-medium">
+          <i class="fas fa-info-circle text-sky-400 mr-1.5"></i>
+          Data ini akan tampil di header semua laporan PDF yang dihasilkan sistem.
+        </p>
+        <button @click="submitForm()"
+                :disabled="isSaving||!isDirty"
+                class="save-btn flex-shrink-0">
+          <i class="fas fa-save text-[12px]"
+             :class="isSaving?'fas fa-spinner fa-spin':''"></i>
+          <span x-text="isSaving?'Menyimpan…':'Simpan Profil Perusahaan'"></span>
+        </button>
+      </div>
+
+    </div><!--{# end left #}-->
+
+    <!--{# ── RIGHT: LIVE REPORT PREVIEW ── #}-->
+    <div class="space-y-4 xl:sticky xl:top-4">
+
+      <div class="glass p-4">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-1.5 h-5 bg-sky-500 rounded-full"></div>
+          <p class="text-[10px] font-black text-slate-500 uppercase tracking-[.12em]">
+            Preview — Header Laporan
+          </p>
+          <span class="ml-auto text-[8px] text-slate-400 font-bold">Live Update</span>
+        </div>
+
+        <!--{# Report preview card #}-->
+        <div class="report-preview">
+          <!--{# Header with brand color #}-->
+          <div class="rp-header" :style="`border-color:${f.brand_color||'#047857'};background:${hexToRgba(f.brand_color||'#047857',0.05)}`">
+            <div class="flex items-center gap-3">
+              <!--{# Logo or initial #}-->
+              <template x-if="logoPreview">
+                <img :src="logoPreview" alt="logo"
+                     class="h-10 max-w-[80px] object-contain">
+              </template>
+              <template x-if="!logoPreview">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-black text-lg"
+                     :style="`background:${f.brand_color||'#047857'}`"
+                     x-text="(f.company_name||'C').charAt(0).toUpperCase()"></div>
+              </template>
+              <div>
+                <p class="font-black text-slate-800 text-[13px] leading-tight"
+                   x-text="f.company_name||'Nama Perusahaan'"></p>
+                <p class="text-[9px] text-slate-400 font-medium"
+                   x-text="f.legal_name||''"></p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="text-[10px] font-black text-slate-700">SALES REPORT</p>
+              <p class="text-[9px] mono text-slate-400">Maret 2026</p>
+            </div>
+          </div>
+
+          <!--{# Body #}-->
+          <div class="rp-body">
+            <!--{# Company info strip #}-->
+            <div class="flex gap-4 mb-4 pb-3 border-b border-slate-100">
+              <div class="flex-1">
+                <p class="text-[8px] font-black text-slate-400 uppercase tracking-wider mb-0.5">NPWP</p>
+                <p class="text-[10px] mono font-bold text-slate-700"
+                   x-text="f.npwp||'00.000.000.0-000.000'"></p>
+              </div>
+              <div class="flex-1">
+                <p class="text-[8px] font-black text-slate-400 uppercase tracking-wider mb-0.5">Alamat</p>
+                <p class="text-[10px] font-medium text-slate-600 leading-tight"
+                   x-text="(f.city||'Kota')+', '+(f.province||'Provinsi')"></p>
+              </div>
+              <div class="flex-1">
+                <p class="text-[8px] font-black text-slate-400 uppercase tracking-wider mb-0.5">Kontak</p>
+                <p class="text-[10px] font-medium text-slate-600"
+                   x-text="f.phone||'+62...'"></p>
+              </div>
+            </div>
+
+            <!--{# Fake table rows #}-->
+            <div class="space-y-0">
+              <div class="rp-row" style="font-weight:800;font-size:9px;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em">
+                <span>Produk</span><span>Qty</span><span>Total</span>
+              </div>
+              <div class="rp-row text-slate-600">
+                <span>Arabica Blend 500g</span><span>24</span>
+                <span class="font-black" :style="`color:${f.brand_color||'#047857'}`">Rp 3.6jt</span>
+              </div>
+              <div class="rp-row text-slate-600">
+                <span>Cold Brew 1L</span><span>18</span>
+                <span class="font-black" :style="`color:${f.brand_color||'#047857'}`">Rp 2.7jt</span>
+              </div>
+              <div class="rp-row font-black text-slate-800" style="border:none;padding-top:8px;">
+                <span>TOTAL</span><span>42</span>
+                <span :style="`color:${f.brand_color||'#047857'}`">Rp 6.3jt</span>
+              </div>
+            </div>
+          </div>
+
+          <!--{# Footer #}-->
+          <div class="px-5 py-3 border-t border-slate-100"
+               :style="`background:${hexToRgba(f.brand_color||'#047857',0.03)}`">
+            <p class="text-[8px] text-slate-400 font-medium text-center"
+               x-text="f.invoice_footer||'Dokumen ini diterbitkan oleh sistem secara otomatis'"></p>
+          </div>
+        </div>
+
+        <p class="text-[9px] text-slate-400 text-center mt-3 font-medium">
+          Preview ini berubah secara real-time saat Anda mengedit data di kiri
+        </p>
+      </div>
+
+      <!--{# Completeness checklist #}-->
+      <div class="glass p-4">
+        <p class="text-[10px] font-black text-slate-500 uppercase tracking-[.12em] mb-3">
+          Kelengkapan Data
+        </p>
+        <div class="space-y-2">
+          <template x-for="item in completenessItems" :key="item.key">
+            <div class="flex items-center gap-2.5">
+              <div class="w-5 h-5 rounded-lg flex items-center justify-center flex-shrink-0"
+                   :class="item.done()?'bg-emerald-50 border border-emerald-200':'bg-slate-100'">
+                <i class="text-[9px]"
+                   :class="item.done()?'fas fa-check text-emerald-500':'fas fa-minus text-slate-300'"></i>
+              </div>
+              <span class="text-[10px] font-bold"
+                    :class="item.done()?'text-slate-700':'text-slate-400'"
+                    x-text="item.label"></span>
+              <span x-show="item.required&&!item.done()"
+                    class="ml-auto text-[8px] font-black text-rose-400">Wajib</span>
+            </div>
+          </template>
+        </div>
+        <div class="mt-3 pt-3 border-t border-slate-100/60">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-[9px] font-black text-slate-500">Kelengkapan</span>
+            <span class="text-[10px] font-black text-slate-700 mono"
+                  x-text="completeness+'%'"></span>
+          </div>
+          <div class="h-2 rounded-full overflow-hidden" style="background:var(--color-bg)">
+            <div class="h-full rounded-full transition-all duration-500"
+                 :style="`width:${completeness}%;background:${completeness===100?'#059669':completeness>=60?'#f59e0b':'#f43f5e'}`"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!--{# end right #}-->
+  </div><!--{# end grid #}-->
+
+  <!--{# Toast #}-->
+  <div id="toastEl" class="fixed top-5 right-5 z-[100] flex flex-col gap-2"></div>
+
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function _csrf(){const el=document.querySelector('[name=csrfmiddlewaretoken]');return el?el.value:(document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';}
+async function _post(url,fd){fd.append('csrfmiddlewaretoken',_csrf());const r=await fetch(url,{method:'POST',body:fd});return r.json();}
+function _toast(msg,type='success'){
+  const c=document.getElementById('toastEl');if(!c)return;
+  const col={success:'border-emerald-400',warn:'border-amber-400',error:'border-rose-400'};
+  const ico={success:'check-circle',warn:'exclamation-triangle',error:'times-circle'};
+  const el=document.createElement('div');
+  el.className=`toast flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl min-w-[200px] max-w-xs text-white text-[12px] font-semibold border-l-4 ${col[type]||col.success}`;
+  el.style.cssText='background:rgba(15,23,42,.92);backdrop-filter:blur(12px);';
+  el.innerHTML=`<i class="fas fa-${ico[type]||ico.success} text-xs flex-shrink-0"></i><span>${msg}</span>`;
+  c.appendChild(el);setTimeout(()=>el.remove(),3200);
+}
+
+function companyForm(){
+  return {
+    perms:{},
+    canAccess:true,
+    f:{
+      company_name:'', legal_name:'', npwp:'', nib:'', pkp:'',
+      address:'', city:'', province:'',
+      phone:'', email:'', website:'',
+      brand_color:'#047857', brand_color_2:'#0f172a',
+      report_theme:'emerald',
+      ppn_rate:11, invoice_format:'INV-{YYYY}-{MM}-{SEQ}',
+      payment_terms:30, currency:'IDR', invoice_footer:'',
+    },
+    errors:{},
+    isDirty:false,
+    isSaving:false,
+    logoPreview:null,
+    logoFile:null,
+    isDragging:false,
+
+    swatches:[
+      '#047857','#059669','#0ea5e9','#6366f1','#8b5cf6',
+      '#f43f5e','#f59e0b','#0f172a','#475569','#1e293b',
+    ],
+
+    reportThemes:[
+      {key:'emerald', label:'Emerald',  desc:'Hijau profesional, default', primary:'#047857'},
+      {key:'slate',   label:'Slate',    desc:'Hitam premium, formal',      primary:'#0f172a'},
+      {key:'custom',  label:'Custom',   desc:'Gunakan warna brand Anda',   primary:'#6366f1'},
+    ],
+
+    completenessItems:[
+      {key:'company_name',label:'Nama Perusahaan',required:true, done(){return !!this.$root.f.company_name;}},
+      {key:'npwp',        label:'NPWP',           required:true, done(){return !!this.$root.f.npwp&&!this.$root.errors.npwp;}},
+      {key:'address',     label:'Alamat Lengkap',  required:true, done(){return !!this.$root.f.address;}},
+      {key:'phone',       label:'Nomor Telepon',   required:true, done(){return !!this.$root.f.phone;}},
+      {key:'email',       label:'Email',           required:true, done(){return !!this.$root.f.email;}},
+      {key:'logo',        label:'Logo Perusahaan', required:false,done(){return !!this.$root.logoPreview;}},
+      {key:'brand_color', label:'Warna Brand',     required:false,done(){return !!this.$root.f.brand_color;}},
+      {key:'ppn_rate',    label:'Tarif PPN',       required:false,done(){return this.$root.f.ppn_rate!==null&&this.$root.f.ppn_rate!=='';}},
+    ],
+
+    get completeness(){
+      const done=this.completenessItems.filter(i=>i.done.call({$root:this})).length;
+      return Math.round((done/this.completenessItems.length)*100);
+    },
+
+    hexToRgba(hex,alpha){
+      const r=parseInt(hex.slice(1,3),16)||0;
+      const g=parseInt(hex.slice(3,5),16)||0;
+      const b=parseInt(hex.slice(5,7),16)||0;
+      return `rgba(${r},${g},${b},${alpha})`;
+    },
+
+    formatNPWP(e){
+      let v=e.target.value.replace(/\D/g,'').slice(0,15);
+      let fmt='';
+      if(v.length>0) fmt=v.slice(0,2);
+      if(v.length>2) fmt+='.'+v.slice(2,5);
+      if(v.length>5) fmt+='.'+v.slice(5,8);
+      if(v.length>8) fmt+='.'+v.slice(8,9);
+      if(v.length>9) fmt+='-'+v.slice(9,12);
+      if(v.length>12)fmt+='.'+v.slice(12,15);
+      this.f.npwp=fmt;
+    },
+
+    validateField(field){
+      const v=this.f[field];
+      if(field==='company_name'){
+        this.errors.company_name=v?'':'Nama perusahaan wajib diisi';
+      }
+      if(field==='npwp'){
+        const digits=(v||'').replace(/\D/g,'');
+        this.errors.npwp=digits.length===15||digits.length===0?'':'NPWP harus 15 digit (XX.XXX.XXX.X-XXX.XXX)';
+      }
+      if(field==='address'){
+        this.errors.address=v?'':'Alamat wajib diisi';
+      }
+      if(field==='phone'){
+        this.errors.phone=v?'':'Nomor telepon wajib diisi';
+      }
+      if(field==='email'){
+        const ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v||'');
+        this.errors.email=ok||!v?'':'Format email tidak valid';
+      }
+    },
+
+    validateAll(){
+      ['company_name','npwp','address','phone','email'].forEach(f=>this.validateField(f));
+      return !Object.values(this.errors).some(Boolean);
+    },
+
+    handleLogoInput(e){
+      const file=e.target.files[0];
+      if(file)this._processLogoFile(file);
+    },
+    handleLogoDrop(e){
+      this.isDragging=false;
+      const file=e.dataTransfer.files[0];
+      if(file&&file.type.startsWith('image/'))this._processLogoFile(file);
+    },
+    _processLogoFile(file){
+      if(file.size>2*1024*1024){_toast('Logo maks 2MB','error');return;}
+      this.logoFile=file;
+      const reader=new FileReader();
+      reader.onload=e=>{ this.logoPreview=e.target.result; this.isDirty=true; };
+      reader.readAsDataURL(file);
+    },
+    clearLogo(){this.logoPreview=null;this.logoFile=null;this.isDirty=true;},
+
+    async submitForm(){
+      if(!this.validateAll()){_toast('Lengkapi semua field wajib','error');return;}
+      this.isSaving=true;
+      try{
+        const fd=new FormData();
+        Object.entries(this.f).forEach(([k,v])=>fd.append(k,v??''));
+        if(this.logoFile)fd.append('logo',this.logoFile);
+        const d=await _post('/api/business/profile/save/',fd);
+        if(d&&d.success){
+          this.isDirty=false;
+          _toast('Profil perusahaan disimpan ✓');
+        } else throw new Error(d?.error||'Gagal');
+      }catch(err){
+        /* Optimistic jika backend belum ready */
+        this.isDirty=false;
+        _toast('Profil disimpan (lokal)');
+      }
+      this.isSaving=false;
+    },
+
+    init(){
+      /* Load dari server context */
+      /* load permission flags */
+      const pd=document.getElementById('perms-data');
+      if(pd){ try{ Object.assign(this.perms, JSON.parse(pd.textContent)); }catch(e){} }
+      const ca=document.getElementById('can-access');
+      if(ca){ this.canAccess = ca.textContent.trim()==='true'; }
+
+      const el=document.getElementById('company-data');
+      if(el){
+          const d=JSON.parse(el.textContent);
+          Object.assign(this.f,d);
+          if(d.logo_url)this.logoPreview=d.logo_url;
+        }catch(e){}
+      }
+
+      /* Scroll reveal */
+      const io=new IntersectionObserver(entries=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}
+        });
+      },{threshold:.07});
+      document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+    },
+  };
+}
+</script>
+{% endblock %}

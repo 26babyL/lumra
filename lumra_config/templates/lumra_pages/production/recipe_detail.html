@@ -1,0 +1,177 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}Recipe Detail - Lumra ERP{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-card { background: rgba(255,255,255,0.88); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.95); border-radius: 18px; box-shadow: 0 10px 30px rgba(15,23,42,0.08); }
+  .metric-card { padding: 1.25rem; border-radius: 1rem; background: rgba(248,250,252,0.92); border: 1px solid #e2e8f0; }
+</style>
+{% endblock %}
+
+{% block content %}
+{{ recipe_data|json_script:"recipe-data" }}
+
+<div class="max-w-7xl mx-auto space-y-6 relative z-10" x-data="recipeDetailApp()" x-init="init()" x-cloak>
+  <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+        <a href="{% url 'recipe_list' %}" class="hover:text-slate-800">Production</a>
+        <span>/</span>
+        <span class="text-slate-800 font-medium">Recipe Detail</span>
+      </nav>
+      <h1 class="text-3xl font-bold text-slate-800" x-text="recipe.name"></h1>
+      <p class="text-sm text-slate-500 mt-1">
+        <span x-text="recipe.category || 'Uncategorized'"></span>
+        <span class="mx-2">•</span>
+        <span x-text="recipe.ingredients.length + ' ingredients'"></span>
+      </p>
+    </div>
+    <div class="flex gap-3">
+      <a href="{% url 'recipe_list' %}" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-50">Back to List</a>
+      <a href="{% url 'edit_recipe' recipe.id %}" class="px-4 py-2.5 rounded-xl bg-slate-800 text-white text-sm font-semibold shadow hover:bg-slate-700">Edit Recipe</a>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+    <div class="metric-card">
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Yield</p>
+      <p class="text-2xl font-bold text-slate-800 mt-2" x-text="formatQty(recipe.yield_quantity)"></p>
+      <p class="text-sm text-slate-500 mt-1" x-text="recipe.yield_unit || '-'"></p>
+    </div>
+    <div class="metric-card">
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Preparation</p>
+      <p class="text-2xl font-bold text-slate-800 mt-2" x-text="recipe.preparation_time"></p>
+      <p class="text-sm text-slate-500 mt-1">minutes</p>
+    </div>
+    <div class="metric-card">
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Total Cost</p>
+      <p class="text-2xl font-bold text-slate-800 mt-2" x-text="formatCurrency(recipe.total_cost)"></p>
+      <p class="text-sm text-slate-500 mt-1">recipe total</p>
+    </div>
+    <div class="metric-card">
+      <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">Cost / Unit</p>
+      <p class="text-2xl font-bold text-slate-800 mt-2" x-text="formatCurrency(costPerUnit)"></p>
+      <p class="text-sm text-slate-500 mt-1" x-text="'per ' + (recipe.yield_unit || 'unit')"></p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+    <section class="glass-card p-6 xl:col-span-2">
+      <div class="flex items-center justify-between mb-4 gap-3">
+        <h2 class="text-lg font-bold text-slate-800">Ingredients</h2>
+        <div class="relative w-full max-w-xs">
+          <input type="search" x-model="searchQuery" @input.debounce.200ms="applyFilter()" placeholder="Cari ingredient atau SKU..." class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-slate-400">
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="border-b border-slate-200 text-left text-xs uppercase tracking-wide text-slate-500">
+              <th class="px-3 py-3">Ingredient</th>
+              <th class="px-3 py-3">Qty</th>
+              <th class="px-3 py-3 text-right">Unit Cost</th>
+              <th class="px-3 py-3 text-right">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <template x-for="item in filteredIngredients" :key="item.id">
+              <tr>
+                <td class="px-3 py-3">
+                  <div class="font-semibold text-slate-800" x-text="item.name"></div>
+                  <div class="text-xs text-slate-500" x-text="item.sku"></div>
+                </td>
+                <td class="px-3 py-3 text-slate-600">
+                  <span x-text="formatQty(item.quantity)"></span>
+                  <span x-text="item.unit"></span>
+                </td>
+                <td class="px-3 py-3 text-right text-slate-600" x-text="formatCurrency(item.unit_cost)"></td>
+                <td class="px-3 py-3 text-right font-semibold text-slate-800" x-text="formatCurrency(item.subtotal_cost)"></td>
+              </tr>
+            </template>
+            <tr x-show="filteredIngredients.length === 0">
+              <td colspan="4" class="px-3 py-8 text-center text-sm text-slate-500">Tidak ada ingredient yang cocok.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="space-y-6">
+      <div class="glass-card p-6">
+        <h2 class="text-lg font-bold text-slate-800 mb-3">Description</h2>
+        <p class="text-sm leading-6 text-slate-600" x-text="recipe.description || 'Tidak ada deskripsi.'"></p>
+      </div>
+
+      <div class="glass-card p-6">
+        <h2 class="text-lg font-bold text-slate-800 mb-3">Instructions</h2>
+        <div class="max-h-72 overflow-y-auto pr-1">
+          <p class="text-sm leading-6 whitespace-pre-line text-slate-600" x-text="recipe.instructions || 'Belum ada instruksi.'"></p>
+        </div>
+      </div>
+
+      <div class="glass-card p-6">
+        <h2 class="text-lg font-bold text-slate-800 mb-3">Metadata</h2>
+        <div class="space-y-3 text-sm">
+          <div class="flex justify-between gap-4">
+            <span class="text-slate-500">Created</span>
+            <span class="font-medium text-slate-800" x-text="recipe.created_at"></span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <span class="text-slate-500">Updated</span>
+            <span class="font-medium text-slate-800" x-text="recipe.updated_at"></span>
+          </div>
+          <div class="flex justify-between gap-4">
+            <span class="text-slate-500">BOM Terkait</span>
+            <template x-if="recipe.bom_id">
+              <a :href="`{% url 'bom_detail' 0 %}`.replace('/0/', `/${recipe.bom_id}/`)" class="font-medium text-emerald-600 hover:underline">Lihat BOM</a>
+            </template>
+            <span x-show="!recipe.bom_id" class="font-medium text-slate-400">Belum ada BOM</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function recipeDetailApp() {
+  return {
+    recipe: { ingredients: [] },
+    filteredIngredients: [],
+    searchQuery: '',
+    get costPerUnit() {
+      if (Number(this.recipe.cost_per_unit || 0) > 0) return Number(this.recipe.cost_per_unit || 0);
+      const yieldQty = Number(this.recipe.yield_quantity || 1);
+      return Number(this.recipe.total_cost || 0) / (yieldQty || 1);
+    },
+    init() {
+      const el = document.getElementById('recipe-data');
+      if (!el?.textContent) return;
+      try {
+        this.recipe = JSON.parse(el.textContent) || { ingredients: [] };
+      } catch (error) {
+        this.recipe = { ingredients: [] };
+      }
+      this.applyFilter();
+    },
+    applyFilter() {
+      const query = this.searchQuery.toLowerCase().trim();
+      this.filteredIngredients = (this.recipe.ingredients || []).filter((item) => {
+        if (!query) return true;
+        return (item.name || '').toLowerCase().includes(query) || (item.sku || '').toLowerCase().includes(query);
+      });
+    },
+    formatCurrency(value) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(value || 0);
+    },
+    formatQty(value) {
+      return Number(value || 0).toLocaleString('id-ID', { maximumFractionDigits: 2 });
+    },
+  };
+}
+</script>
+{% endblock %}

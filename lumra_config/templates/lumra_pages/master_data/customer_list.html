@@ -1,0 +1,179 @@
+{% extends "base/base_hybrid.html" %}
+{% load static %}
+
+{% block title %}Customers{% endblock %}
+{% block page_title %}Customers{% endblock %}
+{% block page_subtitle %}Manage customer data{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Header Actions -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <div class="flex gap-2">
+            <button class="btn btn-primary">
+                <i class="fas fa-plus mr-2"></i>
+                Add Customer
+            </button>
+            <button class="btn btn-outline">
+                <i class="fas fa-download mr-2"></i>
+                Export
+            </button>
+        </div>
+        <div class="flex gap-2">
+            <div class="form-control">
+                <input type="text" placeholder="Search customers..." class="input input-bordered" />
+            </div>
+            <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-outline">
+                    <i class="fas fa-filter mr-2"></i>
+                    Filter
+                </label>
+                <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-52">
+                    <li><a href="#">Active Customers</a></li>
+                    <li><a href="#">Inactive Customers</a></li>
+                    <li><a href="#">New This Month</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customers Table -->
+    <div class="card bg-base-100 shadow-lg">
+        <div class="card-body p-0">
+            <div class="overflow-x-auto">
+                <table class="table table-compact w-full">
+                    <thead>
+                        <tr>
+                            <th>
+                                <label>
+                                    <input type="checkbox" class="checkbox checkbox-sm" />
+                                </label>
+                            </th>
+                            <th>Customer ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover">
+                            <td>
+                                <label>
+                                    <input type="checkbox" class="checkbox checkbox-sm" />
+                                </label>
+                            </td>
+                            <td class="font-mono">#CUST-001</td>
+                            <td>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                                        <i class="fas fa-user text-primary text-xs"></i>
+                                    </div>
+                                    <span>John Doe</span>
+                                </div>
+                            </td>
+                            <td>john.doe@email.com</td>
+                            <td>+62 812-3456-7890</td>
+                            <td>Jakarta</td>
+                            <td><span class="badge badge-success badge-sm">Active</span></td>
+                            <td>
+                                <div class="dropdown dropdown-end">
+                                    <label tabindex="0" class="btn btn-ghost btn-sm btn-circle">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </label>
+                                    <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-48">
+                                        <li><a href="#"><i class="fas fa-eye mr-2"></i>View</a></li>
+                                        <li><a href="#"><i class="fas fa-edit mr-2"></i>Edit</a></li>
+                                        <li><a href="#"><i class="fas fa-trash mr-2"></i>Delete</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover">
+                            <td>
+                                <label>
+                                    <input type="checkbox" class="checkbox checkbox-sm" />
+                                </label>
+                            </td>
+                            <td class="font-mono">#CUST-002</td>
+                            <td>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center">
+                                        <i class="fas fa-user text-secondary text-xs"></i>
+                                    </div>
+                                    <span>Jane Smith</span>
+                                </div>
+                            </td>
+                            <td>jane.smith@email.com</td>
+                            <td>+62 813-4567-8901</td>
+                            <td>Surabaya</td>
+                            <td><span class="badge badge-success badge-sm">Active</span></td>
+                            <td>
+                                <div class="dropdown dropdown-end">
+                                    <label tabindex="0" class="btn btn-ghost btn-sm btn-circle">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </label>
+                                    <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-48">
+                                        <li><a href="#"><i class="fas fa-eye mr-2"></i>View</a></li>
+                                        <li><a href="#"><i class="fas fa-edit mr-2"></i>Edit</a></li>
+                                        <li><a href="#"><i class="fas fa-trash mr-2"></i>Delete</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="hover">
+                            <td>
+                                <label>
+                                    <input type="checkbox" class="checkbox checkbox-sm" />
+                                </label>
+                            </td>
+                            <td class="font-mono">#CUST-003</td>
+                            <td>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 rounded-full bg-warning/20 flex items-center justify-center">
+                                        <i class="fas fa-user text-warning text-xs"></i>
+                                    </div>
+                                    <span>Bob Johnson</span>
+                                </div>
+                            </td>
+                            <td>bob.johnson@email.com</td>
+                            <td>+62 814-5678-9012</td>
+                            <td>Bandung</td>
+                            <td><span class="badge badge-warning badge-sm">Inactive</span></td>
+                            <td>
+                                <div class="dropdown dropdown-end">
+                                    <label tabindex="0" class="btn btn-ghost btn-sm btn-circle">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </label>
+                                    <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-48">
+                                        <li><a href="#"><i class="fas fa-eye mr-2"></i>View</a></li>
+                                        <li><a href="#"><i class="fas fa-edit mr-2"></i>Edit</a></li>
+                                        <li><a href="#"><i class="fas fa-trash mr-2"></i>Delete</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-between items-center mt-6">
+        <div class="text-sm text-base-content/60">
+            Showing 1 to 3 of 12 results
+        </div>
+        <div class="join">
+            <button class="join-item btn btn-outline">«</button>
+            <button class="join-item btn btn-outline">1</button>
+            <button class="join-item btn btn-primary">2</button>
+            <button class="join-item btn btn-outline">3</button>
+            <button class="join-item btn btn-outline">4</button>
+            <button class="join-item btn btn-outline">»</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,410 @@
+{
+  "filename": "report_staff_performance.html",
+  "title": "Laporan Kinerja Karyawan",
+  "components": [
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "w-full flex-1 space-y-6 relative z-10",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": "staffPerfApp()"
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "flex items-end justify-between",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h1",
+      "label": "HEADING (H1)",
+      "depth": 4,
+      "path": "root/body/div/div/div/h1",
+      "classes": "text-2xl font-bold text-slate-800",
+      "text_preview": "Laporan Kinerja Karyawan",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "select",
+      "label": "INPUT [select] ",
+      "depth": 3,
+      "path": "root/body/div/div/select",
+      "classes": "bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-sm font-bold text-slate-700 outline-none focus:border-slate-400",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 4,
+      "path": "root/body/div/div/template/div",
+      "classes": "glass-card p-5",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "depth": 5,
+      "path": "root/body/div/div/template/div/div",
+      "classes": "flex flex-col md:flex-row md:items-center justify-between gap-6",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (column)",
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 6,
+      "path": "root/body/div/div/template/div/div/div",
+      "classes": "flex items-center gap-4 w-full md:w-auto",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 7,
+      "path": "root/body/div/div/template/div/div/div/div",
+      "classes": "w-14 h-14 rounded-xl bg-slate-200 flex items-center justify-center text-slate-500 text-xl font-bold",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h2",
+      "label": "HEADING (H2)",
+      "depth": 8,
+      "path": "root/body/div/div/template/div/div/div/div/h2",
+      "classes": "font-bold text-slate-800",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [GRID 1 cols]",
+      "depth": 6,
+      "path": "root/body/div/div/template/div/div/div",
+      "classes": "flex-1 w-full grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "GRID 1 cols",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 8,
+      "path": "root/body/div/div/template/div/div/div/div/div",
+      "classes": "flex justify-between items-center mb-1",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 8,
+      "path": "root/body/div/div/template/div/div/div/div/div",
+      "classes": "flex items-center gap-2 text-sm",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 8,
+      "path": "root/body/div/div/template/div/div/div/div/div",
+      "classes": "flex justify-between items-center mb-1",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 8,
+      "path": "root/body/div/div/template/div/div/div/div/div",
+      "classes": "flex items-center gap-2 text-sm",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "depth": 6,
+      "path": "root/body/div/div/template/div/div/div",
+      "classes": "hidden md:flex flex-col items-center gap-3 border-l border-slate-100 pl-6",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (column)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: [icon]",
+      "depth": 7,
+      "path": "root/body/div/div/template/div/div/div/button",
+      "classes": "px-4 py-2 bg-slate-50 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-100 transition",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/h1",
+      "type": "heading",
+      "label": "HEADING (H1)",
+      "text_preview": "Laporan Kinerja Karyawan"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/select",
+      "type": "input",
+      "label": "INPUT [select] ",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/template/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/template/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/template/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 7,
+      "path": "root/body/div/div/template/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 8,
+      "path": "root/body/div/div/template/div/div/div/div/h2",
+      "type": "heading",
+      "label": "HEADING (H2)",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/template/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [GRID 1 cols]",
+      "text_preview": ""
+    },
+    {
+      "depth": 8,
+      "path": "root/body/div/div/template/div/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 8,
+      "path": "root/body/div/div/template/div/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 8,
+      "path": "root/body/div/div/template/div/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 8,
+      "path": "root/body/div/div/template/div/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/template/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 7,
+      "path": "root/body/div/div/template/div/div/div/button",
+      "type": "button",
+      "label": "BUTTON: [icon]",
+      "text_preview": ""
+    }
+  ],
+  "issues": [
+    {
+      "type": "empty_button",
+      "severity": "warning",
+      "message": "Tombol tanpa teks/aria-label: <button> id='' class='px-4 py-2 bg-slate-50 text-slate-600 rounded-lg te'",
+      "path": ""
+    },
+    {
+      "type": "alpine_xcloak",
+      "severity": "info",
+      "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template",
+      "path": ""
+    }
+  ],
+  "stats": {
+    "total_components": 16,
+    "by_type": {
+      "layout": 11,
+      "heading": 2,
+      "input": 1,
+      "card": 1,
+      "button": 1
+    },
+    "interactive": 2,
+    "with_scroll": 0,
+    "with_form_fields": 3,
+    "scroll_nestings": 0,
+    "issues": 2,
+    "issues_by_severity": {
+      "warning": 1,
+      "info": 1
+    }
+  }
+}

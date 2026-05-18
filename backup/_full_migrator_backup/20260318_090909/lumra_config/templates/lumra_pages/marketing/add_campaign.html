@@ -1,0 +1,700 @@
+{% extends 'lumra_pages/reports/base_report.html' %}
+{% load custom_filters %}
+
+{% block extra_head %}
+<style>
+  [x-cloak] { display:var(--shadow-sm-16) !important; }
+
+  @keyframes drift { 0%,100%{transform:translate(0,0)scale(1)} 50%{transform:translate(22px,18px)scale(1.04)} }
+
+  .f-hint {
+    font-size:10px; color:var(--color-slate-400); margin-top:4px;
+  }
+
+  .promo-card {
+    position:relative; padding:14px 16px; border-radius:14px;
+    border:2px solid var(--color-slate-200-a7);
+    background:var(--color-slate-50-a6);
+    cursor:pointer; transition:all .2s;
+    display:flex; align-items:flex-start; gap:12px;
+  }
+
+  .promo-card:hover { border-color:var(--color-emerald-600-a3); background:var(--color-rgba-240-253-250-a6); }
+
+  .promo-card.selected {
+    border-color:var(--color-emerald-600);
+    background:var(--color-rgba-240-253-250-a8);
+    box-shadow:0 0 0 3px var(--color-emerald-600-a08), 0 4px 14px var(--color-emerald-600-a1);
+  }
+
+  .promo-card .card-icon {
+    width:36px; height:36px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; flex-shrink:0;
+  }
+
+  .promo-card .check {
+    position:absolute; top:8px; right:8px;
+    width:18px; height:18px; border-radius:50%;
+    border:2px solid var(--color-slate-300-a6);
+    display:flex; align-items:center; justify-content:center;
+    transition:all .15s;
+  }
+
+  .promo-card.selected .check {
+    background:var(--color-emerald-600); border-color:var(--color-emerald-600);
+    box-shadow:0 0 0 3px var(--color-emerald-600-a15);
+  }
+
+  .section-box {
+    padding:18px 20px; border-radius:16px;
+    border:1.5px solid transparent;
+    transition:all .25s;
+  }
+
+  .section-box.emerald { background:var(--color-rgba-240-253-250-a6); border-color:var(--color-emerald-600-a15); }
+
+  .section-box.violet  { background:var(--color-rgba-245-243-255-a6); border-color:var(--color-rgba-139-92-246-a15); }
+
+  .section-box.sky     { background:var(--color-rgba-240-249-255-a6); border-color:var(--color-rgba-14-165-233-a15); }
+
+  .section-box.amber   { background:var(--color-rgba-255-251-235-a6); border-color:var(--color-rgba-245-158-11-a15); }
+
+  .section-box.rose    { background:var(--color-rgba-255-241-242-a6); border-color:var(--color-rgba-244-63-94-a15); }
+
+  .section-box.slate   { background:var(--color-slate-50-a6); border-color:var(--color-slate-300-a4); }
+
+  .scope-btn {
+    flex:1; padding:8px 12px; border-radius:10px; text-align:center;
+    font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.06em;
+    border:1.5px solid var(--color-slate-300-a5);
+    background:var(--color-slate-50-a7);
+    color:var(--color-slate-400); cursor:pointer; transition:all .15s;
+  }
+
+  .scope-btn.active {
+    background:var(--color-emerald-600-a1); color:var(--color-emerald-700);
+    border-color:var(--color-emerald-600-a35);
+    box-shadow:0 2px 8px var(--color-emerald-600-a1);
+  }
+
+  .scope-btn:hover:not(.active) { border-color:var(--color-slate-300); color:var(--color-slate-600); }
+
+  .tier-pill {
+    display:inline-flex; align-items:center; gap:5px;
+    padding:6px 12px; border-radius:99px; font-size:11px; font-weight:700;
+    border:1.5px solid transparent; cursor:pointer; transition:all .15s;
+    background:var(--color-slate-50-a8); color:var(--color-slate-400); border-color:var(--color-slate-300-a4);
+  }
+
+  .tier-pill.selected-all      { background:var(--color-emerald-600-a1); color:var(--color-emerald-700); border-color:var(--color-emerald-600-a3); }
+
+  .tier-pill.selected-silver   { background:var(--color-slate-400-a15); color:var(--color-slate-600); border-color:var(--color-slate-400-a5); }
+
+  .tier-pill.selected-gold     { background:var(--color-rgba-245-158-11-a12); color:var(--color-b45309); border-color:var(--color-rgba-245-158-11-a35); }
+
+  .tier-pill.selected-platinum { background:var(--color-rgba-59-130-246-a1); color:var(--color-1d4ed8); border-color:var(--color-rgba-59-130-246-a3); }
+
+  .tier-pill.selected-vip      { background:var(--color-rgba-139-92-246-a12); color:var(--color-6d28d9); border-color:var(--color-rgba-139-92-246-a35); }
+
+  .tier-pill:hover { border-color:var(--color-emerald-300); color:var(--color-emerald-700); }
+
+  @keyframes tIn  { from{opacity:0;transform:translateX(16px)} to{opacity:1;transform:var(--shadow-sm-16)} }
+
+  @keyframes tOut { from{opacity:1} to{opacity:0;pointer-events:var(--shadow-sm-16)} }
+
+  .btn-submit {
+    background:linear-gradient(135deg,var(--color-emerald-700),var(--color-emerald-600));
+    border:var(--shadow-sm-16); border-radius:14px; color:var(--color-fff);
+    font-size:13px; font-weight:800; cursor:pointer;
+    padding:13px 28px; display:inline-flex; align-items:center; gap:8px;
+    box-shadow:0 4px 18px var(--color-emerald-700-a28);
+    transition:opacity .13s,transform .13s,box-shadow .13s;
+    width:100%; justify-content:center;
+  }
+
+  .btn-submit:hover { opacity:.93; transform:translateY(-1px); box-shadow:0 6px 22px var(--color-emerald-700-a36); }
+
+  .btn-submit:disabled { opacity:.55; cursor:not-allowed; transform:var(--shadow-sm-16); }
+
+  .preview-pill {
+    display:inline-flex; align-items:center; gap:6px;
+    padding:6px 14px; border-radius:99px;
+    background:var(--color-slate-900-a06); border:1px solid var(--color-slate-900-a08);
+    font-size:11px; font-weight:700; color:var(--color-slate-600);
+    transition:all .25s;
+  }
+</style>
+{% endblock %}
+
+{% block summary_stats %}{% endblock %}
+
+{% block content %}
+<div class="blob" style="width:500px;height:500px;background:var(--color-primary);opacity:.05;top:-100px;left:-80px;animation-delay:0s;" aria-hidden="true"></div>
+<div class="blob" style="width:320px;height:320px;background:var(--color-violet-500);opacity:.04;bottom:-60px;right:-60px;animation-delay:-9s;" aria-hidden="true"></div>
+<div class="blob" style="width:220px;height:220px;background:var(--color-info);opacity:.04;top:40%;left:65%;animation-delay:-5s;" aria-hidden="true"></div>
+
+<div class="w-full flex-1 relative z-10 max-w-4xl mx-auto pb-10"
+     x-data="campaignForm()"
+     x-init="init()"
+     x-cloak>
+
+  <!-- HEADER -->
+  <div class="reveal flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-emerald-600 mb-1">
+        <a href="{% url 'dashboard' %}" class="hover:text-emerald-800 transition-colors">Dashboard</a>
+        <span class="text-slate-300">/</span>
+        <a href="{% url 'campaign_list' %}" class="hover:text-emerald-800 transition-colors">Campaigns</a>
+        <span class="text-slate-300">/</span>
+        <span class="text-slate-600 font-medium">{% if campaign %}Edit{% else %}Buat Baru{% endif %}</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800">
+        {% if campaign %}Edit <span class="text-emerald-600">Campaign</span>{% else %}Campaign <span class="text-emerald-600">Baru</span>{% endif %}
+      </h1>
+      <div class="flex items-center gap-2 mt-1">
+        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+        <span class="text-xs text-slate-400">Promo Engine — 5 tipe promo tersedia</span>
+      </div>
+    </div>
+    <!-- Live preview pill -->
+    <div class="preview-pill" x-show="form.name">
+      <i class="fas fa-eye text-[10px] text-emerald-500"></i>
+      <span x-text="form.name || 'Campaign Preview'"></span>
+      <span class="px-2 py-0.5 rounded-full text-[9px] font-black"
+            :class="{
+              'bg-emerald-100 text-emerald-700': promoType==='discount',
+              'bg-violet-100 text-violet-700':  promoType==='bogo',
+              'bg-sky-100 text-sky-700':         promoType==='bundle',
+              'bg-amber-100 text-amber-700':     promoType==='tiered',
+              'bg-rose-100 text-rose-700':        promoType==='loyalty',
+            }"
+            x-text="promoLabels[promoType]"></span>
+    </div>
+  </div>
+
+  {% if messages %}
+  <div class="reveal space-y-2 mb-4">
+    {% for message in messages %}
+    <div class="px-4 py-3 rounded-xl text-[12px] font-semibold flex items-center gap-2
+                {% if message.tags == 'error' %}bg-rose-50 text-rose-700 border border-rose-200{% else %}bg-emerald-50 text-emerald-700 border border-emerald-200{% endif %}">
+      <i class="fas {% if message.tags == 'error' %}fa-exclamation-triangle text-rose-400{% else %}fa-check-circle text-emerald-500{% endif %} text-[11px] flex-shrink-0"></i>
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <form method="post" id="campaignForm" @submit.prevent="submitForm()">
+    {% csrf_token %}
+    <input type="hidden" name="promo_type" :value="promoType">
+    <input type="hidden" name="target_scope" :value="targetScope">
+    <input type="hidden" name="customer_tier" :value="customerTier">
+
+    <div class="space-y-5">
+
+      <!-- ══ STEP 1: Tipe Promo ══ -->
+      <div class="reveal glass p-6">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-6 h-6 rounded-lg bg-emerald-500 flex items-center justify-center text-white text-[10px] font-black flex-shrink-0">1</div>
+          <p class="text-[11px] font-black text-slate-700 uppercase tracking-wider">Pilih Tipe Promo</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+
+          <!-- Diskon -->
+          <div class="promo-card" :class="{selected: promoType==='discount'}" @click="promoType='discount'">
+            <div class="card-icon bg-emerald-50 text-emerald-600">%</div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[12px] font-black text-slate-700">Diskon Persen / Flat</p>
+              <p class="text-[10px] text-slate-400 mt-0.5">Potongan % atau nominal tetap dari harga</p>
+            </div>
+            <div class="check"><i class="fas fa-check text-white text-[8px]" x-show="promoType==='discount'"></i></div>
+          </div>
+
+          <!-- Buy X Get Y -->
+          <div class="promo-card" :class="{selected: promoType==='bogo'}" @click="promoType='bogo'">
+            <div class="card-icon bg-violet-50 text-violet-600"><i class="fas fa-gift"></i></div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[12px] font-black text-slate-700">Buy X Get Y (BOGO)</p>
+              <p class="text-[10px] text-slate-400 mt-0.5">Beli produk A, gratis produk B</p>
+            </div>
+            <div class="check"><i class="fas fa-check text-white text-[8px]" x-show="promoType==='bogo'"></i></div>
+          </div>
+
+          <!-- Bundle -->
+          <div class="promo-card" :class="{selected: promoType==='bundle'}" @click="promoType='bundle'">
+            <div class="card-icon bg-sky-50 text-sky-600"><i class="fas fa-layer-group"></i></div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[12px] font-black text-slate-700">Paket Combo / Bundle</p>
+              <p class="text-[10px] text-slate-400 mt-0.5">Beli beberapa produk dengan harga paket</p>
+            </div>
+            <div class="check"><i class="fas fa-check text-white text-[8px]" x-show="promoType==='bundle'"></i></div>
+          </div>
+
+          <!-- Tiered -->
+          <div class="promo-card" :class="{selected: promoType==='tiered'}" @click="promoType='tiered'">
+            <div class="card-icon bg-amber-50 text-amber-600"><i class="fas fa-layer-group" style="transform:rotate(90deg)"></i></div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[12px] font-black text-slate-700">Grosir / Tiered</p>
+              <p class="text-[10px] text-slate-400 mt-0.5">Beli makin banyak, diskon makin besar</p>
+            </div>
+            <div class="check"><i class="fas fa-check text-white text-[8px]" x-show="promoType==='tiered'"></i></div>
+          </div>
+
+          <!-- Loyalty -->
+          <div class="promo-card" :class="{selected: promoType==='loyalty'}" @click="promoType='loyalty'">
+            <div class="card-icon bg-rose-50 text-rose-500"><i class="fas fa-star"></i></div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[12px] font-black text-slate-700">Loyalty / Poin</p>
+              <p class="text-[10px] text-slate-400 mt-0.5">Reward poin atau cashback untuk member</p>
+            </div>
+            <div class="check"><i class="fas fa-check text-white text-[8px]" x-show="promoType==='loyalty'"></i></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ══ STEP 2: Info Dasar ══ -->
+      <div class="reveal glass p-6">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-6 h-6 rounded-lg bg-emerald-500 flex items-center justify-center text-white text-[10px] font-black flex-shrink-0">2</div>
+          <p class="text-[11px] font-black text-slate-700 uppercase tracking-wider">Informasi Campaign</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+          <div class="sm:col-span-2">
+            <label class="f-label">Nama Campaign *</label>
+            <input type="text" name="name" x-model="form.name" required
+                   class="f-input" placeholder="misal: Promo Harbolnas Desember 2025">
+          </div>
+
+          <div class="sm:col-span-2">
+            <label class="f-label">Deskripsi</label>
+            <textarea name="description" x-model="form.description" rows="2"
+                      class="f-input resize-none" placeholder="Jelaskan tujuan dan mekanisme campaign ini..."></textarea>
+          </div>
+
+          <div>
+            <label class="f-label">Tanggal Mulai *</label>
+            <input type="date" name="start_date" x-model="form.start_date" required class="f-input">
+          </div>
+
+          <div>
+            <label class="f-label">Tanggal Selesai *</label>
+            <input type="date" name="end_date" x-model="form.end_date" required class="f-input">
+            <p class="f-hint" x-show="dateError" x-text="dateError" style="color:var(--color-danger);"></p>
+          </div>
+
+          <div>
+            <label class="f-label">Status Awal</label>
+            <select name="status" x-model="form.status" class="f-input">
+              <option value="draft">Draft — belum aktif</option>
+              <option value="active">Active — langsung aktif</option>
+              <option value="paused">Paused</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="f-label">Budget (Rp)</label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[11px] font-bold text-slate-400">Rp</span>
+              <input type="number" name="budget" x-model="form.budget" min="0" step="1000" class="f-input pl-9" placeholder="5000000">
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ══ STEP 3: Aturan Promo (dinamis berdasar tipe) ══ -->
+      <div class="reveal glass p-6">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-6 h-6 rounded-lg bg-emerald-500 flex items-center justify-center text-white text-[10px] font-black flex-shrink-0">3</div>
+          <p class="text-[11px] font-black text-slate-700 uppercase tracking-wider">
+            Aturan Promo — <span class="text-emerald-600" x-text="promoLabels[promoType]"></span>
+          </p>
+        </div>
+
+        <!-- ── Diskon ── -->
+        <div x-show="promoType==='discount'" x-transition class="section-box emerald">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="f-label">Tipe Diskon</label>
+              <select name="discount_type" x-model="form.discount_type" class="f-input">
+                <option value="percent">Persen (%)</option>
+                <option value="flat">Nominal Flat (Rp)</option>
+              </select>
+            </div>
+            <div>
+              <label class="f-label" x-text="form.discount_type==='percent' ? 'Besar Diskon (%)' : 'Potongan (Rp)'"></label>
+              <input type="number" name="discount_value" x-model="form.discount_value"
+                     :placeholder="form.discount_type==='percent' ? '15' : '25000'"
+                     :max="form.discount_type==='percent' ? 100 : null"
+                     min="0" class="f-input">
+            </div>
+            <div>
+              <label class="f-label">Maks Potongan (Rp) <span class="normal-case text-slate-300 font-normal">opsional</span></label>
+              <input type="number" name="max_discount" x-model="form.max_discount" min="0" class="f-input" placeholder="50000">
+              <p class="f-hint">Batas atas potongan jika tipe persen</p>
+            </div>
+            <div>
+              <label class="f-label">Min. Pembelian (Rp) <span class="normal-case text-slate-300 font-normal">opsional</span></label>
+              <input type="number" name="min_purchase" x-model="form.min_purchase" min="0" class="f-input" placeholder="100000">
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Buy X Get Y ── -->
+        <div x-show="promoType==='bogo'" x-transition class="section-box violet">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="f-label">Produk yang Dibeli (X)</label>
+              <select name="buy_product_id" x-model="form.buy_product_id" class="f-input">
+                <option value="">— Pilih Produk —</option>
+                {% for product in products %}
+                <option value="{{ product.id }}">{{ product.name }} ({{ product.sku }})</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div>
+              <label class="f-label">Jumlah Beli (X)</label>
+              <input type="number" name="buy_qty" x-model="form.buy_qty" min="1" class="f-input" value="1" placeholder="1">
+            </div>
+            <div>
+              <label class="f-label">Produk yang Digratisin (Y)</label>
+              <select name="get_product_id" x-model="form.get_product_id" class="f-input">
+                <option value="">— Sama dengan X —</option>
+                {% for product in products %}
+                <option value="{{ product.id }}">{{ product.name }} ({{ product.sku }})</option>
+                {% endfor %}
+              </select>
+              <p class="f-hint">Kosongkan jika produk gratis = produk yang dibeli (BOGOF)</p>
+            </div>
+            <div>
+              <label class="f-label">Jumlah Gratis (Y)</label>
+              <input type="number" name="get_qty" x-model="form.get_qty" min="1" class="f-input" value="1" placeholder="1">
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Bundle ── -->
+        <div x-show="promoType==='bundle'" x-transition class="section-box sky">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="sm:col-span-2">
+              <label class="f-label">Produk dalam Bundle</label>
+              <select name="bundle_product_ids" multiple class="f-input" style="min-height:120px;">
+                {% for product in products %}
+                <option value="{{ product.id }}">{{ product.name }} ({{ product.sku }}) — Rp {{ product.price|floatformat:0 }}</option>
+                {% endfor %}
+              </select>
+              <p class="f-hint">Tahan Ctrl/Cmd untuk memilih lebih dari satu produk</p>
+            </div>
+            <div>
+              <label class="f-label">Harga Bundle (Rp)</label>
+              <input type="number" name="bundle_price" x-model="form.bundle_price" min="0" class="f-input" placeholder="75000">
+            </div>
+            <div>
+              <label class="f-label">Nama Bundle</label>
+              <input type="text" name="bundle_name" x-model="form.bundle_name" class="f-input" placeholder="misal: Paket Sarapan Komplit">
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Tiered ── -->
+        <div x-show="promoType==='tiered'" x-transition class="section-box amber">
+          <p class="f-label mb-3">Atur Tier Diskon (Beli Makin Banyak, Diskon Makin Besar)</p>
+          <div class="space-y-3">
+            <template x-for="(tier, i) in form.tiers" :key="i">
+              <div class="flex items-center gap-3 p-3 rounded-xl border border-amber-100/70" style="background:var(--color-surface)">
+                <div class="flex items-center justify-center w-6 h-6 rounded-lg bg-amber-100 text-amber-600 text-[10px] font-black flex-shrink-0" x-text="i+1"></div>
+                <div class="flex-1 grid grid-cols-3 gap-3">
+                  <div>
+                    <label class="f-label">Min. Qty</label>
+                    <input type="number" x-model="tier.min_qty" min="1" class="f-input text-[12px]" placeholder="5">
+                  </div>
+                  <div>
+                    <label class="f-label">Diskon (%)</label>
+                    <input type="number" x-model="tier.discount_pct" min="0" max="100" class="f-input text-[12px]" placeholder="10">
+                  </div>
+                  <div>
+                    <label class="f-label">Label</label>
+                    <input type="text" x-model="tier.label" class="f-input text-[12px]" placeholder="misal: Tier 1">
+                  </div>
+                </div>
+                <button type="button" @click="form.tiers.splice(i,1)"
+                        x-show="form.tiers.length > 1"
+                        class="w-7 h-7 rounded-lg bg-rose-50 text-rose-400 hover:bg-rose-100 flex items-center justify-center flex-shrink-0">
+                  <i class="fas fa-times text-[10px]"></i>
+                </button>
+              </div>
+            </template>
+          </div>
+          <button type="button" @click="addTier()"
+                  class="mt-3 flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-50 border border-amber-200/60 text-amber-700 text-[11px] font-bold hover:bg-amber-100 transition">
+            <i class="fas fa-plus text-[10px]"></i> Tambah Tier
+          </button>
+          <input type="hidden" name="tiers_json" :value="JSON.stringify(form.tiers)">
+        </div>
+
+        <!-- ── Loyalty ── -->
+        <div x-show="promoType==='loyalty'" x-transition class="section-box rose">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="f-label">Tipe Reward</label>
+              <select name="loyalty_type" x-model="form.loyalty_type" class="f-input">
+                <option value="points_multiplier">Poin Multiplier</option>
+                <option value="cashback">Cashback (%)</option>
+                <option value="free_points">Bonus Poin Flat</option>
+              </select>
+            </div>
+            <div>
+              <label class="f-label"
+                     x-text="form.loyalty_type==='points_multiplier' ? 'Multiplier (x)' : form.loyalty_type==='cashback' ? 'Cashback (%)' : 'Bonus Poin'">
+              </label>
+              <input type="number" name="loyalty_value" x-model="form.loyalty_value" min="0" class="f-input"
+                     :placeholder="form.loyalty_type==='points_multiplier' ? '2' : form.loyalty_type==='cashback' ? '5' : '100'">
+            </div>
+            <div>
+              <label class="f-label">Min. Pembelian (Rp)</label>
+              <input type="number" name="loyalty_min_purchase" x-model="form.loyalty_min_purchase" min="0" class="f-input" placeholder="50000">
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ══ STEP 4: Target Scope ══ -->
+      <div class="reveal glass p-6">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-6 h-6 rounded-lg bg-emerald-500 flex items-center justify-center text-white text-[10px] font-black flex-shrink-0">4</div>
+          <p class="text-[11px] font-black text-slate-700 uppercase tracking-wider">Target Produk (Scope)</p>
+          <span class="text-[9px] text-slate-400 font-medium">Berlaku untuk 118.000 SKU</span>
+        </div>
+
+        <div class="flex gap-2 mb-4">
+          <button type="button" class="scope-btn" :class="{active: targetScope==='all'}"
+                  @click="targetScope='all'">
+            <i class="fas fa-globe-asia mr-1"></i> Semua Produk
+          </button>
+          <button type="button" class="scope-btn" :class="{active: targetScope==='category'}"
+                  @click="targetScope='category'">
+            <i class="fas fa-folder mr-1"></i> Per Kategori
+          </button>
+          <button type="button" class="scope-btn" :class="{active: targetScope==='sku'}"
+                  @click="targetScope='sku'">
+            <i class="fas fa-barcode mr-1"></i> SKU Spesifik
+          </button>
+        </div>
+
+        <!-- All: info only -->
+        <div x-show="targetScope==='all'" class="section-box emerald px-4 py-3">
+          <p class="text-[11px] text-emerald-700 font-semibold flex items-center gap-2">
+            <i class="fas fa-check-circle text-emerald-500"></i>
+            Promo ini berlaku untuk seluruh produk aktif di sistem
+          </p>
+        </div>
+
+        <!-- Category -->
+        <div x-show="targetScope==='category'" x-transition class="section-box slate">
+          <label class="f-label">Pilih Kategori</label>
+          <select name="target_category_id" x-model="form.target_category_id" class="f-input">
+            <option value="">— Pilih Kategori —</option>
+            {% for cat in categories %}
+            <option value="{{ cat.id }}">{{ cat.name }}</option>
+            {% endfor %}
+          </select>
+          <p class="f-hint">Promo hanya berlaku untuk produk dalam kategori ini</p>
+        </div>
+
+        <!-- SKU Spesifik -->
+        <div x-show="targetScope==='sku'" x-transition class="section-box slate">
+          <label class="f-label">SKU atau Nama Produk</label>
+          <select name="target_product_ids" multiple class="f-input" style="min-height:120px;">
+            {% for product in products %}
+            <option value="{{ product.id }}">{{ product.sku }} — {{ product.name }}</option>
+            {% endfor %}
+          </select>
+          <p class="f-hint">Tahan Ctrl/Cmd untuk memilih beberapa produk</p>
+        </div>
+
+      </div>
+
+      <!-- ══ STEP 5: Customer Tier & Limit ══ -->
+      <div class="reveal glass p-6">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-6 h-6 rounded-lg bg-emerald-500 flex items-center justify-center text-white text-[10px] font-black flex-shrink-0">5</div>
+          <p class="text-[11px] font-black text-slate-700 uppercase tracking-wider">Customer Eligibility &amp; Limit</p>
+        </div>
+
+        <!-- Tier selection -->
+        <div class="mb-4">
+          <label class="f-label mb-3">Berlaku untuk Member Tier</label>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" class="tier-pill" :class="{'selected-all': customerTier===''}"
+                    @click="customerTier=''">👥 Semua Member</button>
+            <button type="button" class="tier-pill" :class="{'selected-silver': customerTier==='silver'}"
+                    @click="customerTier='silver'">🥈 Silver</button>
+            <button type="button" class="tier-pill" :class="{'selected-gold': customerTier==='gold'}"
+                    @click="customerTier='gold'">⭐ Gold</button>
+            <button type="button" class="tier-pill" :class="{'selected-platinum': customerTier==='platinum'}"
+                    @click="customerTier='platinum'">💎 Platinum</button>
+            <button type="button" class="tier-pill" :class="{'selected-vip': customerTier==='vip'}"
+                    @click="customerTier='vip'">👑 VIP</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="f-label">Maks Penggunaan Total <span class="normal-case text-slate-300 font-normal">opsional</span></label>
+            <input type="number" name="usage_limit" x-model="form.usage_limit" min="0" class="f-input" placeholder="Unlimited">
+            <p class="f-hint">Promo akan otomatis berhenti setelah kuota habis</p>
+          </div>
+          <div>
+            <label class="f-label">Maks per Customer <span class="normal-case text-slate-300 font-normal">opsional</span></label>
+            <input type="number" name="usage_per_customer" x-model="form.usage_per_customer" min="0" class="f-input" placeholder="Unlimited">
+          </div>
+          <div>
+            <label class="f-label">Kode Voucher <span class="normal-case text-slate-300 font-normal">opsional</span></label>
+            <input type="text" name="voucher_code" x-model="form.voucher_code"
+                   class="f-input font-mono uppercase"
+                   placeholder="HARBOLNAS25"
+                   @input="form.voucher_code=form.voucher_code.toUpperCase()">
+            <p class="f-hint">Kosongkan jika promo otomatis (tanpa kode)</p>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="mt-4">
+          <label class="f-label">Catatan Internal <span class="normal-case text-slate-300 font-normal">opsional</span></label>
+          <textarea name="notes" x-model="form.notes" rows="2"
+                    class="f-input resize-none"
+                    placeholder="Catatan untuk tim internal, tidak tampil ke customer..."></textarea>
+        </div>
+
+      </div>
+
+      <!-- ══ SUBMIT ══ -->
+      <div class="reveal flex flex-col sm:flex-row gap-3">
+        <a href="{% url 'campaign_list' %}"
+           class="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl border-2 border-slate-200/80 text-slate-500 text-[12px] font-bold hover:bg-slate-50 hover:border-slate-300 transition">
+          <i class="fas fa-arrow-left text-[10px]"></i> Batal
+        </a>
+        <button type="submit" class="btn-submit flex-1" :disabled="isSubmitting">
+          <i class="fas text-[12px]" :class="isSubmitting ? 'fa-circle-notch fa-spin' : 'fa-save'"></i>
+          <span x-text="isSubmitting ? 'Menyimpan...' : '{% if campaign %}Update Campaign{% else %}Buat Campaign{% endif %}'"></span>
+        </button>
+      </div>
+
+    </div>
+  </form>
+
+  <!-- Toast -->
+  <div id="toastEl" class="fixed top-5 right-5 z-[100] flex flex-col gap-2"></div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function campaignForm() {
+  return {
+    promoType   : '{{ campaign.type|default:"discount" }}',
+    targetScope : '{{ campaign.target_scope|default:"all" }}',
+    customerTier: '{{ campaign.customer_tier|default:"" }}',
+    isSubmitting: false,
+
+    promoLabels: {
+      discount: 'Diskon',
+      bogo    : 'Buy X Get Y',
+      bundle  : 'Bundle',
+      tiered  : 'Tiered / Grosir',
+      loyalty : 'Loyalty / Poin',
+    },
+
+    form: {
+      name              : '{{ campaign.name|default:""|escapejs }}',
+      description       : '{{ campaign.description|default:""|escapejs }}',
+      start_date        : '{{ campaign.start_date|date:"Y-m-d"|default:"" }}',
+      end_date          : '{{ campaign.end_date|date:"Y-m-d"|default:"" }}',
+      status            : '{{ campaign.status|default:"draft" }}',
+      budget            : '{{ campaign.budget|default:"" }}',
+      // Discount
+      discount_type     : '{{ campaign.promo_rules.discount_type|default:"percent" }}',
+      discount_value    : '{{ campaign.promo_rules.discount_value|default:"" }}',
+      max_discount      : '{{ campaign.promo_rules.max_discount|default:"" }}',
+      min_purchase      : '{{ campaign.promo_rules.min_purchase|default:"" }}',
+      // BOGO
+      buy_product_id    : '{{ campaign.promo_rules.buy_product_id|default:"" }}',
+      buy_qty           : '{{ campaign.promo_rules.buy_qty|default:"1" }}',
+      get_product_id    : '{{ campaign.promo_rules.get_product_id|default:"" }}',
+      get_qty           : '{{ campaign.promo_rules.get_qty|default:"1" }}',
+      // Bundle
+      bundle_price      : '{{ campaign.promo_rules.bundle_price|default:"" }}',
+      bundle_name       : '{{ campaign.promo_rules.bundle_name|default:""|escapejs }}',
+      // Tiered
+      tiers: {{ campaign.promo_rules.tiers|default:'[{"min_qty":5,"discount_pct":10,"label":"Tier 1"},{"min_qty":10,"discount_pct":20,"label":"Tier 2"}]'|safe }},
+      // Loyalty
+      loyalty_type      : '{{ campaign.promo_rules.loyalty_type|default:"points_multiplier" }}',
+      loyalty_value     : '{{ campaign.promo_rules.loyalty_value|default:"" }}',
+      loyalty_min_purchase: '{{ campaign.promo_rules.loyalty_min_purchase|default:"" }}',
+      // Scope
+      target_category_id: '{{ campaign.target_category_id|default:"" }}',
+      // Limits
+      usage_limit        : '{{ campaign.usage_limit|default:"" }}',
+      usage_per_customer : '{{ campaign.usage_per_customer|default:"" }}',
+      voucher_code       : '{{ campaign.voucher_code|default:"" }}',
+      notes              : '{{ campaign.notes|default:""|escapejs }}',
+    },
+
+    dateError: '',
+
+    init() {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i * 70);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: .05 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    },
+
+    addTier() {
+      this.form.tiers.push({ min_qty: '', discount_pct: '', label: `Tier ${this.form.tiers.length + 1}` });
+    },
+
+    validateDates() {
+      if (!this.form.start_date || !this.form.end_date) return true;
+      if (new Date(this.form.end_date) <= new Date(this.form.start_date)) {
+        this.dateError = 'Tanggal selesai harus setelah tanggal mulai';
+        return false;
+      }
+      this.dateError = '';
+      return true;
+    },
+
+    submitForm() {
+      if (!this.validateDates()) return;
+      this.isSubmitting = true;
+      // Biarkan form submit biasa — Alpine hanya untuk validasi client-side
+      // Jika ingin AJAX, ganti dengan fetch() ke endpoint
+      document.getElementById('campaignForm').submit();
+    },
+
+    _toast(msg, type = 'success') {
+      const c = document.getElementById('toastEl'); if (!c) return;
+      const col = { success:'border-emerald-400', warn:'border-amber-400', error:'border-rose-400' };
+      const ico = { success:'check-circle', warn:'exclamation-triangle', error:'times-circle' };
+      const el  = document.createElement('div');
+      el.className = `toast flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl min-w-[200px] max-w-xs text-white text-[12px] font-semibold border-l-4 ${col[type]||col.success}`;
+      el.style.cssText = 'background:rgba(15,23,42,.92);backdrop-filter:blur(12px);';
+      el.innerHTML = `<i class="fas fa-${ico[type]||ico.success} text-xs flex-shrink-0"></i><span>${msg}</span>`;
+      c.appendChild(el);
+      setTimeout(() => el.remove(), 3100);
+    },
+  };
+}
+</script>
+{% endblock %}

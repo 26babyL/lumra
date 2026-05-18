@@ -1,0 +1,51 @@
+{# base/partials/pagination.html - DaisyUI Version#}
+# Reusable pagination component
+
+{% if page_obj.has_other_pages %}
+  <div class="flex items-center justify-between mt-6 px-6 py-4 bg-base-200 rounded-lg border border-base-300">
+    <div class="text-sm text-base-content/60">
+      Menampilkan <span class="font-semibold text-base-content">{{ page_obj.start_index }}</span> hingga 
+      <span class="font-semibold text-base-content">{{ page_obj.end_index }}</span> dari 
+      <span class="font-semibold text-base-content">{{ paginator.count }}</span> item
+    </div>
+    
+    <nav class="flex items-center gap-2">
+      <!-- Previous -->
+      {% if page_obj.has_previous %}
+        <a href="?page=1" class="btn btn-sm btn-ghost" title="Halaman pertama">
+          <i class="fas fa-chevron-left"></i>
+        </a>
+        <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-ghost">
+          Sebelumnya
+        </a>
+      {% else %}
+        <span class="btn btn-sm btn-ghost btn-disabled"><i class="fas fa-chevron-left"></i></span>
+        <span class="btn btn-sm btn-ghost btn-disabled">Sebelumnya</span>
+      {% endif %}
+
+      <!-- Page numbers -->
+      <div class="flex items-center gap-1">
+        {% for num in paginator.page_range %}
+          {% if page_obj.number == num %}
+            <span class="btn btn-sm btn-primary">{{ num }}</span>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?page={{ num }}" class="btn btn-sm btn-ghost">{{ num }}</a>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <!-- Next -->
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-ghost">
+          Berikutnya
+        </a>
+        <a href="?page={{ paginator.num_pages }}" class="btn btn-sm btn-ghost" title="Halaman terakhir">
+          <i class="fas fa-chevron-right"></i>
+        </a>
+      {% else %}
+        <span class="btn btn-sm btn-ghost btn-disabled">Berikutnya</span>
+        <span class="btn btn-sm btn-ghost btn-disabled"><i class="fas fa-chevron-right"></i></span>
+      {% endif %}
+    </nav>
+  </div>
+{% endif %}

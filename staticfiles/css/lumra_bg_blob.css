@@ -1,0 +1,235 @@
+/* ============================================================
+   LUMRA BG BLOB — lumra_bg_blob.css
+   Emerald Odyssey Blueprint v1.2
+   ============================================================
+   Background decoration yang dipakai di banyak halaman.
+   Diinclude via partial: base/partials/bg_blob.html
+
+   Load order:
+     3. lumra_components.css
+     4. lumra_bg_blob.css   ← ini (sebelum page-specific CSS)
+
+   Variants:
+     blob      → inventory, settings, marketing
+     bg-blob   → reports, dashboard
+     orb       → sales_insight
+     sh-bg-orb → (reserved, halaman khusus)
+
+   Usage di template:
+     {% include "base/partials/bg_blob.html" %}
+     {% include "base/partials/bg_blob.html" with variant="orb" %}
+   ============================================================ */
+
+@import './lumra_tokens.css';
+
+
+/* ══════════════════════════════════════════════════════════════
+   SHARED ANIMATION
+   ══════════════════════════════════════════════════════════════ */
+@keyframes blobDrift {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(30px, 40px) scale(1.08); }
+}
+
+@keyframes orbFloat {
+  0%   { transform: translate(0, 0) scale(1)    rotate(0deg); }
+  33%  { transform: translate(20px, -30px) scale(1.06) rotate(3deg); }
+  66%  { transform: translate(-15px, 20px) scale(0.96) rotate(-2deg); }
+  100% { transform: translate(0, 0) scale(1)    rotate(0deg); }
+}
+
+@keyframes shOrbPulse {
+  0%,100% { transform: scale(1);    opacity: 0.06; }
+  50%     { transform: scale(1.12); opacity: 0.10; }
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §1. VARIANT: blob
+   Dipakai di: inventory, settings, marketing
+   ══════════════════════════════════════════════════════════════ */
+.blob {
+  position      : fixed;
+  border-radius : 50%;
+  filter        : blur(72px);
+  pointer-events: none;
+  z-index       : 0;
+  animation     : blobDrift 20s ease-in-out infinite alternate;
+}
+
+.blob-a {
+  width           : 400px;
+  height          : 400px;
+  background      : var(--color-primary, #10B981);
+  opacity         : 0.06;
+  top             : -100px;
+  left            : -80px;
+  animation-delay : 0s;
+}
+
+.blob-b {
+  width           : 300px;
+  height          : 300px;
+  background      : var(--color-secondary, #00A86B);
+  opacity         : 0.05;
+  bottom          : 5%;
+  right           : -60px;
+  animation-delay : -8s;
+}
+
+.blob-c {
+  width           : 240px;
+  height          : 240px;
+  background      : var(--color-accent, #F59E0B);
+  opacity         : 0.04;
+  top             : 35%;
+  left            : 28%;
+  animation-delay : -14s;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §2. VARIANT: bg-blob
+   Dipakai di: reports, dashboard
+   ══════════════════════════════════════════════════════════════ */
+.bg-blob {
+  position      : fixed;
+  border-radius : 50%;
+  filter        : blur(80px);
+  pointer-events: none;
+  z-index       : 0;
+  animation     : blobDrift 24s ease-in-out infinite alternate;
+}
+
+.bg-blob-1 {
+  width           : 480px;
+  height          : 480px;
+  background      : var(--color-primary, #10B981);
+  opacity         : 0.05;
+  top             : -120px;
+  left            : -80px;
+  animation-delay : 0s;
+}
+
+.bg-blob-2 {
+  width           : 360px;
+  height          : 360px;
+  background      : var(--color-secondary, #00A86B);
+  opacity         : 0.04;
+  bottom          : 10%;
+  right           : -60px;
+  animation-delay : -10s;
+}
+
+.bg-blob-3 {
+  width           : 280px;
+  height          : 280px;
+  background      : var(--color-accent, #F59E0B);
+  opacity         : 0.03;
+  top             : 40%;
+  left            : 30%;
+  animation-delay : -18s;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §3. VARIANT: orb
+   Dipakai di: sales_insight
+   Lebih hidup dari blob — rotasi + float
+   ══════════════════════════════════════════════════════════════ */
+.orb {
+  position      : fixed;
+  border-radius : 50%;
+  filter        : blur(90px);
+  pointer-events: none;
+  z-index       : 0;
+  animation     : orbFloat 18s ease-in-out infinite;
+}
+
+.orb-1 {
+  width           : 500px;
+  height          : 500px;
+  background      : var(--color-primary, #10B981);
+  opacity         : 0.06;
+  top             : -160px;
+  right           : -100px;
+  animation-delay : 0s;
+  animation-duration: 22s;
+}
+
+.orb-2 {
+  width           : 380px;
+  height          : 380px;
+  background      : var(--color-secondary, #00A86B);
+  opacity         : 0.05;
+  bottom          : -80px;
+  left            : -60px;
+  animation-delay : -7s;
+  animation-duration: 18s;
+}
+
+.orb-3 {
+  width           : 260px;
+  height          : 260px;
+  background      : var(--color-accent, #F59E0B);
+  opacity         : 0.04;
+  top             : 45%;
+  right           : 15%;
+  animation-delay : -13s;
+  animation-duration: 25s;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §4. VARIANT: sh-bg-orb
+   Reserved — halaman khusus (SH = special highlight)
+   Pulse scale, lebih subtle, tidak terlalu kemana-mana
+   ══════════════════════════════════════════════════════════════ */
+.sh-bg-orb {
+  position      : fixed;
+  border-radius : 50%;
+  filter        : blur(100px);
+  pointer-events: none;
+  z-index       : 0;
+  animation     : shOrbPulse 12s ease-in-out infinite;
+}
+
+.sh-bg-orb-1 {
+  width           : 560px;
+  height          : 560px;
+  background      : var(--color-primary, #10B981);
+  opacity         : 0.06;
+  top             : -180px;
+  left            : -140px;
+  animation-delay : 0s;
+}
+
+.sh-bg-orb-2 {
+  width           : 400px;
+  height          : 400px;
+  background      : var(--color-accent, #F59E0B);
+  opacity         : 0.05;
+  bottom          : -100px;
+  right           : -80px;
+  animation-delay : -4s;
+}
+
+.sh-bg-orb-3 {
+  width           : 300px;
+  height          : 300px;
+  background      : var(--color-secondary, #00A86B);
+  opacity         : 0.04;
+  top             : 38%;
+  left            : 40%;
+  animation-delay : -8s;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   REDUCED MOTION — semua variant
+   ══════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .blob, .bg-blob, .orb, .sh-bg-orb {
+    animation: none;
+  }
+}

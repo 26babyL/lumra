@@ -1,0 +1,53 @@
+<!-- ============================================================
+     ALERT COMPONENT
+     
+     Parameter:
+       type        : 'error' | 'success' | 'warning' | 'info'  (default: 'info')
+       title       : string  (opsional)
+       message     : string  (wajib)
+       dismissible : True | False  (default: False)
+     
+     Cara pakai:
+       {% include "base/components/alert.html" with
+           type="success"
+           title="Berhasil!"
+           message="Produk berhasil disimpan."
+           dismissible=True
+       %}
+     
+     Integrasi Django Messages:
+       {% for msg in messages %}
+           {% include "base/components/alert.html" with
+               type=msg.tags|split:" "|last
+               message=msg
+               dismissible=True
+           %}
+       {% endfor %}
+       
+       Catatan: filter 'split' perlu didaftarkan di templatetags,
+       atau gunakan custom tag. Lihat catatan di bawah.
+============================================================ -->
+
+{% comment %}
+Mapping tipe ke kelas Tailwind dilakukan sekali di sini dengan {% with %},
+sehingga tidak perlu mengulang {% if %} berkali-kali di bawah.
+{% endcomment %}
+{% with type=type|default:"info" %}
+{% if type == 'error' %}
+    {% with bg="bg-red-50 border-red-200" icon="fa-exclamation-circle" icon_color="text-red-400" title_color="text-red-800" msg_color="text-red-700" btn_color="text-red-800 hover:bg-red-100 focus:ring-red-600" default_title="Terjadi Kesalahan" %}
+        {% include "components/alert_inner.html" %}
+    {% endwith %}
+{% elif type == 'success' %}
+    {% with bg="bg-green-50 border-green-200" icon="fa-check-circle" icon_color="text-green-400" title_color="text-green-800" msg_color="text-green-700" btn_color="text-green-800 hover:bg-green-100 focus:ring-green-600" default_title="Berhasil" %}
+        {% include "components/alert_inner.html" %}
+    {% endwith %}
+{% elif type == 'warning' %}
+    {% with bg="bg-yellow-50 border-yellow-200" icon="fa-exclamation-triangle" icon_color="text-yellow-400" title_color="text-yellow-800" msg_color="text-yellow-700" btn_color="text-yellow-800 hover:bg-yellow-100 focus:ring-yellow-600" default_title="Perhatian" %}
+        {% include "components/alert_inner.html" %}
+    {% endwith %}
+{% else %}
+    {% with bg="bg-blue-50 border-blue-200" icon="fa-info-circle" icon_color="text-blue-400" title_color="text-blue-800" msg_color="text-blue-700" btn_color="text-blue-800 hover:bg-blue-100 focus:ring-blue-600" default_title="Informasi" %}
+        {% include "components/alert_inner.html" %}
+    {% endwith %}
+{% endif %}
+{% endwith %}

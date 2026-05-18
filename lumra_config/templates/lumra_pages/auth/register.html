@@ -1,0 +1,258 @@
+{% extends 'base/base_hybrid.html' %}
+
+{% block title %}Register - CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  .auth-page-bg {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #00a86b 0%, #1A1A1A 45%, #003D2F 100%);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+  .auth-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.18;
+    pointer-events: none;
+    animation: drift 16s ease-in-out infinite alternate;
+  }
+  .auth-blob-1 { width:420px; height:420px; background:#00a86b; top:-80px; left:-100px; }
+  .auth-blob-2 { width:300px; height:300px; background:#1A1A1A; bottom:-60px; right:-80px; animation-delay:-6s; }
+  .auth-blob-3 { width:200px; height:200px; background:#008B61; top:50%; left:60%; animation-delay:-3s; }
+  @keyframes drift {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(30px, -20px) scale(1.05); }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-page-bg">
+  <!-- Background Pattern -->
+  <div class="auth-blob auth-blob-1"></div>
+  <div class="auth-blob auth-blob-2"></div>
+  <div class="auth-blob auth-blob-3"></div>
+  
+  <!-- Register Card -->
+  <div class="card bg-base-100/85 backdrop-blur-lg border border-base-300 shadow-2xl max-w-md w-full mx-4 relative z-10">
+    <div class="card-body p-10">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-success to-emerald-600 flex items-center justify-center shadow-lg">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 4h3v12h6.5V19H7V4z"/>
+          </svg>
+        </div>
+        <h1 class="text-2xl font-bold text-base-content mb-2">Buat Akun Baru</h1>
+        <p class="text-base-content/60">Daftar untuk memulai menggunakan CoffeeShop</p>
+      </div>
+
+      <!-- Register Form -->
+      <form method="post" class="space-y-6">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+          <div class="alert alert-error">
+            <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.932-3L13.932 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.932 3z"/>
+            </svg>
+            <div>
+              {% for error in form.non_field_errors %}
+                {{ error }}
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Username Field -->
+        <div class="form-control">
+          <label for="id_username" class="label">
+            <span class="label-text">Username</span>
+          </label>
+          <input 
+            type="text" 
+            name="username" 
+            id="id_username" 
+            class="input input-bordered input-primary w-full" 
+            placeholder="Pilih username"
+            value="{{ form.username.value|default:'' }}"
+            required
+            autocomplete="username"
+          >
+          {% if form.username.errors %}
+            <label class="label">
+              <span class="label-text-alt text-error">
+                {% for error in form.username.errors %}
+                  {{ error }}
+                {% endfor %}
+              </span>
+            </label>
+          {% endif %}
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-control">
+          <label for="id_email" class="label">
+            <span class="label-text">Email</span>
+          </label>
+          <input 
+            type="email" 
+            name="email" 
+            id="id_email" 
+            class="input input-bordered input-primary w-full" 
+            placeholder="alamat@email.com"
+            value="{{ form.email.value|default:'' }}"
+            required
+            autocomplete="email"
+          >
+          {% if form.email.errors %}
+            <label class="label">
+              <span class="label-text-alt text-error">
+                {% for error in form.email.errors %}
+                  {{ error }}
+                {% endfor %}
+              </span>
+            </label>
+          {% endif %}
+        </div>
+
+        <!-- First Name Field -->
+        <div class="form-control">
+          <label for="id_first_name" class="label">
+            <span class="label-text">Nama Depan</span>
+          </label>
+          <input 
+            type="text" 
+            name="first_name" 
+            id="id_first_name" 
+            class="input input-bordered input-primary w-full" 
+            placeholder="John"
+            value="{{ form.first_name.value|default:'' }}"
+            required
+            autocomplete="given-name"
+          >
+          {% if form.first_name.errors %}
+            <label class="label">
+              <span class="label-text-alt text-error">
+                {% for error in form.first_name.errors %}
+                  {{ error }}
+                {% endfor %}
+              </span>
+            </label>
+          {% endif %}
+        </div>
+
+        <!-- Last Name Field -->
+        <div class="form-control">
+          <label for="id_last_name" class="label">
+            <span class="label-text">Nama Belakang</span>
+          </label>
+          <input 
+            type="text" 
+            name="last_name" 
+            id="id_last_name" 
+            class="input input-bordered input-primary w-full" 
+            placeholder="Doe"
+            value="{{ form.last_name.value|default:'' }}"
+            required
+            autocomplete="family-name"
+          >
+          {% if form.last_name.errors %}
+            <label class="label">
+              <span class="label-text-alt text-error">
+                {% for error in form.last_name.errors %}
+                  {{ error }}
+                {% endfor %}
+              </span>
+            </label>
+          {% endif %}
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-control">
+          <label for="id_password1" class="label">
+            <span class="label-text">Password</span>
+          </label>
+          <input 
+            type="password" 
+            name="password1" 
+            id="id_password1" 
+            class="input input-bordered input-primary w-full" 
+            placeholder="Minimal 8 karakter"
+            required
+            autocomplete="new-password"
+          >
+          {% if form.password1.errors %}
+            <label class="label">
+              <span class="label-text-alt text-error">
+                {% for error in form.password1.errors %}
+                  {{ error }}
+                {% endfor %}
+              </span>
+            </label>
+          {% endif %}
+        </div>
+
+        <!-- Confirm Password Field -->
+        <div class="form-control">
+          <label for="id_password2" class="label">
+            <span class="label-text">Konfirmasi Password</span>
+          </label>
+          <input 
+            type="password" 
+            name="password2" 
+            id="id_password2" 
+            class="input input-bordered input-primary w-full" 
+            placeholder="Ketik ulang password"
+            required
+            autocomplete="new-password"
+          >
+          {% if form.password2.errors %}
+            <label class="label">
+              <span class="label-text-alt text-error">
+                {% for error in form.password2.errors %}
+                  {{ error }}
+                {% endfor %}
+              </span>
+            </label>
+          {% endif %}
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="form-control">
+          <label class="label cursor-pointer justify-start gap-3">
+            <input type="checkbox" name="terms_agreed" class="checkbox checkbox-primary" required>
+            <span class="label-text">Saya setuju dengan <a href="#" class="link link-primary">Syarat & Ketentuan</a></span>
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary w-full">
+          <i class="fas fa-user-plus mr-2"></i>
+          Daftar Sekarang
+        </button>
+      </form>
+
+      <!-- Footer Links -->
+      <div class="text-center mt-8">
+        <div class="text-sm text-base-content/60">
+          Sudah punya akun? 
+          <a href="{% url 'login' %}" class="link link-primary">
+            Masuk di sini
+          </a>
+        </div>
+        
+        <div class="text-xs text-base-content/40 mt-4">
+          &copy; {% now "Y" %} CoffeeShop. Hak cipta dilindungi.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

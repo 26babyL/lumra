@@ -1,0 +1,206 @@
+{% extends 'base/base.html' %}
+{% block title %}Buat SPK — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  .glass-panel { background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid white; padding: 32px; }
+  .form-input { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; background: rgba(255,255,255,0.5); transition: 0.2s; }
+  .form-input:focus { background: white; border-color: #0f172a; outline: none; }
+  
+  .bom-preview { background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-4xl mx-auto relative z-10 space-y-6" x-data="poFormApp()" x-init="init()" x-cloak>
+  
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">Buat Surat Perintah Kerja (SPK)</h1>
+      <p class="text-sm text-slate-500">Tentukan rencana produksi berdasarkan permintaan atau stok.</p>
+    </div>
+    <a href="{% url 'production_order_list' %}" class="text-slate-500 hover:text-slate-700 font-bold text-sm">Batal</a>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Left: Form -->
+    <div class="lg:col-span-2 glass-panel space-y-6">
+      
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Pilih Produk (Resep)</label>
+          <select x-model="form.bomId" @change="loadBOM()" class="form-input">
+            <option value="">-- Pilih Produk --</option>
+            <template x-for="b in boms" :key="b.id">
+              <option :value="b.id" x-text="b.code + ' — ' + b.name"></option>
+            </template>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Kode PO</label>
+          <input type="text" :value="generatedPO" disabled class="form-input bg-slate-100 text-slate-500">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Target Kuantitas</label>
+          <div class="flex gap-2">
+            <input type="number" x-model.number="form.qty" class="form-input">
+            <input type="text" value="Pcs" disabled class="form-input w-20 bg-slate-100 text-slate-500 text-center">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Line Produksi</label>
+          <select x-model="form.line" class="form-input">
+            <option>Dapur A (Bakery)</option>
+            <option>Dapur B (Hot Kitchen)</option>
+            <option>Dapur C (Packing)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Rencana Mulai</label>
+          <input type="date" x-model="form.startDate" class="form-input">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Prioritas</label>
+          <select x-model="form.priority" class="form-input">
+            <option value="Normal">Normal</option>
+            <option value="High">Tinggi (Urgent)</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Catatan Operator</label>
+        <textarea x-model="form.notes" rows="3" class="form-input" placeholder="Instruksi khusus..."></textarea>
+      </div>
+
+    </div>
+
+    <!-- Right: BOM Preview -->
+    <div class="glass-panel bg-slate-50/50 h-fit">
+      <h3 class="font-bold text-slate-700 mb-4 text-sm uppercase tracking-wide border-b pb-2">Prakiraan Kebutuhan Bahan</h3>
+      
+      <div x-show="!bomLoaded" class="text-center py-10 text-slate-400">
+        <i class="fas fa-flask text-3xl mb-2 opacity-30"></i>
+        <p class="text-xs">Pilih produk untuk melihat komposisi.</p>
+      </div>
+
+      <div x-show="bomLoaded" class="space-y-3">
+        <template x-for="ing in bomIngredients" :key="ing.name">
+          <div class="flex justify-between items-center bg-white p-3 rounded-lg border border-slate-100 shadow-sm">
+            <div>
+              <p class="text-sm font-bold text-slate-700" x-text="ing.name"></p>
+              <p class="text-[10px] text-slate-400">Stok Gudang: <span class="font-mono text-emerald-600" x-text="ing.stock"></span></p>
+            </div>
+            <div class="text-right">
+              <p class="text-sm font-bold text-slate-800" x-text="(ing.qty * form.qty) + ' ' + ing.uom"></p>
+              <p class="text-[10px] text-slate-400" x-text="ing.qty + ' / unit'"></p>
+            </div>
+          </div>
+        </template>
+
+        <div class="mt-4 pt-4 border-t border-slate-200">
+          <div class="flex justify-between items-center mb-1">
+            <span class="text-xs font-bold text-slate-500">Estimasi Biaya Bahan</span>
+            <span class="text-sm font-bold text-emerald-600" x-text="formatCurrency(estimatedCost)"></span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-slate-500">Estimasi Waktu</span>
+            <span class="text-sm font-bold text-slate-800" x-text="estimatedTime + ' Jam'"></span>
+          </div>
+        </div>
+      </div>
+
+      <button @click="createPO()" :disabled="!form.bomId" class="w-full mt-6 py-3 bg-slate-800 text-white rounded-xl font-bold shadow hover:bg-slate-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
+        Buat SPK
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ boms_data|json_script:"boms-data" }}
+<script>
+function poFormApp() {
+  return {
+    boms: [],
+    form: { bomId: '', qty: 10, line: '', startDate: '', priority: 'Normal', notes: '' },
+    bomLoaded: false,
+    bomIngredients: [],
+    generatedPO: '',
+
+    init() {
+      const el = document.getElementById('boms-data');
+      if (el && el.textContent) {
+        try { this.boms = JSON.parse(el.textContent) || []; } catch(e) { this.boms = []; }
+      }
+      this.generatedPO = 'PO-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 1000)).padStart(3,'0');
+    },
+
+    loadBOM() {
+      this.bomLoaded = false;
+      this.bomIngredients = [];
+    },
+
+    get estimatedCost() {
+      return 0;
+    },
+
+    get estimatedTime() {
+      return 0;
+    },
+
+    formatCurrency(num) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+    },
+
+    createPO() {
+      if (!this.form.bomId) {
+        alert('Mohon pilih BOM/Produk');
+        return;
+      }
+
+      const payload = {
+        code: this.generatedPO,
+        bom_id: this.form.bomId,
+        target_quantity: this.form.qty || 0,
+        scheduled_date: this.form.startDate || null,
+        priority: this.form.priority || 'Normal',
+        line: this.form.line || '',
+        status: 'pending',
+        notes: this.form.notes || '',
+      };
+
+      const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+      };
+
+      fetch('{{ submit_url }}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken'),
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(r => r.json().then(j => ({ ok: r.ok, j })))
+      .then(({ ok, j }) => {
+        if (!ok || !j.success) throw new Error(j.error || 'Gagal membuat SPK');
+        window.location.href = '{% url 'production_order_list' %}';
+      })
+      .catch(e => alert(e.message || 'Terjadi kesalahan'));
+    }
+  }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,434 @@
+{
+  "filename": "accounts_payable.html",
+  "title": "Accounts Payable",
+  "components": [
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "w-full flex-1 space-y-6 relative z-10",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": "apApp()"
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "flex items-end justify-between",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "nav",
+      "tag": "nav",
+      "label": "[ NAVIGATION BAR ]",
+      "depth": 4,
+      "path": "root/body/div/div/div/nav",
+      "classes": "flex items-center gap-2 text-xs text-slate-500 mb-1",
+      "text_preview": "Keuangan / Hutang Usaha (AP)",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h1",
+      "label": "HEADING (H1)",
+      "depth": 4,
+      "path": "root/body/div/div/div/h1",
+      "classes": "text-2xl font-bold text-slate-800",
+      "text_preview": "Accounts Payable",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "a",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/a",
+      "classes": "bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg hover:bg-slate-700 transition flex items-center gap-2",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [GRID 1 cols]",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "grid grid-cols-1 md:grid-cols-4 gap-4",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "GRID 1 cols",
+      "is_interactive": false,
+      "children_count": 4,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "glass-card p-5 border-l-4 border-slate-300",
+      "text_preview": "Total Hutang",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "glass-card p-5 border-l-4 border-emerald-500",
+      "text_preview": "Jatuh Tempo (0-30 Hari)",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "glass-card p-5 border-l-4 border-amber-500",
+      "text_preview": "Jatuh Tempo (31-60 Hari)",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "glass-card p-5 border-l-4 border-rose-500",
+      "text_preview": "Telat Bayar (>60 Hari)",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "glass-card overflow-hidden",
+      "text_preview": "Aging Schedule per Supplier Export Excel Supplier Total Balance 0 - 30 Hari 31 -…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h2",
+      "label": "HEADING (H2)",
+      "depth": 4,
+      "path": "root/body/div/div/div/h2",
+      "classes": "font-bold text-slate-700 text-sm",
+      "text_preview": "Aging Schedule per Supplier",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "classes": "flex gap-2",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: Export Excel",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/button",
+      "classes": "text-xs font-bold text-slate-500 hover:text-slate-800 bg-white border border-slate-200 px-3 py-1 rounded-lg",
+      "text_preview": "Export Excel",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "table",
+      "tag": "table",
+      "label": "[ TABLE ]",
+      "depth": 4,
+      "path": "root/body/div/div/div/table",
+      "classes": "aging-table",
+      "text_preview": "Supplier Total Balance 0 - 30 Hari 31 - 60 Hari 61 - 90 Hari > 90 Hari Aksi GRAN…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: [icon]",
+      "depth": 9,
+      "path": "root/body/div/div/div/table/tbody/template/tr/td/button",
+      "classes": "text-xs font-bold text-slate-500 hover:text-emerald-600 bg-white border border-slate-200 px-3 py-1 rounded-lg shadow-sm",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/nav",
+      "type": "nav",
+      "label": "[ NAVIGATION BAR ]",
+      "text_preview": "Keuangan / Hutang Usaha (AP)"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/h1",
+      "type": "heading",
+      "label": "HEADING (H1)",
+      "text_preview": "Accounts Payable"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/a",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [GRID 1 cols]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "Total Hutang"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "Jatuh Tempo (0-30 Hari)"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "Jatuh Tempo (31-60 Hari)"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "Telat Bayar (>60 Hari)"
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "Aging Schedule per Supplier Export Excel Supplier Total Balance 0 - 30 Hari 31 -…"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/h2",
+      "type": "heading",
+      "label": "HEADING (H2)",
+      "text_preview": "Aging Schedule per Supplier"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/button",
+      "type": "button",
+      "label": "BUTTON: Export Excel",
+      "text_preview": "Export Excel"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/table",
+      "type": "table",
+      "label": "[ TABLE ]",
+      "text_preview": "Supplier Total Balance 0 - 30 Hari 31 - 60 Hari 61 - 90 Hari > 90 Hari Aksi GRAN…"
+    },
+    {
+      "depth": 9,
+      "path": "root/body/div/div/div/table/tbody/template/tr/td/button",
+      "type": "button",
+      "label": "BUTTON: [icon]",
+      "text_preview": ""
+    }
+  ],
+  "issues": [
+    {
+      "type": "empty_button",
+      "severity": "warning",
+      "message": "Tombol tanpa teks/aria-label: <button> id='' class='text-xs font-bold text-slate-500 hover:text-emeral'",
+      "path": ""
+    },
+    {
+      "type": "alpine_xcloak",
+      "severity": "info",
+      "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template",
+      "path": ""
+    }
+  ],
+  "stats": {
+    "total_components": 17,
+    "by_type": {
+      "layout": 6,
+      "nav": 1,
+      "heading": 2,
+      "card": 5,
+      "button": 2,
+      "table": 1
+    },
+    "interactive": 2,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 2,
+    "issues_by_severity": {
+      "warning": 1,
+      "info": 1
+    }
+  }
+}

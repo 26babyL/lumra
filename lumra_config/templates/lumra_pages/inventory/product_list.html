@@ -1,0 +1,358 @@
+{% extends 'base/base_hybrid.html' %}
+
+{% block title %}Daftar Produk — LUMRA{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="productList()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-base-content">Daftar Produk</h1>
+      <p class="text-base-content/60 text-sm">Manajemen master data produk dan inventory.</p>
+    </div>
+    <div class="flex gap-2">
+      <button class="btn btn-primary" @click="importProducts()">
+        <i class="fas fa-upload mr-2"></i> Import
+      </button>
+      <a href="{% url 'inventory:product_form' %}" class="btn btn-primary">
+        <i class="fas fa-plus mr-2"></i> Tambah Produk
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-primary">
+      <div class="card-body p-5">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-xs font-bold text-base-content/60 uppercase">Total Produk</p>
+            <p class="text-2xl font-bold text-base-content" x-text="stats.total_products"></p>
+          </div>
+          <i class="fas fa-box text-primary/60 text-2xl"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-success">
+      <div class="card-body p-5">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-xs font-bold text-base-content/60 uppercase">Stok Tersedia</p>
+            <p class="text-2xl font-bold text-success" x-text="stats.in_stock"></p>
+          </div>
+          <i class="fas fa-check-circle text-success/60 text-2xl"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-warning">
+      <div class="card-body p-5">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-xs font-bold text-base-content/60 uppercase">Stok Rendah</p>
+            <p class="text-2xl font-bold text-warning" x-text="stats.low_stock"></p>
+          </div>
+          <i class="fas fa-exclamation-triangle text-warning/60 text-2xl"></i>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card bg-base-100 shadow-lg border-l-4 border-l-error">
+      <div class="card-body p-5">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-xs font-bold text-base-content/60 uppercase">Habis</p>
+            <p class="text-2xl font-bold text-error" x-text="stats.out_of_stock"></p>
+          </div>
+          <i class="fas fa-times-circle text-error/60 text-2xl"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card bg-base-100 shadow-lg border border-base-300">
+    <div class="card-body p-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Kategori</span>
+          </label>
+          <select x-model="filters.category" class="select select-bordered select-sm">
+            <option value="">Semua Kategori</option>
+            <template x-for="category in categories" :key="category.id">
+              <option :value="category.id" x-text="category.name"></option>
+            </template>
+          </select>
+        </div>
+        
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Status</span>
+          </label>
+          <select x-model="filters.status" class="select select-bordered select-sm">
+            <option value="">Semua Status</option>
+            <option value="active">Aktif</option>
+            <option value="inactive">Tidak Aktif</option>
+            <option value="discontinued">Dihentikan</option>
+          </select>
+        </div>
+        
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Stok</span>
+          </label>
+          <select x-model="filters.stock_status" class="select select-bordered select-sm">
+            <option value="">Semua Stok</option>
+            <option value="in_stock">Tersedia</option>
+            <option value="low_stock">Rendah</option>
+            <option value="out_of_stock">Habis</option>
+          </select>
+        </div>
+        
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Search</span>
+          </label>
+          <input 
+            type="text" 
+            x-model="filters.search" 
+            placeholder="Cari produk..."
+            class="input input-bordered input-sm"
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Table -->
+  <div class="card bg-base-100 shadow-lg border border-base-300">
+    <div class="card-body p-0">
+      <div class="overflow-x-auto">
+        <table class="table table-compact w-full">
+          <thead>
+            <tr class="bg-base-200">
+              <th class="text-left">SKU</th>
+              <th class="text-left">Nama Produk</th>
+              <th class="text-left">Kategori</th>
+              <th class="text-right">Harga</th>
+              <th class="text-right">Stok</th>
+              <th class="text-left">Status</th>
+              <th class="text-center">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="product in filteredProducts" :key="product.id">
+              <tr class="hover:bg-base-200">
+                <td class="font-mono text-sm" x-text="product.sku"></td>
+                <td>
+                  <div>
+                    <p class="font-semibold" x-text="product.name"></p>
+                    <p class="text-xs text-base-content/60" x-text="product.description"></p>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge badge-sm badge-outline" x-text="product.category_name"></span>
+                </td>
+                <td class="text-right font-mono" x-text="formatCurrency(product.price)"></td>
+                <td class="text-right">
+                  <span class="font-mono" :class="getStockClass(product.stock_status)" x-text="product.stock"></span>
+                </td>
+                <td>
+                  <span class="badge badge-sm" :class="getStatusClass(product.status)" x-text="getStatusText(product.status)"></span>
+                </td>
+                <td class="text-center">
+                  <div class="flex gap-2 justify-center">
+                    <button class="btn btn-ghost btn-xs" @click="viewProduct(product.id)">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn btn-ghost btn-xs" @click="editProduct(product.id)">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-ghost btn-xs" @click="viewStock(product.id)">
+                      <i class="fas fa-boxes"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function productList() {
+  return {
+    products: [],
+    categories: [],
+    filters: {
+      category: '',
+      status: '',
+      stock_status: '',
+      search: ''
+    },
+    filteredProducts: [],
+    stats: {
+      total_products: 0,
+      in_stock: 0,
+      low_stock: 0,
+      out_of_stock: 0
+    },
+    
+    init() {
+      this.loadProducts();
+      this.loadCategories();
+    },
+    
+    loadProducts() {
+      // Mock data - replace with actual API call
+      this.products = [
+        {
+          id: 1,
+          sku: 'PRD-001',
+          name: 'Produk A',
+          description: 'Deskripsi produk A',
+          category_name: 'Elektronik',
+          price: 1500000,
+          stock: 50,
+          stock_status: 'in_stock',
+          status: 'active'
+        },
+        {
+          id: 2,
+          sku: 'PRD-002',
+          name: 'Produk B',
+          description: 'Deskripsi produk B',
+          category_name: 'Makanan',
+          price: 25000,
+          stock: 5,
+          stock_status: 'low_stock',
+          status: 'active'
+        },
+        {
+          id: 3,
+          sku: 'PRD-003',
+          name: 'Produk C',
+          description: 'Deskripsi produk C',
+          category_name: 'Pakaian',
+          price: 75000,
+          stock: 0,
+          stock_status: 'out_of_stock',
+          status: 'active'
+        }
+      ];
+      
+      this.calculateStats();
+      this.applyFilters();
+    },
+    
+    loadCategories() {
+      // Mock data - replace with actual API call
+      this.categories = [
+        { id: 1, name: 'Elektronik' },
+        { id: 2, name: 'Makanan' },
+        { id: 3, name: 'Pakaian' }
+      ];
+    },
+    
+    calculateStats() {
+      this.stats.total_products = this.products.length;
+      this.stats.in_stock = this.products.filter(p => p.stock_status === 'in_stock').length;
+      this.stats.low_stock = this.products.filter(p => p.stock_status === 'low_stock').length;
+      this.stats.out_of_stock = this.products.filter(p => p.stock_status === 'out_of_stock').length;
+    },
+    
+    applyFilters() {
+      this.filteredProducts = this.products.filter(product => {
+        let matches = true;
+        
+        if (this.filters.search) {
+          const search = this.filters.search.toLowerCase();
+          if (!product.name.toLowerCase().includes(search) &&
+              !product.sku.toLowerCase().includes(search) &&
+              !product.description.toLowerCase().includes(search)) {
+            matches = false;
+          }
+        }
+        
+        if (this.filters.status && product.status !== this.filters.status) {
+          matches = false;
+        }
+        
+        if (this.filters.stock_status && product.stock_status !== this.filters.stock_status) {
+          matches = false;
+        }
+        
+        return matches;
+      });
+    },
+    
+    getStockClass(status) {
+      switch(status) {
+        case 'in_stock': return 'text-success';
+        case 'low_stock': return 'text-warning';
+        case 'out_of_stock': return 'text-error';
+        default: return 'text-neutral';
+      }
+    },
+    
+    getStatusClass(status) {
+      switch(status) {
+        case 'active': return 'badge-success';
+        case 'inactive': return 'badge-neutral';
+        case 'discontinued': return 'badge-error';
+        default: return 'badge-neutral';
+      }
+    },
+    
+    getStatusText(status) {
+      switch(status) {
+        case 'active': return 'Aktif';
+        case 'inactive': return 'Tidak Aktif';
+        case 'discontinued': return 'Dihentikan';
+        default: return 'Tidak Diketahui';
+      }
+    },
+    
+    formatCurrency(amount) {
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0
+      }).format(amount);
+    },
+    
+    viewProduct(id) {
+      console.log('View product:', id);
+      // Navigate to product detail
+    },
+    
+    editProduct(id) {
+      console.log('Edit product:', id);
+      // Navigate to product edit
+    },
+    
+    viewStock(id) {
+      console.log('View stock:', id);
+      // Navigate to stock view
+    },
+    
+    importProducts() {
+      console.log('Import products');
+      // Open import modal
+    }
+  }
+}
+</script>
+{% endblock %}

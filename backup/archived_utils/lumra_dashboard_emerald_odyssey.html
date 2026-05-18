@@ -1,0 +1,337 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --em:#00674F;--jade:#00A86B;--gold:#EFBF04;--cream:#FDFBD4;--navy:#000080;
+  --em-08:rgba(0,103,79,.08);--em-12:rgba(0,103,79,.12);--em-15:rgba(0,103,79,.15);
+  --jade-12:rgba(0,168,107,.12);--jade-15:rgba(0,168,107,.15);
+  --gold-12:rgba(239,191,4,.12);--gold-15:rgba(239,191,4,.15);
+  --navy-08:rgba(0,0,128,.08);
+  --glass-border:0.5px solid rgba(255,255,255,0.12);
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.04);
+  --shadow-h:0 4px 16px rgba(0,103,79,.16),0 8px 24px rgba(0,0,0,.06);
+  --r4:4px;--r6:6px;--r8:8px;--r10:10px;--r14:14px;--rpill:100px;
+  --font:'Plus Jakarta Sans',-apple-system,sans-serif;
+}
+body{font-family:var(--font);font-size:13px;background:#f0f4f2;display:flex;height:600px;overflow:hidden;color:#1a2e25}
+
+/* SIDEBAR */
+.sidebar{width:220px;flex-shrink:0;background:var(--em);display:flex;flex-direction:column;padding:0;overflow:hidden}
+.sidebar-logo{display:flex;align-items:center;gap:10px;padding:18px 16px 14px;border-bottom:0.5px solid rgba(255,255,255,.12)}
+.sidebar-logo-icon{width:32px;height:32px;background:rgba(255,255,255,.15);border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;letter-spacing:-0.5px}
+.sidebar-logo-name{font-size:16px;font-weight:700;color:#fff;letter-spacing:-0.3px}
+.sidebar-logo-sub{font-size:10px;color:rgba(255,255,255,.55);margin-top:1px}
+.nav-section{padding:12px 8px 4px;font-size:10px;font-weight:600;color:rgba(255,255,255,.4);letter-spacing:.08em;text-transform:uppercase;padding-left:16px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;transition:background 150ms;color:rgba(255,255,255,.7);font-size:13px;font-weight:400;border-left:3px solid transparent;margin:1px 0}
+.nav-item:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav-item.active{background:rgba(0,168,107,.18);border-left:3px solid var(--jade);color:#fff;font-weight:500}
+.nav-icon{width:16px;height:16px;opacity:.8;flex-shrink:0}
+.nav-item.active .nav-icon{opacity:1}
+.nav-badge{margin-left:auto;background:var(--jade);color:#fff;font-size:10px;font-weight:600;padding:2px 6px;border-radius:var(--rpill)}
+.sidebar-bottom{margin-top:auto;padding:12px 8px;border-top:0.5px solid rgba(255,255,255,.1)}
+.user-pill{display:flex;align-items:center;gap:9px;padding:8px;border-radius:var(--r8);cursor:pointer;transition:background 150ms}
+.user-pill:hover{background:rgba(255,255,255,.08)}
+.user-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--jade),var(--gold));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.user-name{font-size:12px;font-weight:600;color:#fff}
+.user-store{font-size:10px;color:rgba(255,255,255,.5)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* NAVBAR */
+.navbar{background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:0.5px solid rgba(0,103,79,.1);padding:0 20px;height:52px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.search-bar{flex:1;max-width:340px;display:flex;align-items:center;gap:8px;background:#f5f7f5;border:0.5px solid rgba(0,103,79,.15);border-radius:var(--rpill);padding:7px 14px;cursor:text}
+.search-bar span{font-size:12px;color:#8fa99a}
+.nav-token{background:var(--em-08);color:var(--em);font-size:10px;font-weight:600;padding:3px 8px;border-radius:var(--rpill);border:0.5px solid rgba(0,103,79,.2)}
+.nav-actions{margin-left:auto;display:flex;align-items:center;gap:8px}
+.nav-btn{width:32px;height:32px;border-radius:50%;background:transparent;border:0.5px solid rgba(0,103,79,.15);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:background 150ms}
+.nav-btn:hover{background:var(--em-08)}
+.nav-btn.notif{position:relative}
+.notif-dot{position:absolute;top:4px;right:4px;width:6px;height:6px;background:#E85D24;border-radius:50%;border:1.5px solid #fff}
+.ai-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;background:linear-gradient(135deg,var(--em),var(--jade));border-radius:var(--rpill);color:#fff;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:opacity 150ms}
+.ai-btn:hover{opacity:.9}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;padding:20px 20px}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
+.page-title{font-size:20px;font-weight:700;color:#0d1f18;letter-spacing:-.3px}
+.page-sub{font-size:12px;color:#6b8a7a;margin-top:2px}
+.header-controls{display:flex;gap:8px}
+.ctrl-btn{display:flex;align-items:center;gap:6px;padding:7px 12px;background:#fff;border:0.5px solid rgba(0,103,79,.2);border-radius:var(--r8);font-size:12px;color:#0d1f18;cursor:pointer;font-family:var(--font)}
+.ctrl-btn svg{opacity:.6}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kpi-card{background:rgba(255,255,255,.85);border:var(--glass-border);border-top-color:rgba(255,255,255,.3);border-left-color:rgba(255,255,255,.25);backdrop-filter:blur(12px);box-shadow:var(--shadow);border-radius:var(--r14);padding:14px 16px;position:relative;overflow:hidden;cursor:pointer;transition:transform 200ms,box-shadow 200ms}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-h)}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--jade),transparent)}
+.kpi-card.gold::before{background:linear-gradient(90deg,var(--gold),transparent)}
+.kpi-label{font-size:10px;font-weight:600;color:#6b8a7a;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.kpi-value{font-size:22px;font-weight:700;color:#0d1f18;letter-spacing:-.5px;font-variant-numeric:tabular-nums;line-height:1.1}
+.kpi-sub{font-size:11px;color:#6b8a7a;margin-top:4px}
+.kpi-badge{display:inline-flex;align-items:center;gap:3px;padding:3px 7px;border-radius:var(--rpill);font-size:10px;font-weight:600;margin-top:6px}
+.kpi-badge.down{background:rgba(163,45,45,.1);color:#a32d2d}
+.kpi-badge.up{background:var(--jade-12);color:#00674F}
+.kpi-badge.gold{background:var(--gold-15);color:#7a5c00}
+.kpi-icon{position:absolute;top:12px;right:14px;width:28px;height:28px;border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:13px}
+.kpi-icon.em{background:var(--em-08)}
+.kpi-icon.jade{background:var(--jade-12)}
+.kpi-icon.gold{background:var(--gold-12)}
+.kpi-icon.navy{background:var(--navy-08)}
+
+/* LOWER GRID */
+.lower-grid{display:grid;grid-template-columns:1fr 300px;gap:12px}
+
+/* CHART CARD */
+.chart-card{background:rgba(255,255,255,.9);border:var(--glass-border);border-top-color:rgba(255,255,255,.3);backdrop-filter:blur(12px);box-shadow:var(--shadow);border-radius:var(--r14);padding:16px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-title{font-size:13px;font-weight:600;color:#0d1f18}
+.card-action{font-size:11px;color:var(--jade);cursor:pointer;font-weight:500}
+.chart-area{height:120px;display:flex;align-items:flex-end;gap:4px;padding:0 4px}
+.bar{flex:1;background:linear-gradient(to top,var(--jade),rgba(0,168,107,.4));border-radius:3px 3px 0 0;transition:opacity 150ms;cursor:pointer;min-height:4px}
+.bar:hover{opacity:.8}
+.bar.accent{background:linear-gradient(to top,var(--em),rgba(0,103,79,.4))}
+.bar.today{background:linear-gradient(to top,var(--gold),rgba(239,191,4,.4))}
+.chart-labels{display:flex;gap:4px;padding:6px 4px 0;font-size:9px;color:#8fa99a}
+.chart-label{flex:1;text-align:center}
+
+/* ACTIVITY */
+.activity-card{background:rgba(255,255,255,.9);border:var(--glass-border);border-top-color:rgba(255,255,255,.3);backdrop-filter:blur(12px);box-shadow:var(--shadow);border-radius:var(--r14);padding:16px}
+.activity-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:0.5px solid rgba(0,103,79,.06)}
+.activity-item:last-child{border-bottom:none}
+.act-dot{width:8px;height:8px;border-radius:50%;margin-top:3px;flex-shrink:0}
+.act-dot.new{background:var(--jade)}
+.act-dot.warn{background:var(--gold)}
+.act-dot.crit{background:#a32d2d}
+.act-text{font-size:12px;color:#1a2e25;line-height:1.4}
+.act-meta{font-size:10px;color:#8fa99a;margin-top:2px}
+.act-badge{display:inline-block;padding:1px 6px;border-radius:var(--rpill);font-size:9px;font-weight:600}
+.act-badge.ok{background:var(--jade-12);color:#00674F}
+.act-badge.warn{background:var(--gold-12);color:#7a5c00}
+.act-badge.crit{background:rgba(163,45,45,.1);color:#a32d2d}
+
+/* CHANNEL PILLS */
+.channel-row{display:flex;gap:6px;margin-bottom:14px}
+.ch-pill{padding:5px 12px;border-radius:var(--rpill);font-size:11px;font-weight:500;cursor:pointer;transition:all 150ms;border:0.5px solid transparent}
+.ch-pill.active{background:var(--em);color:#fff}
+.ch-pill:not(.active){background:#fff;color:#4a6a5a;border-color:rgba(0,103,79,.2)}
+.ch-pill:not(.active):hover{background:var(--em-08)}
+
+/* SUMMARY RIGHT PANEL */
+.right-summary{display:flex;flex-direction:column;gap:10px}
+.summary-stat{background:rgba(255,255,255,.85);border:var(--glass-border);border-top-color:rgba(255,255,255,.28);backdrop-filter:blur(10px);border-radius:var(--r10);padding:12px 14px;box-shadow:var(--shadow)}
+.ss-label{font-size:10px;font-weight:600;color:#6b8a7a;text-transform:uppercase;letter-spacing:.06em}
+.ss-value{font-size:18px;font-weight:700;color:#0d1f18;margin-top:4px;font-variant-numeric:tabular-nums}
+.ss-sub{font-size:10px;color:#8fa99a;margin-top:2px}
+.upgrade-card{background:linear-gradient(135deg,var(--em) 0%,#005040 100%);border-radius:var(--r10);padding:14px;margin-top:2px}
+.ug-title{font-size:12px;font-weight:700;color:#fff;margin-bottom:4px}
+.ug-sub{font-size:11px;color:rgba(255,255,255,.7);line-height:1.4;margin-bottom:10px}
+.ug-btn{background:var(--gold);color:#3a2800;font-size:11px;font-weight:700;padding:7px 14px;border-radius:var(--r8);cursor:pointer;display:inline-block}
+</style>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-icon">L</div>
+    <div>
+      <div class="sidebar-logo-name">Lumra</div>
+      <div class="sidebar-logo-sub">Emerald Odyssey</div>
+    </div>
+  </div>
+
+  <div style="overflow-y:auto;flex:1">
+    <div class="nav-section">Main</div>
+    <div class="nav-item active">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" fill="currentColor"/><rect x="9" y="1" width="6" height="6" rx="1.5" fill="currentColor" opacity=".6"/><rect x="1" y="9" width="6" height="6" rx="1.5" fill="currentColor" opacity=".6"/><rect x="9" y="9" width="6" height="6" rx="1.5" fill="currentColor" opacity=".4"/></svg>
+      Dashboard
+    </div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="3" width="13" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M5 6.5h6M5 9.5h4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+      Pesanan
+      <span class="nav-badge">12</span>
+    </div>
+    <div class="nav-section">Katalog</div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 2h5v5H2zM9 2h5v5H9zM2 9h5v5H2zM9 9h5v5H9z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      Produk
+    </div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M8 1v14M4 5l4-4 4 4M4 11l4 4 4-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Inventori
+    </div>
+    <div class="nav-section">Bisnis</div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Pelanggan
+    </div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 11L6 7l3 3 5-6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Laporan
+    </div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Marketing
+    </div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M4 4V2h8v2M5 4v10h6V4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Sales Channel
+    </div>
+  </div>
+
+  <div class="sidebar-bottom">
+    <div class="user-pill">
+      <div class="user-avatar">LQ</div>
+      <div>
+        <div class="user-name">Luqman</div>
+        <div class="user-store">Umama Gallery</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="navbar">
+    <div class="search-bar">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="#8fa99a" stroke-width="1.5"/><path d="M11 11l3 3" stroke="#8fa99a" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span>Cari produk, pesanan, pelanggan…</span>
+      <span class="nav-token">⌘K</span>
+    </div>
+    <div class="nav-actions">
+      <button class="ai-btn">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 3.5L13 7l-3.5 1.5L8 12l-1.5-3.5L3 7l3.5-1.5z" fill="rgba(255,255,255,.9)"/></svg>
+        Lumra AI
+      </button>
+      <div class="nav-btn notif">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2a4 4 0 00-4 4v4l-1 1h10l-1-1V6a4 4 0 00-4-4z" stroke="var(--em)" stroke-width="1.2"/><path d="M6.5 13a1.5 1.5 0 003 0" stroke="var(--em)" stroke-width="1.2"/></svg>
+        <div class="notif-dot"></div>
+      </div>
+      <div class="nav-btn">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="2.5" stroke="var(--em)" stroke-width="1.2"/><path d="M3 14c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="var(--em)" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Halo, Luqman 👋</div>
+        <div class="page-sub">Lacak, kelola, dan pantau empire kamu dari sini.</div>
+      </div>
+      <div class="header-controls">
+        <button class="ctrl-btn">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M5 8h6M5 5h3M5 11h4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+          Hari ini
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </button>
+        <button class="ctrl-btn">Semua Channel
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="channel-row">
+      <div class="ch-pill active">Semua</div>
+      <div class="ch-pill">Tokopedia</div>
+      <div class="ch-pill">Shopee</div>
+      <div class="ch-pill">Toko Fisik</div>
+      <div class="ch-pill">WhatsApp</div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon em">💰</div>
+        <div class="kpi-label">Penjualan Kotor</div>
+        <div class="kpi-value">171,9jt</div>
+        <div class="kpi-badge down">↓ 88,3%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon jade">📈</div>
+        <div class="kpi-label">Penjualan Bersih</div>
+        <div class="kpi-value">155,8jt</div>
+        <div class="kpi-badge down">↓ 88,22%</div>
+      </div>
+      <div class="kpi-card gold">
+        <div class="kpi-icon gold">⚡</div>
+        <div class="kpi-label">Avg Sales / Jam</div>
+        <div class="kpi-value">12,9jt</div>
+        <div class="kpi-badge gold">Rp/Hour</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon navy">📦</div>
+        <div class="kpi-label">Total Pesanan</div>
+        <div class="kpi-value">1.018</div>
+        <div class="kpi-badge down">↓ 86,38%</div>
+      </div>
+    </div>
+
+    <div class="lower-grid">
+      <div class="chart-card">
+        <div class="card-header">
+          <div class="card-title">Tren Penjualan — 30 Hari</div>
+          <div class="card-action">Lihat Detail →</div>
+        </div>
+        <div class="chart-area" id="chart"></div>
+        <div class="chart-labels" id="labels"></div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="summary-stat">
+          <div class="ss-label">Total Hari Ini</div>
+          <div class="ss-value">Rp 155.894.200</div>
+          <div class="ss-sub">1.018 pesanan masuk</div>
+        </div>
+        <div class="activity-card" style="flex:1">
+          <div class="card-header">
+            <div class="card-title">Aktivitas Terbaru</div>
+            <div class="card-action">Semua</div>
+          </div>
+          <div class="activity-item">
+            <div class="act-dot new"></div>
+            <div>
+              <div class="act-text">Pesanan #ORD-8821 <span class="act-badge ok">Selesai</span></div>
+              <div class="act-meta">Shopee · 2 mnt lalu</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="act-dot warn"></div>
+            <div>
+              <div class="act-text">Stok Batik Tulis Hijau <span class="act-badge warn">Menipis</span></div>
+              <div class="act-meta">Inventori · 8 mnt lalu</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="act-dot crit"></div>
+            <div>
+              <div class="act-text">Transfer stok perlu approval <span class="act-badge crit">Kritis</span></div>
+              <div class="act-meta">Gudang Utama · 15 mnt lalu</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="act-dot new"></div>
+            <div>
+              <div class="act-text">Pelanggan baru — Tier Gold 🥇</div>
+              <div class="act-meta">CRM · 22 mnt lalu</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const data=[42,38,55,71,60,45,80,90,78,65,88,92,70,55,60,75,82,68,95,100,88,72,60,85,92,78,65,88,95,72];
+const labels=['1','','','','5','','','','','10','','','','','15','','','','','20','','','','','25','','','','','30'];
+const max=Math.max(...data);
+const ch=document.getElementById('chart');
+const lb=document.getElementById('labels');
+data.forEach((v,i)=>{
+  const b=document.createElement('div');
+  b.className='bar'+(i===29?' today':i%5===0?' accent':'');
+  b.style.height=(v/max*100)+'%';
+  ch.appendChild(b);
+  const l=document.createElement('div');
+  l.className='chart-label';
+  l.textContent=labels[i];
+  lb.appendChild(l);
+});
+</script>

@@ -1,0 +1,301 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}Production Waste - Lumra ERP{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-card { background: rgba(255,255,255,0.88); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.95); border-radius: 18px; box-shadow: 0 10px 30px rgba(15,23,42,0.08); }
+</style>
+{% endblock %}
+
+{% block content %}
+{{ waste_data|json_script:"waste-data" }}
+{{ completed_orders_data|json_script:"waste-orders-data" }}
+{{ variants_data|json_script:"waste-variants-data" }}
+{{ units_data|json_script:"waste-units-data" }}
+
+<div class="max-w-7xl mx-auto space-y-6 relative z-10" x-data="wasteApp()" x-init="init()" x-cloak>
+  <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+        <a href="{% url 'production_order_list' %}" class="hover:text-slate-800">Production</a>
+        <span>/</span>
+        <span class="text-slate-800 font-medium">Waste</span>
+      </nav>
+      <h1 class="text-3xl font-bold text-slate-800">Production Waste</h1>
+      <p class="text-sm text-slate-500 mt-1">Catatan scrap, spoilage, rework, dan kerugian material per order.</p>
+    </div>
+    <button @click="openForm()" class="rounded-xl bg-slate-800 px-5 py-3 text-sm font-semibold text-white shadow hover:bg-slate-700">+ Catat Waste</button>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div class="glass-card px-4 py-3">
+      <p class="text-xs uppercase tracking-wide text-slate-400">Records</p>
+      <p class="text-2xl font-bold text-slate-800 mt-1" x-text="filteredItems.length"></p>
+    </div>
+    <div class="glass-card px-4 py-3">
+      <p class="text-xs uppercase tracking-wide text-slate-400">Jenis Waste</p>
+      <p class="text-2xl font-bold text-slate-800 mt-1" x-text="wasteTypes.length"></p>
+    </div>
+    <div class="glass-card px-4 py-3">
+      <p class="text-xs uppercase tracking-wide text-slate-400">PO Terdampak</p>
+      <p class="text-2xl font-bold text-slate-800 mt-1" x-text="groupedByPO.length"></p>
+    </div>
+    <div class="glass-card px-4 py-3">
+      <p class="text-xs uppercase tracking-wide text-slate-400">Nilai Kerugian</p>
+      <p class="text-2xl font-bold text-rose-600 mt-1" x-text="formatCurrency(totalWasteValue)"></p>
+    </div>
+  </div>
+
+  <div class="glass-card p-5">
+    <div class="flex flex-col lg:flex-row gap-3">
+      <input type="search" x-model="searchQuery" @input="applyFilter()" placeholder="Cari PO, jenis waste, SKU, atau item..." class="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-slate-400">
+      <select aria-label="Pilih opsi" x-model="typeFilter" @change="applyFilter()" class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-slate-400">
+        <option value="">Semua jenis</option>
+        <template x-for="type in wasteTypes" :key="type.value">
+          <option :value="type.value" x-text="type.label"></option>
+        </template>
+      </select>
+      <button aria-label="Tombol" @click="groupMode = !groupMode" class="rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50" x-text="groupMode ? 'Lihat per baris' : 'Group per PO'"></button>
+    </div>
+  </div>
+
+  <section class="glass-card overflow-hidden" x-show="!groupMode">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+      <h2 class="text-lg font-bold text-slate-800">Waste Records</h2>
+      <p class="text-sm text-slate-500"><span x-text="filteredItems.length"></span> data tampil</p>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+          <tr>
+            <th class="px-6 py-3">PO</th>
+            <th class="px-6 py-3">Type</th>
+            <th class="px-6 py-3">Material</th>
+            <th class="px-6 py-3 text-right">Qty</th>
+            <th class="px-6 py-3 text-right">Nilai</th>
+            <th class="px-6 py-3">Recorded At</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 bg-white">
+          <template x-for="item in filteredItems" :key="item.id">
+            <tr class="hover:bg-slate-50 transition-colors">
+              <td class="px-6 py-4 font-semibold text-slate-800" x-text="item.po_code"></td>
+              <td class="px-6 py-4"><span class="inline-flex rounded-full bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-700" x-text="formatType(item.waste_type)"></span></td>
+              <td class="px-6 py-4">
+                <div class="font-medium text-slate-800" x-text="item.name || '-'"></div>
+                <div class="text-xs text-slate-500 font-mono" x-text="item.sku || '-'"></div>
+              </td>
+              <td class="px-6 py-4 text-right font-semibold text-slate-800" x-text="formatQty(item.quantity) + ' ' + (item.unit || '')"></td>
+              <td class="px-6 py-4 text-right font-semibold text-rose-700" x-text="formatCurrency(item.waste_value)"></td>
+              <td class="px-6 py-4 text-slate-500" x-text="item.recorded_at"></td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="space-y-4" x-show="groupMode">
+    <template x-for="group in groupedByPO" :key="group.po_code">
+      <div class="glass-card p-5">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <h3 class="text-lg font-bold text-slate-800" x-text="group.po_code"></h3>
+            <p class="text-sm text-slate-500" x-text="group.items.length + ' baris waste'"></p>
+          </div>
+          <p class="text-lg font-bold text-rose-600" x-text="formatCurrency(group.totalValue)"></p>
+        </div>
+      </div>
+    </template>
+  </section>
+
+  <div x-show="showForm" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4">
+    <div class="glass-card w-full max-w-2xl p-6">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h3 class="text-lg font-bold text-slate-800">Catat Waste Produksi</h3>
+          <p class="mt-1 text-sm text-slate-500">Template ini sudah siap untuk pencatatan manual. Saat endpoint backend belum ada, data akan masuk sebagai draft lokal.</p>
+        </div>
+        <button @click="closeForm()" class="text-slate-400 hover:text-slate-700">Tutup</button>
+      </div>
+
+      <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">Production Order</label>
+          <select aria-label="Pilih opsi" x-model="draft.po_id" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-slate-400">
+            <option value="">Pilih PO selesai...</option>
+            <template x-for="po in completedOrders" :key="po.id">
+              <option :value="String(po.id)" x-text="po.code + ' - ' + po.product"></option>
+            </template>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">Jenis Waste</label>
+          <select aria-label="Pilih opsi" x-model="draft.waste_type" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-slate-400">
+            <template x-for="type in wasteTypes" :key="type.value">
+              <option :value="type.value" x-text="type.label"></option>
+            </template>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">Material</label>
+          <select aria-label="Pilih opsi" x-model="draft.variant_id" @change="syncDraftVariant()" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-slate-400">
+            <option value="">Pilih material...</option>
+            <template x-for="variant in variants" :key="variant.id">
+              <option :value="String(variant.id)" x-text="variant.sku + ' - ' + variant.name"></option>
+            </template>
+          </select>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Qty</label>
+            <input aria-label="Qty" type="number" min="0" step="0.01" x-model.number="draft.quantity" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-slate-400">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Unit</label>
+            <select aria-label="Pilih opsi" x-model="draft.unit" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-slate-400">
+              <template x-for="unit in units" :key="unit.id">
+                <option :value="unit.symbol" x-text="unit.symbol"></option>
+              </template>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+        Nilai kerugian estimasi: <span class="font-semibold" x-text="formatCurrency(draftWasteValue)"></span>
+      </div>
+
+      <div class="mt-6 flex gap-3">
+        <button @click="saveDraft()" class="flex-1 rounded-xl bg-slate-800 px-4 py-3 text-sm font-semibold text-white">Simpan Draft Lokal</button>
+        <button @click="closeForm()" class="flex-1 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-600">Batal</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function wasteApp() {
+  return {
+    allItems: [],
+    filteredItems: [],
+    completedOrders: [],
+    variants: [],
+    units: [],
+    showForm: false,
+    searchQuery: '',
+    typeFilter: '',
+    groupMode: false,
+    wasteTypes: [
+      { value: 'scrap', label: 'Scrap' },
+      { value: 'spoilage', label: 'Spoilage' },
+      { value: 'rework', label: 'Rework' },
+      { value: 'other', label: 'Lainnya' },
+    ],
+    draft: { po_id: '', waste_type: 'scrap', variant_id: '', quantity: 0, unit: 'pcs' },
+
+    init() {
+      this.completedOrders = this.parseJson('waste-orders-data');
+      this.variants = this.parseJson('waste-variants-data');
+      this.units = this.parseJson('waste-units-data');
+      this.allItems = this.parseJson('waste-data').map((item) => this.mapWaste(item));
+      if (this.units.length && !this.draft.unit) this.draft.unit = this.units[0].symbol;
+      this.applyFilter();
+    },
+
+    parseJson(id) {
+      const el = document.getElementById(id);
+      if (!el?.textContent) return [];
+      try { return JSON.parse(el.textContent) || []; } catch (error) { return []; }
+    },
+
+    mapWaste(item) {
+      const variant = this.variants.find((row) => String(row.sku || '').toLowerCase() === String(item.sku || '').toLowerCase());
+      const unitPrice = Number(variant?.price_buy || item.unit_price || 0);
+      return { ...item, unit_price: unitPrice, waste_value: Number(item.quantity || 0) * unitPrice };
+    },
+
+    get groupedByPO() {
+      const groups = {};
+      this.filteredItems.forEach((item) => {
+        if (!groups[item.po_code]) groups[item.po_code] = { po_code: item.po_code, items: [], totalValue: 0 };
+        groups[item.po_code].items.push(item);
+        groups[item.po_code].totalValue += Number(item.waste_value || 0);
+      });
+      return Object.values(groups);
+    },
+
+    get totalWasteValue() {
+      return this.filteredItems.reduce((sum, item) => sum + Number(item.waste_value || 0), 0);
+    },
+
+    get draftWasteValue() {
+      const variant = this.variants.find((item) => String(item.id) === String(this.draft.variant_id || ''));
+      return Number(this.draft.quantity || 0) * Number(variant?.price_buy || 0);
+    },
+
+    applyFilter() {
+      const query = this.searchQuery.toLowerCase().trim();
+      this.filteredItems = this.allItems.filter((item) => {
+        const matchesType = !this.typeFilter || item.waste_type === this.typeFilter;
+        const matchesQuery = !query || [item.po_code, item.waste_type, item.sku, item.name].some((value) => String(value || '').toLowerCase().includes(query));
+        return matchesType && matchesQuery;
+      });
+    },
+
+    openForm() {
+      this.showForm = true;
+    },
+
+    closeForm() {
+      this.showForm = false;
+      this.draft = { po_id: '', waste_type: 'scrap', variant_id: '', quantity: 0, unit: this.units[0]?.symbol || 'pcs' };
+    },
+
+    syncDraftVariant() {
+      if (!this.units.length || this.draft.unit) return;
+      this.draft.unit = this.units[0].symbol;
+    },
+
+    saveDraft() {
+      const po = this.completedOrders.find((item) => String(item.id) === String(this.draft.po_id || ''));
+      const variant = this.variants.find((item) => String(item.id) === String(this.draft.variant_id || ''));
+      if (!po || !variant || !(Number(this.draft.quantity || 0) > 0)) {
+        alert('Lengkapi PO, material, dan qty waste.');
+        return;
+      }
+      this.allItems.unshift({
+        id: Date.now(),
+        po_code: po.code,
+        waste_type: this.draft.waste_type,
+        sku: variant.sku,
+        name: variant.name,
+        quantity: Number(this.draft.quantity || 0),
+        unit: this.draft.unit,
+        recorded_at: 'draft lokal',
+        unit_price: Number(variant.price_buy || 0),
+        waste_value: this.draftWasteValue,
+      });
+      this.applyFilter();
+      this.closeForm();
+    },
+
+    formatType(type) {
+      const found = this.wasteTypes.find((item) => item.value === type);
+      return found ? found.label : type;
+    },
+
+    formatCurrency(value) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(Number(value || 0));
+    },
+
+    formatQty(value) {
+      return Number(value || 0).toLocaleString('id-ID', { maximumFractionDigits: 2 });
+    },
+  };
+}
+</script>
+{% endblock %}

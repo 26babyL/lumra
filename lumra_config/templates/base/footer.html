@@ -1,0 +1,21 @@
+{% load static %}
+
+<!-- Template Footer: Menampilkan informasi hak cipta dan versi aplikasi secara dinamis - DaisyUI Version -->
+
+<footer class="footer footer-center bg-base-100 border-t border-base-300 p-4 backdrop-blur-lg fixed-bottom">
+  <div class="container mx-auto">
+    <div class="flex flex-col items-center justify-center gap-2 md:flex-row md:flex-wrap md:gap-0">
+      <p class="text-sm text-base-content/80">
+        &copy; {% now "Y" %} <strong class="text-base-content">Lumra ERP</strong>
+        <span class="mx-2">•</span>
+        Emerald Odyssey v3.0
+        <span class="mx-2">•</span>
+        <a href="{% url 'about' %}" title="Tentang aplikasi" class="link link-primary text-primary hover:text-primary-focus font-medium">Tentang</a>
+      </p>
+      <span class="badge badge-success badge-sm gap-2" aria-label="System status">
+        <span class="inline-block w-2 h-2 rounded-full bg-success"></span>
+        UI aktif
+      </span>
+    </div>
+  </div>
+</footer>

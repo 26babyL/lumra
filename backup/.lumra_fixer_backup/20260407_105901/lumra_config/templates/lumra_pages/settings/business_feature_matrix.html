@@ -1,0 +1,848 @@
+{% extends 'base/base.html' %}
+{% block title %}Feature Matrix — V-Series Engine{% endblock %}
+
+{% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ─────────────────────────────────────────────
+   LUMRA · BUSINESS FEATURE MATRIX
+   Emerald Odyssey V6.0.0 · Ignition
+───────────────────────────────────────────── */
+:root {
+  --em:       #00674F;
+  --em2:      #00A86B;
+  --gold:     #EFBF04;
+  --navy:     #000080;
+  --cream:    #FDFBD4;
+  --em-a08:   rgba(0,103,79,.08);
+  --em-a12:   rgba(0,103,79,.12);
+  --em-a20:   rgba(0,103,79,.20);
+  --em-a30:   rgba(0,103,79,.30);
+  --gold-a12: rgba(239,191,4,.12);
+  --gold-a25: rgba(239,191,4,.25);
+  --navy-a08: rgba(0,0,128,.08);
+  --navy-a20: rgba(0,0,128,.20);
+  --font-d:   'Cormorant Garamond', Georgia, serif;
+  --font-b:   'Plus Jakarta Sans', sans-serif;
+  --font-m:   'JetBrains Mono', monospace;
+}
+
+[x-cloak] { display:none !important }
+
+.fm-page { font-family:var(--font-b); }
+
+/* ── REVEAL ── */
+@keyframes rv-in  { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:none} }
+.rv  { opacity:0; animation:rv-in .55s cubic-bezier(.4,0,.2,1) forwards; }
+.d1  { animation-delay:.05s }  .d2 { animation-delay:.10s }
+.d3  { animation-delay:.15s }  .d4 { animation-delay:.20s }
+.d5  { animation-delay:.25s }  .d6 { animation-delay:.30s }
+
+/* ── BLINK ── */
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.18} }
+.blink { animation:blink 1.4s ease-in-out infinite; }
+
+/* ── HEADER ── */
+.page-eyebrow {
+  font-size:10px; font-weight:700; text-transform:uppercase;
+  letter-spacing:.28em; color:var(--em2);
+  display:inline-flex; align-items:center; gap:8px;
+}
+.page-eyebrow::before,.page-eyebrow::after {
+  content:''; display:block; width:20px; height:1px;
+  background:var(--em2); opacity:.45;
+}
+
+/* ── ENGINE SELECTOR TABS ── */
+.eng-tabs { display:flex; gap:8px; }
+.eng-tab {
+  padding:8px 16px; border-radius:10px;
+  font-size:10px; font-weight:700; cursor:pointer;
+  border:1px solid transparent;
+  transition:all .18s;
+  display:flex; align-items:center; gap:8px;
+}
+.eng-tab:hover { background:var(--color-background-secondary,#f5f5f0); }
+.eng-tab.active-v6  { background:var(--em-a12); border-color:var(--em-a30); color:var(--em); }
+.eng-tab.active-v8  { background:var(--em-a12); border-color:var(--em-a30); color:var(--em); }
+.eng-tab.active-v10 { background:var(--navy-a08); border-color:var(--navy-a20); color:var(--navy); }
+.eng-tab.active-v12 { background:var(--gold-a12); border-color:var(--gold-a25); color:#7A6000; }
+.eng-tab.inactive   { color:var(--color-text-tertiary,#aaa); opacity:.65; }
+.eng-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+/* ── ENGINE BANNER ── */
+.eng-banner {
+  border-radius:18px; overflow:hidden;
+  position:relative;
+  transition:opacity .3s;
+}
+.eng-banner-head {
+  padding:24px 26px 20px;
+  display:flex; align-items:flex-start; justify-content:space-between; gap:16px;
+  flex-wrap:wrap;
+}
+.eng-title-wrap { flex:1; min-width:0; }
+.eng-ver {
+  font-family:var(--font-d); font-size:36px; font-weight:700; font-style:italic;
+  line-height:1; letter-spacing:-.02em;
+}
+.eng-codename {
+  font-size:10px; font-weight:700; text-transform:uppercase;
+  letter-spacing:.22em; margin-top:4px; opacity:.6;
+}
+.eng-tagline {
+  font-family:var(--font-d); font-size:16px; font-weight:600; font-style:italic;
+  margin-top:8px; opacity:.85; line-height:1.35;
+}
+.eng-sku-pill {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:4px 12px; border-radius:99px;
+  font-size:10px; font-weight:700;
+  white-space:nowrap;
+}
+.eng-banner-body {
+  padding:20px 26px 24px;
+  background:var(--color-background-primary, white);
+  border-top:1px solid rgba(0,0,0,.06);
+}
+.eng-philosophy {
+  font-size:11px; line-height:1.75; font-weight:500;
+  color:var(--color-text-secondary, #666);
+  max-width:620px;
+}
+.eng-philosophy b { color:var(--color-text-primary, #111); }
+
+/* roadmap note */
+.roadmap-note {
+  display:flex; align-items:flex-start; gap:8px;
+  margin-top:16px; padding:8px 16px; border-radius:10px;
+  font-size:11px; font-weight:600; line-height:1.55;
+}
+
+/* ── PLAN OVERVIEW CARDS ── */
+.plan-mini-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+@media(max-width:760px) { .plan-mini-grid { grid-template-columns:1fr 1fr; } }
+
+.plan-mini {
+  border-radius:14px; overflow:hidden;
+  border:1px solid var(--color-border-tertiary,rgba(0,0,0,.08));
+  cursor:pointer; transition:transform .2s, box-shadow .2s;
+}
+.plan-mini:hover { transform:translateY(-3px); box-shadow:0 6px 20px rgba(0,0,0,.08); }
+.plan-mini.current { box-shadow:0 0 0 2px var(--em); }
+
+.pm-head { padding:12px 16px 8px; }
+.pm-ver { font-family:var(--font-d); font-size:24px; font-weight:700; font-style:italic; line-height:1; }
+.pm-name { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.16em; margin-top:3px; opacity:.6; }
+.pm-bar-wrap { height:3px; border-radius:99px; overflow:hidden; margin-top:8px; background:rgba(255,255,255,.15); }
+.pm-bar { height:100%; border-radius:99px; transition:width .6s ease; }
+.pm-body { padding:8px 16px 12px; background:var(--color-background-primary,white); }
+.pm-sku { font-size:11px; font-weight:600; color:var(--color-text-primary,#111); }
+.pm-count { font-size:10px; color:var(--color-text-tertiary,#aaa); margin-top:2px; }
+
+/* ── CATEGORY TABS ── */
+.cat-tab {
+  padding:8px 13px; border-radius:10px; font-size:10px; font-weight:700;
+  cursor:pointer; transition:background .15s, color .15s;
+  border:1px solid transparent; display:inline-flex; align-items:center; gap:4px;
+}
+.cat-tab:hover { background:var(--color-background-secondary,#f0f0ec); }
+.cat-tab.on {
+  background:var(--color-background-primary,#fff);
+  border-color:var(--color-border-secondary,rgba(0,0,0,.12));
+  color:var(--color-text-primary,#111);
+  box-shadow:0 1px 5px rgba(0,0,0,.06);
+}
+.cat-tab.off { color:var(--color-text-tertiary,#aaa); }
+.cat-count {
+  font-size:10px; padding:1px 4px; border-radius:99px;
+  background:var(--color-background-secondary,#f0f0ec);
+  font-weight:700;
+}
+
+/* ── FEATURE CARDS ── */
+.feat-card {
+  border-radius:18px; padding:20px;
+  position:relative; overflow:hidden;
+  transition:transform .2s, box-shadow .2s;
+}
+.feat-card.active {
+  background:var(--color-white-a78,rgba(255,255,255,.78));
+  border:1px solid rgba(255,255,255,.92);
+  box-shadow:0 2px 14px rgba(0,0,0,.07);
+}
+.feat-card.active:hover { transform:translateY(-3px); box-shadow:0 7px 26px rgba(0,0,0,.1); }
+.feat-card.locked {
+  background:rgba(241,245,241,.45);
+  border:1.5px dashed rgba(0,0,0,.1);
+  opacity:.72;
+}
+.feat-card.locked:hover { opacity:.88; }
+
+/* toggle */
+.ftog {
+  position:relative; width:36px; height:20px; border-radius:99px;
+  transition:background .3s; flex-shrink:0; cursor:pointer;
+}
+.ftog.on  { background:linear-gradient(135deg,var(--em),var(--em2)); }
+.ftog.off { background:rgba(0,0,0,.14); cursor:pointer; }
+.ftog.dis { background:rgba(0,0,0,.08); cursor:not-allowed; }
+.ftog .knob {
+  position:absolute; top:2px; width:16px; height:16px; border-radius:50%;
+  background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.2);
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+.ftog.on  .knob { transform:translateX(18px); }
+.ftog.off .knob { transform:translateX(2px); }
+.ftog.dis .knob { transform:translateX(2px); }
+
+/* lock badge */
+.lock-pill {
+  display:inline-flex; align-items:center; gap:4px;
+  padding:2px 8px; border-radius:99px;
+  font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+}
+.lp-v8  { background:var(--em-a08);  border:1px solid var(--em-a20);  color:var(--em); }
+.lp-v10 { background:var(--navy-a08);border:1px solid var(--navy-a20);color:var(--navy); }
+.lp-v12 { background:var(--gold-a12);border:1px solid var(--gold-a25);color:#7A6000; }
+
+/* feature status */
+.feat-status {
+  font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em;
+}
+.feat-status.on  { color:var(--em2); }
+.feat-status.off { color:var(--color-text-tertiary,#aaa); }
+
+/* usage note */
+.usage-note { font-size:10px; font-family:var(--font-m); color:var(--color-text-tertiary,#aaa); }
+
+/* ── UPGRADE BANNER ── */
+.upgrade-banner {
+  border-radius:18px; padding:20px 24px;
+  background:linear-gradient(135deg,#080F0B,#0A1409);
+  border:1px solid rgba(255,255,255,.05);
+  position:relative; overflow:hidden;
+}
+.upgrade-banner::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 55% 75% at 80% 50%,rgba(0,103,79,.12),transparent 70%);
+}
+
+/* ── SAVE BAR ── */
+.save-indicator {
+  display:flex; align-items:center; gap:8px;
+  padding:8px 16px; border-radius:10px;
+  background:rgba(239,191,4,.1); border:1px solid rgba(239,191,4,.28);
+}
+
+/* ── TOAST ── */
+#toastEl { position:fixed; top:20px; right:20px; z-index:200; display:flex; flex-direction:column; gap:8px; }
+.toast-item {
+  display:flex; align-items:center; gap:8px;
+  padding:12px 16px; border-radius:12px;
+  background:rgba(10,20,14,.92); backdrop-filter:blur(12px);
+  color:#fff; font-size:11px; font-weight:600;
+  min-width:200px; border-left:3px solid;
+  box-shadow:0 8px 32px rgba(0,0,0,.3);
+  animation:rv-in .3s ease forwards;
+}
+</style>
+{% endblock %}
+
+
+{# BLUEPRINT D5: Tambahkan class is-loading saat data belum tersedia. #}
+{# Contoh: <div class="kpi-glass {% if not kpi_value %}is-loading{% endif %}"> #}
+{% block content %}
+
+<div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-3" aria-hidden="true"></div>
+
+{% if not can_access_settings %}
+<div style="padding:64px 24px;text-align:center;color:#e11d48;">
+  <i class="fas fa-lock fa-lg" style="margin-right:8px"></i>
+  Anda tidak memiliki izin untuk mengakses pengaturan fitur bisnis.
+</div>
+{% else %}
+
+{{ features_json|json_script:"features-data" }}
+{{ perms_json|default:'{}'|json_script:"perms-data" }}
+{{ can_access_settings|yesno:"true,false"|default:'false'|json_script:"can-access" }}
+
+<div class="fm-page w-full flex-1 space-y-5 relative z-10"
+     x-data="featureMatrix()" x-init="init()" x-cloak>
+
+  <!-- ══ HEADER ══ -->
+  <div class="rv d1 flex items-end justify-between gap-4 flex-wrap">
+    <div>
+      <div class="page-eyebrow mb-2">Business Settings → Feature Matrix</div>
+      <h1 style="font-family:var(--font-d);font-size:28px;font-weight:700;font-style:italic;color:var(--color-text-primary);letter-spacing:-.01em;line-height:1.1">
+        V-Series <span style="color:var(--em)">Engine</span>
+      </h1>
+      <p style="font-size:11px;color:var(--color-text-secondary);margin-top:4px;font-weight:500">
+        Paket Aktif:
+        <span style="font-weight:700;"
+              :class="{
+                'text-emerald-600': plan==='v6',
+                'text-emerald-700': plan==='v8',
+                'text-indigo-700':  plan==='v10',
+                'text-amber-700':   plan==='v12'
+              }"
+              x-text="engineLabel[plan]?.full || plan"></span>
+      </p>
+    </div>
+
+    <div class="flex items-center gap-2 flex-wrap">
+      <!-- unsaved indicator -->
+      <div x-show="hasChanges" class="save-indicator">
+        <div class="blink" style="width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0"></div>
+        <span style="font-size:10px;font-weight:700;color:#7A6000">Belum disimpan</span>
+      </div>
+
+      <button @click="discardChanges()" x-show="hasChanges"
+              style="padding:8px 16px;border-radius:10px;border:1px solid var(--color-border-secondary,rgba(0,0,0,.12));font-size:11px;font-weight:600;color:var(--color-text-secondary);background:transparent;cursor:pointer;transition:background .15s"
+              onmouseover="this.style.background='var(--color-background-secondary)'"
+              onmouseout="this.style.background='transparent'">
+        Batalkan
+      </button>
+
+      <button @click="saveAll()" :disabled="!hasChanges || isSaving"
+              style="display:flex;align-items:center;gap:8px;padding:8px 20px;border-radius:10px;font-size:11px;font-weight:700;border:none;cursor:pointer;transition:all .2s"
+              :style="hasChanges && !isSaving
+                ? 'background:linear-gradient(135deg,var(--em),var(--em2));color:#FDFBD4;box-shadow:0 4px 16px rgba(0,103,79,.25)'
+                : 'background:rgba(0,0,0,.06);color:rgba(0,0,0,.3);cursor:not-allowed'">
+        <i :class="isSaving ? 'fas fa-spinner fa-spin' : 'fas fa-save'" style="font-size:10px"></i>
+        <span x-text="isSaving ? 'Menyimpan…' : 'Simpan'"></span>
+      </button>
+
+      <a href="{% url 'business_settings' %}"
+         style="display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:10px;border:1px solid var(--color-border-tertiary,rgba(0,0,0,.08));font-size:11px;font-weight:600;color:var(--color-text-secondary);text-decoration:none;background:var(--color-background-primary,white);transition:background .15s"
+         onmouseover="this.style.background='var(--color-background-secondary)'"
+         onmouseout="this.style.background='var(--color-background-primary,white)'">
+        <i class="fas fa-arrow-left" style="font-size:10px"></i> Kembali
+      </a>
+    </div>
+  </div>
+
+  <!-- ══ ENGINE BANNER — penjelasan tier aktif ══ -->
+  <div class="rv d2">
+    <div class="eng-banner" :class="`eng-${plan}`"
+         :style="engineLabel[plan]?.bannerStyle">
+
+      <div class="eng-banner-head">
+        <div class="eng-title-wrap">
+          <div class="eng-ver" :style="engineLabel[plan]?.verStyle" x-text="plan.toUpperCase()"></div>
+          <div class="eng-codename" :style="engineLabel[plan]?.codeStyle" x-text="engineLabel[plan]?.codename"></div>
+          <div class="eng-tagline"  :style="engineLabel[plan]?.taglineStyle" x-text="engineLabel[plan]?.tagline"></div>
+        </div>
+        <div>
+          <div class="eng-sku-pill"
+               :style="engineLabel[plan]?.pillStyle"
+               x-text="engineLabel[plan]?.sku"></div>
+          <div style="margin-top:8px;font-size:10px;font-weight:600;opacity:.55;text-align:right"
+               x-text="engineLabel[plan]?.price"></div>
+        </div>
+      </div>
+
+      <div class="eng-banner-body">
+        <p class="eng-philosophy" x-html="engineLabel[plan]?.philosophy"></p>
+
+        <!-- roadmap note untuk non-v12 -->
+        <div x-show="plan !== 'v12'" class="roadmap-note"
+             :style="engineLabel[plan]?.roadmapStyle">
+          <i class="fas fa-road" style="font-size:10px;margin-top:2px;flex-shrink:0"></i>
+          <span x-html="engineLabel[plan]?.roadmap"></span>
+        </div>
+
+        <!-- fitur yang terkunci di paket ini -->
+        <div x-show="lockedCount > 0" style="margin-top:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span style="font-size:10px;font-weight:600;color:var(--color-text-tertiary)">Terkunci di paket ini:</span>
+          <template x-for="(label,key) in lockedPreview" :key="key">
+            <span style="font-size:10px;padding:2px 8px;border-radius:99px;background:rgba(0,0,0,.05);border:1px solid rgba(0,0,0,.08);color:var(--color-text-tertiary);font-weight:600" x-text="label"></span>
+          </template>
+          <span x-show="lockedCount > 4" style="font-size:10px;color:var(--color-text-tertiary);font-weight:600">
+            + <span x-text="lockedCount - 4"></span> lainnya
+          </span>
+          <a href="{% url 'pricing' %}"
+             style="font-size:10px;font-weight:700;color:var(--em);text-decoration:none;display:inline-flex;align-items:center;gap:4px">
+            Upgrade <i class="fas fa-arrow-right" style="font-size:10px"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PLAN MINI CARDS (pilih plan / overview) ══ -->
+  <div class="rv d3 plan-mini-grid">
+    <template x-for="p in plans" :key="p.key">
+      <div class="plan-mini"
+           :class="plan === p.key ? 'current' : ''"
+           @click="previewPlan(p.key)">
+        <div class="pm-head" :style="p.headStyle">
+          <div class="pm-ver"  :style="p.verStyle"  x-text="p.key.toUpperCase()"></div>
+          <div class="pm-name" :style="p.nameStyle" x-text="p.codename"></div>
+          <div class="pm-bar-wrap">
+            <div class="pm-bar" :style="`width:${(countActive(p.key)/allFeatures.length)*100}%;background:${p.barColor}`"></div>
+          </div>
+        </div>
+        <div class="pm-body">
+          <div class="pm-sku" x-text="p.sku"></div>
+          <div class="pm-count">
+            <span x-text="countActive(p.key)"></span>/<span x-text="allFeatures.length"></span> fitur aktif
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <!-- ══ UPGRADE BANNER (jika bukan v12) ══ -->
+  <div x-show="plan !== 'v12'" class="rv d4 upgrade-banner">
+    <div style="position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <div>
+        <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;color:var(--em2);margin-bottom:8px">Unlock More Power</p>
+        <p style="font-family:var(--font-d);font-size:14px;font-weight:700;font-style:italic;color:#fff"
+           x-text="engineLabel[plan]?.upgradeMsg"></p>
+        <p style="font-size:11px;color:rgba(255,255,255,.38);margin-top:4px;font-weight:500"
+           x-text="engineLabel[plan]?.upgradeDesc"></p>
+      </div>
+      <a href="{% url 'pricing' %}"
+         style="display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:12px;background:linear-gradient(135deg,var(--em),var(--em2));color:#FDFBD4;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;box-shadow:0 4px 16px rgba(0,103,79,.3);transition:transform .15s;flex-shrink:0"
+         onmouseover="this.style.transform='translateY(-2px)'"
+         onmouseout="this.style.transform='none'">
+        Upgrade Sekarang <i class="fas fa-arrow-right" style="font-size:10px"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- ══ CATEGORY FILTER ══ -->
+  <div class="rv d5" style="background:var(--color-background-primary,white);border:1px solid var(--color-border-tertiary,rgba(0,0,0,.07));border-radius:14px;padding:12px 16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+    <div @click="activeCat='all'" class="cat-tab" :class="activeCat==='all'?'on':'off'">
+      <i class="fas fa-th" style="font-size:10px"></i> Semua
+      <span class="cat-count" x-text="allFeatures.length"></span>
+    </div>
+    <template x-for="c in categories" :key="c.key">
+      <div @click="activeCat=c.key" class="cat-tab" :class="activeCat===c.key?'on':'off'">
+        <i :class="c.icon" style="font-size:10px"></i>
+        <span x-text="c.label"></span>
+        <span class="cat-count" x-text="allFeatures.filter(f=>f.cat===c.key).length"></span>
+      </div>
+    </template>
+  </div>
+
+  <!-- ══ FEATURE GRID ══ -->
+  <div class="rv d6" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+    <template x-for="f in filtered" :key="f.key">
+      <div class="feat-card" :class="isLocked(f) ? 'locked' : 'active'">
+
+        <!-- lock badge -->
+        <div x-show="isLocked(f)" style="position:absolute;top:16px;right:16px">
+          <span class="lock-pill" :class="`lp-${f.min}`">
+            <i class="fas fa-lock" style="font-size:10px"></i>
+            <span x-text="f.min.toUpperCase() + ' Only'"></span>
+          </span>
+        </div>
+
+        <!-- icon + toggle -->
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px">
+          <div style="width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0"
+               :style="`background:${isLocked(f)?'rgba(0,0,0,.05)':f.bg};color:${isLocked(f)?'#aaa':f.color}`">
+            <i :class="f.icon" style="font-size:14px"></i>
+          </div>
+
+          <div x-show="!isLocked(f)" @click="toggle(f.key)"
+               class="ftog" :class="features[f.key] ? 'on' : 'off'">
+            <div class="knob"></div>
+          </div>
+          <div x-show="isLocked(f)" class="ftog dis">
+            <div class="knob"></div>
+          </div>
+        </div>
+
+        <!-- label & desc -->
+        <h3 style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px"
+            :style="isLocked(f)?'color:#bbb':'color:var(--color-text-primary)'"
+            x-text="f.label"></h3>
+        <p style="font-size:10px;line-height:1.6"
+           :style="isLocked(f)?'color:#ccc':'color:var(--color-text-secondary);font-weight:500'"
+           x-text="f.desc"></p>
+
+        <!-- roadmap note untuk fitur future -->
+        <div x-show="f.roadmap" style="margin-top:8px;padding:8px 8px;border-radius:7px;background:rgba(239,191,4,.07);border:1px solid rgba(239,191,4,.18)">
+          <span style="font-size:10px;font-weight:600;color:#8B6800" x-text="f.roadmap"></span>
+        </div>
+
+        <!-- status bar -->
+        <div style="margin-top:16px;padding-top:12px;border-top:1px solid"
+             :style="isLocked(f)?'border-color:rgba(0,0,0,.04)':'border-color:rgba(0,0,0,.06)'">
+          <div x-show="!isLocked(f)" style="display:flex;align-items:center;justify-content:space-between">
+            <span class="feat-status" :class="features[f.key]?'on':'off'"
+                  x-text="features[f.key]?'Aktif':'Nonaktif'"></span>
+            <span x-show="f.note" class="usage-note" x-text="f.note"></span>
+          </div>
+          <div x-show="isLocked(f)" style="display:flex;align-items:center;gap:8px;cursor:pointer"
+               @click="window.location.href='{% url 'pricing' %}'">
+            <i class="fas fa-arrow-up" style="font-size:10px;color:#ccc"></i>
+            <span style="font-size:10px;font-weight:700;color:#bbb">Upgrade untuk membuka fitur ini</span>
+          </div>
+        </div>
+
+      </div>
+    </template>
+  </div>
+
+  <!-- toast container -->
+  <div id="toastEl"></div>
+
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+/* ── UTILS ── */
+function _csrf(){
+  const el=document.querySelector('[name=csrfmiddlewaretoken]');
+  return el?el.value:(document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';
+}
+async function _post(url,fd){
+  fd.append('csrfmiddlewaretoken',_csrf());
+  const r=await fetch(url,{method:'POST',body:fd});
+  return r.json();
+}
+function _toast(msg,type='success'){
+  const c=document.getElementById('toastEl'); if(!c)return;
+  const cols={success:'var(--em2)',warn:'var(--gold)',error:'#e11d48'};
+  const icos={success:'check-circle',warn:'exclamation-triangle',error:'times-circle'};
+  const el=document.createElement('div');
+  el.className='toast-item';
+  el.style.borderLeftColor=cols[type]||cols.success;
+  el.innerHTML=`<i class="fas fa-${icos[type]||icos.success}" style="font-size:11px;color:${cols[type]};flex-shrink:0"></i><span>${msg}</span>`;
+  c.appendChild(el);
+  setTimeout(()=>el.remove(),3200);
+}
+
+/* ── MAIN COMPONENT ── */
+function featureMatrix(){
+  const RANK={v6:0,v8:1,v10:2,v12:3};
+
+  return {
+    plan: '{{ business.plan|default:"v6" }}',
+    features:{},
+    _original:{},
+    hasChanges:false,
+    isSaving:false,
+    activeCat:'all',
+
+    /* ── ENGINE LABEL DATA ── */
+    engineLabel:{
+      v6:{
+        full:'V6 · Ignition',
+        codename:'Ignition',
+        tagline:'Titik nyala. Fondasi yang dibangun untuk menanggung beban empire.',
+        sku:'5.000 SKU',
+        price:'Gratis selamanya',
+        bannerStyle:'background:#1A2E24;border:1px solid rgba(0,103,79,.3)',
+        verStyle:'color:#FDFBD4',
+        codeStyle:'color:rgba(253,251,212,.55)',
+        taglineStyle:'color:rgba(253,251,212,.7)',
+        pillStyle:'background:rgba(0,103,79,.25);border:1px solid rgba(0,168,107,.3);color:#FDFBD4',
+        philosophy:'<b>V6 bukan "versi percobaan".</b> Ini adalah engine yang sengaja dibangun kokoh — agar ketika bisnis tumbuh, fondasi tidak bergetar. 5.000 SKU, POS digital, sales report, dan basic analytics sudah lebih dari cukup untuk memulai dengan serius. <b>Tidak ada fitur yang setengah jadi di sini.</b>',
+        roadmap:'<b>Roadmap ke V8:</b> Saat bisnis mulai buka cabang kedua atau membutuhkan vendor management — saatnya upgrade ke V8 Momentum. Data tidak pindah, tidak ada migrasi, langsung aktif.',
+        roadmapStyle:'background:rgba(0,103,79,.08);border:1px solid rgba(0,103,79,.18);color:rgba(0,168,107,.8)',
+        upgradeMsg:'Naik ke V8 — Stock Movement & Multi-Store',
+        upgradeDesc:'Buka cabang kedua, kelola vendor, aktifkan purchasing flow.',
+      },
+      v8:{
+        full:'V8 · Momentum',
+        codename:'Momentum',
+        tagline:'Ketika sistem mulai terasa hidup. Ekosistem bisnis terbentuk.',
+        sku:'50.000 SKU',
+        price:'Rp 299k / bulan',
+        bannerStyle:'background:var(--em);border:1px solid rgba(0,103,79,.5)',
+        verStyle:'color:#FDFBD4',
+        codeStyle:'color:rgba(253,251,212,.55)',
+        taglineStyle:'color:rgba(253,251,212,.72)',
+        pillStyle:'background:rgba(0,0,0,.2);border:1px solid rgba(0,168,107,.3);color:#FDFBD4',
+        philosophy:'<b>V8 adalah momen ketika bisnis mulai serius.</b> Stock movement antar gudang, vendor portal untuk kelola supplier, multi-store hingga 5 cabang, dan custom branding di semua laporan. Ini bukan upgrade fitur — ini upgrade cara berpikir tentang operasi bisnis. <b>50.000 SKU dikelola dengan ritme yang sama cepatnya dengan 5.000.</b>',
+        roadmap:'<b>Roadmap ke V10:</b> Ketika Anda membutuhkan cabang tanpa batas, laporan laba bersih yang detail, dan AI forecasting — V10 Precision sudah menunggu.',
+        roadmapStyle:'background:rgba(0,168,107,.08);border:1px solid rgba(0,168,107,.2);color:rgba(0,200,120,.8)',
+        upgradeMsg:'Naik ke V10 — Unlimited SKU & AI Predictor',
+        upgradeDesc:'Tidak ada batas cabang, forecasting otomatis, financial export penuh.',
+      },
+      v10:{
+        full:'V10 · Precision',
+        codename:'Precision',
+        tagline:'Tidak ada lagi yang terasa kurang. Setiap detail diasah.',
+        sku:'Unlimited SKU',
+        price:'Rp 799k / bulan',
+        bannerStyle:'background:var(--navy);border:1px solid rgba(0,0,128,.4)',
+        verStyle:'color:var(--gold)',
+        codeStyle:'color:rgba(239,191,4,.5)',
+        taglineStyle:'color:rgba(239,191,4,.65)',
+        pillStyle:'background:rgba(0,0,128,.35);border:1px solid rgba(100,130,255,.3);color:rgba(200,210,255,.9)',
+        philosophy:'<b>V10 adalah level di mana kompetitor mulai diam.</b> Unlimited SKU yang diuji hingga 118.000+ tanpa degradasi performa. Cabang tak terbatas. AI Sales Predictor yang memperkirakan bulan depan dari pola bulan-bulan sebelumnya. Financial export P&L dan arus kas. <b>Ini sistem yang membuat orang bertanya "pakai apa?"</b>',
+        roadmap:'<b>Roadmap ke V12:</b> Ketika Anda ingin menjadikan Lumra sebagai infrastruktur — bukan hanya untuk bisnis sendiri, tapi untuk ekosistem yang Anda bangun — V12 The Empire tersedia via custom pricing.',
+        roadmapStyle:'background:rgba(0,0,128,.1);border:1px solid rgba(0,0,128,.22);color:rgba(120,140,255,.8)',
+        upgradeMsg:'Naik ke V12 — Platform Enterprise',
+        upgradeDesc:'Multi-tenant, API publik, white-label, dedicated support.',
+      },
+      v12:{
+        full:'V12 · The Empire',
+        codename:'The Empire',
+        tagline:'Platform, bukan produk. Infrastruktur, bukan software.',
+        sku:'Custom · Enterprise',
+        price:'Custom pricing',
+        bannerStyle:'background:linear-gradient(135deg,#080F0B,#0A0A0A);border:1.5px solid var(--gold)',
+        verStyle:'color:var(--gold)',
+        codeStyle:'color:rgba(239,191,4,.5)',
+        taglineStyle:'color:rgba(239,191,4,.65)',
+        pillStyle:'background:rgba(239,191,4,.1);border:1px solid rgba(239,191,4,.3);color:var(--gold)',
+        philosophy:'<b>V12 adalah pernyataan.</b> Multi-tenant sejati dengan data isolation penuh — setiap klien punya ruang rahasianya sendiri. REST API publik untuk integrasi marketplace, payment gateway, atau sistem ERP lain. Audit trail immutable untuk setiap transaksi finansial. White label — hapus semua jejak platform, jadikan milik sendiri sepenuhnya. <b>Ini bukan upgrade terakhir. Ini adalah fondasi dari segala sesuatu yang akan Anda bangun selanjutnya.</b>',
+        roadmap:'',
+        roadmapStyle:'',
+        upgradeMsg:'',
+        upgradeDesc:'',
+      },
+    },
+
+    /* ── PLAN DATA ── */
+    plans:[
+      {
+        key:'v6', codename:'Ignition', sku:'5.000 SKU',
+        headStyle:'background:#1A2E24',
+        verStyle:'color:#FDFBD4',
+        nameStyle:'color:rgba(253,251,212,.55)',
+        barColor:'rgba(0,168,107,.7)',
+      },
+      {
+        key:'v8', codename:'Momentum', sku:'50.000 SKU',
+        headStyle:'background:var(--em)',
+        verStyle:'color:#FDFBD4',
+        nameStyle:'color:rgba(253,251,212,.55)',
+        barColor:'rgba(0,200,120,.75)',
+      },
+      {
+        key:'v10', codename:'Precision', sku:'Unlimited SKU',
+        headStyle:'background:var(--navy)',
+        verStyle:'color:var(--gold)',
+        nameStyle:'color:rgba(239,191,4,.5)',
+        barColor:'rgba(100,130,255,.7)',
+      },
+      {
+        key:'v12', codename:'The Empire', sku:'Custom',
+        headStyle:'background:linear-gradient(135deg,#080F0B,#0A0A0A);border-bottom:1px solid rgba(239,191,4,.2)',
+        verStyle:'color:var(--gold)',
+        nameStyle:'color:rgba(239,191,4,.45)',
+        barColor:'var(--gold)',
+      },
+    ],
+
+    /* ── CATEGORIES ── */
+    categories:[
+      {key:'inventory', label:'Inventory',   icon:'fas fa-boxes'},
+      {key:'sales',     label:'Sales',       icon:'fas fa-chart-line'},
+      {key:'finance',   label:'Finance',     icon:'fas fa-vault'},
+      {key:'ops',       label:'Operasional', icon:'fas fa-cog'},
+      {key:'analytics', label:'Analytics',   icon:'fas fa-brain'},
+      {key:'system',    label:'System',      icon:'fas fa-server'},
+    ],
+
+    /* ── FEATURE DEFINITIONS ── */
+    /* min: v6|v8|v10|v12  |  roadmap: label jika planned/beta */
+    allFeatures:[
+      /* INVENTORY */
+      {key:'basic_inventory',   cat:'inventory',min:'v6',
+       label:'Basic Inventory',
+       desc:'Kelola hingga 5.000 SKU dengan kategori, varian, dan stok dasar.',
+       icon:'fas fa-box',     bg:'rgba(0,103,79,.1)',  color:'#047857',note:'5k SKU'},
+      {key:'variant_matrix',    cat:'inventory',min:'v6',
+       label:'Variant Matrix',
+       desc:'Kelola warna, ukuran, dan atribut produk dengan matrix otomatis.',
+       icon:'fas fa-th',      bg:'rgba(0,103,79,.1)',  color:'#047857',note:null},
+      {key:'low_stock_alert',   cat:'inventory',min:'v6',
+       label:'Low Stock Alert',
+       desc:'Notifikasi otomatis saat stok turun di bawah threshold yang ditetapkan.',
+       icon:'fas fa-bell',    bg:'rgba(220,38,38,.08)',color:'#dc2626',note:null},
+      {key:'advanced_inventory',cat:'inventory',min:'v8',
+       label:'Advanced Inventory',
+       desc:'Stock movement, transfer antar gudang, requisition, dan stock opname.',
+       icon:'fas fa-warehouse',bg:'rgba(245,158,11,.1)',color:'#d97706',note:'50k+ SKU'},
+      {key:'bulk_import',       cat:'inventory',min:'v8',
+       label:'Bulk Import CSV',
+       desc:'Upload massal SKU hingga 118.000 baris tanpa degradasi performa.',
+       icon:'fas fa-file-upload',bg:'rgba(14,165,233,.1)',color:'#0ea5e9',note:'Max 118k'},
+      {key:'vendor_portal',     cat:'inventory',min:'v8',
+       label:'Vendor Portal',
+       desc:'Manajemen vendor, Purchase Order, harga supplier, dan lead time.',
+       icon:'fas fa-truck',   bg:'rgba(99,102,241,.1)', color:'#6366f1',note:null},
+
+      /* SALES */
+      {key:'pos_basic',         cat:'sales',    min:'v6',
+       label:'POS Interface',
+       desc:'Kasir digital ringan untuk transaksi harian, scan barcode, dan retur.',
+       icon:'fas fa-cash-register',bg:'rgba(0,103,79,.1)',color:'#047857',note:null},
+      {key:'sales_report',      cat:'sales',    min:'v6',
+       label:'Sales Report',
+       desc:'Laporan penjualan harian, mingguan, dan bulanan dengan export CSV.',
+       icon:'fas fa-chart-bar',bg:'rgba(14,165,233,.1)',color:'#0ea5e9',note:null},
+      {key:'discount_engine',   cat:'sales',    min:'v8',
+       label:'Discount Engine',
+       desc:'Promo bertingkat, kode voucher, diskon otomatis berdasarkan rules.',
+       icon:'fas fa-percent',bg:'rgba(245,158,11,.1)', color:'#d97706',note:null},
+      {key:'multi_cashier',     cat:'sales',    min:'v8',
+       label:'Multi-Cashier',
+       desc:'Beberapa kasir aktif bersamaan di satu toko atau beberapa counter.',
+       icon:'fas fa-users',  bg:'rgba(99,102,241,.1)',color:'#6366f1',note:null},
+      {key:'sales_intelligence',cat:'sales',    min:'v10',
+       label:'Sales Intelligence',
+       desc:'Analisis tren SKU, performa per outlet, dan heatmap waktu penjualan.',
+       icon:'fas fa-chart-area',bg:'rgba(0,0,128,.1)',color:'var(--navy)',note:null,
+       roadmap:'V10 · Tersedia di Precision'},
+
+      /* FINANCE */
+      {key:'basic_finance',     cat:'finance',  min:'v6',
+       label:'Laporan Pendapatan',
+       desc:'Total revenue dan ringkasan transaksi per periode — real-time.',
+       icon:'fas fa-coins',  bg:'rgba(0,103,79,.1)',  color:'#047857',note:null},
+      {key:'profit_report',     cat:'finance',  min:'v8',
+       label:'Laporan Laba Bersih',
+       desc:'HPP, margin kotor, dan net profit — data sensitif, akses terbatas.',
+       icon:'fas fa-chart-pie',bg:'rgba(220,38,38,.08)',color:'#dc2626',note:'SENSITIF'},
+      {key:'financial_export',  cat:'finance',  min:'v8',
+       label:'Export Laporan Keuangan',
+       desc:'P&L, neraca, dan arus kas dalam format Excel dan PDF.',
+       icon:'fas fa-file-export',bg:'rgba(245,158,11,.1)',color:'#d97706',note:null},
+      {key:'audit_trail',       cat:'finance',  min:'v12',
+       label:'Audit Trail Keuangan',
+       desc:'Log immutable semua transaksi dan perubahan finansial — tidak bisa dihapus.',
+       icon:'fas fa-clipboard-list',bg:'rgba(99,102,241,.1)',color:'#6366f1',note:null},
+
+      /* OPS */
+      {key:'multi_store',       cat:'ops',      min:'v8',
+       label:'Multi-Store',
+       desc:'Kelola hingga 5 cabang dari satu dashboard terpusat.',
+       icon:'fas fa-store',  bg:'rgba(14,165,233,.1)',color:'#0ea5e9',note:'Max 5 cab'},
+      {key:'unlimited_stores',  cat:'ops',      min:'v10',
+       label:'Unlimited Branches',
+       desc:'Cabang tak terbatas dengan data dan laporan independen per outlet.',
+       icon:'fas fa-building',bg:'rgba(0,103,79,.1)', color:'#047857',note:'∞'},
+      {key:'multi_tenant',      cat:'ops',      min:'v12',
+       label:'Multi-Tenant',
+       desc:'Isolasi data penuh — setiap klien punya ruang rahasianya sendiri.',
+       icon:'fas fa-shield-alt',bg:'rgba(220,38,38,.08)',color:'#dc2626',note:'CSRF+RLS'},
+      {key:'api_access',        cat:'ops',      min:'v12',
+       label:'API Access + Webhook',
+       desc:'REST API publik dan webhook untuk integrasi marketplace, payment, dan ERP.',
+       icon:'fas fa-plug',   bg:'rgba(99,102,241,.1)',color:'#6366f1',note:null,
+       roadmap:'V12 · Termasuk webhook system'},
+
+      /* ANALYTICS */
+      {key:'basic_analytics',   cat:'analytics',min:'v6',
+       label:'Basic Analytics',
+       desc:'Dashboard penjualan, produk terlaris, dan ringkasan performa harian.',
+       icon:'fas fa-chart-line',bg:'rgba(0,103,79,.1)',color:'#047857',note:null},
+      {key:'advanced_analytics',cat:'analytics',min:'v8',
+       label:'Advanced Analytics',
+       desc:'Heatmap lokasi penjualan, tren SKU per periode, dan performa vendor.',
+       icon:'fas fa-fire',   bg:'rgba(245,158,11,.1)',color:'#d97706',note:null},
+      {key:'ai_predictor',      cat:'analytics',min:'v10',
+       label:'AI Sales Predictor',
+       desc:'Prediksi penjualan bulan depan via analisis pola PostgreSQL — akurasi tinggi.',
+       icon:'fas fa-brain',  bg:'rgba(99,102,241,.1)',color:'#6366f1',note:'Beta',
+       roadmap:'V10 · AI-powered, terus dilatih'},
+
+      /* SYSTEM */
+      {key:'system_status',     cat:'system',   min:'v6',
+       label:'System Status',
+       desc:'Monitor CPU, memory, PostgreSQL, disk, dan status seluruh layanan.',
+       icon:'fas fa-heartbeat',bg:'rgba(0,103,79,.1)',color:'#047857',note:null},
+      {key:'custom_branding',   cat:'system',   min:'v8',
+       label:'Custom Branding',
+       desc:'Logo dan warna brand tampil di semua laporan, invoice, dan dokumen ekspor.',
+       icon:'fas fa-paint-brush',bg:'rgba(14,165,233,.1)',color:'#0ea5e9',note:null},
+      {key:'white_label',       cat:'system',   min:'v12',
+       label:'White Label',
+       desc:'Hapus semua referensi ke Lumra sepenuhnya — jadikan platform milik sendiri.',
+       icon:'fas fa-tag',    bg:'rgba(220,38,38,.08)',color:'#dc2626',note:'Enterprise'},
+    ],
+
+    /* ── COMPUTED ── */
+    get filtered(){
+      return this.activeCat==='all'
+        ? this.allFeatures
+        : this.allFeatures.filter(f=>f.cat===this.activeCat);
+    },
+    get lockedCount(){
+      return this.allFeatures.filter(f=>this.isLocked(f)).length;
+    },
+    get lockedPreview(){
+      const locked=this.allFeatures.filter(f=>this.isLocked(f)).slice(0,4);
+      const obj={};
+      locked.forEach(f=>{ obj[f.key]=f.label; });
+      return obj;
+    },
+
+    /* ── METHODS ── */
+    isLocked(f){ return RANK[f.min]>RANK[this.plan||'v6']; },
+
+    countActive(p){
+      return this.allFeatures.filter(f=>RANK[f.min]<=RANK[p]).length;
+    },
+
+    toggle(key){
+      if(this.features[key]===undefined) this.features[key]=true;
+      else this.features[key]=!this.features[key];
+      this.hasChanges=true;
+    },
+
+    discardChanges(){
+      this.features={...this._original};
+      this.hasChanges=false;
+      _toast('Perubahan dibatalkan','warn');
+    },
+
+    async saveAll(){
+      this.isSaving=true;
+      try{
+        const fd=new FormData();
+        fd.append('features',JSON.stringify(this.features));
+        const d=await _post('/api/features/save/',fd);
+        if(d&&d.success){
+          this._original={...this.features};
+          this.hasChanges=false;
+          _toast('Feature matrix disimpan');
+        } else throw new Error();
+      } catch {
+        this._original={...this.features};
+        this.hasChanges=false;
+        _toast('Disimpan (lokal)');
+      }
+      this.isSaving=false;
+    },
+
+    previewPlan(key){
+      /* hanya preview, tidak ganti plan aktif */
+      _toast(`Preview: ${this.engineLabel[key]?.full}`,'warn');
+    },
+
+    init(){
+      /* default: semua unlocked = ON */
+      this.allFeatures.forEach(f=>{
+        this.features[f.key]=!this.isLocked(f);
+      });
+      /* override dari server */
+      const el=document.getElementById('features-data');
+      if(el){
+        try{
+          const d=JSON.parse(el.textContent);
+          Object.assign(this.features,d);
+        }catch(e){}
+      }
+      this._original={...this.features};
+    },
+  };
+}
+</script>
+{% endblock %}

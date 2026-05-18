@@ -1,0 +1,57 @@
+<!-- ============================================================
+     KPI CARD COMPONENT
+     
+     Parameter:
+       title       : string — judul KPI (wajib)
+       value       : string — nilai utama, e.g. "Rp 12.500.000" (wajib)
+       icon        : string — FontAwesome class, e.g. "fa-coffee" (wajib)
+       trend_value : string — e.g. "+12%" atau "-3" (opsional)
+       trend_text  : string — e.g. "minggu ini" (opsional)
+       trend_up    : True | False | None — None = netral, tanpa arah (opsional)
+       color       : 'emerald' | 'blue' | 'violet' | 'amber' | 'rose' | 'cyan'
+                     (default: 'emerald')
+
+     Cara pakai:
+       {% include "base/components/kpi_card.html" with
+           title="Total Penjualan"
+           value="Rp 12.500.000"
+           icon="fa-money-bill-wave"
+           trend_value="+12%"
+           trend_text="minggu ini"
+           trend_up=True
+           color="emerald"
+       %}
+
+     Integrasi Django context (dari view):
+       {% for kpi in kpi_list %}
+           {% include "base/components/kpi_card.html" with
+               title=kpi.title
+               value=kpi.value
+               icon=kpi.icon
+               trend_value=kpi.trend_value
+               trend_text=kpi.trend_text
+               trend_up=kpi.trend_up
+               color=kpi.color
+           %}
+       {% endfor %}
+============================================================ -->
+
+{% if color == "blue" %}
+    {% include "components/kpi_card_inner.html" with grad="from-blue-500 to-blue-600" ring="ring-blue-400/30" icon_bg="bg-blue-400/30" trend_bg_neutral="bg-blue-400/20" %}
+
+{% elif color == "violet" %}
+    {% include "components/kpi_card_inner.html" with grad="from-violet-500 to-violet-600" ring="ring-violet-400/30" icon_bg="bg-violet-400/30" trend_bg_neutral="bg-violet-400/20" %}
+
+{% elif color == "amber" %}
+    {% include "components/kpi_card_inner.html" with grad="from-amber-500 to-amber-600" ring="ring-amber-400/30" icon_bg="bg-amber-400/30" trend_bg_neutral="bg-amber-400/20" %}
+
+{% elif color == "rose" %}
+    {% include "components/kpi_card_inner.html" with grad="from-rose-500 to-rose-600" ring="ring-rose-400/30" icon_bg="bg-rose-400/30" trend_bg_neutral="bg-rose-400/20" %}
+
+{% elif color == "cyan" %}
+    {% include "components/kpi_card_inner.html" with grad="from-cyan-500 to-cyan-600" ring="ring-cyan-400/30" icon_bg="bg-cyan-400/30" trend_bg_neutral="bg-cyan-400/20" %}
+
+{% else %}
+    {# Default Emerald (jika color tidak diisi atau tidak cocok) #}
+    {% include "components/kpi_card_inner.html" with grad="from-emerald-500 to-emerald-600" ring="ring-emerald-400/30" icon_bg="bg-emerald-400/30" trend_bg_neutral="bg-emerald-400/20" %}
+{% endif %}

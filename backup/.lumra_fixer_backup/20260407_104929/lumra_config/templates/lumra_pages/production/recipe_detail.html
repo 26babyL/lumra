@@ -1,0 +1,441 @@
+
+<style>
+/* Glass Minimal — lumra_glass_fix.py fase 5 (konservatif) */
+.modal-overlay {
+  background: var(--glass-dark-bg, var(--color-slate-900-a040));
+  backdrop-filter: var(--glass-dark-blur);
+  -webkit-backdrop-filter: var(--glass-dark-blur);
+}
+.panel-glass {
+  background: var(--glass-bg, rgba(255, 255, 255, 0.72));
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.20));
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow, 0 2px 12px var(--color-black-a06));
+}
+
+</style>
+{% extends 'base/base.html' %}
+
+{% block title %}Recipes List - Lumra ERP{% endblock %}
+
+{% block content %}
+
+  <!-- Ambient Blob Background -->
+  <div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+  <div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+  <div class="bg-blob bg-blob-3" aria-hidden="true"></div>
+
+{# Pass server data to Alpine.js via a safe JSON script tag — avoids DOM scraping anti-pattern #}
+{{ recipes_json|json_script:"recipes-data" }}
+
+<div
+    x-data="recipesListManager()"
+    x-init="init()"
+    class="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 py-12 px-6 lg:px-12 relative overflow-hidden"
+>
+    {# Decorative background blobs #}
+    <div class="absolute inset-0 opacity-10 pointer-events-none" aria-hidden="true">
+        <div class="absolute top-10 left-10 w-20 h-20 bg-emerald-200 rounded-full blur-xl"></div>
+        <div class="absolute bottom-10 right-10 w-32 h-32 bg-green-200 rounded-full blur-xl"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-teal-200 rounded-full blur-2xl"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto space-y-10 relative z-10">
+
+        {# ── Page Header ─────────────────────────────────── #}
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+            <div>
+                <h1 class="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent leading-tight">
+                    🍽️ Recipes List
+                </h1>
+                <p class="text-emerald-700 mt-2 text-lg">Manage and view all drink and food recipes</p>
+            </div>
+            <a
+                href="{% url 'add_recipe' %}"
+                class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-5 rounded-lg transition-colors shadow-md flex items-center gap-2"
+            >
+                ➕ Add Recipe
+            </a>
+        </div>
+
+        {# ── Search & Filter ──────────────────────────────── #}
+        <div class="p-6 rounded-2xl shadow-xl border border-emerald-100" style="background:var(--color-surface)">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div class="relative flex-1 w-full">
+                    <input
+                        type="text"
+                        x-model="searchQuery"
+                        @input.debounce.300ms="filterRecipes()"
+                        placeholder="Search recipes by name…"
+                        class="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition-colors" style="background:var(--color-surface)"
+                    >
+                    <i class="fas fa-search absolute left-3 top-3.5 text-emerald-400"></i>
+                </div>
+                <div class="flex gap-2 flex-wrap">
+                    <select
+                        x-model="categoryFilter"
+                        @change="filterRecipes()"
+                        class="px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition-colors" style="background:var(--color-surface)"
+                    >
+                        <option value="">All Categories</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <button
+                        @click="resetFilters()"
+                        class="bg-slate-500 hover:bg-slate-600 text-white font-medium py-3 px-5 rounded-lg transition-colors shadow-md"
+                    >
+                        Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        {# ── Recipes Table ────────────────────────────────── #}
+        <div class="rounded-2xl shadow-xl border border-emerald-100 overflow-hidden" style="background:var(--color-surface)">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-200">
+                    <thead class="bg-slate-50">
+                        <tr>
+                            {% for col, label in table_columns %}
+                            <th
+                                class="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider cursor-pointer hover:bg-slate-100 select-none"
+                                @click="sortBy('{{ col }}')"
+                            >
+                                {{ label }}
+                                <i
+                                    class="fas ml-1 text-slate-400"
+                                    :class="{
+                                        'fa-sort-up':   sortColumn === '{{ col }}' && sortDirection === 'asc',
+                                        'fa-sort-down': sortColumn === '{{ col }}' && sortDirection === 'desc',
+                                        'fa-sort':      sortColumn !== '{{ col }}'
+                                    }"
+                                ></i>
+                            </th>
+                            {% endfor %}
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200" style="background:var(--color-surface)">
+                        <template x-for="recipe in pagedRecipes" :key="recipe.id">
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-6 py-4 text-sm font-medium text-slate-900" x-text="`#${recipe.id}`"></td>
+                                <td class="px-6 py-4 text-sm font-semibold text-slate-900" x-text="recipe.name"></td>
+                                <td class="px-6 py-4 text-sm text-slate-600" x-text="recipe.category || 'Uncategorized'"></td>
+                                <td class="px-6 py-4 text-sm text-slate-600" x-text="`${recipe.ingredients_count} items`"></td>
+                                <td class="px-6 py-4 text-sm text-slate-600" x-text="recipe.created_at"></td>
+                                <td class="px-6 py-4 text-sm">
+                                    <div class="flex gap-3">
+                                        <a
+                                            :href="`{% url 'recipe_form' 0 %}`.replace('0', recipe.id)"
+                                            class="text-blue-600 hover:text-blue-800 transition-colors"
+                                        >
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                        <button
+                                            @click="confirmDelete(recipe)"
+                                            class="text-red-600 hover:text-red-800 transition-colors bg-transparent border-0 p-0 cursor-pointer"
+                                        >
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+
+                        {# Empty state #}
+                        <tr x-show="filteredRecipes.length === 0">
+                            <td colspan="6" class="px-6 py-10 text-center text-slate-500">
+                                No recipes found.
+                                <a href="{% url 'add_recipe' %}" class="text-emerald-600 hover:underline ml-1">Add one now</a>.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {# ── Pagination ───────────────────────────────────── #}
+        <div x-show="totalPages > 1" class="flex justify-center items-center gap-1">
+            <button
+                @click="goToPage(currentPage - 1)"
+                :disabled="currentPage === 1"
+                class="px-3 py-2 rounded border border-slate-300 text-sm text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+                ‹
+            </button>
+            <template x-for="page in displayedPages" :key="page">
+                <template x-if="page === '...'">
+                    <span class="px-3 py-2 text-sm text-slate-400">…</span>
+                </template>
+                <template x-if="page !== '...'">
+                    <button
+                        @click="goToPage(page)"
+                        :class="currentPage === page
+                            ? 'bg-emerald-600 text-white border-emerald-600'
+                            : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'"
+                        class="px-3 py-2 rounded border text-sm transition-colors"
+                        x-text="page"
+                    ></button>
+                </template>
+            </template>
+            <button
+                @click="goToPage(currentPage + 1)"
+                :disabled="currentPage === totalPages"
+                class="px-3 py-2 rounded border border-slate-300 text-sm text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+                ›
+            </button>
+        </div>
+
+        {# Results count #}
+        <p class="text-center text-sm text-slate-400" x-text="`Showing ${pagedRecipes.length} of ${filteredRecipes.length} recipe(s)`"></p>
+
+    </div>{# /max-w-7xl #}
+
+    {# ── Delete Confirmation Modal ────────────────────────── #}
+    <div
+        x-show="showDeleteModal"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="delete-modal-title"
+    >
+        <div
+            @click.away="showDeleteModal = false"
+            @keydown.escape.window="showDeleteModal = false"
+            class="p-6 rounded-2xl shadow-xl max-w-md w-full mx-4" style="background:var(--color-surface)"
+        >
+            <h3 id="delete-modal-title" class="text-lg font-semibold text-slate-800 mb-4">Confirm Delete</h3>
+            <p
+                class="text-sm text-slate-600 mb-6"
+                x-text="`Are you sure you want to delete \"${recipeToDelete?.name ?? ''}\"? This action cannot be undone.`"
+            ></p>
+            <div class="flex gap-3">
+                <button
+                    @click="deleteRecipe()"
+                    :disabled="isDeleting"
+                    class="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                >
+                    <i x-show="isDeleting" class="fas fa-spinner fa-spin mr-2"></i>
+                    <span x-text="isDeleting ? 'Deleting…' : 'Delete'"></span>
+                </button>
+                <button
+                    @click="showDeleteModal = false"
+                    class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2 px-4 rounded-lg transition-colors"
+                >
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {# ── Toast Notification ───────────────────────────────── #}
+    <div
+        x-show="showToast"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-y-4"
+        x-transition:enter-end="opacity-100 translate-y-0"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-y-0"
+        x-transition:leave-end="opacity-0 translate-y-4"
+        class="fixed bottom-4 right-4 rounded-xl shadow-xl border border-slate-100 p-4 z-50 max-w-sm" style="background:var(--color-surface)"
+        role="alert"
+        aria-live="polite"
+    >
+        <div class="flex items-start gap-3">
+            <i class="text-xl flex-shrink-0 mt-0.5" :class="toastIconClass"></i>
+            <p class="text-sm font-medium text-slate-900 flex-1" x-text="toastMessage"></p>
+            <button @click="showToast = false" class="text-slate-400 hover:text-slate-600" aria-label="Dismiss">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+</div>{# /x-data #}
+
+{# Hidden CSRF token for AJAX delete requests #}
+{% csrf_token %}
+
+<script>
+const PAGE_SIZE = 20;
+
+function recipesListManager() {
+    return {
+        // ── State ──────────────────────────────────────────
+        allRecipes: [],
+        filteredRecipes: [],
+        searchQuery: '{{ query|escapejs }}',
+        categoryFilter: '{{ category_filter|escapejs }}',
+        sortColumn: 'name',
+        sortDirection: 'asc',
+        currentPage: 1,
+
+        showToast: false,
+        toastMessage: '',
+        toastType: 'success',
+
+        showDeleteModal: false,
+        recipeToDelete: null,
+        isDeleting: false,
+
+        // ── Computed ───────────────────────────────────────
+        get totalPages() {
+            return Math.max(1, Math.ceil(this.filteredRecipes.length / PAGE_SIZE));
+        },
+
+        get pagedRecipes() {
+            const start = (this.currentPage - 1) * PAGE_SIZE;
+            return this.filteredRecipes.slice(start, start + PAGE_SIZE);
+        },
+
+        get toastIconClass() {
+            return {
+                success: 'fas fa-check-circle text-green-500',
+                error:   'fas fa-exclamation-circle text-red-500',
+                info:    'fas fa-info-circle text-blue-500',
+            }[this.toastType] ?? 'fas fa-info-circle text-blue-500';
+        },
+
+        get displayedPages() {
+            const pages = [];
+            const { currentPage: c, totalPages: t } = this;
+            if (t <= 7) {
+                for (let i = 1; i <= t; i++) pages.push(i);
+            } else if (c <= 4) {
+                pages.push(1, 2, 3, 4, 5, '...', t);
+            } else if (c >= t - 3) {
+                pages.push(1, '...', t - 4, t - 3, t - 2, t - 1, t);
+            } else {
+                pages.push(1, '...', c - 1, c, c + 1, '...', t);
+            }
+            return pages;
+        },
+
+        // ── Lifecycle ──────────────────────────────────────
+        init() {
+            // Load data from the json_script tag — no DOM scraping
+            const el = document.getElementById('recipes-data');
+            this.allRecipes = el ? JSON.parse(el.textContent) : [];
+            this.filterRecipes();
+        },
+
+        // ── Filter / Search / Sort ─────────────────────────
+        filterRecipes() {
+            let result = [...this.allRecipes];
+
+            if (this.searchQuery.trim()) {
+                const q = this.searchQuery.toLowerCase();
+                result = result.filter(r =>
+                    r.name.toLowerCase().includes(q) ||
+                    (r.category ?? '').toLowerCase().includes(q)
+                );
+            }
+
+            if (this.categoryFilter) {
+                result = result.filter(r => String(r.category_id) === String(this.categoryFilter));
+            }
+
+            this.filteredRecipes = this._sorted(result);
+            this.goToPage(1);
+        },
+
+        resetFilters() {
+            this.searchQuery = '';
+            this.categoryFilter = '';
+            this.filterRecipes();
+        },
+
+        sortBy(column) {
+            if (this.sortColumn === column) {
+                this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                this.sortColumn = column;
+                this.sortDirection = 'asc';
+            }
+            this.filteredRecipes = this._sorted(this.filteredRecipes);
+        },
+
+        _sorted(arr) {
+            return [...arr].sort((a, b) => {
+                let av = a[this.sortColumn] ?? '';
+                let bv = b[this.sortColumn] ?? '';
+                if (typeof av === 'string') { av = av.toLowerCase(); bv = bv.toLowerCase(); }
+                if (av === bv) return 0;
+                const cmp = av > bv ? 1 : -1;
+                return this.sortDirection === 'asc' ? cmp : -cmp;
+            });
+        },
+
+        // ── Pagination ─────────────────────────────────────
+        goToPage(page) {
+            this.currentPage = Math.min(Math.max(1, page), this.totalPages);
+        },
+
+        // ── Delete ─────────────────────────────────────────
+        confirmDelete(recipe) {
+            this.recipeToDelete = recipe;
+            this.showDeleteModal = true;
+        },
+
+        async deleteRecipe() {
+            if (!this.recipeToDelete) return;
+            this.isDeleting = true;
+
+            const { id, name } = this.recipeToDelete;
+            const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            try {
+                const resp = await fetch(`{% url 'recipe_delete' 0 %}`.replace('0', id), {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrf,
+                        'Accept': 'application/json',
+                    },
+                    body: new URLSearchParams({ _ajax: '1' }),
+                });
+
+                const data = await resp.json();
+
+                if (data.success) {
+                    this.allRecipes = this.allRecipes.filter(r => r.id !== id);
+                    this.filterRecipes();
+                    this.showDeleteModal = false;
+                    this.recipeToDelete = null;
+                    this._toast(`Recipe "${name}" deleted.`, 'success');
+                } else {
+                    this._toast(data.message ?? 'Failed to delete recipe.', 'error');
+                }
+            } catch (err) {
+                console.error('Delete error:', err);
+                this._toast('An error occurred. Please try again.', 'error');
+            } finally {
+                this.isDeleting = false;
+            }
+        },
+
+        // ── Toast ──────────────────────────────────────────
+        _toast(message, type = 'success') {
+            this.toastMessage = message;
+            this.toastType = type;
+            this.showToast = true;
+            clearTimeout(this._toastTimer);
+            this._toastTimer = setTimeout(() => { this.showToast = false; }, 5000);
+        },
+    };
+}
+</script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+{% endblock %}

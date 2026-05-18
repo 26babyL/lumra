@@ -1,0 +1,252 @@
+{% extends 'base/base_hybrid.html' %}
+
+{% block title %}Retur Penjualan — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  
+  /* Copy styles dari contoh Inbox untuk konsistensi */
+  .stat-card {
+    background     : rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border         : 1px solid rgba(255, 255, 255, 0.95);
+    border-radius  : 16px;
+    box-shadow     : 0 2px 10px rgba(0,0,0,0.05);
+    padding        : 16px 20px;
+    transition     : box-shadow .2s, transform .2s;
+  }
+  .stat-card:hover { box-shadow:0 6px 20px rgba(0,0,0,0.08); transform:translateY(-1px); }
+  .stat-icon {
+    width:36px; height:36px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; flex-shrink:0;
+  }
+
+  .filter-tab {
+    padding: 4px 12px; border-radius:8px;
+    font-size:11px; font-weight:600;
+    color:#666; border:1px solid transparent; background:transparent;
+    cursor:pointer; white-space:nowrap;
+    transition:background .12s, color .12s;
+  }
+  .filter-tab:hover { background:rgba(0,0,0,0.05); color:#333; }
+  .filter-tab.active { background:rgba(0, 184, 163, 0.1); color:#00B8A3; border-color:rgba(0, 184, 163, 0.2); }
+
+  .search-input {
+    background   : rgba(255, 255, 255, 0.85);
+    border       : 1px solid rgba(0,0,0,0.05);
+    border-radius: 10px;
+    transition   : background .15s, border-color .15s, box-shadow .15s;
+  }
+  .search-input:focus {
+    background  : #FFFFFF;
+    border-color: #00B8A3;
+    box-shadow  : 0 0 0 3px rgba(0, 184, 163, 0.1);
+    outline     : none;
+  }
+
+  .item-row {
+    background     : rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    border         : 1px solid rgba(255, 255, 255, 0.95);
+    border-radius  : 14px;
+    box-shadow     : 0 1px 6px rgba(0,0,0,0.04);
+    transition     : box-shadow .18s, transform .18s;
+    padding        : 16px;
+  }
+  .item-row:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    transform: translateY(-1px);
+  }
+
+  /* Status Chips */
+  .status-chip {
+    display:inline-flex; align-items:center;
+    padding:2px 8px; border-radius:6px;
+    font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;
+  }
+  .chip-pending  { background:#FFF4E5; color:#FF9800; } /* Orange */
+  .chip-approved { background:#E6FFFA; color:#00B8A3; } /* Emerald */
+  .chip-rejected { background:#FFF1F2; color:#E11D48; } /* Rose */
+  .chip-completed{ background:#F0F9FF; color:#0284C7; } /* Blue */
+
+  /* Animation */
+  .fade-in { animation: fadeIn 0.3s ease-out; }
+  @keyframes fadeIn { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform: none;} }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-5 relative z-10"
+     x-data="returApp()"
+     x-init="init()"
+     x-cloak>
+
+  <!-- Header -->
+  <div class="flex items-end justify-between gap-3">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+        <a href="#" class="hover:text-slate-800">Dashboard</a>
+        <span>/</span>
+        <span class="text-slate-800 font-medium">Retur Penjualan</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800">Retur Penjualan</h1>
+      <p class="text-sm text-slate-400 mt-0.5">Kelola permintaan pengembalian barang pelanggan</p>
+    </div>
+    <button class="bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-lg hover:bg-slate-700 transition">
+      <i class="fas fa-plus mr-2"></i> Buat Retur
+    </button>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div class="stat-card flex items-center gap-3">
+      <div class="stat-icon bg-slate-100 text-slate-600"><i class="fas fa-undo"></i></div>
+      <div>
+        <p class="text-[10px] font-semibold text-slate-400 uppercase">Total Retur</p>
+        <p class="text-xl font-bold text-slate-800" x-text="returns.length"></p>
+      </div>
+    </div>
+    <div class="stat-card flex items-center gap-3">
+      <div class="stat-icon" style="background:#FFF4E5; color:#FF9800"><i class="fas fa-clock"></i></div>
+      <div>
+        <p class="text-[10px] font-semibold text-slate-400 uppercase">Pending</p>
+        <p class="text-xl font-bold text-slate-800" x-text="stats.pending"></p>
+      </div>
+    </div>
+    <div class="stat-card flex items-center gap-3">
+      <div class="stat-icon" style="background:#E6FFFA; color:#00B8A3"><i class="fas fa-check"></i></div>
+      <div>
+        <p class="text-[10px] font-semibold text-slate-400 uppercase">Disetujui</p>
+        <p class="text-xl font-bold text-slate-800" x-text="stats.approved"></p>
+      </div>
+    </div>
+    <div class="stat-card flex items-center gap-3">
+      <div class="stat-icon" style="background:#F0F9FF; color:#0284C7"><i class="fas fa-money-bill-wave"></i></div>
+      <div>
+        <p class="text-[10px] font-semibold text-slate-400 uppercase">Total Refund</p>
+        <p class="text-sm font-bold text-slate-800 truncate w-24" x-text="formatCurrency(stats.totalRefund)"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="bg-white/70 backdrop-blur-md px-4 py-3 rounded-2xl border border-white/80 shadow-sm">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div class="flex items-center gap-0.5 flex-wrap">
+        <button @click="filter='all'" class="filter-tab" :class="filter==='all' ? 'active' : ''">Semua</button>
+        <button @click="filter='pending'" class="filter-tab" :class="filter==='pending' ? 'active' : ''">Pending</button>
+        <button @click="filter='approved'" class="filter-tab" :class="filter==='approved' ? 'active' : ''">Disetujui</button>
+        <button @click="filter='rejected'" class="filter-tab" :class="filter==='rejected' ? 'active' : ''">Ditolak</button>
+      </div>
+      <div class="relative w-full sm:w-64">
+        <input type="text" x-model="search" placeholder="Cari No. Retur / Pelanggan..." class="search-input w-full pl-8 pr-3 py-1.5 text-sm text-slate-700">
+        <i class="fas fa-search absolute left-2.5 top-2.5 text-slate-300 text-xs"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- List -->
+  <div class="space-y-2">
+    <template x-if="filteredReturns.length === 0">
+      <div class="text-center py-12 text-slate-400">
+        <i class="fas fa-inbox text-4xl mb-3 opacity-30"></i>
+        <p class="text-sm">Tidak ada data retur ditemukan.</p>
+      </div>
+    </template>
+
+    <template x-for="item in filteredReturns" :key="item.id">
+      <div class="item-row fade-in group">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          
+          <!-- Main Info -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-sm font-bold text-slate-800" x-text="item.id"></span>
+              <span class="status-chip" :class="'chip-' + item.status" x-text="item.status"></span>
+              <span class="text-xs text-slate-400" x-text="item.date"></span>
+            </div>
+            <div class="flex items-center gap-2 text-sm text-slate-600">
+              <i class="fas fa-user text-xs text-slate-400"></i>
+              <span class="font-medium" x-text="item.customer"></span>
+              <span class="text-slate-300">•</span>
+              <span class="text-xs text-slate-500 italic truncate" x-text="'Alas: ' + item.reason"></span>
+            </div>
+          </div>
+
+          <!-- Amount & Actions -->
+          <div class="flex items-center justify-between md:justify-end gap-4 pl-4 md:pl-0">
+            <div class="text-right">
+              <p class="text-sm font-bold text-slate-800" x-text="formatCurrency(item.amount)"></p>
+              <p class="text-[10px] text-slate-400">Refund</p>
+            </div>
+
+            <div class="flex items-center gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
+              <!-- Actions based on status -->
+              <template x-if="item.status === 'pending'">
+                <div class="flex gap-1">
+                  <button aria-label="Centang" @click="updateStatus(item.id, 'approved')" class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition" title="Setujui">
+                    <i class="fas fa-check text-xs"></i>
+                  </button>
+                  <button aria-label="Hapus" @click="updateStatus(item.id, 'rejected')" class="w-8 h-8 rounded-lg bg-rose-100 text-rose-600 hover:bg-rose-600 hover:text-white flex items-center justify-center transition" title="Tolak">
+                    <i class="fas fa-times text-xs"></i>
+                  </button>
+                </div>
+              </template>
+
+              <template x-if="item.status !== 'pending'">
+                <button class="text-xs text-slate-400 hover:text-slate-600 px-2">Detail</button>
+              </template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function returApp() {
+  return {
+    returns: {{ returns_json|default:"[]"|safe }},
+    filter: 'all',
+    search: '',
+
+    get filteredReturns() {
+      return this.returns.filter(item => {
+        const matchFilter = this.filter === 'all' || item.status === this.filter;
+        const matchSearch = item.customer.toLowerCase().includes(this.search.toLowerCase()) || 
+                          item.id.toLowerCase().includes(this.search.toLowerCase());
+        return matchFilter && matchSearch;
+      });
+    },
+
+    get stats() {
+      return {
+        pending: this.returns.filter(i => i.status === 'pending').length,
+        approved: this.returns.filter(i => i.status === 'approved').length,
+        totalRefund: this.returns.reduce((acc, curr) => acc + (curr.status === 'approved' ? curr.amount : 0), 0)
+      };
+    },
+
+    init() {
+    },
+
+    updateStatus(id, newStatus) {
+      const item = this.returns.find(i => i.id === id);
+      if (item) {
+        item.status = newStatus;
+      }
+    },
+
+    formatCurrency(num) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+    }
+  }
+}
+</script>
+{% endblock %}

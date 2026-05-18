@@ -1,0 +1,747 @@
+{% extends "base/base_hybrid.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Dashboard — Lumra{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ── Dashboard-specific tokens ── */
+    :root {
+        --card-radius: 12px;
+        --card-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
+        --card-border:  rgba(0,0,0,.06);
+    }
+
+    /* ── Page wrapper: no min-h-screen (parent scroll handles it) ── */
+    .dash-page {
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        /* Let content grow naturally — parent .app-content scrolls */
+    }
+
+    /* ── Page header ── */
+    .dash-page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: .75rem;
+    }
+
+    /* ── KPI grid ── */
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: .875rem;
+    }
+
+    /* ── KPI card ── */
+    .kpi-card {
+        background: oklch(var(--b1));
+        border: .5px solid var(--card-border);
+        border-radius: var(--card-radius);
+        box-shadow: var(--card-shadow);
+        padding: 1.125rem 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+        transition: box-shadow 180ms ease, transform 180ms ease;
+    }
+    .kpi-card:hover {
+        box-shadow: 0 4px 20px rgba(0,0,0,.08);
+        transform: translateY(-1px);
+    }
+
+    .kpi-icon {
+        width: 40px; height: 40px;
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+    .kpi-value {
+        font-size: 1.6rem;
+        font-weight: 800;
+        letter-spacing: -.02em;
+        line-height: 1;
+        color: oklch(var(--bc));
+    }
+
+    .kpi-label {
+        font-size: .75rem;
+        font-weight: 600;
+        color: oklch(var(--bc)/.5);
+        text-transform: uppercase;
+        letter-spacing: .06em;
+    }
+
+    .kpi-delta {
+        font-size: .7rem;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 20px;
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+    }
+    .kpi-delta.up   { background: rgba(0,168,107,.1);  color: #065f46; }
+    .kpi-delta.down { background: rgba(239,68,68,.1);   color: #991b1b; }
+    .kpi-delta.neu  { background: oklch(var(--b2));      color: oklch(var(--bc)/.5); }
+
+    [data-theme="dark"] .kpi-delta.up  { background: rgba(0,168,107,.2); color: #34d399; }
+    [data-theme="dark"] .kpi-delta.down { background: rgba(239,68,68,.2); color: #f87171; }
+
+    /* ── Quick-stat bar ── */
+    .stat-bar {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: .875rem;
+    }
+
+    .stat-tile {
+        background: oklch(var(--b1));
+        border: .5px solid var(--card-border);
+        border-radius: var(--card-radius);
+        box-shadow: var(--card-shadow);
+        padding: 1rem 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: .875rem;
+    }
+
+    .stat-tile-icon {
+        width: 38px; height: 38px;
+        border-radius: 9px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: .95rem;
+        flex-shrink: 0;
+    }
+
+    .stat-tile-val  { font-size: 1.35rem; font-weight: 800; color: oklch(var(--bc)); line-height: 1; }
+    .stat-tile-lbl  { font-size: .7rem;   font-weight: 600; color: oklch(var(--bc)/.45); text-transform: uppercase; letter-spacing: .06em; margin-top: 2px; }
+
+    /* ── Section card ── */
+    .section-card {
+        background: oklch(var(--b1));
+        border: .5px solid var(--card-border);
+        border-radius: var(--card-radius);
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+    }
+
+    .section-card-header {
+        padding: 1rem 1.25rem;
+        border-bottom: .5px solid oklch(var(--bc)/.06);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: .5rem;
+        flex-wrap: wrap;
+    }
+
+    .section-card-title {
+        font-size: .85rem;
+        font-weight: 700;
+        color: oklch(var(--bc));
+        text-transform: uppercase;
+        letter-spacing: .07em;
+    }
+
+    .section-card-body {
+        padding: 1.125rem 1.25rem;
+    }
+
+    /* ── Metrics perf grid ── */
+    .perf-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: .875rem;
+    }
+
+    .perf-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: .25rem;
+        padding: 1rem .75rem;
+        border-radius: 10px;
+        background: oklch(var(--b2));
+        text-align: center;
+        transition: background 150ms;
+    }
+    .perf-item:hover { background: oklch(var(--b3)); }
+
+    .perf-val { font-size: 1.45rem; font-weight: 800; color: oklch(var(--bc)); line-height: 1; }
+    .perf-lbl { font-size: .7rem;   font-weight: 600; color: oklch(var(--bc)/.45); text-transform: uppercase; letter-spacing: .06em; }
+
+    /* ── Table ── */
+    .dash-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: .82rem;
+    }
+    .dash-table th {
+        padding: .625rem 1rem;
+        text-align: left;
+        font-size: .68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .07em;
+        color: oklch(var(--bc)/.4);
+        border-bottom: .5px solid oklch(var(--bc)/.07);
+    }
+    .dash-table td {
+        padding: .75rem 1rem;
+        border-bottom: .5px solid oklch(var(--bc)/.05);
+        color: oklch(var(--bc)/.8);
+        vertical-align: middle;
+    }
+    .dash-table tr:last-child td { border-bottom: none; }
+    .dash-table tr:hover td { background: oklch(var(--b2)); }
+
+    /* ── Status badge ── */
+    .status-badge {
+        display: inline-flex; align-items: center; gap: 4px;
+        padding: 2px 9px;
+        border-radius: 20px;
+        font-size: .67rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+    }
+    .status-badge::before {
+        content: '';
+        width: 5px; height: 5px;
+        border-radius: 50%;
+        background: currentColor;
+        display: inline-block;
+    }
+    .status-badge.completed { background: rgba(0,168,107,.1);  color: #065f46; }
+    .status-badge.processing{ background: rgba(245,158,11,.1); color: #78350f; }
+    .status-badge.pending   { background: rgba(59,130,246,.1); color: #1e40af; }
+    .status-badge.cancelled { background: rgba(239,68,68,.1);  color: #991b1b; }
+
+    [data-theme="dark"] .status-badge.completed { background: rgba(0,168,107,.2); color: #34d399; }
+    [data-theme="dark"] .status-badge.processing{ background: rgba(245,158,11,.2); color: #fbbf24; }
+    [data-theme="dark"] .status-badge.pending   { background: rgba(59,130,246,.2); color: #60a5fa; }
+    [data-theme="dark"] .status-badge.cancelled { background: rgba(239,68,68,.2); color: #f87171; }
+
+    /* ── Skeleton loader ── */
+    .skel {
+        background: linear-gradient(90deg, oklch(var(--b2)) 25%, oklch(var(--b3)) 50%, oklch(var(--b2)) 75%);
+        background-size: 200% 100%;
+        animation: skel-anim 1.4s ease infinite;
+        border-radius: 6px;
+    }
+    @keyframes skel-anim {
+        0%   { background-position:  200% 0; }
+        100% { background-position: -200% 0; }
+    }
+    .skel-text  { height: .85rem; }
+    .skel-val   { height: 1.6rem; }
+    .skel-block { height: 2rem; }
+
+    /* ── Refresh spin ── */
+    .spin-anim { animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Responsive tweaks ── */
+    @media (max-width: 640px) {
+        .dash-page { padding: .875rem; gap: .875rem; }
+        .kpi-value { font-size: 1.35rem; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dash-page" x-data="dashboardApp()" x-init="init()" x-cloak>
+
+    <!-- ── Page header ── -->
+    <div class="dash-page-header">
+        <div>
+            <h1 style="font-size:1.3rem;font-weight:800;color:oklch(var(--bc));margin:0 0 2px;">
+                Dashboard Operasional
+            </h1>
+            <p style="font-size:.8rem;color:oklch(var(--bc)/.5);margin:0;">
+                Monitor performa bisnis real-time Anda
+            </p>
+        </div>
+        <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;">
+            <!-- Date Filter -->
+            <select
+                class="select select-bordered select-sm"
+                style="font-size:.8rem;height:34px;min-height:34px;border-radius:9px;"
+                x-model="selectedPeriod"
+                @change="loadKpiData()">
+                <option value="today">Hari Ini</option>
+                <option value="yesterday">Kemarin</option>
+                <option value="week">7 Hari Terakhir</option>
+                <option value="month">30 Hari Terakhir</option>
+                <option value="all">Semua Data</option>
+            </select>
+
+            <!-- Location Filter -->
+            <select
+                class="select select-bordered select-sm"
+                style="font-size:.8rem;height:34px;min-height:34px;border-radius:9px;"
+                x-model="selectedLocation"
+                @change="loadKpiData()">
+                <option value="">Semua Outlet</option>
+                <template x-for="loc in locations" :key="loc.id">
+                    <option :value="loc.id" x-text="loc.name"></option>
+                </template>
+            </select>
+
+            <!-- Refresh Button -->
+            <button
+                class="btn btn-sm"
+                style="height:34px;min-height:34px;border-radius:9px;background:var(--jade);color:white;border:none;font-size:.8rem;font-weight:600;gap:6px;padding:0 14px;"
+                @click="refreshData()"
+                :disabled="loading">
+                <svg
+                    class="w-3.5 h-3.5"
+                    :class="loading ? 'spin-anim' : ''"
+                    fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                <span x-text="loading ? 'Memuat...' : 'Refresh'"></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ── Quick stats (server-rendered: always fast) ── -->
+    <div class="stat-bar">
+        <div class="stat-tile">
+            <div class="stat-tile-icon" style="background:rgba(0,168,107,.1);color:#00a86b;">
+                <i class="fas fa-box"></i>
+            </div>
+            <div>
+                <div class="stat-tile-val">{{ quick_stats.active_products|default:"—" }}</div>
+                <div class="stat-tile-lbl">Produk Aktif</div>
+            </div>
+        </div>
+        <div class="stat-tile">
+            <div class="stat-tile-icon" style="background:rgba(59,130,246,.1);color:#3b82f6;">
+                <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div>
+                <div class="stat-tile-val">{{ quick_stats.total_locations|default:"—" }}</div>
+                <div class="stat-tile-lbl">Total Lokasi</div>
+            </div>
+        </div>
+        <div class="stat-tile">
+            <div class="stat-tile-icon" style="background:rgba(168,85,247,.1);color:#a855f7;">
+                <i class="fas fa-users"></i>
+            </div>
+            <div>
+                <div class="stat-tile-val">{{ quick_stats.total_customers|default:"—" }}</div>
+                <div class="stat-tile-lbl">Total Pelanggan</div>
+            </div>
+        </div>
+        <div class="stat-tile">
+            <div class="stat-tile-icon" style="background:rgba(245,158,11,.1);color:#f59e0b;">
+                <i class="fas fa-clipboard-list"></i>
+            </div>
+            <div>
+                <div class="stat-tile-val" x-text="kpis.pending_orders ?? '—'"></div>
+                <div class="stat-tile-lbl">Pending Orders</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── KPI cards (lazy-loaded) ── -->
+    <div class="kpi-grid">
+
+        <!-- Total Penjualan -->
+        <div class="kpi-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div class="kpi-icon" style="background:rgba(0,168,107,.1);">
+                    <svg style="width:18px;height:18px;color:#00a86b;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                    </svg>
+                </div>
+                <span class="kpi-delta" :class="kpis.sales_trend_up ? 'up' : 'down'">
+                    <svg style="width:10px;height:10px;" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" :d="kpis.sales_trend_up ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7'"/>
+                    </svg>
+                    <span x-text="kpis.sales_growth"></span>
+                </span>
+            </div>
+            <template x-if="loading">
+                <div>
+                    <div class="skel skel-val" style="width:7rem;margin-bottom:.35rem;"></div>
+                    <div class="skel skel-text" style="width:5rem;"></div>
+                </div>
+            </template>
+            <template x-if="!loading">
+                <div>
+                    <div class="kpi-value" x-text="kpis.today_sales"></div>
+                    <div class="kpi-label">Total Penjualan</div>
+                </div>
+            </template>
+        </div>
+
+        <!-- Total Transaksi -->
+        <div class="kpi-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div class="kpi-icon" style="background:rgba(59,130,246,.1);">
+                    <svg style="width:18px;height:18px;color:#3b82f6;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                    </svg>
+                </div>
+                <span class="kpi-delta" :class="kpis.transaction_trend_up ? 'up' : 'down'">
+                    <svg style="width:10px;height:10px;" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" :d="kpis.transaction_trend_up ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7'"/>
+                    </svg>
+                    <span x-text="kpis.transaction_growth"></span>
+                </span>
+            </div>
+            <template x-if="loading">
+                <div>
+                    <div class="skel skel-val" style="width:4rem;margin-bottom:.35rem;"></div>
+                    <div class="skel skel-text" style="width:5rem;"></div>
+                </div>
+            </template>
+            <template x-if="!loading">
+                <div>
+                    <div class="kpi-value" x-text="kpis.total_transactions"></div>
+                    <div class="kpi-label">Total Transaksi</div>
+                </div>
+            </template>
+        </div>
+
+        <!-- Pendapatan Bersih -->
+        <div class="kpi-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div class="kpi-icon" style="background:rgba(245,158,11,.1);">
+                    <svg style="width:18px;height:18px;color:#f59e0b;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <span class="kpi-delta" :class="(parseFloat(kpis.monthly_growth) >= 0) ? 'up' : 'down'">
+                    <span x-text="kpis.monthly_growth"></span>
+                </span>
+            </div>
+            <template x-if="loading">
+                <div>
+                    <div class="skel skel-val" style="width:7rem;margin-bottom:.35rem;"></div>
+                    <div class="skel skel-text" style="width:5.5rem;"></div>
+                </div>
+            </template>
+            <template x-if="!loading">
+                <div>
+                    <div class="kpi-value" x-text="kpis.total_revenue"></div>
+                    <div class="kpi-label">Pendapatan Bersih</div>
+                </div>
+            </template>
+        </div>
+
+        <!-- Avg Order Value -->
+        <div class="kpi-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div class="kpi-icon" style="background:rgba(168,85,247,.1);">
+                    <svg style="width:18px;height:18px;color:#a855f7;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <span class="kpi-delta neu">avg</span>
+            </div>
+            <template x-if="loading">
+                <div>
+                    <div class="skel skel-val" style="width:6rem;margin-bottom:.35rem;"></div>
+                    <div class="skel skel-text" style="width:5rem;"></div>
+                </div>
+            </template>
+            <template x-if="!loading">
+                <div>
+                    <div class="kpi-value" x-text="kpis.avg_order_value"></div>
+                    <div class="kpi-label">Avg Order Value</div>
+                </div>
+            </template>
+        </div>
+
+    </div>
+
+    <!-- ── Performance metrics + Recent activity (2-col on desktop) ── -->
+    <div style="display:grid;grid-template-columns:1fr;gap:1rem;">
+        <template x-if="true"><!-- always render both, CSS controls layout -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;">
+
+            <!-- Performance Metrics -->
+            <div class="section-card">
+                <div class="section-card-header">
+                    <span class="section-card-title">Performance Metrics</span>
+                    <span style="font-size:.7rem;color:oklch(var(--bc)/.4);" x-text="selectedPeriodLabel"></span>
+                </div>
+                <div class="section-card-body">
+                    <div class="perf-grid">
+                        <div class="perf-item">
+                            <div class="perf-val" style="color:#00a86b;" x-text="kpis.conversion_rate">—</div>
+                            <div class="perf-lbl">Conversion</div>
+                        </div>
+                        <div class="perf-item">
+                            <div class="perf-val" style="color:#3b82f6;" x-text="kpis.profit_margin">—</div>
+                            <div class="perf-lbl">Margin</div>
+                        </div>
+                        <div class="perf-item">
+                            <div class="perf-val" style="color:#f59e0b;" x-text="kpis.return_rate">—</div>
+                            <div class="perf-lbl">Return Rate</div>
+                        </div>
+                        <div class="perf-item">
+                            <div class="perf-val" style="color:#a855f7;" x-text="kpis.customer_retention">—</div>
+                            <div class="perf-lbl">Retensi</div>
+                        </div>
+                        <div class="perf-item">
+                            <div class="perf-val" x-text="kpis.inventory_turnover">—</div>
+                            <div class="perf-lbl">Inventory Turn</div>
+                        </div>
+                        <div class="perf-item">
+                            <div class="perf-val" x-text="kpis.repeat_purchase_rate">—</div>
+                            <div class="perf-lbl">Repeat Buy</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stock Alerts -->
+            <div class="section-card">
+                <div class="section-card-header">
+                    <span class="section-card-title">Stok Kritis</span>
+                    <a href="{% url 'inventory_overview' %}"
+                       style="font-size:.75rem;font-weight:600;color:var(--jade);text-decoration:none;">
+                        Lihat semua →
+                    </a>
+                </div>
+                <div>
+                    <template x-if="stockAlerts.length === 0">
+                        <div style="padding:2rem;text-align:center;color:oklch(var(--bc)/.35);font-size:.82rem;">
+                            Tidak ada produk kritis 🎉
+                        </div>
+                    </template>
+                    <template x-for="item in stockAlerts" :key="item.id">
+                        <div style="display:flex;align-items:center;gap:.75rem;padding:.75rem 1.25rem;border-bottom:.5px solid oklch(var(--bc)/.05);">
+                            <div style="width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0;"
+                                 :style="item.level === 'critical'
+                                    ? 'background:rgba(239,68,68,.1);color:#991b1b;'
+                                    : 'background:rgba(245,158,11,.1);color:#78350f;'">
+                                <i class="fas fa-box"></i>
+                            </div>
+                            <div style="flex:1;min-width:0;">
+                                <div style="font-size:.82rem;font-weight:600;color:oklch(var(--bc));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" x-text="item.name"></div>
+                                <div style="font-size:.72rem;color:oklch(var(--bc)/.45);" x-text="item.subtitle"></div>
+                            </div>
+                            <span class="status-badge"
+                                  :class="item.level === 'critical' ? 'cancelled' : 'processing'"
+                                  x-text="item.level === 'critical' ? 'Kritis' : 'Rendah'"></span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+        </div>
+        </template>
+    </div>
+
+    <!-- ── Recent Activity table ── -->
+    <div class="section-card">
+        <div class="section-card-header">
+            <span class="section-card-title">Aktivitas Terkini</span>
+            <a href="{% url 'sales_order_list' %}"
+               style="font-size:.75rem;font-weight:600;color:var(--jade);text-decoration:none;">
+                Lihat semua →
+            </a>
+        </div>
+        <div style="overflow-x:auto;">
+            <table class="dash-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Pelanggan</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Tanggal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template x-if="loading">
+                        <tr x-for="i in [1,2,3,4]" :key="i">
+                            <td><div class="skel skel-text" style="width:6rem;"></div></td>
+                            <td><div class="skel skel-text" style="width:7rem;"></div></td>
+                            <td><div class="skel skel-text" style="width:5rem;"></div></td>
+                            <td><div class="skel skel-text" style="width:5rem;border-radius:20px;"></div></td>
+                            <td><div class="skel skel-text" style="width:5.5rem;"></div></td>
+                        </tr>
+                    </template>
+                    <template x-if="!loading">
+                        <template x-for="row in recentOrders" :key="row.id">
+                            <tr>
+                                <td style="font-family:ui-monospace,monospace;font-size:.78rem;font-weight:600;" x-text="row.order_id"></td>
+                                <td x-text="row.customer"></td>
+                                <td style="font-weight:600;" x-text="row.amount"></td>
+                                <td>
+                                    <span class="status-badge" :class="row.status_class" x-text="row.status_label"></span>
+                                </td>
+                                <td style="color:oklch(var(--bc)/.5);font-size:.78rem;" x-text="row.date"></td>
+                            </tr>
+                        </template>
+                        <template x-if="recentOrders.length === 0">
+                            <tr>
+                                <td colspan="5" style="text-align:center;padding:2rem;color:oklch(var(--bc)/.35);font-size:.82rem;">
+                                    Belum ada transaksi
+                                </td>
+                            </tr>
+                        </template>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div><!-- end dash-page -->
+
+<script>
+function dashboardApp() {
+    return {
+        selectedPeriod: 'today',
+        selectedLocation: '',
+        loading: false,
+        locations: [],
+
+        kpis: {
+            today_sales:          'Rp —',
+            sales_growth:         '+0%',
+            sales_trend_up:       true,
+            total_transactions:   '—',
+            transaction_growth:   '+0%',
+            transaction_trend_up: true,
+            total_revenue:        'Rp —',
+            monthly_growth:       '+0%',
+            avg_order_value:      'Rp —',
+            pending_orders:       0,
+            conversion_rate:      '—',
+            profit_margin:        '—',
+            return_rate:          '—',
+            customer_retention:   '—',
+            inventory_turnover:   '—',
+            repeat_purchase_rate: '—',
+        },
+
+        stockAlerts: [],
+        recentOrders: [],
+
+        get selectedPeriodLabel() {
+            return { 
+                today:'Hari Ini', 
+                yesterday:'Kemarin',
+                week:'7 Hari Terakhir', 
+                month:'30 Hari Terakhir',
+                all:'Semua Data' 
+            }[this.selectedPeriod] || '';
+        },
+
+        init() {
+            this.loadLocations();
+            this.loadKpiData();
+        },
+
+        async loadLocations() {
+            try {
+                const r = await fetch('/api/locations/?format=json');
+                if (!r.ok) throw new Error(r.status);
+                const data = await r.json();
+                // Extract locations from paginated response or direct array
+                this.locations = Array.isArray(data) ? data : (data.results || []);
+            } catch (err) {
+                console.warn('Locations API unavailable:', err);
+                // Mock fallback
+                this.locations = [
+                    { id:1, name:'Toko Utama' },
+                    { id:2, name:'Cabang Bandung' },
+                    { id:3, name:'Cabang Surabaya' },
+                ];
+            }
+        },
+
+        async loadKpiData() {
+            this.loading = true;
+            try {
+                // Build query params
+                const params = new URLSearchParams();
+                params.append('period', this.selectedPeriod);
+                if (this.selectedLocation) {
+                    params.append('location_id', this.selectedLocation);
+                }
+
+                const r = await fetch(`/api/dashboard/data/?${params.toString()}`);
+                if (!r.ok) throw new Error(r.status);
+                const data = await r.json();
+
+                // KPIs
+                if (data.kpis) {
+                    Object.assign(this.kpis, data.kpis);
+                }
+                // Stock alerts
+                this.stockAlerts = data.stock_alerts || this._mockAlerts();
+                // Recent orders
+                this.recentOrders = data.recent_orders || this._mockOrders();
+            } catch (err) {
+                console.warn('Dashboard API unavailable, using mock data:', err);
+                // Fallback mock so page still looks good during dev
+                Object.assign(this.kpis, this._mockKpis());
+                this.stockAlerts  = this._mockAlerts();
+                this.recentOrders = this._mockOrders();
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async refreshData() {
+            await this.loadKpiData();
+        },
+
+        /* ── Dev mocks (remove when API is ready) ── */
+        _mockKpis() {
+            return {
+                today_sales:          'Rp 12.450.000',
+                sales_growth:         '+8.2%',
+                sales_trend_up:       true,
+                total_transactions:   '142',
+                transaction_growth:   '+3.1%',
+                transaction_trend_up: true,
+                total_revenue:        'Rp 9.810.000',
+                monthly_growth:       '+5.7%',
+                avg_order_value:      'Rp 87.600',
+                pending_orders:       7,
+                conversion_rate:      '64.2%',
+                profit_margin:        '21.3%',
+                return_rate:          '1.4%',
+                customer_retention:   '78.5%',
+                inventory_turnover:   '4.2x',
+                repeat_purchase_rate: '38.1%',
+            };
+        },
+        _mockAlerts() {
+            return [
+                { id:1, name:'Kopi Mandheling',      subtitle:'Stok: 12 Kg · min 20 Kg', level:'warning'  },
+                { id:2, name:'Gayo Natural Process',  subtitle:'Stok: 0 — Habis',         level:'critical' },
+                { id:3, name:'Kopi Luwak Toraja',     subtitle:'Stok: 5 Kg · min 15 Kg',  level:'critical' },
+            ];
+        },
+        _mockOrders() {
+            return [
+                { id:1, order_id:'#ORD-001234', customer:'Budi Santoso',  amount:'Rp 1.250.000', status_class:'completed',  status_label:'Selesai',    date:'15 Jan 2025' },
+                { id:2, order_id:'#ORD-001235', customer:'Sari Dewi',     amount:'Rp 850.000',   status_class:'processing', status_label:'Proses',     date:'15 Jan 2025' },
+                { id:3, order_id:'#ORD-001236', customer:'Andi Wijaya',   amount:'Rp 430.000',   status_class:'pending',    status_label:'Menunggu',   date:'14 Jan 2025' },
+                { id:4, order_id:'#ORD-001237', customer:'Rina Kusuma',   amount:'Rp 2.100.000', status_class:'completed',  status_label:'Selesai',    date:'14 Jan 2025' },
+                { id:5, order_id:'#ORD-001238', customer:'Hendra Gunawan',amount:'Rp 680.000',   status_class:'cancelled',  status_label:'Dibatalkan', date:'13 Jan 2025' },
+            ];
+        },
+    };
+}
+</script>
+{% endblock %}

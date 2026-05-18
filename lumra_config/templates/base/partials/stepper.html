@@ -1,0 +1,44 @@
+{# base/partials/stepper.html #}
+{# Step-by-step form stepper component #}
+
+<div class="mb-8">
+  <div class="flex items-center justify-between">
+    {% for step in steps %}
+      <div class="flex items-center flex-1">
+        <!-- Step circle -->
+        <div class="flex items-center">
+          <div class="relative">
+            {% if step.completed %}
+              <div class="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold border-2 border-emerald-500">
+                <i class="fas fa-check"></i>
+              </div>
+            {% elif step.active %}
+              <div class="w-10 h-10 rounded-full bg-emerald-700 flex items-center justify-center text-white font-bold border-2 border-emerald-500 ring-4 ring-emerald-500/30">
+                {{ forloop.counter }}
+              </div>
+            {% else %}
+              <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center text-slate-400 font-bold border-2 border-slate-600">
+                {{ forloop.counter }}
+              </div>
+            {% endif %}
+          </div>
+          
+          <!-- Label -->
+          <div class="ml-3">
+            <p class="text-sm font-semibold {% if step.active or step.completed %}text-emerald-400{% else %}text-slate-400{% endif %}">
+              {{ step.label }}
+            </p>
+            {% if step.description %}
+              <p class="text-xs text-slate-500">{{ step.description }}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Connector line -->
+        {% if not forloop.last %}
+          <div class="flex-1 h-1 mx-4 {% if step.completed %}bg-emerald-600{% else %}bg-slate-700{% endif %}"></div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</div>

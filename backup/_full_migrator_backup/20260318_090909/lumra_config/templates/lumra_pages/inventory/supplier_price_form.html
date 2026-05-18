@@ -1,0 +1,378 @@
+
+<style>
+/* Glass Minimal — lumra_glass_fix.py fase 5 (konservatif) */
+.modal-overlay {
+  background: var(--glass-dark-bg, var(--color-slate-900-a040));
+  backdrop-filter: var(--backdrop-var-glass-dark-blur-blur-6px);
+  -webkit-backdrop-filter: var(--backdrop-var-glass-dark-blur-blur-6px);
+}
+.panel-glass {
+  background: var(--glass-bg, var(--color-white-a072));
+  backdrop-filter: var(--backdrop-var-glass-blur-blur-14px-saturate-1);
+  -webkit-backdrop-filter: var(--backdrop-var-glass-blur-blur-14px-saturate-1);
+  border: 1px solid var(--glass-border, var(--color-white-a020));
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow, 0 2px 12px var(--color-black-a06));
+}
+
+</style>
+{% extends 'base/base.html' %}
+{% block title %}{% if is_edit %}Edit{% else %}Tambah{% endif %} Supplier Price — CoffeeShop{% endblock %}
+
+{#
+   Data via json_script — menggantikan Jinja2 syntax dan interpolasi Django ke JS.
+   Di view, tambahkan:
+     context['form_init'] = json.dumps({
+         'is_edit': bool(is_edit),
+         'price_id': instance.id if is_edit else None,
+     })
+     context['product_units'] = {
+         str(variant.id): variant.product.unit.short_name or 'unit'
+         for variant in form.product.field.queryset
+     }
+     # json.dumps di Python meng-escape semua karakter berbahaya secara otomatis
+#}
+{{ form_init|json_script:"form-init-data" }}
+{{ product_units|json_script:"product-units-data" }}
+
+{% block content %}
+<div class="py-6 px-3 sm:px-4 lg:px-6"
+     x-data="supplierPriceForm()"
+     x-init="init()">
+<div class="max-w-3xl mx-auto space-y-6">
+
+    {# ── HEADER ──────────────────────────────────────────────── #}
+    <div>
+        <nav aria-label="Breadcrumb" class="mb-1">
+            <ol class="flex items-center gap-2 text-sm text-blue-600">
+                <li><a href="{% url 'dashboard' %}" class="hover:text-blue-800 transition-colors">Dashboard</a></li>
+                <li aria-hidden="true"><span class="text-blue-300">/</span></li>
+                <li><a href="{% url 'supplier_price_list' %}" class="hover:text-blue-800 transition-colors">Supplier Prices</a></li>
+                <li aria-hidden="true"><span class="text-blue-300">/</span></li>
+                <li class="text-blue-800 font-medium" aria-current="page">
+                    {% if is_edit %}Edit{% else %}Tambah{% endif %} Harga
+                </li>
+            </ol>
+        </nav>
+        <h1 class="text-2xl md:text-3xl font-bold text-slate-900">
+            {% if is_edit %}Edit Supplier Price{% else %}Tambah Supplier Price{% endif %}
+        </h1>
+        <p class="text-sm text-blue-600 mt-0.5">
+            {% if is_edit %}Perbarui detail harga supplier{% else %}Set harga baru untuk produk dari supplier{% endif %}
+        </p>
+    </div>
+
+    {# ── FORM CARD ────────────────────────────────────────────── #}
+    <div class="p-6 rounded-2xl shadow-sm border border-slate-100" style="background:var(--color-surface)">
+        {#
+           Form menggunakan id="price-form" yang eksplisit — tidak mengambil
+           ID dari template tag form.supplier.id_for_label yang bisa berubah.
+           @submit.prevent mengarahkan submit ke Alpine submitForm().
+        #}
+        <form id="price-form"
+              @submit.prevent="submitForm()"
+              novalidate
+              class="space-y-5">
+            {% csrf_token %}
+
+            {# Supplier #}
+            <div>
+                <label for="{{ form.supplier.id_for_label }}"
+                       class="block text-sm font-medium text-slate-700 mb-1">
+                    Supplier <span class="text-red-500" aria-hidden="true">*</span>
+                </label>
+                {{ form.supplier }}
+                {# x-text aman — errors diisi dari Alpine state, bukan dari server HTML #}
+                <p x-show="errors.supplier"
+                   x-text="errors.supplier"
+                   class="mt-1 text-xs text-red-600"
+                   role="alert"></p>
+                {% if form.supplier.errors %}
+                <p class="mt-1 text-xs text-red-600">{{ form.supplier.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            {# Product — @change trigger auto-fill unit #}
+            <div>
+                <label for="{{ form.product.id_for_label }}"
+                       class="block text-sm font-medium text-slate-700 mb-1">
+                    Produk <span class="text-red-500" aria-hidden="true">*</span>
+                </label>
+                {#
+                   @change memanggil handleProductChange() — membaca value dari
+                   elemen select ini, mencari unit yang sesuai dari productUnits map,
+                   lalu mengisi field unit secara otomatis.
+                   TIDAK ada interpolasi Django ke handler JS.
+                #}
+                <div @change="handleProductChange($event)">
+                    {{ form.product }}
+                </div>
+                <p x-show="errors.product"
+                   x-text="errors.product"
+                   class="mt-1 text-xs text-red-600"
+                   role="alert"></p>
+                {% if form.product.errors %}
+                <p class="mt-1 text-xs text-red-600">{{ form.product.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            {# Price #}
+            <div>
+                <label for="{{ form.price.id_for_label }}"
+                       class="block text-sm font-medium text-slate-700 mb-1">
+                    Harga <span class="text-red-500" aria-hidden="true">*</span>
+                </label>
+                <div class="relative">
+                    <span class="absolute left-3 top-2.5 text-sm text-slate-500 pointer-events-none"
+                          aria-hidden="true">Rp</span>
+                    {{ form.price }}
+                </div>
+                <p x-show="errors.price"
+                   x-text="errors.price"
+                   class="mt-1 text-xs text-red-600"
+                   role="alert"></p>
+                {% if form.price.errors %}
+                <p class="mt-1 text-xs text-red-600">{{ form.price.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            {# Unit — diisi otomatis saat produk dipilih #}
+            <div>
+                <label for="{{ form.unit.id_for_label }}"
+                       class="block text-sm font-medium text-slate-700 mb-1">
+                    Unit <span class="text-red-500" aria-hidden="true">*</span>
+                </label>
+                {{ form.unit }}
+                <p x-show="errors.unit"
+                   x-text="errors.unit"
+                   class="mt-1 text-xs text-red-600"
+                   role="alert"></p>
+                {% if form.unit.errors %}
+                <p class="mt-1 text-xs text-red-600">{{ form.unit.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            {# Effective Date #}
+            <div>
+                <label for="{{ form.effective_date.id_for_label }}"
+                       class="block text-sm font-medium text-slate-700 mb-1">
+                    Tanggal Efektif <span class="text-red-500" aria-hidden="true">*</span>
+                </label>
+                {{ form.effective_date }}
+                <p x-show="errors.effective_date"
+                   x-text="errors.effective_date"
+                   class="mt-1 text-xs text-red-600"
+                   role="alert"></p>
+                {% if form.effective_date.errors %}
+                <p class="mt-1 text-xs text-red-600">{{ form.effective_date.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            {# Submit buttons #}
+            <div class="flex gap-3 pt-4 border-t border-slate-100">
+                <button type="submit"
+                        :disabled="isLoading"
+                        class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold py-2 px-5 rounded-xl transition-colors shadow-sm">
+                    <i x-show="isLoading" class="fas fa-circle-notch fa-spin text-xs" aria-hidden="true"></i>
+                    <i x-show="!isLoading" class="fas fa-save text-xs" aria-hidden="true"></i>
+                    <span x-text="isLoading ? 'Menyimpan...' : (isEdit ? 'Simpan Perubahan' : 'Buat Harga')"></span>
+                </button>
+                <a href="{% url 'supplier_price_list' %}"
+                   class="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-medium py-2 px-4 rounded-xl transition-colors">
+                    <i class="fas fa-times text-xs" aria-hidden="true"></i> Batal
+                </a>
+            </div>
+        </form>
+    </div>
+
+</div>
+</div>
+
+{# Toast container #}
+<div id="toast-container"
+     class="fixed bottom-4 right-4 z-50 space-y-2 pointer-events-none"
+     aria-live="polite"></div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+function supplierPriceForm() {
+    return {
+        // ── State ──────────────────────────────────────────────
+        isEdit: false,
+        isLoading: false,
+        errors: {},
+
+        // Map variantId (string) → unit short_name
+        // Diinisialisasi dari json_script — bukan dari {% for variant in queryset %} di JS
+        productUnits: {},
+
+        // ── Init ───────────────────────────────────────────────
+        init() {
+            // form_init dari json_script
+            const formInit = JSON.parse(
+                document.getElementById('form-init-data')?.textContent || 'null'
+            );
+            if (formInit) {
+                this.isEdit = formInit.is_edit ?? false;
+            }
+
+            // product_units dari json_script — key: string variant.id, value: unit short_name
+            // json_script meng-escape semua karakter berbahaya (termasuk " dan \)
+            this.productUnits = JSON.parse(
+                document.getElementById('product-units-data')?.textContent || '{}'
+            );
+
+            // Auto-fill unit jika edit mode (produk sudah terpilih)
+            const productSelect = document.querySelector('[name="product"]');
+            if (productSelect?.value) {
+                this.fillUnit(productSelect.value);
+            }
+
+            // Keyboard shortcut Ctrl+S
+            document.addEventListener('keydown', e => {
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+                    e.preventDefault();
+                    this.submitForm();
+                }
+            });
+        },
+
+        // ── Product Change ─────────────────────────────────────
+        handleProductChange(event) {
+            const productId = event.target.value;
+            this.fillUnit(productId);
+        },
+
+        fillUnit(productId) {
+            if (!productId) return;
+            // productUnits adalah plain object {variantId: unitShortName}
+            const unit = this.productUnits[String(productId)];
+            if (!unit) return;
+            const unitSelect = document.querySelector('[name="unit"]');
+            if (!unitSelect) return;
+            // Cari option yang value-nya sesuai unit short_name atau id
+            const option = Array.from(unitSelect.options)
+                .find(o => o.value === unit || o.text === unit);
+            if (option) unitSelect.value = option.value;
+        },
+
+        // ── Validation ─────────────────────────────────────────
+        validateForm() {
+            this.errors = {};
+            let valid = true;
+
+            // Validasi semua required fields via querySelectorAll
+            // TIDAK menggunakan id_for_label yang diinterpolasi dari template
+            const form = document.getElementById('price-form');
+            const requiredFields = form.querySelectorAll('[required], select, input[type="number"], input[type="date"]');
+
+            requiredFields.forEach(field => {
+                const name = field.name;
+                if (!name) return;
+                const val = field.value?.trim();
+                if (!val) {
+                    this.errors[name] = 'Field ini wajib diisi.';
+                    field.classList.add('border-red-400');
+                    valid = false;
+                } else {
+                    field.classList.remove('border-red-400');
+                }
+            });
+
+            // Validasi harga > 0
+            const priceField = form.querySelector('[name="price"]');
+            if (priceField && parseFloat(priceField.value) <= 0) {
+                this.errors.price = 'Harga harus lebih dari 0.';
+                valid = false;
+            }
+
+            return valid;
+        },
+
+        // ── Submit ─────────────────────────────────────────────
+        submitForm() {
+            if (!this.validateForm()) {
+                this.showToast('Lengkapi semua field yang wajib diisi.', 'error');
+                // Fokus ke field pertama yang error
+                const firstError = document.querySelector('.border-red-400');
+                if (firstError) firstError.focus();
+                return;
+            }
+
+            this.isLoading = true;
+
+            const form = document.getElementById('price-form');
+            // FormData otomatis mengambil semua field dalam form termasuk csrf token
+            const formData = new FormData(form);
+
+            fetch(window.location.href, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    // CSRF diambil dari FormData — tidak perlu X-CSRFToken header terpisah
+                    // karena server membaca dari POST body untuk multipart/form-data
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                },
+                body: formData,
+            })
+                .then(res => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
+                .then(data => {
+                    if (data.success) {
+                        this.showToast(
+                            this.isEdit
+                                ? 'Harga supplier berhasil diperbarui!'
+                                : 'Harga supplier berhasil dibuat!',
+                            'success'
+                        );
+                        setTimeout(() => {
+                            window.location.href = '{% url "supplier_price_list" %}';
+                        }, 1200);
+                    } else if (data.errors) {
+                        // Server-side validation errors — ditampilkan via x-text
+                        this.errors = {};
+                        Object.entries(data.errors).forEach(([field, msgs]) => {
+                            this.errors[field] = Array.isArray(msgs) ? msgs[0] : msgs;
+                        });
+                        this.showToast('Terdapat kesalahan pada form. Periksa kembali.', 'error');
+                    } else {
+                        this.showToast(data.error || 'Terjadi kesalahan. Coba lagi.', 'error');
+                    }
+                })
+                .catch(() => this.showToast('Terjadi kesalahan. Coba lagi.', 'error'))
+                .finally(() => { this.isLoading = false; });
+        },
+
+        // ── Toast ──────────────────────────────────────────────
+        showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const colors = { success: 'bg-green-500', error: 'bg-red-500', warning: 'bg-amber-500', info: 'bg-blue-500' };
+            const toast = document.createElement('div');
+            toast.className = [colors[type] ?? colors.info, 'text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 pointer-events-auto translate-x-full transition-transform duration-300 text-sm'].join(' ');
+            toast.setAttribute('role', 'status');
+            const msg = document.createElement('span');
+            msg.className = 'flex-1';
+            msg.textContent = message;
+            const btn = document.createElement('button');
+            btn.setAttribute('aria-label', 'Tutup');
+            btn.className = 'text-white/80 hover:text-white flex-shrink-0';
+            btn.innerHTML = '<i class="fas fa-times text-xs" aria-hidden="true"></i>';
+            btn.addEventListener('click', dismiss);
+            toast.appendChild(msg);
+            toast.appendChild(btn);
+            container.appendChild(toast);
+            requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.remove('translate-x-full')));
+            const timer = setTimeout(dismiss, 5000);
+            function dismiss() {
+                clearTimeout(timer);
+                toast.classList.add('translate-x-full');
+                toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+            }
+        }
+    };
+}
+</script>
+{% endblock %}

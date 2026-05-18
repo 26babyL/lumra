@@ -1,0 +1,207 @@
+{% extends "base/base_hybrid.html" %}
+{% load static %}
+
+{% block title %}Purchasing{% endblock %}
+{% block page_title %}Purchasing{% endblock %}
+{% block page_subtitle %}Manage purchase orders and suppliers{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Header Actions -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <div class="flex gap-2">
+            <button class="btn btn-primary">
+                <i class="fas fa-plus mr-2"></i>
+                New Purchase Order
+            </button>
+            <button class="btn btn-outline">
+                <i class="fas fa-download mr-2"></i>
+                Export
+            </button>
+        </div>
+        <div class="flex gap-2">
+            <div class="form-control">
+                <input type="text" placeholder="Search purchase orders..." class="input input-bordered" />
+            </div>
+            <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-outline">
+                    <i class="fas fa-filter mr-2"></i>
+                    Filter
+                </label>
+                <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-52">
+                    <li><a href="#">Draft</a></li>
+                    <li><a href="#">Sent</a></li>
+                    <li><a href="#">Partial Received</a></li>
+                    <li><a href="#">Received</a></li>
+                    <li><a href="#">Cancelled</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="stat bg-base-100 rounded-lg shadow">
+            <div class="stat-figure text-primary">
+                <i class="fas fa-shopping-bag text-3xl"></i>
+            </div>
+            <div class="stat-title">Total Orders</div>
+            <div class="stat-value text-primary">48</div>
+            <div class="stat-desc">This month</div>
+        </div>
+        
+        <div class="stat bg-base-100 rounded-lg shadow">
+            <div class="stat-figure text-warning">
+                <i class="fas fa-clock text-3xl"></i>
+            </div>
+            <div class="stat-title">Pending</div>
+            <div class="stat-value text-warning">12</div>
+            <div class="stat-desc">Awaiting delivery</div>
+        </div>
+        
+        <div class="stat bg-base-100 rounded-lg shadow">
+            <div class="stat-figure text-success">
+                <i class="fas fa-check-circle text-3xl"></i>
+            </div>
+            <div class="stat-title">Received</div>
+            <div class="stat-value text-success">28</div>
+            <div class="stat-desc">This month</div>
+        </div>
+        
+        <div class="stat bg-base-100 rounded-lg shadow">
+            <div class="stat-figure text-info">
+                <i class="fas fa-dollar-sign text-3xl"></i>
+            </div>
+            <div class="stat-title">Total Value</div>
+            <div class="stat-value text-info">Rp 125M</div>
+            <div class="stat-desc">This month</div>
+        </div>
+    </div>
+
+    <!-- Purchase Orders Table -->
+    <div class="card bg-base-100 shadow-lg">
+        <div class="card-body p-0">
+            <div class="overflow-x-auto">
+                <table class="table table-compact w-full">
+                    <thead>
+                        <tr>
+                            <th>
+                                <label>
+                                    <input type="checkbox" class="checkbox checkbox-sm" />
+                                </label>
+                            </th>
+                            <th>PO Number</th>
+                            <th>Supplier</th>
+                            <th>Items</th>
+                            <th>Total Amount</th>
+                            <th>Status</th>
+                            <th>Expected Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for purchase in page_obj %}
+                        <tr class="hover">
+                            <td>
+                                <label>
+                                    <input type="checkbox" class="checkbox checkbox-sm" />
+                                </label>
+                            </td>
+                            <td class="font-mono">{{ purchase.po_number }}</td>
+                            <td>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
+                                        <i class="fas fa-truck text-primary text-xs"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium">{{ purchase.supplier.name }}</div>
+                                        <div class="text-xs text-base-content/60">Supplier ID: {{ purchase.supplier.id }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-sm">
+                                    <div>{{ purchase.description }}</div>
+                                    <div class="text-base-content/60">{{ purchase.items_count }} items</div>
+                                </div>
+                            </td>
+                            <td class="text-right font-semibold">Rp {{ purchase.total_amount|floatformat:0|intcomma }}</td>
+                            <td><span class="badge badge-{{ purchase.status|lower }} badge-sm">{{ purchase.status }}</span></td>
+                            <td>{{ purchase.expected_date|date:"Y-m-d" }}</td>
+                            <td>
+                                <div class="dropdown dropdown-end">
+                                    <label tabindex="0" class="btn btn-ghost btn-sm btn-circle">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </label>
+                                    <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-48">
+                                        <li><a href="#"><i class="fas fa-eye mr-2"></i>View</a></li>
+                                        <li><a href="#"><i class="fas fa-edit mr-2"></i>Edit</a></li>
+                                        <li><a href="#"><i class="fas fa-truck mr-2"></i>Mark Received</a></li>
+                                        <li><a href="#"><i class="fas fa-print mr-2"></i>Print</a></li>
+                                        <li><a href="#"><i class="fas fa-trash mr-2"></i>Delete</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-8">
+                                <div class="text-base-content/60">
+                                    <i class="fas fa-shopping-bag text-4xl mb-4"></i>
+                                    <p class="text-lg font-medium">No purchase orders found</p>
+                                    <p class="text-sm">Create your first purchase order to get started.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-between items-center mt-6" x-data="{ 
+        currentPage: {{ current_page }}, 
+        hasMore: {{ has_more }}, 
+        isLoadingMore: false 
+    }">
+        <div class="text-sm text-base-content/60">
+            <span x-show="!isLoadingMore">
+                Menampilkan {{ per_page }} dari {{ total_count }} data
+                <span x-show="hasMore"> (halaman {{ current_page }})</span>
+            </span>
+            <span x-show="isLoadingMore" class="loading loading-dots">
+                <span class="loading-dot"></span>
+                <span class="loading-dot"></span>
+                <span class="loading-dot"></span>
+                <span> memuat data...</span>
+            </span>
+        </div>
+        
+        <div class="join">
+            <button class="join-item btn btn-outline" 
+                    x-show="currentPage > 1" 
+                    @click="window.location.href='?page=' + (currentPage - 1)">«</button>
+            <button class="join-item btn btn-outline" 
+                    x-show="currentPage > 2" 
+                    @click="window.location.href='?page=' + (currentPage - 2)">‹</button>
+            <template x-for="page in [Math.max(1, currentPage - 2), currentPage, currentPage + 1, currentPage + 2].slice(0, 5)">
+                <button class="join-item" 
+                        :class="page === currentPage ? 'btn-primary' : 'btn-outline'"
+                        @click="window.location.href='?page=' + page">{{ page }}</button>
+            </template>
+            <button class="join-item btn btn-outline" 
+                    x-show="hasMore" 
+                    @click="isLoadingMore = true; $nextTick(() => { window.location.href='?page=' + (currentPage + 1) })">
+                <span x-show="isLoadingMore" class="loading loading-dots">
+                    <span class="loading-dot"></span>
+                    <span class="loading-dot"></span>
+                    <span class="loading-dot"></span>
+                </span>
+                <span x-show="!isLoadingMore">»</span>
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

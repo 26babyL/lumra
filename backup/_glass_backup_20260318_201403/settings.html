@@ -1,0 +1,348 @@
+{% extends 'base/base.html' %}
+
+{% block title %}My Settings - CoffeeShop{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 py-8 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-5">
+        <div class="absolute top-10 left-10 w-20 h-20 bg-emerald-200 rounded-full blur-xl animate-pulse"></div>
+        <div class="absolute bottom-10 right-10 w-32 h-32 bg-green-200 rounded-full blur-xl animate-pulse"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-teal-200 rounded-full blur-2xl animate-pulse"></div>
+    </div>
+
+    <div class="max-w-6xl mx-auto relative z-10" x-data="userSettings()">
+        <!-- Header -->
+        <div class="mb-8">
+            <nav class="mb-2" aria-label="Breadcrumb">
+                <ol class="flex items-center space-x-2 text-sm text-emerald-600">
+                    <li><a href="{% url 'dashboard' %}" class="hover:text-emerald-800 transition-colors">Dashboard</a></li>
+                    <li><span class="text-emerald-400">/</span></li>
+                    <li class="text-emerald-800 font-medium">My Settings</li>
+                </ol>
+            </nav>
+            <h1 class="text-4xl font-bold text-slate-900 bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">My Settings</h1>
+            <p class="text-emerald-700 mt-1">Manage your account settings and preferences</p>
+        </div>
+
+        <!-- Success/Error Message -->
+        <div x-show="message.text" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="p-4 rounded-2xl shadow-xl mb-6" :class="message.type === 'success' ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-red-100 text-red-800 border border-red-200'">
+            <p x-text="message.text"></p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Sidebar Navigation -->
+            <div class="lg:w-1/4">
+                <nav class="p-4 rounded-2xl shadow-xl border border-emerald-100" style="background:var(--color-surface)">
+                    <ul class="space-y-1">
+                        <template x-for="section in navigation" :key="section.id">
+                            <li>
+                                <button @click="currentSection = section.id" :class="currentSection === section.id ? 'bg-emerald-100 text-emerald-700 border-l-4 border-emerald-500' : 'text-slate-700 hover:bg-emerald-50 hover:text-emerald-700'" class="w-full text-left px-4 py-3 rounded-lg transition-all duration-200 flex items-center gap-3">
+                                    <i :class="section.icon" class="w-5"></i>
+                                    <span x-text="section.name"></span>
+                                </button>
+                            </li>
+                        </template>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="lg:w-3/4">
+                <div class="p-6 rounded-2xl shadow-xl border border-emerald-100" style="background:var(--color-surface)">
+                    
+                    <!-- Profile Section -->
+                    <div x-show="currentSection === 'profile'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-2xl font-bold text-slate-900">Profile Information</h2>
+                            <button @click="toggleEdit('profile')" class="text-emerald-600 hover:text-emerald-800 font-medium transition-colors">
+                                <i class="fas fa-edit"></i> <span x-text="isEditing.profile ? 'Cancel' : 'Edit'"></span>
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-6 mb-6">
+                            <div class="relative">
+                                <img src="https://picsum.photos/seed/user-avatar/150/150.jpg" alt="Profile Avatar" class="w-24 h-24 rounded-full object-cover border-4 border-emerald-200">
+                                <button x-show="isEditing.profile" class="absolute bottom-0 right-0 bg-emerald-500 text-white p-2 rounded-full shadow-lg hover:bg-emerald-400 transition-colors">
+                                    <i class="fas fa-camera text-xs"></i>
+                                </button>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-slate-900" x-text="userProfile.name"></h3>
+                                <p class="text-slate-600" x-text="userProfile.role"></p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Full Name</label>
+                                <p x-show="!isEditing.profile" class="text-slate-900" x-text="userProfile.name"></p>
+                                <input x-show="isEditing.profile" type="text" x-model="userProfile.name" class="w-full px-3 py-2 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Username</label>
+                                <p class="text-slate-900" x-text="userProfile.username"></p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Email Address</label>
+                                <p class="text-slate-900" x-text="userProfile.email"></p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Phone Number</label>
+                                <p x-show="!isEditing.profile" class="text-slate-900" x-text="userProfile.phone"></p>
+                                <input x-show="isEditing.profile" type="tel" x-model="userProfile.phone" class="w-full px-3 py-2 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-transparent">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Bio</label>
+                                <p x-show="!isEditing.profile" class="text-slate-900" x-text="userProfile.bio"></p>
+                                <textarea x-show="isEditing.profile" x-model="userProfile.bio" rows="3" class="w-full px-3 py-2 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-transparent"></textarea>
+                            </div>
+                        </div>
+                        <div x-show="isEditing.profile" class="flex justify-end gap-3 mt-6">
+                            <button @click="toggleEdit('profile')" class="px-4 py-2 bg-slate-200 text-slate-800 rounded-lg hover:bg-slate-300 transition-colors">Cancel</button>
+                            <button @click="saveProfile" class="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-400 transition-colors">Save Changes</button>
+                        </div>
+                    </div>
+
+                    <!-- Security Section -->
+                    <div x-show="currentSection === 'security'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-6">Security</h2>
+                        
+                        <!-- Change Password -->
+                        <div class="mb-8 p-4 bg-slate-50 rounded-xl">
+                            <h3 class="text-lg font-semibold text-slate-800 mb-4">Change Password</h3>
+                            <form @submit.prevent="changePassword" class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Current Password</label>
+                                    <input type="password" x-model="passwordForm.current" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-transparent" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">New Password</label>
+                                    <input type="password" x-model="passwordForm.new" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-transparent" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Confirm New Password</label>
+                                    <input type="password" x-model="passwordForm.confirm" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-transparent" required>
+                                </div>
+                                <button type="submit" class="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-400 transition-colors">Update Password</button>
+                            </form>
+                        </div>
+
+                        <!-- Two-Factor Authentication -->
+                        <div class="p-4 bg-slate-50 rounded-xl">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h3 class="text-lg font-semibold text-slate-800">Two-Factor Authentication</h3>
+                                    <p class="text-sm text-slate-600">Add an extra layer of security to your account.</p>
+                                </div>
+                                <button @click="toggle2FA" class="px-4 py-2 rounded-lg font-medium transition-colors" :class="securitySettings.twoFactorEnabled ? 'bg-red-100 text-red-700 hover:bg-red-200' : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'">
+                                    <span x-text="securitySettings.twoFactorEnabled ? 'Disable' : 'Enable'"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notifications Section -->
+                    <div x-show="currentSection === 'notifications'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-6">Notification Preferences</h2>
+                        <div class="space-y-4">
+                            <template x-for="notif in notificationSettings" :key="notif.key">
+                                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-lg">
+                                    <div>
+                                        <p class="font-medium text-slate-900" x-text="notif.label"></p>
+                                        <p class="text-sm text-slate-600" x-text="notif.description"></p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" x-model="notif.enabled" class="sr-only peer" @change="saveNotifications">
+                                        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                                    </label>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- API Section -->
+                    <div x-show="currentSection === 'api'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-2xl font-bold text-slate-900">API Access</h2>
+                            <button @click="generateApiKey" class="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                                <i class="fas fa-plus"></i> Generate New Key
+                            </button>
+                        </div>
+                        <div class="space-y-3">
+                            <template x-for="key in apiKeys" :key="key.id">
+                                <div class="flex justify-between items-center p-4 border border-slate-200 rounded-lg">
+                                    <div>
+                                        <p class="font-mono text-sm text-slate-800" x-text="key.key"></p>
+                                        <p class="text-xs text-slate-500">Created: <span x-text="key.created"></span></p>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <button @click="copyToClipboard(key.key)" class="text-blue-600 hover:text-blue-800">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                        <button @click="revokeApiKey(key.id)" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </template>
+                             <div x-show="apiKeys.length === 0" class="text-center py-8 text-slate-500">
+                                <i class="fas fa-key text-4xl mb-2"></i>
+                                <p>No API keys generated yet.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sessions Section -->
+                    <div x-show="currentSection === 'sessions'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-2xl font-bold text-slate-900">Active Sessions</h2>
+                            <button @click="revokeAllSessions" class="text-red-600 hover:text-red-800 font-medium transition-colors">
+                                Revoke All Other Sessions
+                            </button>
+                        </div>
+                        <div class="space-y-3">
+                            <template x-for="session in activeSessions" :key="session.id">
+                                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-lg">
+                                    <div class="flex items-center gap-4">
+                                        <i class="fas fa-laptop text-2xl text-slate-400"></i>
+                                        <div>
+                                            <p class="font-medium text-slate-900" x-text="session.device"></p>
+                                            <p class="text-sm text-slate-600"><span x-text="session.location"></span> • Last active <span x-text="session.lastActive"></span></p>
+                                        </div>
+                                    </div>
+                                    <span x-show="session.current" class="px-3 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800">Current</span>
+                                    <button x-show="!session.current" @click="revokeSession(session.id)" class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-times-circle"></i> Revoke
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function userSettings() {
+    return {
+        currentSection: 'profile',
+        isEditing: { profile: false },
+        message: { text: '', type: 'success' },
+
+        navigation: [
+            { id: 'profile', name: 'Profile', icon: 'fas fa-user' },
+            { id: 'security', name: 'Security', icon: 'fas fa-shield-alt' },
+            { id: 'notifications', name: 'Notifications', icon: 'fas fa-bell' },
+            { id: 'api', name: 'API Access', icon: 'fas fa-key' },
+            { id: 'sessions', name: 'Sessions', icon: 'fas fa-desktop' },
+        ],
+
+        userProfile: {
+            name: 'John Administrator',
+            username: 'john.admin',
+            email: 'john.admin@coffeeshop.com',
+            phone: '+62 812 3456 7890',
+            role: 'Super Admin',
+            bio: 'Passionate about coffee and technology. Managing the CoffeeShop empire.'
+        },
+
+        passwordForm: {
+            current: '',
+            new: '',
+            confirm: ''
+        },
+
+        securitySettings: {
+            twoFactorEnabled: false
+        },
+
+        notificationSettings: [
+            { key: 'newUser', label: 'New User Registration', description: 'Get notified when a new user registers.', enabled: true },
+            { key: 'newOrder', label: 'New Order', description: 'Receive an email for every new order.', enabled: true },
+            { key: 'lowStock', label: 'Low Stock Alert', description: 'Alert when an item\'s stock is low.', enabled: true },
+            { key: 'newsletter', label: 'Newsletter', description: 'Receive weekly updates and news.', enabled: false },
+        ],
+
+        apiKeys: [
+            { id: 1, key: 'cs_live_...aBcDeFgHiJkLmNoPqRsTuVwXyZ', created: '2023-05-10' },
+        ],
+
+        activeSessions: [
+            { id: 1, device: 'Chrome on macOS', location: 'Jakarta, Indonesia', lastActive: '2 minutes ago', current: true },
+            { id: 2, device: 'Safari on iPhone', location: 'Jakarta, Indonesia', lastActive: '1 hour ago', current: false },
+        ],
+
+        // Methods
+        toggleEdit(section) {
+            this.isEditing[section] = !this.isEditing[section];
+        },
+
+        saveProfile() {
+            // Simulate API call
+            this.showMessage('Your profile has been updated successfully!', 'success');
+            this.isEditing.profile = false;
+        },
+
+        changePassword() {
+            if (this.passwordForm.new !== this.passwordForm.confirm) {
+                this.showMessage('New passwords do not match.', 'error');
+                return;
+            }
+            // Simulate API call
+            this.showMessage('Your password has been changed successfully!', 'success');
+            this.passwordForm = { current: '', new: '', confirm: '' };
+        },
+
+        toggle2FA() {
+            this.securitySettings.twoFactorEnabled = !this.securitySettings.twoFactorEnabled;
+            const status = this.securitySettings.twoFactorEnabled ? 'enabled' : 'disabled';
+            this.showMessage(`Two-Factor Authentication has been ${status}.`, 'success');
+        },
+
+        saveNotifications() {
+            // Simulate API call
+            this.showMessage('Notification preferences saved.', 'success');
+        },
+
+        generateApiKey() {
+            const newKey = {
+                id: this.apiKeys.length + 1,
+                key: 'cs_live_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
+                created: new Date().toISOString().split('T')[0]
+            };
+            this.apiKeys.push(newKey);
+            this.showMessage('New API key generated successfully!', 'success');
+        },
+
+        revokeApiKey(id) {
+            this.apiKeys = this.apiKeys.filter(k => k.id !== id);
+            this.showMessage('API key revoked.', 'success');
+        },
+
+        copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+            this.showMessage('API key copied to clipboard!', 'success');
+        },
+
+        revokeSession(id) {
+            this.activeSessions = this.activeSessions.filter(s => s.id !== id);
+            this.showMessage('Session revoked.', 'success');
+        },
+
+        revokeAllSessions() {
+            this.activeSessions = this.activeSessions.filter(s => s.current);
+            this.showMessage('All other sessions have been revoked.', 'success');
+        },
+
+        showMessage(text, type = 'success') {
+            this.message.text = text;
+            this.message.type = type;
+            setTimeout(() => {
+                this.message.text = '';
+            }, 5000);
+        }
+    }
+}
+</script>
+{% endblock %}

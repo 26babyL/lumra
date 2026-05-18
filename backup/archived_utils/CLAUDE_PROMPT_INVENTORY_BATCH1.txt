@@ -1,0 +1,167 @@
+# PROMPT UNTUK CLAUDE - INVENTORY BATCH #1
+## 3 File Pertama: Product List, Stock Overview, Stock Purchasing
+
+Salin SELURUH text di bawah (dari "---START PROMPT---" sampai "---END PROMPT---") dan paste ke Claude
+
+---START PROMPT---
+
+@claude
+
+**TASK**: Update 3 Inventory HTML files untuk Emerald Odyssey Design System v3.0
+
+**REFERENCE DOCUMENTS** (dalam project folder):
+1. LUMRA_DESIGN_SYSTEM_REFERENCE.md - Design tokens & component patterns
+2. CLAUDE_GENERATION_CHECKLIST.md - Validation checklist
+3. Reference file updated: lumra_config/templates/lumra_pages/sales_insight/dashboard.html
+
+**KEY REQUIREMENTS**:
+
+✅ **Color Palette** (use CSS variables):
+- --em: #00674F (Primary Emerald)
+- --jade: #00A86B (Secondary)
+- --gold: #EFBF04 (Accent)
+- --slate-600: #6b8a7a (Body text)
+- --slate-400: #94a3b8 (Labels)
+
+✅ **Glass Morphism MUST BE**:
+- Background: rgba(255, 255, 255, 0.92)
+- Backdrop: blur(12px) saturate(180%)
+- Border: 0.5px solid rgba(0, 103, 79, 0.1)
+- Radius: 8px (r8) default, 14px (r14) for KPI cards
+
+✅ **Structure Pattern**:
+```html
+{% load tailwind_tags %}
+{% extends 'base/base.html' %}
+
+{% block title %}Page Title{% endblock %}
+
+{% block content %}
+<!-- Blobs -->
+<div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-3" aria-hidden="true"></div>
+
+<!-- Section Container -->
+<section class="content-grid-section px-6 py-5">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-20px font-700 text-slate-800">Title</h2>
+    <button class="bg-em text-cream px-4 py-2.5 rounded-r8 hover:shadow-h transition">
+      Action
+    </button>
+  </div>
+  
+  <!-- Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    {% for item in items %}
+    <div class="lumra-glass p-4">
+      <!-- Content -->
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+```
+
+✅ **REMOVE Immediately**:
+- ❌ ALL custom <style> tags in {% block extra_css %}
+- ❌ ALL inline style="color: var(--em)" (use class names instead)
+- ❌ ALL hardcoded colors like style="background-color: #ffffff"
+- ❌ ALL custom CSS classes like .s-input, .stat-card, .tbl-row (use Tailwind only)
+
+✅ **REPLACE With Tailwind + Design Tokens**:
+- Input styling: use `glass-base` class
+- Cards: use `lumra-glass` or `lumra-kpi-glass`
+- Section headers: use `text-20px font-700 text-slate-800`
+- Grid responsive: `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4`
+- Buttons: `bg-em text-cream` or `bg-jade`
+- Hover: `hover:shadow-h transition`
+
+✅ **Responsive MUST**:
+- Mobile: `grid-cols-1` (single column)
+- Tablet: `sm:grid-cols-2` 
+- Desktop: `lg:grid-cols-3` or `lg:grid-cols-4`
+- Test: works on 360px (mobile), 768px (tablet), 1920px (desktop)
+
+✅ **Specific Updates for Each File**:
+
+**FILE 1: product_list.html**
+- Remove stat-card custom CSS
+- Convert 4 stat KPI cards to `.lumra-kpi-glass` pattern
+- Convert table styling to Tailwind (table rows, hover effects)
+- Use glass-base for search input & filters
+- Change filter buttons from `.btn-ghost` to Tailwind button with proper hover
+- Icons: use Font Awesome classes with `text-em` or `text-jade` colors
+- Keep Alpine.js logic intact (x-data, @click, etc.)
+
+**FILE 2: stock_overview.html**
+- Same pattern: remove custom CSS
+- Convert all cards to `.lumra-glass` or `.lumra-kpi-glass`
+- Tables should have: hover effect `hover:bg-em-08` + smooth transition
+- Status badges: use color classes (bg-emerald-100, bg-amber-100, text-em)
+- Search input: glass-base class
+- Grid layout: responsive columns
+
+**FILE 3: stock_purchasing.html**
+- Forms: all inputs should use `glass-base` class
+- Input focus: `focus:ring-2 focus:ring-jade focus:outline-none`
+- Buttons: `bg-em text-cream hover:shadow-h`
+- Form sections: wrap in `content-grid-section`
+- Labels: `text-13px font-600 text-slate-800`
+- Tables: Tailwind + emerald borders
+- Dropdowns: use glass-base styling
+
+✅ **VALIDATION CHECKLIST** (before sending response):
+☑ NO custom <style> tags
+☑ NO inline styles (except data attributes for Alpine)
+☑ NO custom CSS classes (.s-input, .stat-card, etc) - using Tailwind
+☑ All colors from CSS tokens (--em, --jade, --gold, --slate-*)
+☑ All glass cards have: rgba(255,255,255,0.92) + blur(12px)
+☑ All sections wrapped in content-grid-section or lumra-glass
+☑ Grid responsive: 1 col mobile → 2-4 cols desktop
+☑ Form inputs have focus:ring-2 focus:ring-jade
+☑ All buttons have hover effects (hover:shadow-h or similar)
+☑ Typography: Plus Jakarta Sans (from base.html, don't add font-face)
+☑ Icons: Font Awesome classes with proper colors
+☑ Alpine.js preserved (x-data, @click, x-show intact)
+☑ Mobile navigation works (hide/show on breakpoints)
+☑ No console errors when running
+☑ File structure: {% extends 'base/base.html' %}, {% load tailwind_tags %}
+
+---
+
+**CURRENT FILE CONTENT FOR UPDATE**:
+
+[FILE 1 - product_list.html - FULL CONTENT TO BE PASTED]
+[FILE 2 - stock_overview.html - FULL CONTENT TO BE PASTED]
+[FILE 3 - stock_purchasing.html - FULL CONTENT TO BE PASTED]
+
+---
+
+**SUBMIT**: For each updated file, please:
+1. Copy entire updated file content
+2. Include HTML filename in response (e.g., "## product_list.html")
+3. At end, provide checklist confirmation that ALL items ✓ passed
+
+**EXPECTED OUTPUT**: 3 fully updated HTML files, Emerald Odyssey compliant, ready to copy-paste into lumra_config/templates/lumra_pages/inventory/
+
+---END PROMPT---
+
+---
+
+## NEXT STEPS:
+
+1. Copy ALL text above (from ---START PROMPT--- to ---END PROMPT---)
+2. Open Claude chat
+3. Paste prompt into Claude
+4. Wait for Claude to ask for the file contents
+5. Then paste each HTML file content (product_list.html, stock_overview.html, stock_purchasing.html)
+6. Claude will return updated versions
+7. Save results to actual template files
+8. Test in browser
+
+## FILE LOCATIONS TO GET CONTENT FROM:
+- d:\APPS\Project\lumra\lumra_config\templates\lumra_pages\inventory\product_list.html
+- d:\APPS\Project\lumra\lumra_config\templates\lumra_pages\inventory\stock_overview.html
+- d:\APPS\Project\lumra\lumra_config\templates\lumra_pages\inventory\stock_purchasing.html

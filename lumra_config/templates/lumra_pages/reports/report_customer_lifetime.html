@@ -1,0 +1,121 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}Loyalitas Pelanggan — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-card { background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border: 1px solid white; border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+  
+  .rank-badge { font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 6px; text-transform: uppercase; }
+  .rank-1 { background: #fef3c7; color: #d97706; border: 1px solid #fcd34d; }
+  .rank-2 { background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; }
+  .rank-3 { background: #ffedd5; color: #b45309; border: 1px solid #fdba74; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="clvApp()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex items-end justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">Laporan Customer Lifetime Value</h1>
+      <p class="text-sm text-slate-400 mt-0.5">Identifikasi pelanggan VIP dan strategi retensi.</p>
+    </div>
+    <div class="flex gap-2">
+      <button class="bg-white text-slate-600 border border-slate-200 px-4 py-2 rounded-xl text-sm font-bold shadow hover:bg-slate-50">
+        <i class="fas fa-calendar-alt mr-2"></i> Periode: 6 Bulan
+      </button>
+    </div>
+  </div>
+
+  <!-- Top Segment -->
+  <div class="glass-card p-8 bg-gradient-to-r from-slate-800 to-slate-900 text-white mb-6">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+      <div>
+        <h2 class="text-emerald-400 font-bold text-sm uppercase tracking-widest mb-2">Total Revenue Period</h2>
+        <p class="text-4xl font-black" x-text="formatCurrency(totalRevenue)"></p>
+      </div>
+      <div class="h-16 w-px bg-white/20"></div>
+      <div>
+        <h3 class="text-blue-400 font-bold text-sm uppercase tracking-widest mb-2">Total Customer</h3>
+        <p class="text-4xl font-black" x-text="totalCustomers"></p>
+      </div>
+      <div class="h-16 w-px bg-white/20"></div>
+      <div>
+        <h3 class="text-purple-400 font-bold text-sm uppercase tracking-widest mb-2">Avg LTV</h3>
+        <p class="text-4xl font-black" x-text="formatCurrency(avgLTV)"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top 5 List -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <template x-for="(cust, index) in topCustomers" :key="cust.id">
+      <div class="glass-card p-5 relative hover:shadow-lg transition duration-300">
+        
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-lg" x-text="cust.initials"></div>
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <h3 class="font-bold text-slate-800" x-text="cust.name"></h3>
+              <span class="rank-badge" :class="'rank-' + (index + 1)" x-text="'Rank ' + (index + 1)"></span>
+            </div>
+            <p class="text-xs text-slate-400" x-text="cust.last_order"></p>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-slate-100">
+          <div>
+            <p class="text-[10px] text-slate-400 uppercase font-bold">Total Belanja</p>
+            <p class="text-lg font-black font-bold" x-text="formatCurrency(cust.spent)"></p>
+          </div>
+          <div>
+            <p class="text-[10px] text-slate-400 uppercase font-bold">Transaksi</p>
+            <p class="text-lg font-black font-bold" x-text="cust.freq"></p>
+          </div>
+        </div>
+
+        <!-- Growth Bar -->
+        <div class="mt-3">
+          <div class="flex justify-between text-[10px] font-bold text-slate-400 uppercase mb-1">
+            <span>LTV Estimasi</span>
+            <span class="text-emerald-600" x-text="formatCurrency(cust.ltv)"></span>
+          </div>
+          <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-emerald-500" :style="`width: ${Math.min(100, (cust.ltv / 10000000) * 100)}%`"></div>
+          </div>
+        </div>
+
+      </div>
+    </template>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function clvApp() {
+  return {
+    topCustomers: [
+      { id: 1, name: 'PT Maju Jaya', initials: 'MJ', last_order: '2 Hari Lalu', spent: 125000000, freq: 45, ltv: 15000000 },
+      { id: 2, name: 'Ibu Siti', initials: 'IS', last_order: 'Kemarin', spent: 85000000, freq: 32, ltv: 9500000 },
+      { id: 3, name: 'Budi Santoso', initials: 'BS', last_order: '5 Hari Lalu', spent: 45000000, freq: 18, ltv: 5200000 },
+      { id: 4, name: 'CV Berkah Abadi', initials: 'BA', last_order: '1 Minggu Lalu', spent: 32000000, freq: 12, ltv: 3500000 },
+      { id: 5, name: 'Toko Sejahtera', initials: 'TS', last_order: '3 Hari Lalu', spent: 28000000, freq: 10, ltv: 3000000 },
+    ],
+    totalRevenue: 315000000,
+    totalCustomers: 542,
+    avgLTV: 5850000,
+
+    formatCurrency(num) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+    },
+
+    init(){}
+  }
+}
+</script>
+{% endblock %}

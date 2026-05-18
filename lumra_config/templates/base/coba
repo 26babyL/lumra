@@ -1,0 +1,938 @@
+{% load static %}
+<style>
+  /* ── Theme Configuration (Dark Emerald Mode) ── */
+  :root {
+    --emerald-400: #34d399; 
+    --emerald-500: #10b981;
+    --emerald-600: #059669;
+    --neon-green: #6ee7b7;
+    --text-main: #f1f5f9;       
+    --text-muted: #94a3b8;      
+    --text-dim: #64748b;        
+    --glass-bg: rgba(6, 78, 59, 0.96); 
+    --glass-border: rgba(52, 211, 153, 0.2);
+    --sidebar-base: #064e3b;
+  }
+
+  [x-cloak] { display: none !important; }
+
+  /* ── Sidebar Container ── */
+  .sidebar-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-right: 1px solid var(--glass-border);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4); 
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    border-radius: 0 16px 16px 0;
+  }
+
+  /* ── Navigation Items Base ── */
+  .nav-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    overflow: hidden;
+    border: none;
+    background: transparent;
+    text-align: left;
+    text-decoration: none;
+  }
+
+  /* ✨ NEW: Focus-visible for keyboard users */
+  .nav-item:focus-visible,
+  .sub-item:focus-visible,
+  .collapse-btn:focus-visible {
+    outline: 2px solid var(--emerald-400);
+    outline-offset: 2px;
+  }
+
+  .nav-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-main);
+  }
+
+  .nav-item.active {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--emerald-400);
+    font-weight: 600;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
+  }
+  
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 20%;
+    bottom: 20%;
+    width: 3px;
+    border-radius: 0 4px 4px 0;
+    background: var(--emerald-400);
+    box-shadow: 0 0 10px var(--emerald-500);
+  }
+
+  .nav-item.parent-active {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-main);
+    font-weight: 600;
+  }
+
+  .nav-item.collapsed {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* ── Icon Styling ── */
+  .nav-icon-wrap {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .nav-icon {
+    width: 18px;
+    height: 18px;
+    stroke-width: 1.8;
+    opacity: 0.7;
+    transition: transform 0.2s ease, opacity 0.2s ease, stroke 0.2s;
+    stroke: currentColor;
+  }
+  
+  .nav-item:hover .nav-icon { 
+    transform: scale(1.1); 
+    opacity: 1; 
+    color: var(--emerald-400); 
+  }
+  .nav-item.active .nav-icon { 
+    opacity: 1; 
+    color: var(--emerald-400); 
+  }
+
+  /* ── Submenu Items ── */
+  .sub-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px 8px 16px;
+    margin-right: 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+  
+  .sub-item::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.4;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+  }
+  
+  .sub-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-main);
+    padding-left: 20px; 
+  }
+  
+  .sub-item:hover::before { 
+    opacity: 1; 
+    transform: scale(1.2); 
+    background: var(--emerald-400); 
+  }
+  
+  .sub-item.active {
+    color: var(--emerald-400);
+    font-weight: 600;
+    background: rgba(16, 185, 129, 0.1);
+  }
+  
+  .sub-item.active::before {
+    background: var(--emerald-400);
+    opacity: 1;
+    box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.2);
+  }
+
+  /* ✨ NEW: Staggered submenu animation */
+  .submenu-container > div > .sub-item,
+  .submenu-container > div > div {
+    animation: submenuFadeIn 0.2s ease forwards;
+    opacity: 0;
+  }
+  .submenu-container > div > :nth-child(1) { animation-delay: 0ms; }
+  .submenu-container > div > :nth-child(2) { animation-delay: 30ms; }
+  .submenu-container > div > :nth-child(3) { animation-delay: 60ms; }
+  .submenu-container > div > :nth-child(4) { animation-delay: 90ms; }
+  .submenu-container > div > :nth-child(5) { animation-delay: 120ms; }
+  .submenu-container > div > :nth-child(6) { animation-delay: 150ms; }
+  .submenu-container > div > :nth-child(7) { animation-delay: 180ms; }
+  .submenu-container > div > :nth-child(8) { animation-delay: 210ms; }
+  .submenu-container > div > :nth-child(9) { animation-delay: 240ms; }
+  .submenu-container > div > :nth-child(10) { animation-delay: 270ms; }
+
+  @keyframes submenuFadeIn {
+    from { opacity: 0; transform: translateX(-8px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ── Section Labels ── */
+  .nav-section {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 16px 12px 6px;
+    white-space: nowrap;
+    transition: opacity 0.2s ease, max-height 0.3s ease, padding 0.3s ease, margin 0.3s ease;
+    max-height: 40px;
+    overflow: hidden;
+  }
+
+  .nav-section.hidden-section {
+    opacity: 0;
+    max-height: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* ── Tooltip (Collapsed Mode) ── */
+  .nav-tooltip {
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%) translateX(-4px);
+    background: #fff;
+    color: #064e3b;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 100;
+  }
+  
+  .nav-tooltip::before {
+    content: '';
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 5px solid transparent;
+    border-right-color: #fff;
+  }
+  
+  .nav-item:hover .nav-tooltip,
+  .avatar-wrapper:hover .nav-tooltip { 
+    opacity: 1; 
+    transform: translateY(-50%) translateX(0);
+  }
+
+  /* ✨ NEW: Tooltip for avatar wrapper */
+  .avatar-wrapper {
+    position: relative;
+  }
+  .avatar-wrapper .nav-tooltip {
+    top: 50%;
+  }
+
+  /* ── Accordion Chevron ── */
+  .chevron { 
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    color: var(--text-muted);
+  }
+  .chevron.open { 
+    transform: rotate(180deg); 
+    color: var(--emerald-400); 
+  }
+
+  /* ── Toggles & Buttons ── */
+  .collapse-btn {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+  .collapse-btn:hover {
+    border-color: var(--emerald-400);
+    color: var(--emerald-400);
+    background: rgba(16, 185, 129, 0.1);
+    transform: scale(1.05);
+  }
+
+  .logo-icon {
+    width: 34px; height: 34px;
+    border-radius: 9px;
+    background: linear-gradient(135deg, var(--emerald-400) 0%, var(--emerald-600) 100%);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+    transition: transform 0.3s ease;
+  }
+  .logo-icon:hover { transform: scale(1.05) rotate(3deg); }
+
+  /* ── Scrollbar ── */
+  .nav-scroll::-webkit-scrollbar { width: 4px; }
+  .nav-scroll::-webkit-scrollbar-track { background: transparent; }
+  .nav-scroll::-webkit-scrollbar-thumb { 
+    background: rgba(255,255,255,0.15); 
+    border-radius: 10px; 
+    transition: background 0.2s;
+  }
+  .nav-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+
+  /* ✨ NEW: Submenu scrollbar - even thinner */
+  .submenu-scroll::-webkit-scrollbar { width: 3px; }
+  .submenu-scroll::-webkit-scrollbar-thumb { 
+    background: rgba(255,255,255,0.1); 
+  }
+  .submenu-scroll::-webkit-scrollbar-thumb:hover { 
+    background: rgba(255,255,255,0.2); 
+  }
+
+  /* ── User Status ── */
+  .online-dot {
+    width: 8px; height: 8px;
+    background: var(--emerald-400);
+    /* ✨ FIX: Border matches sidebar base color */
+    border: 2px solid var(--sidebar-base);
+    position: absolute;
+    bottom: 0; right: 0;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    transition: transform 0.2s ease;
+  }
+  /* ✨ NEW: Pulse animation for online status */
+  .online-dot::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 50%;
+    background: var(--emerald-400);
+    animation: pulse-ring 2s ease-out infinite;
+  }
+  @keyframes pulse-ring {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(2); opacity: 0; }
+  }
+
+  /* ✨ NEW: Logout button - proper dark mode hover */
+  .logout-btn {
+    padding: 6px;
+    border-radius: 8px;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+  .logout-btn:hover {
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.1);
+  }
+
+  /* ✨ NEW: Notification badge for dark mode */
+  .notif-badge {
+    font-size: 10px;
+    font-weight: 700;
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    padding: 1px 6px;
+    border-radius: 9999px;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
+  /* ✨ NEW: Sub-submenu (nested) styling */
+  .sub-submenu .sub-item {
+    font-size: 11px;
+    padding-left: 28px;
+    color: var(--text-dim);
+  }
+  .sub-submenu .sub-item::before {
+    width: 3px;
+    height: 3px;
+  }
+  .sub-submenu .sub-item:hover {
+    padding-left: 30px;
+  }
+
+  /* ✨ NEW: Smooth width transition helper */
+  .sidebar-transition {
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ✨ NEW: Mobile overlay - proper z-index */
+  .mobile-overlay {
+    z-index: 25;
+  }
+</style>
+
+<aside
+  id="sidebar"
+  class="sidebar-glass sidebar-transition fixed inset-y-0 left-0 md:static z-30 flex flex-col"
+  x-data="{
+    open  : (JSON.parse(localStorage.getItem('sidebarOpen') || 'true')) && window.innerWidth >= 768,
+    mobile: window.innerWidth < 768,
+    menu  : null,
+
+    // ✨ FIX: Unique keys for each accordion (no collisions)
+    menuMap: {
+      sales       : ['/sales/', '/quotation/', '/invoice/', '/retur/', '/payment/'],
+      inventory   : ['/inventory/', '/products/', '/stock-planning/', '/stock-movement/', '/batch/', '/requisition/'],
+      production  : ['/production/'],
+      accounting  : ['/accounting/', '/chart-of-accounts/', '/general-ledger/', '/journal-entry/', '/payment-voucher/', '/trial-balance/', '/balance-sheet/', '/cash-flow/', '/accounts-receivable/', '/accounts-payable/', '/profit-loss/'],
+      logistics   : ['/purchasing/', '/supplier-price-list/', '/locations/', '/warehouse/'],
+      marketing   : ['/marketing/', '/campaigns/', '/discounts/', '/vouchers/', '/loyalty/', '/customer-segments/', '/promotions/'],
+      masterdata  : ['/master/', '/bank-accounts/', '/payment-terms/', '/taxes/', '/reason-codes/', '/tags/', '/categories/', '/units/', '/vendors/', '/customers/'],
+      messages    : ['/messages/', '/inbox/', '/compose/', '/broadcast/', '/templates/'],
+      reports     : ['/reports/', '/sales-report/', '/financial-reports/', '/inventory-report/', '/production-report/', '/expiry/', '/inventory-age/', '/customer-lifetime/', '/staff-performance/'],
+      settings    : ['/settings/', '/users/', '/business-settings/', '/email-settings/', '/notification-settings/', '/system-status/', '/about/', '/permissions/', '/numbering/', '/backup/', '/api/'],
+      notifications: ['/notifications/'],
+      dashboard   : ['/dashboard/'],
+      pos         : ['/pos/'],
+      locations   : ['/locations/'],
+      profile     : ['/profile/'],
+    },
+
+    init() {
+      // ✨ IMPROVED: Find active section with priority (longest match wins)
+      const path = window.location.pathname;
+      let bestMatch = null;
+      let bestLength = 0;
+      
+      for (const [key, routes] of Object.entries(this.menuMap)) {
+        for (const route of routes) {
+          if (path.startsWith(route) && route.length > bestLength) {
+            bestLength = route.length;
+            bestMatch = key;
+          }
+        }
+      }
+      if (bestMatch) this.menu = bestMatch;
+
+      this.$watch('open', value => {
+        localStorage.setItem('sidebarOpen', value);
+        document.body.classList.toggle('sidebar-open', value);
+        window.dispatchEvent(new CustomEvent('sidebar-toggled', { detail: { open: value } }));
+      });
+      document.body.classList.toggle('sidebar-open', this.open);
+
+      // ✨ IMPROVED: Debounced resize handler
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          const isMobile = window.innerWidth < 768;
+          this.mobile = isMobile;
+          if (isMobile) this.open = false;
+          else this.open = JSON.parse(localStorage.getItem('sidebarOpen') || 'true');
+        }, 100);
+      });
+
+      window.addEventListener('toggle-sidebar', () => { this.open = !this.open; });
+      window.addEventListener('keydown', e => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+          e.preventDefault(); this.open = !this.open;
+        }
+      });
+
+      // ✨ NEW: Close on route change (for SPAs with history API)
+      if (window.PushState) {
+        window.addEventListener('popstate', () => {
+          if (this.mobile) this.open = false;
+        });
+      }
+    },
+
+    toggle(key) { this.menu = this.menu === key ? null : key; },
+    
+    // ✨ IMPROVED: More precise active detection
+    isActive(path) { 
+      const current = window.location.pathname;
+      // Exact match or child path
+      if (current === path) return true;
+      if (path.endsWith('/') && current.startsWith(path)) return true;
+      if (current.startsWith(path + '/')) return true;
+      return false;
+    },
+    
+    isParentActive(routes) { 
+      return routes.some(p => window.location.pathname.startsWith(p)); 
+    },
+    
+    // ✨ NEW: Check if any child is active
+    isChildActive(routes) {
+      const current = window.location.pathname;
+      return routes.some(p => current === p || current.startsWith(p + '/') || (p.endsWith('/') && current.startsWith(p)));
+    }
+  }"
+  @keydown.window.escape="if (mobile) open = false"
+  :class="open ? 'w-[260px]' : 'w-[72px] -translate-x-full md:translate-x-0'"
+  role="navigation"
+  aria-label="Main Sidebar">
+
+  <!-- ── HEADER: Logo & Toggle ── -->
+  <div class="flex-shrink-0 flex items-center h-16 px-3 border-b border-emerald-800/60 relative z-20"
+       :class="open ? 'justify-between' : 'justify-center'">
+
+    <a href="{% url 'dashboard' %}"
+       class="flex items-center gap-3 min-w-0 group"
+       aria-label="CoffeeShop Dashboard">
+      <div class="logo-icon">
+        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M2 21v-2h2V3h14v2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2v6h2v2H2zm4-2h8V5H6v14zm10-6h2V7h-2v6z"/>
+        </svg>
+      </div>
+      <span x-show="open" 
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 -translate-x-2"
+            x-transition:enter-end="opacity-100 translate-x-0"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 translate-x-0"
+            x-transition:leave-end="opacity-0 -translate-x-2"
+            class="font-bold text-[15px] text-emerald-50 tracking-tight truncate select-none">
+        CoffeeShop
+      </span>
+    </a>
+
+    <button x-show="open" x-transition.opacity.duration.150ms
+            @click="open = false"
+            class="collapse-btn"
+            aria-label="Collapse Sidebar">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Floating Expand Button -->
+  <button x-show="!open" x-cloak
+          @click="open = true"
+          class="hidden md:flex absolute right-0 top-[68px] translate-x-1/2 collapse-btn shadow-lg z-50 ring-1 ring-black/5"
+          aria-label="Expand Sidebar">
+    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+    </svg>
+  </button>
+
+  <!-- ── NAVIGATION SCROLL AREA ── -->
+  <nav class="nav-scroll flex-1 overflow-y-auto overflow-x-hidden py-4 px-3 space-y-1"
+       role="menu"
+       aria-label="Sidebar Navigation">
+
+    <!-- ─── SECTION: OPERATIONS ─── -->
+    <p class="nav-section" :class="!open && 'hidden-section'">Operations</p>
+
+    <!-- Dashboard -->
+    <a href="{% url 'dashboard' %}"
+       class="nav-item group"
+       :class="[isActive('/dashboard/') ? 'active' : '', !open ? 'collapsed' : '']"
+       role="menuitem">
+      <div class="nav-icon-wrap">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+      </div>
+      <span x-show="open" x-transition class="flex-1 truncate">Dashboard</span>
+      <span class="nav-tooltip">Dashboard</span>
+    </a>
+
+    <!-- Point of Sale -->
+    <a href="{% url 'pos' %}"
+       class="nav-item group"
+       :class="[isActive('/pos/') ? 'active' : '', !open ? 'collapsed' : '']"
+       role="menuitem">
+      <div class="nav-icon-wrap">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+      </div>
+      <span x-show="open" x-transition class="flex-1 truncate">Point of Sale</span>
+      <span class="nav-tooltip">POS</span>
+    </a>
+
+    <!-- ✨ FIX: Sales Accordion - unique key 'sales' -->
+    <div x-data="{ isOpen: false }" x-init="isOpen = $root.menu === 'sales'">
+      <button @click="isOpen = !isOpen; $root.menu = isOpen ? 'sales' : null"
+              :aria-expanded="isOpen.toString()"
+              class="nav-item w-full"
+              :class="[isChildActive(['/sales/', '/quotation/', '/invoice/', '/retur/', '/payment/']) ? 'parent-active' : '', !open ? 'collapsed justify-center' : '']">
+        <div class="nav-icon-wrap">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <span x-show="open" x-transition class="flex-1 truncate text-left">Sales</span>
+        <svg x-show="open" class="nav-icon chevron w-4 h-4" :class="{ 'open': isOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        <span class="nav-tooltip">Sales</span>
+      </button>
+      <div x-show="isOpen && open" x-collapse class="submenu-container pl-2">
+        <div class="py-1 space-y-0.5">
+          <!-- Orders & Quotations Sub-group -->
+          <div x-data="{ isSubOpen: false }" 
+               x-init="isSubOpen = $root.isChildActive(['/sales/order/', '/sales/quotation/'])">
+            <button @click="isSubOpen = !isSubOpen" class="sub-item w-full" :class="{ 'active': isSubOpen || $root.isChildActive(['/sales/order/', '/sales/quotation/']) }">
+              <span class="flex-1 text-left truncate">Orders & Quotations</span>
+              <svg class="w-3 h-3 transition-transform duration-200" :class="{ 'rotate-180': isSubOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div x-show="isSubOpen" x-collapse class="sub-submenu pl-2 space-y-0.5">
+              <a href="{% url 'sales_order_list' %}" class="sub-item text-xs" :class="isActive('/sales/order') ? 'active' : ''">Sales Orders</a>
+              <a href="{% url 'sales_order_form' %}" class="sub-item text-xs" :class="isActive('/sales/order/form') ? 'active' : ''">New Sales Order</a>
+              <a href="{% url 'quotation_list' %}" class="sub-item text-xs" :class="isActive('/sales/quotation') ? 'active' : ''">Quotations</a>
+              <a href="{% url 'quotation_form' %}" class="sub-item text-xs" :class="isActive('/sales/quotation/form') ? 'active' : ''">New Quotation</a>
+            </div>
+          </div>
+
+          <!-- Invoices & Billing Sub-group -->
+          <div x-data="{ isSubOpen: false }"
+               x-init="isSubOpen = $root.isChildActive(['/sales/invoice/', '/sales/payment/'])">
+            <button @click="isSubOpen = !isSubOpen" class="sub-item w-full" :class="{ 'active': isSubOpen || $root.isChildActive(['/sales/invoice/', '/sales/payment/']) }">
+              <span class="flex-1 text-left truncate">Invoices & Billing</span>
+              <svg class="w-3 h-3 transition-transform duration-200" :class="{ 'rotate-180': isSubOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div x-show="isSubOpen" x-collapse class="sub-submenu pl-2 space-y-0.5">
+              <a href="{% url 'invoice_list' %}" class="sub-item text-xs" :class="isActive('/sales/invoice') ? 'active' : ''">Invoices</a>
+              <a href="{% url 'invoice_form' %}" class="sub-item text-xs" :class="isActive('/sales/invoice/form') ? 'active' : ''">New Invoice</a>
+              <a href="{% url 'payment_list' %}" class="sub-item text-xs" :class="isActive('/sales/payment') ? 'active' : ''">Payments</a>
+              <a href="{% url 'payment_form' %}" class="sub-item text-xs" :class="isActive('/sales/payment/form') ? 'active' : ''">New Payment</a>
+            </div>
+          </div>
+
+          <!-- Returns & Refunds Sub-group -->
+          <div x-data="{ isSubOpen: false }"
+               x-init="isSubOpen = $root.isChildActive(['/sales/retur/'])">
+            <button @click="isSubOpen = !isSubOpen" class="sub-item w-full" :class="{ 'active': isSubOpen || $root.isChildActive(['/sales/retur/']) }">
+              <span class="flex-1 text-left truncate">Returns & Refunds</span>
+              <svg class="w-3 h-3 transition-transform duration-200" :class="{ 'rotate-180': isSubOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div x-show="isSubOpen" x-collapse class="sub-submenu pl-2 space-y-0.5">
+              <a href="{% url 'retur_list' %}" class="sub-item text-xs" :class="isActive('/sales/retur') ? 'active' : ''">Return Orders</a>
+              <a href="{% url 'retur_form' %}" class="sub-item text-xs" :class="isActive('/sales/retur/form') ? 'active' : ''">New Return</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✨ FIX: Inventory Accordion - unique key 'inventory' -->
+    <div x-data="{ isOpen: false }" x-init="isOpen = $root.menu === 'inventory'">
+      <button @click="isOpen = !isOpen; $root.menu = isOpen ? 'inventory' : null"
+              :aria-expanded="isOpen.toString()"
+              class="nav-item w-full"
+              :class="[isChildActive(['/inventory/', '/products/', '/stock-planning/', '/stock-movement/', '/batch/', '/requisition/']) ? 'parent-active' : '', !open ? 'collapsed justify-center' : '']">
+        <div class="nav-icon-wrap">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0v10l-8 4m0-14L4 17m8-10v14"/></svg>
+        </div>
+        <span x-show="open" x-transition class="flex-1 truncate text-left">Inventory</span>
+        <svg x-show="open" class="nav-icon chevron w-4 h-4" :class="{ 'open': isOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        <span class="nav-tooltip">Inventory</span>
+      </button>
+      <div x-show="isOpen && open" x-collapse class="submenu-container pl-2">
+        <div class="py-1 space-y-0.5">
+          <a href="{% url 'products' %}" class="sub-item" :class="isActive('/inventory/products') ? 'active' : ''">Stock Overview</a>
+          <a href="{% url 'stock_planning' %}" class="sub-item" :class="isActive('/inventory/planning') ? 'active' : ''">Planning</a>
+          <a href="{% url 'stock_movement' %}" class="sub-item" :class="isActive('/inventory/movement') ? 'active' : ''">Movements</a>
+          <a href="{% url 'batch_list' %}" class="sub-item" :class="isActive('/inventory/batch') ? 'active' : ''">Batch Operations</a>
+          <a href="{% url 'requisition_list' %}" class="sub-item" :class="isActive('/inventory/requisition') ? 'active' : ''">Requisitions</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✨ FIX: Production Accordion - unique key 'production' -->
+    <div x-data="{ isOpen: false }" x-init="isOpen = $root.menu === 'production'">
+      <button @click="isOpen = !isOpen; $root.menu = isOpen ? 'production' : null"
+              :aria-expanded="isOpen.toString()"
+              class="nav-item w-full"
+              :class="[isChildActive(['/production/']) ? 'parent-active' : '', !open ? 'collapsed justify-center' : '']">
+        <div class="nav-icon-wrap">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.414-.586h-.028a2 2 0 00-1.414.586m5.656 0A9.966 9.966 0 0121 12a9.966 9.966 0 01-2.414 6.428m-5.656 0A9.966 9.966 0 0112 21a9.966 9.966 0 01-6.428-2.414m12.856-4.014a21.01 21.01 0 00-3.422-3.428m3.422 3.428l6.005 4.272m-3.422-3.428l-3.422 3.428m3.585-6m-1.585-1.585a3 3 0 00-4.242 0m4.242 0L9.88 5.22m5.658 0a3 3 0 00-4.242 0m4.242 0l-5.658 5.658m0 0a3 3 0 00-4.242 0m4.242 0L3.757 9.22"/></svg>
+        </div>
+        <span x-show="open" x-transition class="flex-1 truncate text-left">Production</span>
+        <svg x-show="open" class="nav-icon chevron w-4 h-4" :class="{ 'open': isOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        <span class="nav-tooltip">Production</span>
+      </button>
+      <div x-show="isOpen && open" x-collapse class="submenu-container pl-2">
+        <div class="py-1 space-y-0.5">
+          <a href="{% url 'bom_list' %}" class="sub-item" :class="isActive('/production/bom') ? 'active' : ''">BOM (Bills of Material)</a>
+          <a href="{% url 'production_order_list' %}" class="sub-item" :class="isActive('/production/order') ? 'active' : ''">Production Orders</a>
+          <a href="{% url 'production_scheduling' %}" class="sub-item" :class="isActive('/production/scheduling') ? 'active' : ''">Scheduling</a>
+          <a href="{% url 'material_consumption' %}" class="sub-item" :class="isActive('/production/consumption') ? 'active' : ''">Material Consumption</a>
+          <a href="{% url 'finished_goods_receipt' %}" class="sub-item" :class="isActive('/production/finished') ? 'active' : ''">Finished Goods</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SECTION: ACCOUNTING ─── -->
+    <p class="nav-section" :class="!open && 'hidden-section'">Accounting</p>
+
+    <div x-data="{ isOpen: false }" x-init="isOpen = $root.menu === 'accounting'">
+      <button @click="isOpen = !isOpen; $root.menu = isOpen ? 'accounting' : null"
+              :aria-expanded="isOpen.toString()"
+              class="nav-item w-full"
+              :class="[isChildActive(['/accounting/', '/chart-of-accounts/', '/general-ledger/', '/journal-entry/', '/payment-voucher/']) ? 'parent-active' : '', !open ? 'collapsed justify-center' : '']">
+        <div class="nav-icon-wrap">
+          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6a4 4 0 100 8 4 4 0 000-8zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+        </div>
+        <span x-show="open" x-transition class="flex-1 truncate text-left">Accounting</span>
+        <svg x-show="open" class="nav-icon chevron w-4 h-4" :class="{ 'open': isOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        <span class="nav-tooltip">Accounting</span>
+      </button>
+      <div x-show="isOpen && open" x-collapse class="submenu-container pl-2">
+        <div class="py-1 space-y-0.5 max-h-[300px] overflow-y-auto submenu-scroll pr-1">
+          <a href="{% url 'chart_of_accounts' %}" class="sub-item" :class="isActive('/accounting/coa') ? 'active' : ''">Chart of Accounts</a>
+          <a href="{% url 'general_ledger' %}" class="sub-item" :class="isActive('/accounting/ledger') ? 'active' : ''">General Ledger</a>
+          <a href="{% url 'journal_entry_list' %}" class="sub-item" :class="isActive('/accounting/journal') ? 'active' : ''">Journal Entries</a>
+          <a href="{% url 'payment_voucher_form' %}" class="sub-item" :class="isActive('/accounting/voucher') ? 'active' : ''">Payment Voucher</a>
+          <a href="{% url 'trial_balance' %}" class="sub-item" :class="isActive('/accounting/trial') ? 'active' : ''">Trial Balance</a>
+          <a href="{% url 'balance_sheet' %}" class="sub-item" :class="isActive('/accounting/balance') ? 'active' : ''">Balance Sheet</a>
+          <a href="{% url 'profit_loss_statement' %}" class="sub-item" :class="isActive('/accounting/income') ? 'active' : ''">Income Statement</a>
+          <a href="{% url 'cash_flow_statement' %}" class="sub-item" :class="isActive('/accounting/cashflow') ? 'active' : ''">Cash Flow</a>
+          <a href="{% url 'accounts_receivable' %}" class="sub-item" :class="isActive('/accounting/ar') ? 'active' : ''">Accounts Receivable</a>
+          <a href="{% url 'accounts_payable' %}" class="sub-item" :class="isActive('/accounting/ap') ? 'active' : ''">Accounts Payable</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SECTION: LOGISTICS ─── -->
+    <p class="nav-section" :class="!open && 'hidden-section'">Logistics</p>
+
+    <a href="{% url 'locations' %}" class="nav-item group" :class="[isActive('/locations/') ? 'active' : '', !open ? 'collapsed' : '']" role="menuitem">
+      <div class="nav-icon-wrap"><svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+      <span x-show="open" x-transition class="flex-1 truncate">Locations</span>
+      <span class="nav-tooltip">Locations</span>
+    </a>
+
+    <div x-data="{ isOpen: false }" x-init="isOpen = $root.menu === 'logistics'">
+      <button @click="isOpen = !isOpen; $root.menu = isOpen ? 'logistics' : null" :aria-expanded="isOpen.toString()" class="nav-item w-full" :class="[isChildActive(['/purchasing/', '/supplier-price-list/', '/warehouse/']) ? 'parent-active' : '', !open ? 'collapsed justify-center' : '']">
+        <div class="nav-icon-wrap"><svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg></div>
+        <span x-show="open" x-transition class="flex-1 truncate text-left">Procurement</span>
+        <svg x-show="open" class="nav-icon chevron w-4 h-4" :class="{ 'open': isOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        <span class="nav-tooltip">Procurement</span>
+      </button>
+      <div x-show="isOpen && open" x-collapse class="submenu-container pl-2">
+        <div class="py-1 space-y-0.5">
+          <a href="{% url 'purchasing' %}" class="sub-item" :class="isActive('/purchasing/') ? 'active' : ''">Purchase Orders</a>
+          <a href="{% url 'supplier_price_list' %}" class="sub-item" :class="isActive('/supplier-price-list/') ? 'active' : ''">Supplier Prices</a>
+          <a href="{% url 'warehouse_zones' %}" class="sub-item" :class="isActive('/warehouse/') ? 'active' : ''">Warehouse Zones</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SECTION: MARKETING ─── -->
+    <p class="nav-section" :class="!open && 'hidden-section'">Marketing</p>
+
+    <div x-data="{ isOpen: false }" x-init="isOpen = $root.menu === 'marketing'">
+      <button @click="isOpen = !isOpen; $root.menu = isOpen ? 'marketing' : null" :aria-expanded="isOpen.toString()" class="nav-item w-full" :class="[isChildActive(['/marketing/', '/campaigns/', '/discounts/', '/vouchers/', '/loyalty/', '/promotions/']) ? 'parent-active' : '', !open ? 'collapsed justify-center' : '']">
+        <div class="nav-icon-wrap"><svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 19C3.582 15.582 1 12.009 1 8c0-4.418 3.582-8 8-8s8 3.582 8 8c0 4.009-2.582 7.582-6 11l-4 4m0-12V6l2.236 2.236A4.477 4.477 0 0114 8c0 1.657-.895 3.1-2.236 3.886L8 14.236"/></svg></div>
+        <span x-show="open" x-transition class="flex-1 truncate text-left">Marketing</span>
+        <svg x-show="open" class="nav-icon chevron w-4 h-4" :class="{ 'open': isOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        <span class="nav-tooltip">Marketing</span>
+      </button>
+      <div x-show="isOpen && open" x-collapse class="submenu-container pl-2">
+        <div class="py-1 space-y-0.5">
+          <a href="{% url 'campaign_list' %}" class="sub-item" :class="isActive('/marketing/campaign') ? 'active' : ''">Campaigns</a>
+          <a href="{% url 'discount_list' %}" class="sub-item" :class="isActive('/marketing/discount') ? 'active' : ''">Discounts</a>
+          <a href="{% url 'voucher_list' %}" class="sub-item" :class="isActive('/marketing/voucher') ? 'active' : ''">Vouchers</a>
+          <a href="{% url 'loyalty_members' %}" class="sub-item" :class="isActive('/marketing/loyalty') ? 'active' : ''">Loyalty Program</a>
+          <a href="{% url 'customer_segment_list' %}" class="sub-item" :class="isActive('/marketing/segment') ? 'active' : ''">Customer Segments</a>
+          <a href="{% url 'promotion_calendar' %}" class="sub-item" :class="isActive('/marketing/promotions') ? 'active' : ''">Promotions</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SECTION: MASTER DATA ─── -->
+    <p class="nav-section" :class="!open && 'hidden-section'">Master Data</p>
+
+    <div x-data="{ isOpen: false }" x-init="isOpen = $root.menu === 'masterdata'">
+      <button @click="isOpen = !isOpen; $root.menu = isOpen ? 'masterdata' : null" :aria-expanded="isOpen.toString()" class="nav-item w-full" :class="[isChildActive(['/master/', '/bank-accounts/', '/payment-terms/', '/taxes/', '/reason-codes/', '/tags/', '/categories/', '/units/', '/vendors/', '/customers/']) ? 'parent-active' : '', !open ? 'collapsed justify-center' : '']">
+        <div class="nav-icon-wrap"><svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg></div>
+        <span x-show="open" x-transition class="flex-1 truncate text-left">Master Data</span>
+        <svg x-show="open" class="nav-icon chevron w-4 h-4" :class="{ 'open': isOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        <span class="nav-tooltip">Master Data</span>
+      </button>
+      <div x-show="isOpen && open" x-collapse class="submenu-container pl-2">
+        <div class="py-1 space-y-0.5 max-h-[300px] overflow-y-auto submenu-scroll pr-1">
+          <a href="{% url 'customer_list' %}" class="sub-item" :class="isActive('/master/customers') ? 'active' : ''">Customers</a>
+          <a href="{% url 'vendors_list' %}" class="sub-item" :class="isActive('/master/vendors') ? 'active' : ''">Vendors</a>
+          <a href="{% url 'categories_list' %}" class="sub-item" :class="isActive('/master/categories') ? 'active' : ''">Categories</a>
+          <a href="{% url 'units_list' %}" class="sub-item" :class="isActive('/master/units') ? 'active' : ''">Units</a>
+          <a href="{% url 'bank_accounts' %}" class="sub-item" :class="isActive('/bank-accounts/') ? 'active' : ''">Bank Accounts</a>
+          <a href="{% url 'payment_terms_list' %}" class="sub-item" :class="isActive('/payment-terms/') ? 'active' : ''">Payment Terms</a>
+          <a href="{% url 'tax_list' %}" class="sub-item" :class="isActive('/taxes/') ? 'active' : ''">Taxes</a>
+          <a href="{% url 'reason_codes' %}" class="sub-item" :class="isActive('/reason-codes/') ? 'active' : ''">Reason Codes</a>
+          <a href="{% url 'tags_list' %}" class="sub-item" :class="isActive('/tags/') ? 'active' : ''">Tags</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SECTION: MESSAGES ─── -->
+    <p class="nav-section" :class="!open && 'hidden-section'">Messages</p>
+
+    <div x-data="{ isOpen: false }" x-init="isOpen = $root.menu === 'messages'">
+      <button @click="isOpen = !isOpen; $root.menu = isOpen ? 'messages' : null" :aria-expanded="isOpen.toString()" class="nav-item w-full" :class="[isChildActive(['/messages/', '/inbox/', '/compose/', '/broadcast/', '/templates/']) ? 'parent-active' : '', !open ? 'collapsed justify-center' : '']">
+        <div class="nav-icon-wrap"><svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+        <span x-show="open" x-transition class="flex-1 truncate text-left">Messages</span>
+        <svg x-show="open" class="nav-icon chevron w-4 h-4" :class="{ 'open': isOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        <span class="nav-tooltip">Messages</span>
+      </button>
+      <div x-show="isOpen && open" x-collapse class="submenu-container pl-2">
+        <div class="py-1 space-y-0.5">
+          <a href="{% url 'inbox' %}" class="sub-item" :class="isActive('/messages/inbox') ? 'active' : ''">Inbox</a>
+          <a href="{% url 'compose_message' %}" class="sub-item" :class="isActive('/messages/compose') ? 'active' : ''">Compose</a>
+          <a href="{% url 'broadcast_message' %}" class="sub-item" :class="isActive('/messages/broadcast') ? 'active' : ''">Broadcast</a>
+          <a href="{% url 'message_templates' %}" class="sub-item" :class="isActive('/messages/templates') ? 'active' : ''">Templates</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SECTION: REPORTS ─── -->
+    <p class="nav-section" :class="!open && 'hidden-section'">Reports</p>
+
+    <div x-data="{ isOpen: false }" x-init="isOpen = $root.menu === 'reports'">
+      <button @click="isOpen = !isOpen; $root.menu = isOpen ? 'reports' : null" :aria-expanded="isOpen.toString()" class="nav-item w-full" :class="[isChildActive(['/reports/']) ? 'parent-active' : '', !open ? 'collapsed justify-center' : '']">
+        <div class="nav-icon-wrap"><svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
+        <span x-show="open" x-transition class="flex-1 truncate text-left">Reports</span>
+        <svg x-show="open" class="nav-icon chevron w-4 h-4" :class="{ 'open': isOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        <span class="nav-tooltip">Reports</span>
+      </button>
+      <div x-show="isOpen && open" x-collapse class="submenu-container pl-2">
+        <div class="py-1 space-y-0.5 max-h-[300px] overflow-y-auto submenu-scroll pr-1">
+          <a href="{% url 'report_expiry' %}" class="sub-item" :class="isActive('/reports/expiry') ? 'active' : ''">Expiry Report</a>
+          <a href="{% url 'report_inventory_age' %}" class="sub-item" :class="isActive('/reports/inventory-age') ? 'active' : ''">Inventory Age</a>
+          <a href="{% url 'report_customer_lifetime' %}" class="sub-item" :class="isActive('/reports/customer-lifetime') ? 'active' : ''">Customer Lifetime Value</a>
+          <a href="{% url 'report_production' %}" class="sub-item" :class="isActive('/reports/production') ? 'active' : ''">Production Report</a>
+          <a href="{% url 'report_staff_performance' %}" class="sub-item" :class="isActive('/reports/staff') ? 'active' : ''">Staff Performance</a>
+          <a href="{% url 'sales_report' %}" class="sub-item" :class="isActive('/reports/sales') ? 'active' : ''">Sales Report</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SECTION: SETTINGS ─── -->
+    <p class="nav-section" :class="!open && 'hidden-section'">Settings</p>
+
+    <!-- ✨ FIX: Notifications - proper dark mode styling -->
+    <a href="{% url 'notification' %}" class="nav-item group relative" :class="[isActive('/notifications/') ? 'active' : '', !open ? 'collapsed' : '']" role="menuitem">
+      <div class="nav-icon-wrap relative">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 00-5-5.917V4a1 1 0 00-2 0v1.083A6 6 0 006 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        <span x-show="open && {{ notifications_count|default:'0' }} > 0" 
+              x-cloak
+              class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full"
+              style="border: 2px solid var(--sidebar-base);"></span>
+      </div>
+      <span x-show="open" x-transition class="flex-1 truncate">Notifications</span>
+      {% if notifications_count %}
+      <span x-show="open" x-transition class="ml-auto notif-badge">{{ notifications_count }}</span>
+      {% endif %}
+      <span class="nav-tooltip">Notifications</span>
+    </a>
+
+    <div x-data="{ isOpen: false }" x-init="isOpen = $root.menu === 'settings'">
+      <button @click="isOpen = !isOpen; $root.menu = isOpen ? 'settings' : null" :aria-expanded="isOpen.toString()" class="nav-item w-full" :class="[isChildActive(['/settings/', '/users/', '/business-settings/', '/email-settings/', '/notification-settings/', '/system-status/', '/about/', '/permissions/', '/numbering/', '/backup/', '/api/']) ? 'parent-active' : '', !open ? 'collapsed justify-center' : '']">
+        <div class="nav-icon-wrap"><svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+        <span x-show="open" x-transition class="flex-1 truncate text-left">Settings</span>
+        <svg x-show="open" class="nav-icon chevron w-4 h-4" :class="{ 'open': isOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        <span class="nav-tooltip">Settings</span>
+      </button>
+      <div x-show="isOpen && open" x-collapse class="submenu-container pl-2">
+        <div class="py-1 space-y-0.5 max-h-[300px] overflow-y-auto submenu-scroll pr-1">
+          <a href="{% url 'users_list' %}" class="sub-item" :class="isActive('/settings/users') ? 'active' : ''">Users & Roles</a>
+          <a href="{% url 'permission_matrix' %}" class="sub-item" :class="isActive('/settings/permissions') ? 'active' : ''">Permissions</a>
+          <a href="{% url 'business_profile' %}" class="sub-item" :class="isActive('/settings/business') ? 'active' : ''">Business Profile</a>
+          <a href="{% url 'email_settings' %}" class="sub-item" :class="isActive('/settings/email') ? 'active' : ''">Email Settings</a>
+          <a href="{% url 'notification_settings' %}" class="sub-item" :class="isActive('/settings/notifications') ? 'active' : ''">Notification Settings</a>
+          <a href="{% url 'numbering_settings' %}" class="sub-item" :class="isActive('/settings/numbering') ? 'active' : ''">Numbering</a>
+          <a href="{% url 'backup_restore' %}" class="sub-item" :class="isActive('/settings/backup') ? 'active' : ''">Backup & Restore</a>
+          <a href="{% url 'api_keys' %}" class="sub-item" :class="isActive('/settings/api') ? 'active' : ''">API Keys</a>
+          <a href="{% url 'system_status' %}" class="sub-item" :class="isActive('/settings/system') ? 'active' : ''">System Status</a>
+          <a href="{% url 'about' %}" class="sub-item" :class="isActive('/settings/about') ? 'active' : ''">About</a>
+        </div>
+      </div>
+    </div>
+
+  </nav>
+
+  <!-- ── FOOTER: User Profile ── -->
+  <div class="flex-shrink-0 border-t border-emerald-800/60 px-3 py-3">
+    <div class="flex items-center gap-3"
+         :class="open ? '' : 'justify-center'">
+
+      <!-- ✨ FIX: Avatar with proper tooltip wrapper -->
+      <div class="avatar-wrapper relative flex-shrink-0">
+        <a href="{% url 'profile' %}" class="cursor-pointer block">
+          <img src="{{ user.profile.avatar.url|default:'/static/img/default-avatar.png' }}"
+               class="w-8 h-8 rounded-full ring-1 ring-emerald-500/50 object-cover hover:ring-emerald-300 transition-all duration-200"
+               alt="{{ user.get_full_name|default:user.username }}"
+               loading="lazy"
+               onerror="this.src='/static/img/default-avatar.png'">
+          <span class="online-dot"></span>
+        </a>
+        <span class="nav-tooltip" x-show="!open" x-cloak>
+          {{ user.get_full_name|default:user.username }}
+        </span>
+      </div>
+
+      <!-- User info + logout -->
+      <div x-show="open"
+           x-transition:enter="transition duration-200 ease-out"
+           x-transition:enter-start="opacity-0 -translate-x-2"
+           x-transition:enter-end="opacity-100 translate-x-0"
+           x-transition:leave="transition duration-150 ease-in"
+           x-transition:leave-end="opacity-0 -translate-x-2"
+           class="flex-1 min-w-0 flex items-center justify-between gap-2">
+
+        <div class="min-w-0">
+          <a href="{% url 'profile' %}"
+             class="block text-[13px] font-semibold text-emerald-50 truncate hover:text-emerald-300 transition-colors leading-tight">
+            {{ user.get_full_name|default:user.username }}
+          </a>
+          <p class="text-[11px] text-emerald-200/60 truncate leading-tight mt-0.5">
+            {{ user.profile.role|default:"Admin" }}
+          </p>
+        </div>
+
+        <!-- ✨ FIX: Proper dark mode logout button -->
+        <a href="{% url 'logout' %}"
+           class="logout-btn"
+           title="Keluar"
+           aria-label="Keluar dari sistem">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✨ FIX: Mobile overlay with proper z-index -->
+  <div class="md:hidden fixed inset-0 bg-black/50 backdrop-blur-sm mobile-overlay"
+       x-show="open && mobile"
+       x-cloak
+       x-transition:enter="transition-opacity duration-300 ease-out"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       x-transition:leave="transition-opacity duration-200 ease-in"
+       x-transition:leave-end="opacity-0"
+       @click="open = false"
+       aria-hidden="true">
+  </div>
+
+</aside>

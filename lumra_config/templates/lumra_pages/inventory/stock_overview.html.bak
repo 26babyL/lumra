@@ -1,0 +1,1130 @@
+{% extends "base/base_hybrid.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Inventory Planner — Lumra{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ── Shared dashboard tokens ── */
+    :root {
+        --card-radius: 12px;
+        --card-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
+        --card-border:  rgba(0,0,0,.06);
+    }
+
+    .inv-page {
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    /* ── Page header ── */
+    .inv-page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: .75rem;
+    }
+
+    /* ── KPI grid (identical to dashboard) ── */
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: .875rem;
+    }
+    .kpi-card {
+        background: oklch(var(--b1));
+        border: .5px solid var(--card-border);
+        border-radius: var(--card-radius);
+        box-shadow: var(--card-shadow);
+        padding: 1.125rem 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+        transition: box-shadow 180ms ease, transform 180ms ease;
+    }
+    .kpi-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.08); transform: translateY(-1px); }
+    .kpi-icon {
+        width: 40px; height: 40px;
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1rem; flex-shrink: 0;
+    }
+    .kpi-value {
+        font-size: 1.6rem; font-weight: 800;
+        letter-spacing: -.02em; line-height: 1;
+        color: oklch(var(--bc));
+    }
+    .kpi-label {
+        font-size: .75rem; font-weight: 600;
+        color: oklch(var(--bc)/.5);
+        text-transform: uppercase; letter-spacing: .06em;
+    }
+
+    /* ── Section card (identical to dashboard) ── */
+    .section-card {
+        background: oklch(var(--b1));
+        border: .5px solid var(--card-border);
+        border-radius: var(--card-radius);
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+    }
+    .section-card-header {
+        padding: 1rem 1.25rem;
+        border-bottom: .5px solid oklch(var(--bc)/.06);
+        display: flex; align-items: center;
+        justify-content: space-between;
+        gap: .5rem; flex-wrap: wrap;
+    }
+    .section-card-title {
+        font-size: .85rem; font-weight: 700;
+        color: oklch(var(--bc));
+        text-transform: uppercase; letter-spacing: .07em;
+    }
+
+    /* ── Toolbar ── */
+    .inv-toolbar {
+        background: oklch(var(--b1));
+        border: .5px solid var(--card-border);
+        border-radius: var(--card-radius);
+        box-shadow: var(--card-shadow);
+        padding: .875rem 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: .75rem;
+        flex-wrap: wrap;
+    }
+
+    /* ── Table (identical to dashboard) ── */
+    .dash-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: .82rem;
+    }
+    .dash-table th {
+        padding: .625rem 1rem;
+        text-align: left;
+        font-size: .68rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: .07em;
+        color: oklch(var(--bc)/.4);
+        border-bottom: .5px solid oklch(var(--bc)/.07);
+    }
+    .dash-table td {
+        padding: .75rem 1rem;
+        border-bottom: .5px solid oklch(var(--bc)/.05);
+        color: oklch(var(--bc)/.8);
+        vertical-align: middle;
+    }
+    .dash-table tr:last-child td { border-bottom: none; }
+    .dash-table tr:hover td { background: oklch(var(--b2)); }
+
+    /* ── Status badges (reused) ── */
+    .status-badge {
+        display: inline-flex; align-items: center; gap: 4px;
+        padding: 2px 9px;
+        border-radius: 20px;
+        font-size: .67rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: .05em;
+    }
+    .status-badge::before {
+        content: ''; width: 5px; height: 5px;
+        border-radius: 50%; background: currentColor;
+        display: inline-block;
+    }
+    .status-badge.critical  { background: rgba(239,68,68,.1);  color: #991b1b; }
+    .status-badge.warning   { background: rgba(245,158,11,.1); color: #78350f; }
+    .status-badge.normal    { background: rgba(0,168,107,.1);  color: #065f46; }
+
+    [data-theme="dark"] .status-badge.critical { background: rgba(239,68,68,.2);  color: #f87171; }
+    [data-theme="dark"] .status-badge.warning  { background: rgba(245,158,11,.2); color: #fbbf24; }
+    [data-theme="dark"] .status-badge.normal   { background: rgba(0,168,107,.2);  color: #34d399; }
+
+    /* ── Stock progress bar ── */
+    .stock-bar-wrap {
+        width: 80px; height: 5px;
+        border-radius: 99px;
+        background: oklch(var(--b3));
+        overflow: hidden;
+    }
+    .stock-bar-fill {
+        height: 100%; border-radius: 99px;
+        transition: width 400ms ease;
+    }
+
+    /* ── Action icon buttons ── */
+    .tbl-action-btn {
+        width: 28px; height: 28px;
+        border-radius: 7px;
+        border: .5px solid var(--card-border);
+        background: oklch(var(--b2));
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; font-size: .7rem;
+        color: oklch(var(--bc)/.5);
+        transition: background 140ms, color 140ms;
+    }
+    .tbl-action-btn:hover         { background: oklch(var(--b3)); color: oklch(var(--bc)); }
+    .tbl-action-btn.blue:hover    { background: rgba(59,130,246,.1);  color: #1e40af; }
+    .tbl-action-btn.green:hover   { background: rgba(0,168,107,.1);   color: #065f46; }
+    .tbl-action-btn.purple:hover  { background: rgba(168,85,247,.1);  color: #6b21a8; }
+
+    /* ── Skeleton (reused) ── */
+    .skel {
+        background: linear-gradient(90deg, oklch(var(--b2)) 25%, oklch(var(--b3)) 50%, oklch(var(--b2)) 75%);
+        background-size: 200% 100%;
+        animation: skel-anim 1.4s ease infinite;
+        border-radius: 6px;
+    }
+    @keyframes skel-anim {
+        0%   { background-position:  200% 0; }
+        100% { background-position: -200% 0; }
+    }
+    .skel-text  { height: .85rem; }
+    .skel-val   { height: 1.6rem; }
+
+    /* ── Form inputs ── */
+    .form-group { display: flex; flex-direction: column; gap: .375rem; }
+    .form-label {
+        font-size: .72rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: .06em;
+        color: oklch(var(--bc)/.5);
+    }
+    .form-input {
+        background: oklch(var(--b2));
+        border: .5px solid oklch(var(--bc)/.12);
+        border-radius: 8px;
+        padding: .6rem .875rem;
+        font-size: .85rem;
+        color: oklch(var(--bc));
+        width: 100%;
+        transition: border-color 150ms, box-shadow 150ms;
+        outline: none;
+    }
+    .form-input:focus {
+        border-color: var(--jade, #00a86b);
+        box-shadow: 0 0 0 3px rgba(0,168,107,.12);
+    }
+    .form-input::placeholder { color: oklch(var(--bc)/.3); }
+
+    /* ── Modal ── */
+    .modal-overlay {
+        position: fixed; inset: 0; z-index: 50;
+        background: rgba(0,0,0,.4);
+        backdrop-filter: blur(4px);
+        display: flex; align-items: center; justify-content: center;
+        padding: 1rem;
+    }
+    .modal-box {
+        background: oklch(var(--b1));
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0,0,0,.18);
+        width: 100%; max-width: 520px;
+        max-height: 90vh; overflow-y: auto;
+        border: .5px solid var(--card-border);
+    }
+    .modal-box.wide { max-width: 760px; }
+    .modal-header {
+        padding: 1.125rem 1.25rem;
+        border-bottom: .5px solid oklch(var(--bc)/.06);
+        display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-title { font-size: .95rem; font-weight: 700; color: oklch(var(--bc)); }
+    .modal-body  { padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
+    .modal-footer {
+        padding: 1rem 1.25rem;
+        border-top: .5px solid oklch(var(--bc)/.06);
+        display: flex; justify-content: flex-end; gap: .625rem;
+    }
+
+    /* ── Stat row (detail modal) ── */
+    .stat-row {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: .625rem .875rem;
+        background: oklch(var(--b2));
+        border-radius: 8px;
+        font-size: .82rem;
+    }
+    .stat-row-label { color: oklch(var(--bc)/.5); font-weight: 500; }
+    .stat-row-val   { color: oklch(var(--bc)); font-weight: 700; }
+
+    /* ── Spin ── */
+    .spin-anim { animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Toast ── */
+    .toast-wrap { position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 60; display: flex; flex-direction: column; gap: .5rem; }
+    .toast-item {
+        background: oklch(var(--b1));
+        border: .5px solid var(--card-border);
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0,0,0,.12);
+        padding: .75rem 1rem;
+        display: flex; align-items: center; gap: .625rem;
+        font-size: .82rem; font-weight: 600;
+        min-width: 220px;
+        animation: toast-in .2s ease;
+    }
+    @keyframes toast-in { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: none; } }
+    .toast-item.success { border-left: 3px solid #00a86b; color: #065f46; }
+    .toast-item.error   { border-left: 3px solid #ef4444; color: #991b1b; }
+    .toast-item.warning { border-left: 3px solid #f59e0b; color: #78350f; }
+    .toast-item.info    { border-left: 3px solid #3b82f6; color: #1e40af; }
+
+    [data-theme="dark"] .toast-item.success { color: #34d399; }
+    [data-theme="dark"] .toast-item.error   { color: #f87171; }
+    [data-theme="dark"] .toast-item.warning { color: #fbbf24; }
+    [data-theme="dark"] .toast-item.info    { color: #60a5fa; }
+
+    /* ── Empty state ── */
+    .empty-state {
+        padding: 3rem 1.25rem;
+        text-align: center;
+        color: oklch(var(--bc)/.35);
+    }
+
+    /* ── Perf grid (for detail modal metrics) ── */
+    .perf-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: .625rem;
+    }
+    .perf-item {
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: .2rem; padding: .875rem .75rem;
+        border-radius: 10px;
+        background: oklch(var(--b2));
+        text-align: center;
+    }
+    .perf-val { font-size: 1.3rem; font-weight: 800; color: oklch(var(--bc)); line-height: 1; }
+    .perf-lbl { font-size: .68rem; font-weight: 600; color: oklch(var(--bc)/.45); text-transform: uppercase; letter-spacing: .06em; }
+
+    /* ── Bulk table (inside modal) ── */
+    .bulk-table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+    .bulk-table th {
+        padding: .5rem .875rem;
+        text-align: left; font-size: .67rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: .06em;
+        color: oklch(var(--bc)/.4);
+        border-bottom: .5px solid oklch(var(--bc)/.07);
+    }
+    .bulk-table td {
+        padding: .625rem .875rem;
+        border-bottom: .5px solid oklch(var(--bc)/.05);
+        vertical-align: middle; color: oklch(var(--bc)/.8);
+    }
+    .bulk-table tr:last-child td { border-bottom: none; }
+    .bulk-table tr:hover td { background: oklch(var(--b2)); }
+
+    /* ── Pagination ── */
+    .page-btn {
+        width: 32px; height: 32px;
+        border-radius: 8px;
+        border: .5px solid oklch(var(--bc)/.1);
+        background: oklch(var(--b1));
+        display: flex; align-items: center; justify-content: center;
+        font-size: .78rem; font-weight: 600;
+        color: oklch(var(--bc)/.6);
+        cursor: pointer;
+        transition: background 140ms, color 140ms;
+    }
+    .page-btn:hover:not(:disabled) { background: oklch(var(--b2)); color: oklch(var(--bc)); }
+    .page-btn.active { background: var(--jade, #00a86b); color: #fff; border-color: transparent; }
+    .page-btn:disabled { opacity: .35; cursor: not-allowed; }
+
+    @media (max-width: 640px) {
+        .inv-page  { padding: .875rem; gap: .875rem; }
+        .kpi-value { font-size: 1.35rem; }
+        .stock-bar-wrap { display: none; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{{ inventory_items|json_script:"inventory-items-data" }}
+
+<div class="inv-page" x-data="inventoryPlanner()" x-init="init()" x-cloak>
+
+    <!-- ── Page Header ── -->
+    <div class="inv-page-header">
+        <div>
+            <h1 style="font-size:1.3rem;font-weight:800;color:oklch(var(--bc));margin:0 0 2px;">
+                Inventory Planner
+            </h1>
+            <p style="font-size:.8rem;color:oklch(var(--bc)/.5);margin:0;">
+                Prediksi stok, pantau status kritis, dan rencanakan pembelian
+            </p>
+        </div>
+        <div style="display:flex;align-items:center;gap:.625rem;flex-wrap:wrap;">
+            <button
+                class="btn btn-sm btn-outline"
+                style="height:34px;min-height:34px;border-radius:9px;font-size:.8rem;font-weight:600;gap:5px;"
+                @click="openModal('conversion')">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                </svg>
+                Konversi
+            </button>
+            <button
+                class="btn btn-sm"
+                style="height:34px;min-height:34px;border-radius:9px;background:var(--jade);color:white;border:none;font-size:.8rem;font-weight:600;gap:6px;padding:0 14px;"
+                @click="openModal('bulkPurchase')">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                Bulk Purchase
+            </button>
+        </div>
+    </div>
+
+    <!-- ── KPI Cards ── -->
+    <div class="kpi-grid">
+
+        <!-- Items Kritis -->
+        <div class="kpi-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div class="kpi-icon" style="background:rgba(239,68,68,.1);">
+                    <svg style="width:18px;height:18px;color:#ef4444;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                </div>
+                <span style="font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(239,68,68,.1);color:#991b1b;" x-text="kpiCritical + ' item'"></span>
+            </div>
+            <div>
+                <div class="kpi-value" style="color:#ef4444;" x-text="kpiCritical"></div>
+                <div class="kpi-label">Stok Kritis</div>
+            </div>
+        </div>
+
+        <!-- Items Peringatan -->
+        <div class="kpi-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div class="kpi-icon" style="background:rgba(245,158,11,.1);">
+                    <svg style="width:18px;height:18px;color:#f59e0b;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                </div>
+            </div>
+            <div>
+                <div class="kpi-value" style="color:#f59e0b;" x-text="kpiWarning"></div>
+                <div class="kpi-label">Perlu Perhatian</div>
+            </div>
+        </div>
+
+        <!-- Total Items -->
+        <div class="kpi-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div class="kpi-icon" style="background:rgba(59,130,246,.1);">
+                    <svg style="width:18px;height:18px;color:#3b82f6;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                </div>
+            </div>
+            <div>
+                <div class="kpi-value" x-text="allItems.length"></div>
+                <div class="kpi-label">Total Item</div>
+            </div>
+        </div>
+
+        <!-- Restock Value -->
+        <div class="kpi-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div class="kpi-icon" style="background:rgba(0,168,107,.1);">
+                    <svg style="width:18px;height:18px;color:#00a86b;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+            </div>
+            <div>
+                <div class="kpi-value" style="color:#00a86b;" x-text="kpiNormal"></div>
+                <div class="kpi-label">Stok Normal</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ── Toolbar ── -->
+    <div class="inv-toolbar">
+        <div style="display:flex;align-items:center;gap:.625rem;flex-wrap:wrap;">
+            <!-- Search -->
+            <div style="position:relative;">
+                <svg style="position:absolute;left:.625rem;top:50%;transform:translateY(-50%);width:14px;height:14px;color:oklch(var(--bc)/.35);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
+                </svg>
+                <input
+                    type="text"
+                    class="form-input"
+                    style="padding-left:2rem;width:220px;height:34px;font-size:.8rem;"
+                    placeholder="Cari nama item atau lokasi..."
+                    x-model.debounce.200ms="searchQuery"
+                    @input="currentPage=1">
+            </div>
+            <!-- Status filter -->
+            <select
+                class="select select-bordered select-sm"
+                style="font-size:.8rem;height:34px;min-height:34px;border-radius:9px;"
+                x-model="filterStatus"
+                @change="currentPage=1">
+                <option value="">Semua Status</option>
+                <option value="critical">Kritis</option>
+                <option value="warning">Peringatan</option>
+                <option value="normal">Normal</option>
+            </select>
+        </div>
+        <div style="display:flex;align-items:center;gap:.625rem;">
+            <span style="font-size:.75rem;color:oklch(var(--bc)/.4);">
+                <span x-text="filtered.length"></span> item
+            </span>
+            <button
+                class="btn btn-sm btn-ghost"
+                style="height:34px;min-height:34px;border-radius:9px;font-size:.8rem;gap:5px;"
+                @click="loadData()"
+                :disabled="loading">
+                <svg class="w-3.5 h-3.5" :class="loading ? 'spin-anim' : ''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                <span x-text="loading ? 'Memuat...' : 'Refresh'"></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ── Inventory Table ── -->
+    <div class="section-card">
+        <div class="section-card-header">
+            <span class="section-card-title">Daftar Inventory</span>
+            <span style="font-size:.7rem;color:oklch(var(--bc)/.4);">
+                Menampilkan <span x-text="paginated.length"></span> dari <span x-text="filtered.length"></span> item
+            </span>
+        </div>
+        <div style="overflow-x:auto;">
+            <table class="dash-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Lokasi</th>
+                        <th>Stok</th>
+                        <th>Sisa Hari</th>
+                        <th>Status</th>
+                        <th>Rekomendasi</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Skeleton -->
+                    <template x-if="loading">
+                        <template x-for="i in [1,2,3,4,5]" :key="i">
+                            <tr>
+                                <td><div class="skel skel-text" style="width:8rem;"></div></td>
+                                <td><div class="skel skel-text" style="width:6rem;"></div></td>
+                                <td>
+                                    <div class="skel skel-text" style="width:4rem;margin-bottom:.375rem;"></div>
+                                    <div class="skel" style="width:80px;height:5px;border-radius:99px;"></div>
+                                </td>
+                                <td><div class="skel skel-text" style="width:3.5rem;"></div></td>
+                                <td><div class="skel skel-text" style="width:4.5rem;border-radius:20px;"></div></td>
+                                <td><div class="skel skel-text" style="width:6rem;"></div></td>
+                                <td><div style="display:flex;gap:.375rem;"><div class="skel" style="width:28px;height:28px;border-radius:7px;"></div><div class="skel" style="width:28px;height:28px;border-radius:7px;"></div><div class="skel" style="width:28px;height:28px;border-radius:7px;"></div></div></td>
+                            </tr>
+                        </template>
+                    </template>
+
+                    <!-- Data rows -->
+                    <template x-if="!loading">
+                        <template x-for="item in paginated" :key="item.id">
+                            <tr>
+                                <td>
+                                    <span style="font-weight:600;color:oklch(var(--bc));" x-text="item.name"></span>
+                                </td>
+                                <td style="font-size:.78rem;color:oklch(var(--bc)/.5);" x-text="item.location || '—'"></td>
+                                <td>
+                                    <div style="font-weight:600;margin-bottom:.3rem;" x-text="item.stock_display"></div>
+                                    <div class="stock-bar-wrap">
+                                        <div class="stock-bar-fill"
+                                             :style="`width:${stockPct(item)}%;background:${stockColor(item)};`"></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span style="font-weight:700;"
+                                          :style="item.status==='critical' ? 'color:#ef4444' : item.status==='warning' ? 'color:#f59e0b' : 'color:#00a86b'"
+                                          x-text="(item.days_left ?? '—') + ' hari'"></span>
+                                </td>
+                                <td>
+                                    <span class="status-badge" :class="item.status" x-text="statusLabel(item.status)"></span>
+                                </td>
+                                <td style="font-size:.78rem;color:oklch(var(--bc)/.6);" x-text="item.recommendation || '—'"></td>
+                                <td>
+                                    <div style="display:flex;align-items:center;gap:.375rem;">
+                                        <button class="tbl-action-btn green" @click="openModal('purchase', item.id)" title="Beli">
+                                            <svg style="width:11px;height:11px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                            </svg>
+                                        </button>
+                                        <button class="tbl-action-btn blue" @click="openModal('conversion', item.id)" title="Konversi">
+                                            <svg style="width:11px;height:11px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                                            </svg>
+                                        </button>
+                                        <button class="tbl-action-btn purple" @click="openDetailModal(item)" title="Detail">
+                                            <svg style="width:11px;height:11px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+                    </template>
+
+                    <!-- Empty state -->
+                    <template x-if="!loading && paginated.length === 0">
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-state">
+                                    <svg style="width:36px;height:36px;margin:0 auto .75rem;color:oklch(var(--bc)/.2);" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                                    </svg>
+                                    <p style="font-size:.88rem;font-weight:700;color:oklch(var(--bc)/.4);">Tidak ada item ditemukan</p>
+                                    <p style="font-size:.78rem;margin-top:.25rem;">Coba ubah filter atau kata kunci pencarian</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ── Pagination ── -->
+    <div x-show="!loading && totalPages > 1" style="display:flex;justify-content:center;align-items:center;gap:.375rem;">
+        <button class="page-btn" @click="currentPage > 1 && currentPage--" :disabled="currentPage===1">
+            <svg style="width:12px;height:12px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <template x-for="p in visiblePages" :key="p">
+            <button class="page-btn" :class="p===currentPage?'active':''" @click="currentPage=p" x-text="p"></button>
+        </template>
+        <button class="page-btn" @click="currentPage < totalPages && currentPage++" :disabled="currentPage===totalPages">
+            <svg style="width:12px;height:12px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </button>
+    </div>
+
+</div><!-- end inv-page -->
+
+<!-- ════════════════════════════
+     MODAL: Purchase
+════════════════════════════ -->
+<div x-show="activeModal === 'purchase'" x-cloak class="modal-overlay" @click.self="closeModal()">
+    <div class="modal-box" x-show="activeModal === 'purchase'"
+         x-transition:enter="transition duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+         @click.stop>
+        <div class="modal-header">
+            <span class="modal-title">Purchase Item</span>
+            <button class="tbl-action-btn" @click="closeModal()">
+                <svg style="width:13px;height:13px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="form-label">Item *</label>
+                <select class="form-input" x-model="purchaseForm.item">
+                    <option value="">— Pilih item —</option>
+                    {% for item in inventory_items %}
+                    <option value="{{ item.id }}">{{ item.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.875rem;">
+                <div class="form-group">
+                    <label class="form-label">Jumlah *</label>
+                    <input type="number" class="form-input" step="0.01" min="0.01" placeholder="0.00" x-model="purchaseForm.quantity">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Harga Satuan</label>
+                    <input type="number" class="form-input" step="0.01" min="0" placeholder="Rp" x-model="purchaseForm.unit_price">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Supplier</label>
+                <select class="form-input" x-model="purchaseForm.supplier">
+                    <option value="">— Pilih supplier —</option>
+                    {% for s in suppliers %}
+                    <option value="{{ s.id }}">{{ s.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Estimasi Pengiriman</label>
+                <input type="date" class="form-input" x-model="purchaseForm.delivery_date">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button style="padding:.6rem 1.25rem;border-radius:9px;border:.5px solid oklch(var(--bc)/.12);background:oklch(var(--b2));font-size:.82rem;font-weight:600;color:oklch(var(--bc)/.6);cursor:pointer;" @click="closeModal()">Batal</button>
+            <button style="padding:.6rem 1.25rem;border-radius:9px;background:var(--jade,#00a86b);border:none;color:#fff;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.5rem;" @click="submitPurchase()" :disabled="submitting">
+                <svg x-show="submitting" class="spin-anim" style="width:13px;height:13px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                <span x-text="submitting ? 'Memproses...' : 'Place Order'"></span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════
+     MODAL: Conversion
+════════════════════════════ -->
+<div x-show="activeModal === 'conversion'" x-cloak class="modal-overlay" @click.self="closeModal()">
+    <div class="modal-box" x-show="activeModal === 'conversion'"
+         x-transition:enter="transition duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+         @click.stop>
+        <div class="modal-header">
+            <span class="modal-title">Start Conversion</span>
+            <button class="tbl-action-btn" @click="closeModal()">
+                <svg style="width:13px;height:13px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="form-label">Item Sumber *</label>
+                <select class="form-input" x-model="conversionForm.source_item">
+                    <option value="">— Pilih item sumber —</option>
+                    {% for item in inventory_items %}
+                    <option value="{{ item.id }}">{{ item.name }} — {{ item.stock_display }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Target Konversi *</label>
+                <select class="form-input" x-model="conversionForm.target_item">
+                    <option value="">— Pilih target —</option>
+                    {% for p in conversion_targets %}
+                    <option value="{{ p.id }}">{{ p.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.875rem;">
+                <div class="form-group">
+                    <label class="form-label">Jumlah *</label>
+                    <input type="number" class="form-input" step="0.01" min="0.01" placeholder="0.00" x-model="conversionForm.amount">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tanggal *</label>
+                    <input type="date" class="form-input" x-model="conversionForm.date">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button style="padding:.6rem 1.25rem;border-radius:9px;border:.5px solid oklch(var(--bc)/.12);background:oklch(var(--b2));font-size:.82rem;font-weight:600;color:oklch(var(--bc)/.6);cursor:pointer;" @click="closeModal()">Batal</button>
+            <button style="padding:.6rem 1.25rem;border-radius:9px;background:#3b82f6;border:none;color:#fff;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.5rem;" @click="submitConversion()" :disabled="submitting">
+                <svg x-show="submitting" class="spin-anim" style="width:13px;height:13px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                <span x-text="submitting ? 'Memproses...' : 'Start Conversion'"></span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════
+     MODAL: Bulk Purchase
+════════════════════════════ -->
+<div x-show="activeModal === 'bulkPurchase'" x-cloak class="modal-overlay" @click.self="closeModal()">
+    <div class="modal-box wide" x-show="activeModal === 'bulkPurchase'"
+         x-transition:enter="transition duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+         @click.stop>
+        <div class="modal-header">
+            <span class="modal-title">Bulk Purchase</span>
+            <button class="tbl-action-btn" @click="closeModal()">
+                <svg style="width:13px;height:13px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div style="padding:1rem 1.25rem .5rem;border-bottom:.5px solid oklch(var(--bc)/.06);">
+            <p style="font-size:.8rem;color:oklch(var(--bc)/.5);">Pilih item dan tentukan jumlah pembelian.</p>
+        </div>
+        <div style="overflow-x:auto;">
+            <table class="bulk-table">
+                <thead>
+                    <tr>
+                        <th style="width:36px;">
+                            <input type="checkbox" @change="toggleSelectAll($event)"
+                                   style="width:14px;height:14px;border-radius:4px;cursor:pointer;">
+                        </th>
+                        <th>Item</th>
+                        <th>Stok Saat Ini</th>
+                        <th>Rekomendasi</th>
+                        <th>Jumlah Beli</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template x-for="item in bulkItems" :key="item.id">
+                        <tr>
+                            <td>
+                                <input type="checkbox" :value="item.id" x-model="selectedBulkItems"
+                                       style="width:14px;height:14px;border-radius:4px;cursor:pointer;">
+                            </td>
+                            <td>
+                                <span style="font-weight:600;color:oklch(var(--bc));" x-text="item.name"></span>
+                            </td>
+                            <td x-text="item.stock_display"></td>
+                            <td style="color:oklch(var(--bc)/.5);" x-text="item.recommended_amount ?? '—'"></td>
+                            <td>
+                                <input type="number" step="0.01" min="0.01"
+                                       x-model="item.bulk_quantity"
+                                       class="form-input"
+                                       style="width:90px;height:30px;padding:.375rem .625rem;font-size:.78rem;">
+                            </td>
+                            <td>
+                                <span class="status-badge" :class="item.status" x-text="statusLabel(item.status)"></span>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer" style="justify-content:space-between;">
+            <span style="font-size:.8rem;font-weight:600;color:oklch(var(--bc)/.5);">
+                <span x-text="selectedBulkItems.length"></span> item dipilih
+            </span>
+            <div style="display:flex;gap:.625rem;">
+                <button style="padding:.6rem 1.25rem;border-radius:9px;border:.5px solid oklch(var(--bc)/.12);background:oklch(var(--b2));font-size:.82rem;font-weight:600;color:oklch(var(--bc)/.6);cursor:pointer;" @click="closeModal()">Batal</button>
+                <button style="padding:.6rem 1.25rem;border-radius:9px;background:var(--jade,#00a86b);border:none;color:#fff;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.5rem;" @click="submitBulkPurchase()" :disabled="submitting || selectedBulkItems.length === 0">
+                    <svg x-show="submitting" class="spin-anim" style="width:13px;height:13px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    <span x-text="submitting ? 'Memproses...' : 'Place Bulk Order'"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════
+     MODAL: Item Detail
+════════════════════════════ -->
+<div x-show="activeModal === 'detail'" x-cloak class="modal-overlay" @click.self="closeModal()">
+    <div class="modal-box" x-show="activeModal === 'detail'"
+         x-transition:enter="transition duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+         @click.stop>
+        <div class="modal-header">
+            <span class="modal-title" x-text="detailItem?.name || 'Detail Item'"></span>
+            <button class="tbl-action-btn" @click="closeModal()">
+                <svg style="width:13px;height:13px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <!-- Loading state -->
+            <template x-if="detailLoading">
+                <div style="display:flex;flex-direction:column;gap:.875rem;">
+                    <div class="perf-grid-2">
+                        <div class="skel" style="height:80px;border-radius:10px;"></div>
+                        <div class="skel" style="height:80px;border-radius:10px;"></div>
+                        <div class="skel" style="height:80px;border-radius:10px;"></div>
+                        <div class="skel" style="height:80px;border-radius:10px;"></div>
+                    </div>
+                    <div class="skel skel-text" style="width:100%;"></div>
+                    <div class="skel skel-text" style="width:100%;"></div>
+                    <div class="skel skel-text" style="width:100%;"></div>
+                </div>
+            </template>
+
+            <template x-if="!detailLoading && detailItem">
+                <div style="display:flex;flex-direction:column;gap:.875rem;">
+                    <!-- Metric tiles -->
+                    <div class="perf-grid-2">
+                        <div class="perf-item">
+                            <div class="perf-val"
+                                 :style="detailItem.status==='critical' ? 'color:#ef4444' : detailItem.status==='warning' ? 'color:#f59e0b' : 'color:#00a86b'"
+                                 x-text="(detailItem.days_left ?? '—') + 'd'"></div>
+                            <div class="perf-lbl">Sisa Hari</div>
+                        </div>
+                        <div class="perf-item">
+                            <div class="perf-val" x-text="detailItem.stock_display ?? '—'"></div>
+                            <div class="perf-lbl">Stok Saat Ini</div>
+                        </div>
+                        <div class="perf-item">
+                            <div class="perf-val" x-text="detailItem.usage_display ?? '—'"></div>
+                            <div class="perf-lbl">Pemakaian/Hari</div>
+                        </div>
+                        <div class="perf-item">
+                            <span class="status-badge" :class="detailItem.status" x-text="statusLabel(detailItem.status)"></span>
+                            <div class="perf-lbl" style="margin-top:.25rem;">Status</div>
+                        </div>
+                    </div>
+
+                    <!-- Detail rows -->
+                    <div style="display:flex;flex-direction:column;gap:.375rem;">
+                        <div class="stat-row">
+                            <span class="stat-row-label">Lokasi</span>
+                            <span class="stat-row-val" x-text="detailItem.location || '—'"></span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-row-label">Supplier</span>
+                            <span class="stat-row-val" x-text="detailItem.supplier || '—'"></span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-row-label">Harga Satuan</span>
+                            <span class="stat-row-val" x-text="detailItem.unit_price || '—'"></span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-row-label">Restock Terakhir</span>
+                            <span class="stat-row-val" x-text="detailItem.last_restock || '—'"></span>
+                        </div>
+                        <div class="stat-row" x-show="detailItem.recommendation">
+                            <span class="stat-row-label">Rekomendasi</span>
+                            <span class="stat-row-val" style="color:#00a86b;" x-text="detailItem.recommendation"></span>
+                        </div>
+                    </div>
+
+                    <!-- Notes -->
+                    <div x-show="detailItem.notes" style="padding:.875rem;background:oklch(var(--b2));border-radius:10px;">
+                        <p style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:oklch(var(--bc)/.4);margin-bottom:.375rem;">Catatan</p>
+                        <p style="font-size:.82rem;color:oklch(var(--bc)/.7);" x-text="detailItem.notes"></p>
+                    </div>
+                </div>
+            </template>
+        </div>
+        <div class="modal-footer" x-show="!detailLoading && detailItem">
+            <button style="flex:1;padding:.6rem;border-radius:9px;background:#3b82f6;border:none;color:#fff;font-size:.82rem;font-weight:700;cursor:pointer;" @click="openModal('conversion', detailItem?.id)">Konversi</button>
+            <button style="flex:1;padding:.6rem;border-radius:9px;background:var(--jade,#00a86b);border:none;color:#fff;font-size:.82rem;font-weight:700;cursor:pointer;" @click="openModal('purchase', detailItem?.id)">Beli Item Ini</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── Toast ── -->
+<div class="toast-wrap" aria-live="polite">
+    <template x-for="t in toasts" :key="t.id">
+        <div class="toast-item" :class="t.type">
+            <!-- success -->
+            <svg x-show="t.type==='success'" style="width:14px;height:14px;flex-shrink:0;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            <!-- error -->
+            <svg x-show="t.type==='error'" style="width:14px;height:14px;flex-shrink:0;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            <!-- warning -->
+            <svg x-show="t.type==='warning'" style="width:14px;height:14px;flex-shrink:0;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            <!-- info -->
+            <svg x-show="t.type==='info'" style="width:14px;height:14px;flex-shrink:0;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span x-text="t.message"></span>
+        </div>
+    </template>
+</div>
+
+<script>
+function inventoryPlanner() {
+    return {
+        /* ── State ── */
+        loading       : false,
+        allItems      : [],
+        bulkItems     : [],
+        searchQuery   : '',
+        filterStatus  : '',
+        currentPage   : 1,
+        itemsPerPage  : 15,
+        activeModal   : null,
+        submitting    : false,
+        detailItem    : null,
+        detailLoading : false,
+        selectedBulkItems: [],
+        toasts        : [],
+        _toastId      : 0,
+
+        purchaseForm  : { item: '', quantity: '', unit_price: '', supplier: '', delivery_date: '' },
+        conversionForm: { source_item: '', target_item: '', amount: '', date: '' },
+
+        /* ── Computed ── */
+        get filtered() {
+            let list = this.allItems;
+            const q = this.searchQuery.trim().toLowerCase();
+            if (q) list = list.filter(i =>
+                i.name?.toLowerCase().includes(q) ||
+                i.location?.toLowerCase().includes(q)
+            );
+            if (this.filterStatus) list = list.filter(i => i.status === this.filterStatus);
+            return list;
+        },
+        get paginated() {
+            const s = (this.currentPage - 1) * this.itemsPerPage;
+            return this.filtered.slice(s, s + this.itemsPerPage);
+        },
+        get totalPages() {
+            return Math.max(1, Math.ceil(this.filtered.length / this.itemsPerPage));
+        },
+        get visiblePages() {
+            const max = 5, half = Math.floor(max / 2);
+            let s = Math.max(1, this.currentPage - half);
+            let e = Math.min(this.totalPages, s + max - 1);
+            if (e - s + 1 < max) s = Math.max(1, e - max + 1);
+            const pp = []; for (let i = s; i <= e; i++) pp.push(i); return pp;
+        },
+        get kpiCritical() { return this.allItems.filter(i => i.status === 'critical').length; },
+        get kpiWarning()  { return this.allItems.filter(i => i.status === 'warning').length; },
+        get kpiNormal()   { return this.allItems.filter(i => i.status === 'normal').length; },
+
+        /* ── Init ── */
+        init() {
+            // Load from server-rendered json_script tag first (instant, no flash)
+            const raw = document.getElementById('inventory-items-data');
+            if (raw?.textContent) {
+                try {
+                    const data = JSON.parse(raw.textContent);
+                    this._setItems(data);
+                } catch(e) { /* will fallback to API */ }
+            }
+            // Then refresh from API
+            this.loadData();
+
+            this.$watch('searchQuery', () => { this.currentPage = 1; });
+            this.$watch('filterStatus', () => { this.currentPage = 1; });
+            // Close modals on Escape
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape' && this.activeModal) this.closeModal();
+            });
+        },
+
+        async loadData() {
+            this.loading = true;
+            try {
+                const r = await fetch('/api/inventory/items/?format=json&page_size=500');
+                if (!r.ok) throw new Error(r.status);
+                const data = await r.json();
+                this._setItems(Array.isArray(data) ? data : (data.results || []));
+            } catch (err) {
+                console.warn('Inventory API unavailable, using mock:', err);
+                this._setItems(this._mockData());
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        _setItems(data) {
+            this.allItems  = data;
+            this.bulkItems = data.map(i => ({ ...i, bulk_quantity: i.recommended_amount ?? 0 }));
+        },
+
+        /* ── Helpers ── */
+        statusLabel(s) {
+            return { critical: 'Kritis', warning: 'Peringatan', normal: 'Normal' }[s] || s || '—';
+        },
+        stockPct(item) {
+            // Expect item.stock_pct (0-100) from API, else derive from days_left proxy
+            if (item.stock_pct != null) return Math.min(100, Math.max(0, item.stock_pct));
+            const d = item.days_left ?? 0;
+            return Math.min(100, Math.max(0, (d / 30) * 100));
+        },
+        stockColor(item) {
+            const s = item.status;
+            return s === 'critical' ? '#ef4444' : s === 'warning' ? '#f59e0b' : '#00a86b';
+        },
+
+        /* ── Toast ── */
+        showToast(message, type = 'success') {
+            const id = ++this._toastId;
+            this.toasts.push({ id, message, type });
+            setTimeout(() => { this.toasts = this.toasts.filter(t => t.id !== id); }, 3200);
+        },
+
+        /* ── Modal ── */
+        openModal(name, itemId = null) {
+            this.activeModal = name;
+            this.submitting  = false;
+            if (itemId) {
+                if (name === 'purchase')   this.purchaseForm.item = String(itemId);
+                if (name === 'conversion') this.conversionForm.source_item = String(itemId);
+            }
+        },
+        closeModal() {
+            this.activeModal = null;
+            this.submitting  = false;
+        },
+        openDetailModal(item) {
+            this.activeModal   = 'detail';
+            this.detailLoading = true;
+            this.detailItem    = null;
+
+            fetch(`/api/inventory/items/${encodeURIComponent(item.id)}/`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+                .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+                .then(d  => { this.detailItem = d; })
+                .catch(() => { this.detailItem = item; }) // fallback to table data
+                .finally(() => { this.detailLoading = false; });
+        },
+
+        /* ── Bulk ── */
+        toggleSelectAll(e) {
+            this.selectedBulkItems = e.target.checked ? this.bulkItems.map(i => i.id) : [];
+        },
+
+        /* ── Submissions ── */
+        async _post(url, payload) {
+            const r = await fetch(url, {
+                method : 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': this._csrf() },
+                body   : JSON.stringify(payload),
+            });
+            if (!r.ok) throw new Error(r.status);
+            return r.json();
+        },
+        _csrf() {
+            return document.cookie.split(';').map(c => c.trim())
+                .find(c => c.startsWith('csrftoken='))?.split('=')[1] || '';
+        },
+
+        async submitPurchase() {
+            if (!this.purchaseForm.item || !this.purchaseForm.quantity) {
+                this.showToast('Lengkapi item dan jumlah', 'warning'); return;
+            }
+            this.submitting = true;
+            try {
+                await this._post('/api/inventory/purchases/', this.purchaseForm);
+                this.showToast('Purchase order berhasil dibuat');
+                this.closeModal();
+                this.purchaseForm = { item: '', quantity: '', unit_price: '', supplier: '', delivery_date: '' };
+            } catch { this.showToast('Gagal membuat purchase order', 'error'); }
+            finally  { this.submitting = false; }
+        },
+
+        async submitConversion() {
+            if (!this.conversionForm.source_item || !this.conversionForm.amount) {
+                this.showToast('Lengkapi item sumber dan jumlah', 'warning'); return;
+            }
+            this.submitting = true;
+            try {
+                await this._post('/api/inventory/conversions/', this.conversionForm);
+                this.showToast('Konversi berhasil dimulai', 'info');
+                this.closeModal();
+                this.conversionForm = { source_item: '', target_item: '', amount: '', date: '' };
+            } catch { this.showToast('Gagal memulai konversi', 'error'); }
+            finally  { this.submitting = false; }
+        },
+
+        async submitBulkPurchase() {
+            if (!this.selectedBulkItems.length) {
+                this.showToast('Pilih minimal satu item', 'warning'); return;
+            }
+            const payload = this.bulkItems
+                .filter(i => this.selectedBulkItems.includes(i.id))
+                .map(i => ({ id: i.id, quantity: i.bulk_quantity }));
+
+            this.submitting = true;
+            try {
+                await this._post('/api/inventory/bulk-purchase/', { items: payload });
+                this.showToast(`${payload.length} item berhasil dipesan`);
+                this.closeModal();
+                this.selectedBulkItems = [];
+                await this.loadData();
+            } catch { this.showToast('Gagal memproses bulk order', 'error'); }
+            finally  { this.submitting = false; }
+        },
+
+        /* ── Mock data (remove when API live) ── */
+        _mockData() {
+            return [
+                { id:1, name:'Kopi Mandheling',     location:'Gudang Utama', stock_display:'12 Kg',  usage_display:'3 Kg/hari',  days_left:4,  status:'critical', recommendation:'Segera restock 50 Kg', stock_pct:15 },
+                { id:2, name:'Gayo Natural Process', location:'Gudang Utama', stock_display:'0 Kg',   usage_display:'2 Kg/hari',  days_left:0,  status:'critical', recommendation:'Stok habis!',          stock_pct:0  },
+                { id:3, name:'Kopi Luwak Toraja',    location:'Gudang Utama', stock_display:'5 Kg',   usage_display:'1.5 Kg/hari',days_left:3,  status:'critical', recommendation:'Restock 30 Kg',        stock_pct:10 },
+                { id:4, name:'Gula Aren',            location:'Dapur Pusat',  stock_display:'18 Kg',  usage_display:'4 Kg/hari',  days_left:8,  status:'warning',  recommendation:'Order minggu ini',      stock_pct:40 },
+                { id:5, name:'Susu Full Cream',      location:'Dapur Pusat',  stock_display:'40 L',   usage_display:'8 L/hari',   days_left:12, status:'warning',  recommendation:'Perlu restock',         stock_pct:55 },
+                { id:6, name:'Coklat Bubuk',         location:'Dapur Pusat',  stock_display:'22 Kg',  usage_display:'1 Kg/hari',  days_left:22, status:'normal',   recommendation:'Stok aman',             stock_pct:75 },
+                { id:7, name:'Vanilla Syrup',        location:'Bar Utama',    stock_display:'15 btl', usage_display:'0.5 btl/hr', days_left:30, status:'normal',   recommendation:'Stok aman',             stock_pct:85 },
+                { id:8, name:'Kayu Manis',           location:'Gudang Utama', stock_display:'8 Kg',   usage_display:'0.3 Kg/hari',days_left:26, status:'normal',   recommendation:'Stok aman',             stock_pct:70 },
+            ];
+        },
+    };
+}
+</script>
+{% endblock %}

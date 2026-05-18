@@ -1,0 +1,116 @@
+{% extends 'base/base_hybrid.html' %}
+
+{% block title %}Two-Factor Authentication - LUMRA{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-12 px-6 lg:px-12 flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10">
+  <div class="max-w-md mx-auto text-center">
+    <div class="card bg-base-100 shadow-2xl border border-primary/20">
+      <div class="card-body p-8">
+        <!-- Header -->
+        <div class="mb-6">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+            <i class="fas fa-shield-alt text-primary text-2xl"></i>
+          </div>
+          <h1 class="text-2xl font-bold text-base-content mb-2">2FA Setup</h1>
+          <p class="text-base-content/60 text-sm">Aktifkan Two-Factor Authentication untuk keamanan ekstra</p>
+        </div>
+
+        <!-- Form -->
+        <form method="post" class="space-y-6" action="#">
+          {% csrf_token %}
+
+          <!-- QR Code -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Scan dengan authenticator app:</span>
+            </label>
+            <div class="p-4 bg-base-200 rounded-lg text-center">
+              {% if qr_code %}
+              <img src="{{ qr_code }}" alt="QR Code" class="w-32 h-32 mx-auto">
+              {% else %}
+              <div class="w-32 h-32 mx-auto bg-base-300 rounded flex items-center justify-center">
+                <i class="fas fa-qrcode text-3xl text-base-content/60"></i>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Manual Entry -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Atau masukkan manual:</span>
+            </label>
+            <input 
+              aria-label="Atau masukkan manual:" 
+              type="text" 
+              value="{{ secret_key }}" 
+              readonly 
+              class="input input-bordered input-primary w-full text-xs font-mono cursor-pointer" 
+              onclick="copyToClipboard()"
+            >
+          </div>
+
+          <!-- Verification Code -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Kode Verifikasi</span>
+            </label>
+            <input 
+              type="text" 
+              name="verification_code" 
+              required 
+              maxlength="6" 
+              class="input input-bordered input-primary w-full text-center tracking-widest" 
+              placeholder="000000"
+            >
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn-primary w-full">
+            <i class="fas fa-check mr-2"></i> Aktifkan 2FA
+          </button>
+        </form>
+
+        <!-- Help Section -->
+        <div class="mt-8 p-4 bg-info/10 border border-info/20 rounded-lg">
+          <h3 class="text-sm font-semibold text-base-content mb-3">
+            <i class="fas fa-info-circle mr-2"></i>
+            Bantuan 2FA
+          </h3>
+          <div class="text-sm text-base-content/60 space-y-2">
+            <p>
+              <i class="fas fa-mobile-alt mr-2"></i>
+              Download Google Authenticator atau Authy dari app store
+            </p>
+            <p>
+              <i class="fas fa-camera mr-2"></i>
+              Scan QR code atau masukkan kode manual
+            </p>
+            <p>
+              <i class="fas fa-key mr-2"></i>
+              Masukkan 6 digit kode dari authenticator app
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Copy to Clipboard Script -->
+  <script>
+    function copyToClipboard() {
+      const secretKey = document.querySelector('input[value="{{ secret_key }}"]');
+      secretKey.select();
+      document.execCommand('copy');
+      
+      // Show feedback
+      const originalValue = secretKey.value;
+      secretKey.value = 'Disalin!';
+      setTimeout(() => {
+        secretKey.value = originalValue;
+      }, 1000);
+    }
+  </script>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+<!-- ============================================================
+     _alert_inner.html
+     Template partial internal — jangan dipakai langsung.
+     Dipanggil oleh alert.html dengan variabel yang sudah dimapping.
+============================================================ -->
+<div x-data="{ visible: true }"
+     x-show="visible"
+     x-transition:leave="transition ease-in duration-200"
+     x-transition:leave-start="opacity-100 translate-y-0"
+     x-transition:leave-end="opacity-0 -translate-y-1"
+     role="alert"
+     aria-live="polite"
+     aria-atomic="true"
+     class="{{ bg }} transition-all duration-200 flex items-start gap-3 font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;">
+
+    <div class="flex items-start gap-3">
+
+        <!-- Icon -->
+        <div class="flex-shrink-0 mt-0.5" aria-hidden="true">
+            <i class="fas {{ icon }} {{ icon_color }} text-base"></i>
+        </div>
+
+        <!-- Content -->
+        <div class="flex-1 min-w-0">
+
+            {% if title %}
+            <h3 class="text-sm font-600 {{ title_color }}">
+                {{ title }}
+            </h3>
+            {% endif %}
+
+            <p class="text-sm {{ msg_color }} {% if title %}mt-1{% endif %} leading-relaxed">
+                {{ message }}
+            </p>
+
+        </div>
+
+        <!-- Dismiss Button (X di pojok kanan) -->
+        {% if dismissible %}
+        <div class="flex-shrink-0">
+            <button type="button"
+                    @click="visible = false"
+                    class="inline-flex rounded-lg p-1.5 {{ btn_color }} focus:outline-none focus:ring-2 focus:ring-offset-1 transition-colors"
+                    aria-label="Tutup pesan">
+                <i class="fas fa-times text-sm" aria-hidden="true"></i>
+            </button>
+        </div>
+        {% endif %}
+
+    </div>
+</div>

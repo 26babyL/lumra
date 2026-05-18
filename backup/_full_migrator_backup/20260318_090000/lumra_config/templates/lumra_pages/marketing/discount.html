@@ -1,0 +1,203 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Discounts - Lumra ERP{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 py-12 px-6 lg:px-12 relative overflow-hidden">
+    <!-- Background Pattern (subtle) -->
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-10 left-10 w-20 h-20 bg-emerald-200 rounded-full blur-xl"></div>
+        <div class="absolute bottom-10 right-10 w-32 h-32 bg-green-200 rounded-full blur-xl"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-teal-200 rounded-full blur-2xl"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto space-y-10 relative z-10">
+        <!-- Page Title -->
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+            <div>
+                <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent leading-tight">
+                    💸 Discounts
+                </h1>
+                <p class="text-emerald-700 mt-2 text-lg">Manage and track discount codes and promotions</p>
+            </div>
+            <div class="flex gap-3">
+                <a href="{% url 'add_discount' %}" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 shadow-md flex items-center gap-2">
+                    ➕ Add Discount
+                </a>
+            </div>
+        </div>
+
+        <!-- Metrics Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="p-6 rounded-2xl shadow-xl border border-emerald-100 hover:shadow-xl transition-all duration-300 transform hover:scale-105 group" style="background:var(--color-surface)">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-emerald-600 font-medium group-hover:text-emerald-800 transition-colors">Total Discounts</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-1">{{ total_discounts }}</p>
+                        <p class="text-xs text-emerald-500 mt-1">All time</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-100 to-blue-200 p-4 rounded-full shadow-md group-hover:scale-110 transition-transform">
+                        <i class="fas fa-tags text-blue-600 text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 rounded-2xl shadow-xl border border-emerald-100 hover:shadow-xl transition-all duration-300 transform hover:scale-105 group" style="background:var(--color-surface)">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-emerald-600 font-medium group-hover:text-emerald-800 transition-colors">Active Discounts</p>
+                        <p class="text-3xl font-bold text-green-600 mt-1">{{ active_discounts }}</p>
+                        <p class="text-xs text-emerald-500 mt-1">Currently available</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-green-100 to-green-200 p-4 rounded-full shadow-md group-hover:scale-110 transition-transform">
+                        <i class="fas fa-check-circle text-green-600 text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 rounded-2xl shadow-xl border border-emerald-100 hover:shadow-xl transition-all duration-300 transform hover:scale-105 group" style="background:var(--color-surface)">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-emerald-600 font-medium group-hover:text-emerald-800 transition-colors">Usage Count</p>
+                        <p class="text-3xl font-bold text-purple-600 mt-1">{{ total_usage }}</p>
+                        <p class="text-xs text-emerald-500 mt-1">Times used</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-100 to-purple-200 p-4 rounded-full shadow-md group-hover:scale-110 transition-transform">
+                        <i class="fas fa-chart-bar text-purple-600 text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 rounded-2xl shadow-xl border border-emerald-100 hover:shadow-xl transition-all duration-300 transform hover:scale-105 group" style="background:var(--color-surface)">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-emerald-600 font-medium group-hover:text-emerald-800 transition-colors">Total Savings</p>
+                        <p class="text-3xl font-bold text-orange-600 mt-1">Rp {{ total_savings|floatformat:0 }}</p>
+                        <p class="text-xs text-emerald-500 mt-1">Customer savings</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-orange-100 to-orange-200 p-4 rounded-full shadow-md group-hover:scale-110 transition-transform">
+                        <i class="fas fa-piggy-bank text-orange-600 text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="p-6 rounded-2xl shadow-xl border border-emerald-100" style="background:var(--color-surface)">
+            <form method="get" class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div class="relative flex-1">
+                    <input type="text" name="q" placeholder="Search discounts by name or code..." class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors duration-200" style="background:var(--color-surface)" value="{{ query }}">
+                    <i class="fas fa-search absolute left-3 top-4 text-emerald-400"></i>
+                </div>
+                <select name="status" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors duration-200" style="background:var(--color-surface)">
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="expired">Expired</option>
+                </select>
+                <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 shadow-md flex items-center gap-2">
+                    🔍 Search
+                </button>
+                <a href="{% url 'discount_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 shadow-md flex items-center gap-2">
+                    Reset
+                </a>
+            </form>
+        </div>
+
+        <!-- Discounts Table -->
+        <div class="rounded-2xl shadow-xl border border-emerald-100 overflow-hidden" style="background:var(--color-surface)">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Name</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Code</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Type</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Value</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Start Date</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">End Date</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200" style="background:var(--color-surface)">
+                        {% for discount in discounts %}
+                        <tr class="hover:bg-gray-50 transition-colors duration-150">
+                            <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ discount.name }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">
+                                <code class="bg-gray-200 px-2 py-1 rounded text-xs font-mono text-gray-800">{{ discount.code }}</code>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-900">{{ discount.type|title }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">
+                                {% if discount.type == 'percentage' %}
+                                    {{ discount.value }}%
+                                {% else %}
+                                    Rp {{ discount.value|floatformat:0 }}
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full {% if discount.status == 'active' %}bg-green-100 text-green-800{% elif discount.status == 'inactive' %}bg-gray-100 text-gray-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                    {{ discount.status|title }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-900">{{ discount.start_date|date:"Y-m-d" }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">{{ discount.end_date|date:"Y-m-d" }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">
+                                <div class="flex gap-2">
+                                    <a href="{% url 'edit_discount' discount.id %}" class="text-blue-600 hover:text-blue-800 transition-colors duration-200">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a href="{% url 'delete_discount' discount.id %}" class="text-red-600 hover:text-red-800 transition-colors duration-200" onclick="return confirm('Are you sure?')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="px-6 py-4 text-sm text-gray-500 text-center">No discounts found. <a href="{% url 'add_discount' %}" class="text-emerald-600 hover:underline">Add one now</a>.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <div class="flex justify-center mt-10">
+            <nav class="relative z-0 inline-flex rounded-lg shadow-sm" aria-label="Pagination">
+                {% if page_obj.has_previous %}
+                <a href="?page=1{% if query %}&q={{ query }}{% endif %}{% if status %}&status={{ status }}{% endif %}" class="relative inline-flex items-center px-3 py-2 rounded-l-lg border border-gray-300 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors duration-200" style="background:var(--color-surface)">
+                    First
+                </a>
+                <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if status %}&status={{ status }}{% endif %}" class="relative inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors duration-200" style="background:var(--color-surface)">
+                    Previous
+                </a>
+                {% endif %}
+
+                {% with current_page=page_obj.number %}
+                {% with total_pages=page_obj.paginator.num_pages %}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if num >= current_page|add:-3 and num <= current_page|add:3 %}
+                    <a href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}{% if status %}&status={{ status }}{% endif %}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors duration-200 {% if page_obj.number == num %}bg-emerald-50 text-emerald-600 border-emerald-500{% endif %}" style="background:var(--color-surface)">
+                        {{ num }}
+                    </a>
+                    {% elif num == current_page|add:-4 or num == current_page|add:4 %}
+                    <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium text-gray-500" style="background:var(--color-surface)">...</span>
+                    {% endif %}
+                {% endfor %}
+                {% endwith %}
+                {% endwith %}
+
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if status %}&status={{ status }}{% endif %}" class="relative inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors duration-200" style="background:var(--color-surface)">
+                    Next
+                </a>
+                <a href="?page={{ page_obj.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}{% if status %}&status={{ status }}{% endif %}" class="relative inline-flex items-center px-3 py-2 rounded-r-lg border border-gray-300 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors duration-200" style="background:var(--color-surface)">
+                    Last
+                </a>
+                {% endif %}
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,257 @@
+{
+  "filename": "kpi_card.html",
+  "title": "kpi_card",
+  "components": [
+    {
+      "type": "card",
+      "tag": "a",
+      "label": "CARD",
+      "depth": 2,
+      "path": "root/body/p/a",
+      "classes": "kpi-card-container hover:no-underline block",
+      "text_preview": "{% else %} {% endif %} {{ title }} {{ value }} {% if subtitle %} {{ subtitle }}…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 3,
+      "path": "root/body/p/a/div",
+      "classes": "kpi-card-container",
+      "text_preview": "{% endif %} {{ title }} {{ value }} {% if subtitle %} {{ subtitle }} {% endif %}…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "metric",
+      "tag": "div",
+      "label": "METRIC CARD",
+      "depth": 4,
+      "path": "root/body/p/a/div/div",
+      "classes": "lumra-kpi-glass{% if variant == 'white' %} kpi-white{% elif variant == 'minimal' %} kpi-minimal{% endif %} reveal",
+      "text_preview": "{{ title }} {{ value }} {% if subtitle %} {{ subtitle }} {% endif %} {% if chang…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 5,
+      "path": "root/body/p/a/div/div/div",
+      "classes": "relative z-10 flex justify-between items-start gap-4",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 6,
+      "path": "root/body/p/a/div/div/div/div",
+      "classes": "flex-1 min-w-0",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "span",
+      "label": "CARD",
+      "depth": 7,
+      "path": "root/body/p/a/div/div/div/div/span",
+      "classes": "kpi-card-title",
+      "text_preview": "{{ title }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 7,
+      "path": "root/body/p/a/div/div/div/div/div",
+      "classes": "kpi-card-value",
+      "text_preview": "{{ value }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "span",
+      "label": "CARD",
+      "depth": 7,
+      "path": "root/body/p/a/div/div/div/div/span",
+      "classes": "kpi-card-subtitle",
+      "text_preview": "{{ subtitle }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "span",
+      "label": "CARD",
+      "depth": 6,
+      "path": "root/body/p/a/div/div/div/span",
+      "classes": "kpi-card-badge {% if change_dir == 'up' %}up{% elif change_dir == 'down' %}down{% else %}neutral{% endif %}",
+      "text_preview": "{% if change_dir == 'up' %}↑{% elif change_dir == 'down' %}↓{% else %}→{% endif…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "span",
+      "label": "CARD",
+      "depth": 7,
+      "path": "root/body/p/a/div/div/div/span/span",
+      "classes": "kpi-card-badge-arrow",
+      "text_preview": "{% if change_dir == 'up' %}↑{% elif change_dir == 'down' %}↓{% else %}→{% endif…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 2,
+      "path": "root/body/p/a",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "{% else %} {% endif %} {{ title }} {{ value }} {% if subtitle %} {{ subtitle }}…"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/p/a/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "{% endif %} {{ title }} {{ value }} {% if subtitle %} {{ subtitle }} {% endif %}…"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/p/a/div/div",
+      "type": "metric",
+      "label": "METRIC CARD",
+      "text_preview": "{{ title }} {{ value }} {% if subtitle %} {{ subtitle }} {% endif %} {% if chang…"
+    },
+    {
+      "depth": 5,
+      "path": "root/body/p/a/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/p/a/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 7,
+      "path": "root/body/p/a/div/div/div/div/span",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "{{ title }}"
+    },
+    {
+      "depth": 7,
+      "path": "root/body/p/a/div/div/div/div/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "{{ value }}"
+    },
+    {
+      "depth": 7,
+      "path": "root/body/p/a/div/div/div/div/span",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "{{ subtitle }}"
+    },
+    {
+      "depth": 6,
+      "path": "root/body/p/a/div/div/div/span",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "{% if change_dir == 'up' %}↑{% elif change_dir == 'down' %}↓{% else %}→{% endif…"
+    },
+    {
+      "depth": 7,
+      "path": "root/body/p/a/div/div/div/span/span",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "{% if change_dir == 'up' %}↑{% elif change_dir == 'down' %}↓{% else %}→{% endif…"
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 10,
+    "by_type": {
+      "card": 7,
+      "metric": 1,
+      "layout": 2
+    },
+    "interactive": 1,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "file_renames": [
+    {
+      "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\vendors_list.html",
+      "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\vendor_list.html",
+      "bak": "D:\\APPS\\Project\\lumra\\.lumra_rename_backup\\20260313_125839\\lumra_config\\templates\\lumra_pages\\master_data\\vendors_list.html"
+    },
+    {
+      "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\locations.html",
+      "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\location_list.html",
+      "bak": "D:\\APPS\\Project\\lumra\\.lumra_rename_backup\\20260313_125839\\lumra_config\\templates\\lumra_pages\\master_data\\locations.html"
+    },
+    {
+      "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\products.html",
+      "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\product_list.html",
+      "bak": "D:\\APPS\\Project\\lumra\\.lumra_rename_backup\\20260313_125839\\lumra_config\\templates\\lumra_pages\\inventory\\products.html"
+    },
+    {
+      "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\inventory.html",
+      "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\stock_overview.html",
+      "bak": "D:\\APPS\\Project\\lumra\\.lumra_rename_backup\\20260313_125839\\lumra_config\\templates\\lumra_pages\\inventory\\inventory.html"
+    },
+    {
+      "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\add_stock_movement.html",
+      "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\stock_movement_form.html",
+      "bak": "D:\\APPS\\Project\\lumra\\.lumra_rename_backup\\20260313_125839\\lumra_config\\templates\\lumra_pages\\inventory\\add_stock_movement.html"
+    },
+    {
+      "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\activity_log.html",
+      "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\report_activity_log.html",
+      "bak": "D:\\APPS\\Project\\lumra\\.lumra_rename_backup\\20260313_125839\\lumra_config\\templates\\lumra_pages\\reports\\activity_log.html"
+    },
+    {
+      "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\sales_insight.html",
+      "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\sales_intelligence.html",
+      "bak": "D:\\APPS\\Project\\lumra\\.lumra_rename_backup\\20260313_125839\\lumra_config\\templates\\lumra_pages\\sales\\sales_insight.html"
+    },
+    {
+      "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\users.html",
+      "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\user_list.html",
+      "bak": "D:\\APPS\\Project\\lumra\\.lumra_rename_backup\\20260313_125839\\lumra_config\\templates\\lumra_pages\\settings\\users.html"
+    },
+    {
+      "src": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\business_form_general.html",
+      "dst": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\business_profile.html",
+      "bak": "D:\\APPS\\Project\\lumra\\.lumra_rename_backup\\20260313_125839\\lumra_config\\templates\\lumra_pages\\settings\\business_form_general.html"
+    }
+  ],
+  "views_fixes": [],
+  "html_fixes": []
+}

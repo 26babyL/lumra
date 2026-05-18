@@ -1,0 +1,59 @@
+{
+  "title": "Lumra Emerald Odyssey v3.0 — Deployment Report",
+  "date": "2026-04-08 16:33:19",
+  "transformation_summary": {},
+  "statistics": {
+    "total_templates": 102,
+    "base_templates": 13,
+    "base_partials": 2,
+    "page_templates": 87,
+    "css_files": 3,
+    "total_components_transformed": {
+      "layouts": 5,
+      "navigation": 4,
+      "cards": 3,
+      "alerts": 2,
+      "modals": 2,
+      "forms": 1,
+      "utilities": 2
+    },
+    "color_tokens": {
+      "primary": "#00674F",
+      "secondary": "#00A86B",
+      "accent": "#EFBF04",
+      "contrast": "#000080",
+      "neutral": "#FDFBD4",
+      "semantic_variants": 12,
+      "opacity_variants": 28
+    },
+    "css_variables": {
+      "color_tokens": 80,
+      "typography": 15,
+      "spacing": 16,
+      "shadows": 6,
+      "transitions": 8,
+      "z_index": 7,
+      "glass_protocol": 7,
+      "breakpoints": 3
+    }
+  },
+  "changes_log": {},
+  "deployment_instructions": [
+    "✓ Verify all CSS tokens are loaded (check browser DevTools)",
+    "✓ Test navbar collapse/expand at 768px breakpoint",
+    "✓ Verify sidebar show/hide on mobile",
+    "✓ Check KPI cards render with Glass Protocol",
+    "✓ Test form input focus states (should show Jade highlight)",
+    "✓ Verify table header color is Emerald (#00674F)",
+    "✓ Check alert colors match semantic mapping (success=Jade, error=Red→Navy)",
+    "✓ Test modal backdrop blur (should be visible)",
+    "✓ Verify all badges display with correct tier colors",
+    "✓ Test button hover states (should have shadow animation)",
+    "✓ Check responsive images still work",
+    "✓ Verify font loading (Plus Jakarta Sans via Google Fonts)",
+    "✓ Clear browser cache and test incognito mode",
+    "✓ Cross-browser test (Chrome, Firefox, Safari, Edge)",
+    "✓ Mobile device testing (iOS + Android)",
+    "✓ Accessibility audit (WCAG 2.1 AA compliance)"
+  ]
+}

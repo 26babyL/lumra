@@ -1,0 +1,225 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Market Insights - Lumra ERP{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 py-12 px-6 lg:px-12 relative overflow-hidden">
+    <!-- Background Pattern (subtle) -->
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-10 left-10 w-20 h-20 bg-emerald-200 rounded-full blur-xl"></div>
+        <div class="absolute bottom-10 right-10 w-32 h-32 bg-green-200 rounded-full blur-xl"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-teal-200 rounded-full blur-2xl"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto space-y-10 relative z-10">
+        <!-- Page Title -->
+        <div class="flex flex-col gap-4">
+            <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent leading-tight">
+                📊 Market Insights
+            </h1>
+            <p class="text-emerald-700 mt-2 text-lg">Analyze market trends, sales performance, and competitive landscape</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-white p-6 rounded-2xl shadow-xl border border-emerald-100">
+            <form method="get" class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div class="relative flex-1">
+                    <input type="date" name="start_date" placeholder="Start Date" class="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white transition-colors duration-200" value="{{ start_date }}">
+                </div>
+                <div class="relative flex-1">
+                    <input type="date" name="end_date" placeholder="End Date" class="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white transition-colors duration-200" value="{{ end_date }}">
+                </div>
+                <select name="category" class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white transition-colors duration-200">
+                    <option value="">All Categories</option>
+                    <option value="coffee">Coffee</option>
+                    <option value="non-coffee">Non-Coffee</option>
+                    <option value="pastry">Pastry</option>
+                </select>
+                <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 shadow-md flex items-center gap-2">
+                    🔍 Apply Filters
+                </button>
+            </form>
+        </div>
+
+        <!-- Metrics Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white p-6 rounded-2xl shadow-xl border border-emerald-100 hover:shadow-xl transition-all duration-300 transform hover:scale-105 group">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-emerald-600 font-medium group-hover:text-emerald-800 transition-colors">Total Sales</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-1">Rp {{ total_sales|floatformat:0 }}</p>
+                        <p class="text-xs text-emerald-500 mt-1">+{{ sales_growth }}% from last period</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-green-100 to-green-200 p-4 rounded-full shadow-md group-hover:scale-110 transition-transform">
+                        <i class="fas fa-chart-line text-green-600 text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-xl border border-emerald-100 hover:shadow-xl transition-all duration-300 transform hover:scale-105 group">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-emerald-600 font-medium group-hover:text-emerald-800 transition-colors">Market Share</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-1">{{ market_share }}%</p>
+                        <p class="text-xs text-emerald-500 mt-1">In local market</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-100 to-blue-200 p-4 rounded-full shadow-md group-hover:scale-110 transition-transform">
+                        <i class="fas fa-pie-chart text-blue-600 text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-xl border border-emerald-100 hover:shadow-xl transition-all duration-300 transform hover:scale-105 group">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-emerald-600 font-medium group-hover:text-emerald-800 transition-colors">Top Product</p>
+                        <p class="text-lg font-bold text-gray-900 mt-1">{{ top_product.name }}</p>
+                        <p class="text-sm text-emerald-600">{{ top_product.sales }} units sold</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-100 to-purple-200 p-4 rounded-full shadow-md group-hover:scale-110 transition-transform">
+                        <i class="fas fa-trophy text-purple-600 text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-xl border border-emerald-100 hover:shadow-xl transition-all duration-300 transform hover:scale-105 group">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-emerald-600 font-medium group-hover:text-emerald-800 transition-colors">Competitor Analysis</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-1">{{ competitor_count }}</p>
+                        <p class="text-xs text-emerald-500 mt-1">Tracked competitors</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-orange-100 to-orange-200 p-4 rounded-full shadow-md group-hover:scale-110 transition-transform">
+                        <i class="fas fa-users text-orange-600 text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Sales Trend Chart -->
+            <div class="bg-white p-6 rounded-2xl shadow-xl border border-emerald-100">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Sales Trend</h3>
+                <div class="h-64">
+                    <canvas id="salesTrendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Category Performance Chart -->
+            <div class="bg-white p-6 rounded-2xl shadow-xl border border-emerald-100">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Category Performance</h3>
+                <div class="h-64">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insights and Reports -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Key Insights -->
+            <div class="bg-white p-6 rounded-2xl shadow-xl border border-emerald-100">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Key Insights</h3>
+                <div class="space-y-3">
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-lightbulb text-emerald-500 mt-1"></i>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">Peak Sales Hours</p>
+                            <p class="text-xs text-gray-600">Sales peak between 7-9 AM and 4-6 PM</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-trend-up text-emerald-500 mt-1"></i>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">Growing Category</p>
+                            <p class="text-xs text-gray-600">Non-coffee beverages showing 15% growth</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-users text-emerald-500 mt-1"></i>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">Customer Loyalty</p>
+                            <p class="text-xs text-gray-600">Repeat customers increased by 8%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports -->
+            <div class="bg-white p-6 rounded-2xl shadow-xl border border-emerald-100">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Reports</h3>
+                <div class="space-y-3">
+                    <a href="{% url 'download_report' 'sales' %}" class="flex items-center justify-between p-3 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors duration-200">
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">Sales Report</p>
+                            <p class="text-xs text-gray-600">Detailed sales analysis</p>
+                        </div>
+                        <i class="fas fa-download text-emerald-600"></i>
+                    </a>
+                    <a href="{% url 'download_report' 'market' %}" class="flex items-center justify-between p-3 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors duration-200">
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">Market Analysis</p>
+                            <p class="text-xs text-gray-600">Competitor and market insights</p>
+                        </div>
+                        <i class="fas fa-download text-emerald-600"></i>
+                    </a>
+                    <a href="{% url 'download_report' 'trends' %}" class="flex items-center justify-between p-3 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors duration-200">
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">Trend Report</p>
+                            <p class="text-xs text-gray-600">Consumer behavior trends</p>
+                        </div>
+                        <i class="fas fa-download text-emerald-600"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Sales Trend Chart
+const salesCtx = document.getElementById('salesTrendChart').getContext('2d');
+new Chart(salesCtx, {
+    type: 'line',
+    data: {
+        labels: {{ sales_labels|safe }},
+        datasets: [{
+            label: 'Sales',
+            data: {{ sales_data|safe }},
+            borderColor: 'rgb(16, 185, 129)',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+// Category Performance Chart
+const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+new Chart(categoryCtx, {
+    type: 'doughnut',
+    data: {
+        labels: {{ category_labels|safe }},
+        datasets: [{
+            data: {{ category_data|safe }},
+            backgroundColor: [
+                'rgb(16, 185, 129)',
+                'rgb(59, 130, 246)',
+                'rgb(245, 158, 11)',
+                'rgb(239, 68, 68)'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+</script>
+{% endblock %}

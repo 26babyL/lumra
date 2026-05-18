@@ -1,0 +1,425 @@
+{% extends 'base/base_hybrid.html' %}
+
+{% block title %}Tulis Pesan — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+
+  .compose-card {
+    background     : var(--color-surface-mid);
+    backdrop-filter: var(--glass-blur);
+    border         : 1px solid rgba(255, 255, 255, 0.85);
+    border-radius  : 20px;
+    box-shadow     : 0 4px 24px var(--color-black-a008);
+  }
+
+  .field-label {
+    display        : block;
+    font-size      : 10px;
+    font-weight    : 700;
+    color          : #64748B;
+    text-transform : uppercase;
+    letter-spacing : 0.05em;
+    margin-bottom  : 6px;
+  }
+
+  .input-field {
+    width           : 100%;
+    background      : rgba(255, 255, 255, 0.85);
+    border          : 1px solid rgba(226, 232, 240, 0.8);
+    border-radius   : 12px;
+    padding         : 11px 14px;
+    font-size       : 0.875rem;
+    color           : #334155;
+    transition      : all .2s;
+    font-family     : 'Inter', sans-serif;
+  }
+  .input-field:focus {
+    outline         : none;
+    border-color    : var(--color-emerald-600);
+    box-shadow      : 0 0 0 3px var(--color-emerald-600-a08);
+    background      : #FFF;
+  }
+  .input-field::placeholder { color: #94A3B8; }
+
+  textarea.input-field { resize: vertical; min-height: 140px; line-height: 1.6; }
+
+  /* ── Recipient chip ── */
+  .recipient-chip {
+    display        : inline-flex; align-items: center; gap: 6px;
+    padding        : 4px 10px 4px 4px;
+    border-radius  : 20px;
+    font-size      : 12px; font-weight: 600;
+    border         : 1px solid;
+    transition     : all .15s;
+  }
+  .recipient-chip.selected {
+    border-color : var(--color-emerald-600);
+    background   : var(--color-emerald-600-a08);
+    color        : var(--color-primary);
+  }
+  .recipient-chip:not(.selected) {
+    border-color : #E2E8F0;
+    background   : rgba(255,255,255,0.5);
+    color        : #64748B;
+  }
+  .recipient-chip:not(.selected):hover {
+    border-color : var(--color-emerald-600);
+    color        : var(--color-emerald-600);
+  }
+  .chip-avatar {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700;
+  }
+
+  /* ── Preview ── */
+  .preview-card {
+    background   : #FFF;
+    border       : 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding      : 16px;
+    box-shadow   : 0 1px 4px rgba(0,0,0,0.03);
+  }
+
+  /* ── Button ── */
+  .btn {
+    display         : inline-flex; align-items: center; justify-content: center;
+    padding         : 10px 20px; font-size: 13px; font-weight: 600;
+    border-radius   : 10px; cursor: pointer; gap: 8px;
+    transition      : all .2s; border: 1px solid transparent;
+    font-family     : 'Inter', sans-serif;
+  }
+  .btn-primary {
+    background : var(--color-emerald-600); color: white;
+    box-shadow : 0 4px 14px rgba(5,150,105,0.25);
+  }
+  .btn-primary:hover { background: #047857; }
+  .btn-primary:disabled { opacity: .5; cursor: not-allowed; box-shadow: none; }
+  .btn-outline { border-color: #CBD5E1; color: #475569; background: rgba(255,255,255,0.5); }
+  .btn-outline:hover { background: white; border-color: var(--color-emerald-600); color: var(--color-emerald-600); }
+
+  /* ── Template tag ── */
+  .tpl-option { transition: all .15s; }
+  .tpl-option:hover { background: var(--color-emerald-600-a08); border-color: var(--color-emerald-600); }
+
+  /* ── Character counter ── */
+  .char-counter { font-size: 11px; transition: color .15s; }
+
+  @keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  .animate-in { animation: slideUp .3s ease-out forwards; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+
+<div class="w-full flex-1 space-y-5 relative z-10"
+     x-data="composeApp()"
+     x-init="init()"
+     x-cloak>
+
+  {# ── HEADER ── #}
+  <div class="reveal">
+    <nav class="flex items-center gap-2 text-xs mb-1" style="color:var(--color-emerald-600);" aria-label="Breadcrumb">
+      <a href="{% url 'dashboard' %}" class="hover:text-slate-700 transition-colors">Dashboard</a>
+      <span class="text-slate-300">/</span>
+      <a href="{% url 'inbox_messages' %}" class="hover:text-slate-700 transition-colors">Pesan Pribadi</a>
+      <span class="text-slate-300">/</span>
+      <span class="text-slate-600 font-medium">Tulis Pesan</span>
+    </nav>
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-800">Tulis Pesan Baru</h1>
+        <p class="text-sm text-slate-400 mt-0.5">Kirim pesan pribadi ke staf</p>
+      </div>
+      <a href="{% url 'inbox_messages' %}"
+         class="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">
+        <i class="fas fa-arrow-left text-xs"></i> Kembali ke Inbox
+      </a>
+    </div>
+  </div>
+
+  {# ── FORM CARD ── #}
+  <div class="reveal compose-card p-6 sm:p-8 animate-in">
+    <form @submit.prevent="sendMessage()">
+
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+
+        {# ── LEFT: Form Fields ── #}
+        <div class="lg:col-span-3 space-y-5">
+
+          {# Penerima ── #}
+          <div>
+            <label class="field-label">Kepada</label>
+            {# Chip selector — lebih visual dari dropdown biasa #}
+            <div class="flex flex-wrap gap-2 mt-1">
+              <template x-for="user in users" :key="user.id">
+                <button aria-label="Tombol" type="button"
+                        class="recipient-chip"
+                        :class="{ 'selected': form.recipientId === user.id }"
+                        @click="form.recipientId = (form.recipientId === user.id ? null : user.id)">
+                  <span class="chip-avatar"
+                        :style="'background:' + avatarBg(user.role) + '; color:' + avatarColor(user.role)"
+                        x-text="user.name.charAt(0)"></span>
+                  <span x-text="user.name"></span>
+                  <span class="text-[10px] opacity-60" x-text="'(' + user.role + ')'"></span>
+                </button>
+              </template>
+            </div>
+            <p x-show="formError === 'recipient'" class="text-xs text-rose-500 mt-1.5 font-medium">
+              <i class="fas fa-exclamation-circle mr-1"></i> Pilih satu penerima
+            </p>
+          </div>
+
+          {# Gunakan Template ── #}
+          <div x-show="templates.length > 0">
+            <label class="field-label">Gunakan Template <span class="font-normal opacity-60">(opsional)</span></label>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-1">
+              <template x-for="tpl in templates" :key="tpl.id">
+                <button aria-label="Tombol" type="button"
+                        class="tpl-option text-left p-2.5 rounded-xl border border-slate-200 bg-white/50"
+                        :class="{ 'border-emerald-400 bg-emerald-50/50': form.templateId === tpl.id }"
+                        @click="applyTemplate(tpl)">
+                  <p class="text-xs font-semibold text-slate-700 truncate" x-text="tpl.title"></p>
+                  <p class="text-[10px] text-slate-400 truncate mt-0.5" x-text="tpl.content"></p>
+                </button>
+              </template>
+            </div>
+          </div>
+
+          {# Isi Pesan ── #}
+          <div>
+            <div class="flex items-center justify-between">
+              <label class="field-label mb-0">Isi Pesan</label>
+              <span class="char-counter"
+                    :class="form.body.length > 1000 ? 'text-rose-500' : 'text-slate-400'"
+                    x-text="form.body.length + ' / 1000'"></span>
+            </div>
+            <textarea x-model="form.body"
+                      class="input-field mt-1.5"
+                      rows="7"
+                      maxlength="1000"
+                      placeholder="Ketik pesan Anda di sini…"></textarea>
+            <p x-show="formError === 'body'" class="text-xs text-rose-500 mt-1.5 font-medium">
+              <i class="fas fa-exclamation-circle mr-1"></i> Isi pesan tidak boleh kosong
+            </p>
+          </div>
+
+          {# Actions ── #}
+          <div class="flex items-center justify-between pt-2">
+            <a href="{% url 'inbox_messages' %}" class="btn btn-outline">Batal</a>
+            <button aria-label="Kirim" type="submit"
+                    class="btn btn-primary"
+                    :disabled="isSending">
+              <i :class="isSending ? 'fas fa-spinner fa-spin' : 'fas fa-paper-plane'" class="text-xs"></i>
+              <span x-text="isSending ? 'Mengirim…' : 'Kirim Pesan'"></span>
+            </button>
+          </div>
+        </div>
+
+        {# ── RIGHT: Live Preview ── #}
+        <div class="lg:col-span-2">
+          <div class="sticky top-6">
+            <p class="field-label mb-2">Preview Pesan</p>
+            <div class="preview-card">
+              {# Header preview #}
+              <div class="flex items-center gap-3 pb-3 border-b border-slate-100">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold"
+                     :style="form.recipientId
+                       ? 'background:' + avatarBg(selectedRecipient?.role) + '; color:' + avatarColor(selectedRecipient?.role)
+                       : 'background:#F1F5F9; color:#94A3B8'"
+                     x-text="form.recipientId ? selectedRecipient?.name.charAt(0) : '?'"></div>
+                <div>
+                  <p class="text-sm font-semibold" :class="form.recipientId ? 'text-slate-800' : 'text-slate-400'"
+                     x-text="form.recipientId ? (selectedRecipient?.name + ' (' + selectedRecipient?.role + ')') : 'Pilih penerima'"></p>
+                  <p class="text-[10px] text-slate-400">Pesan Pribadi</p>
+                </div>
+              </div>
+              {# Body preview #}
+              <div class="pt-3 min-h-[80px]">
+                <p class="text-sm leading-relaxed whitespace-pre-wrap"
+                   :class="form.body.trim() ? 'text-slate-700' : 'text-slate-300 italic'"
+                   x-text="form.body.trim() || '(Pesan akan muncul di sini)'"></p>
+              </div>
+              {# Footer preview #}
+              <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                <span class="text-[10px] text-slate-400">
+                  <i class="fas fa-clock mr-1"></i>
+                  <span x-text="new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })"></span>
+                </span>
+                <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md"
+                      :class="form.body.trim() && form.recipientId ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400'"
+                      x-text="form.body.trim() && form.recipientId ? 'Siap kirim' : 'Belum lengkap'"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+</div>
+
+{# ── TOAST ── #}
+<div class="fixed bottom-4 right-4 z-50 space-y-2" x-data aria-live="polite" aria-atomic="true">
+  <template x-for="t in $store.toasts.list" :key="t.id">
+    <div class="flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl min-w-56 max-w-xs text-white text-sm"
+         style="background:rgba(15,23,42,0.9); backdrop-filter:var(--glass-blur);"
+         :class="{
+           'border-l-4 border-emerald-400': t.type==='success',
+           'border-l-4 border-blue-400'   : t.type==='info',
+           'border-l-4 border-amber-400'  : t.type==='warning',
+           'border-l-4 border-rose-400'   : t.type==='error',
+         }">
+      <i :class="t.icon" class="text-xs flex-shrink-0"></i>
+      <span x-text="t.message"></span>
+    </div>
+  </template>
+</div>
+
+{# ── Data JSON ── #}
+<script id="compose-users-data" type="application/json">{{ users_json|default:"[]"|safe }}</script>
+<script id="compose-templates-data" type="application/json">{{ templates_json|default:"[]"|safe }}</script>
+{% endblock %}
+
+{% block dashboard_scripts %}
+<script>
+document.addEventListener('alpine:init', () => {
+  if (!Alpine.store('toasts')) {
+    Alpine.store('toasts', {
+      list: [], _id: 0,
+      show(message, type = 'success', icon = 'fas fa-check-circle') {
+        const id = ++this._id;
+        this.list.push({ id, message, type, icon });
+        setTimeout(() => { this.list = this.list.filter(t => t.id !== id); }, 2900);
+      }
+    });
+  }
+});
+</script>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function composeApp() {
+  return {
+    users        : [],
+    templates    : [],
+    form         : { recipientId: null, templateId: null, body: '' },
+    formError    : '',
+    isSending    : false,
+
+    init() {
+      /* Load users */
+      const usersRaw = document.getElementById('compose-users-data');
+      if (usersRaw?.textContent) {
+        try { const p = JSON.parse(usersRaw.textContent); if (Array.isArray(p)) this.users = p; } catch {}
+      }
+      /* Load templates */
+      const tplRaw = document.getElementById('compose-templates-data');
+      if (tplRaw?.textContent) {
+        try { const p = JSON.parse(tplRaw.textContent); if (Array.isArray(p)) this.templates = p; } catch {}
+      }
+      /* Fallback mock data */
+      if (this.users.length === 0) {
+        this.users = [
+          { id: 1, name: 'Budi',  role: 'Kasir' },
+          { id: 2, name: 'Siti',  role: 'Manajer' },
+          { id: 3, name: 'Andi',  role: 'Gudang' },
+          { id: 4, name: 'Dewi',  role: 'Kasir' },
+          { id: 5, name: 'Rina',  role: 'Kebersihan' },
+        ];
+      }
+      if (this.templates.length === 0) {
+        this.templates = [
+          { id: 1, title: 'Instruksi Opname', content: 'Mohon lakukan stok opname malam ini. Pastikan semua data tercatat dengan benar dan laporkan besok pagi.' },
+          { id: 2, title: 'Info Libur',       content: 'Diberitahukan bahwa toko akan libur pada tanggal merah. Pastikan semua peralatan sudah mati dan tersimpan.' },
+          { id: 3, title: 'Teguran Stok',     content: 'Stok beberapa item sudah di bawah minimum. Segera lakukan pemesanan ulang ke supplier.' },
+        ];
+      }
+
+      /* Scroll reveal */
+      const io = new IntersectionObserver(entries => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 60); io.unobserve(e.target); }
+        });
+      }, { threshold: .08 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    },
+
+    get selectedRecipient() {
+      return this.users.find(u => u.id === this.form.recipientId) || null;
+    },
+
+    applyTemplate(tpl) {
+      if (this.form.templateId === tpl.id) {
+        /* Unselect template */
+        this.form.templateId = null;
+        return;
+      }
+      this.form.templateId = tpl.id;
+      this.form.body = tpl.content;
+      this.formError = '';
+      Alpine.store('toasts').show('Template "' + tpl.title + '" diterapkan', 'info', 'fas fa-file-alt');
+    },
+
+    sendMessage() {
+      this.formError = '';
+
+      /* Validasi */
+      if (!this.form.recipientId) {
+        this.formError = 'recipient';
+        return;
+      }
+      if (!this.form.body.trim()) {
+        this.formError = 'body';
+        return;
+      }
+
+      this.isSending = true;
+
+      /*
+       * === INTEGRASI DJANGO ===
+       * Ganti simulasi di bawah dengan fetch POST ke backend:
+       *
+       * fetch('{% url "send_message" %}', {
+       *   method: 'POST',
+       *   headers: { 'X-CSRFToken': '{{ csrf_token }}', 'Content-Type': 'application/json' },
+       *   body: JSON.stringify({
+       *     recipient_id: this.form.recipientId,
+       *     body: this.form.body.trim(),
+       *     template_id: this.form.templateId,
+       *   })
+       * })
+       * .then(r => r.json())
+       * .then(data => { ... })
+       * .catch(err => { ... });
+       */
+
+      setTimeout(() => {
+        this.isSending = false;
+        const recipientName = this.selectedRecipient?.name || 'Staf';
+        Alpine.store('toasts').show('Pesan berhasil dikirim ke ' + recipientName, 'success', 'fas fa-check-circle');
+
+        /* Reset & redirect */
+        this.form = { recipientId: null, templateId: null, body: '' };
+        setTimeout(() => { window.location.href = '{% url "inbox_messages" %}'; }, 800);
+      }, 1200);
+    },
+
+    avatarBg(role) {
+      const map = { 'Kasir': 'rgba(5,150,105,0.1)', 'Manajer': 'rgba(37,99,235,0.1)', 'Gudang': 'rgba(245,158,11,0.1)', 'Kebersihan': 'rgba(139,92,246,0.1)' };
+      return map[role] || 'rgba(100,116,139,0.1)';
+    },
+    avatarColor(role) {
+      const map = { 'Kasir': '#059669', 'Manajer': '#2563EB', 'Gudang': '#D97706', 'Kebersihan': '#7C3AED' };
+      return map[role] || '#64748B';
+    },
+  };
+}
+</script>
+{% endblock %}

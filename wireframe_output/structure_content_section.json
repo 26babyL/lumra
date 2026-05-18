@@ -1,0 +1,142 @@
+{
+  "filename": "content_section.html",
+  "title": "content_section",
+  "components": [
+    {
+      "type": "heading",
+      "tag": "h3",
+      "label": "HEADING (H3)",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/h3",
+      "classes": "section-title",
+      "text_preview": "{{ title }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "a",
+      "label": "BUTTON: {{ action_label }}",
+      "depth": 4,
+      "path": "root/body/div/div/div/a",
+      "classes": "btn-section-action",
+      "text_preview": "{{ action_label }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: [icon]",
+      "depth": 4,
+      "path": "root/body/div/div/div/button",
+      "classes": "btn-section-action",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "footer",
+      "tag": "div",
+      "label": "FOOTER",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "section-footer",
+      "text_preview": "{% if footer_meta %} {{ footer_meta }} {% endif %} {% if footer_actions %} View…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "a",
+      "label": "BUTTON: View All",
+      "depth": 4,
+      "path": "root/body/div/div/div/a",
+      "classes": "btn-section-small",
+      "text_preview": "View All",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/h3",
+      "type": "heading",
+      "label": "HEADING (H3)",
+      "text_preview": "{{ title }}"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/a",
+      "type": "button",
+      "label": "BUTTON: {{ action_label }}",
+      "text_preview": "{{ action_label }}"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/button",
+      "type": "button",
+      "label": "BUTTON: [icon]",
+      "text_preview": ""
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "footer",
+      "label": "FOOTER",
+      "text_preview": "{% if footer_meta %} {{ footer_meta }} {% endif %} {% if footer_actions %} View…"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/a",
+      "type": "button",
+      "label": "BUTTON: View All",
+      "text_preview": "View All"
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 5,
+    "by_type": {
+      "heading": 1,
+      "button": 3,
+      "footer": 1
+    },
+    "interactive": 3,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

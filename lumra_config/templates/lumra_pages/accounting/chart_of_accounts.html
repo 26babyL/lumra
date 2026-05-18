@@ -1,0 +1,245 @@
+{% extends "base/base_hybrid.html" %}
+{% block title %}Chart of Accounts — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="coaApp()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-base-content/60 mb-1">
+        <a href="#" class="hover:text-base-content">Keuangan</a>
+        <span>/</span>
+        <span class="text-base-content font-medium">Chart of Accounts</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-base-content">Buku Besar Pembantu (COA)</h1>
+      <p class="text-sm text-base-content/60 mt-0.5">Struktur akun untuk pencatatan keuangan.</p>
+    </div>
+    <a href="{% url 'chart_of_accounts_form' %}" class="btn btn-primary">
+      <i class="fas fa-plus mr-2"></i> Buat Akun Baru
+    </a>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="card bg-base-100 shadow-lg border border-base-300 p-4">
+    <div class="flex flex-col sm:flex-row justify-between gap-4">
+      <div class="flex gap-2 overflow-x-auto pb-1 sm:pb-0">
+        <button @click="filterType='all'" class="btn btn-sm" 
+                :class="filterType==='all' ? 'btn-primary' : 'btn-ghost'">Semua</button>
+        <button @click="filterType='asset'" class="btn btn-sm" 
+                :class="filterType==='asset' ? 'btn-info' : 'btn-ghost'">Asset</button>
+        <button @click="filterType='liability'" class="btn btn-sm" 
+                :class="filterType==='liability' ? 'btn-secondary' : 'btn-ghost'">Liability</button>
+        <button @click="filterType='equity'" class="btn btn-sm" 
+                :class="filterType==='equity' ? 'btn-warning' : 'btn-ghost'">Equity</button>
+        <button @click="filterType='revenue'" class="btn btn-sm" 
+                :class="filterType==='revenue' ? 'btn-success' : 'btn-ghost'">Revenue</button>
+        <button @click="filterType='expense'" class="btn btn-sm" 
+                :class="filterType==='expense' ? 'btn-error' : 'btn-ghost'">Expense</button>
+      </div>
+      
+      <div class="flex gap-2">
+        <div class="form-control">
+          <input type="text" placeholder="Cari akun..." class="input input-bordered input-sm w-48" 
+                 x-model="searchTerm" @input="filterAccounts()">
+        </div>
+        <button class="btn btn-ghost btn-sm">
+          <i class="fas fa-download"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="card bg-base-100 shadow-lg border border-base-300">
+    <div class="overflow-x-auto">
+      <table class="table table-compact w-full">
+        <thead>
+          <tr class="bg-base-200">
+            <th class="text-left">Kode</th>
+            <th class="text-left">Nama Akun</th>
+            <th class="text-left">Tipe</th>
+            <th class="text-left">Level</th>
+            <th class="text-left">Saldo</th>
+            <th class="text-center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Asset Accounts -->
+          <template x-for="account in filteredAccounts.filter(a => a.type === 'asset')" :key="account.id">
+            <tr class="hover:bg-base-200">
+              <td class="font-mono text-sm font-semibold text-base-content/60" x-text="account.code"></td>
+              <td x-text="account.name"></td>
+              <td>
+                <span class="badge badge-info badge-sm">Asset</span>
+              </td>
+              <td x-text="account.level"></td>
+              <td class="font-mono" x-text="account.balance"></td>
+              <td class="text-center">
+                <div class="flex items-center justify-center gap-2">
+                  <button class="btn btn-ghost btn-xs" @click="editAccount(account)">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-ghost btn-xs text-error" @click="deleteAccount(account)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </template>
+
+          <!-- Liability Accounts -->
+          <template x-for="account in filteredAccounts.filter(a => a.type === 'liability')" :key="account.id">
+            <tr class="hover:bg-base-200">
+              <td class="font-mono text-sm font-semibold text-base-content/60" x-text="account.code"></td>
+              <td x-text="account.name"></td>
+              <td>
+                <span class="badge badge-secondary badge-sm">Liability</span>
+              </td>
+              <td x-text="account.level"></td>
+              <td class="font-mono" x-text="account.balance"></td>
+              <td class="text-center">
+                <div class="flex items-center justify-center gap-2">
+                  <button class="btn btn-ghost btn-xs" @click="editAccount(account)">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-ghost btn-xs text-error" @click="deleteAccount(account)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </template>
+
+          <!-- Equity Accounts -->
+          <template x-for="account in filteredAccounts.filter(a => a.type === 'equity')" :key="account.id">
+            <tr class="hover:bg-base-200">
+              <td class="font-mono text-sm font-semibold text-base-content/60" x-text="account.code"></td>
+              <td x-text="account.name"></td>
+              <td>
+                <span class="badge badge-warning badge-sm">Equity</span>
+              </td>
+              <td x-text="account.level"></td>
+              <td class="font-mono" x-text="account.balance"></td>
+              <td class="text-center">
+                <div class="flex items-center justify-center gap-2">
+                  <button class="btn btn-ghost btn-xs" @click="editAccount(account)">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-ghost btn-xs text-error" @click="deleteAccount(account)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </template>
+
+          <!-- Revenue Accounts -->
+          <template x-for="account in filteredAccounts.filter(a => a.type === 'revenue')" :key="account.id">
+            <tr class="hover:bg-base-200">
+              <td class="font-mono text-sm font-semibold text-base-content/60" x-text="account.code"></td>
+              <td x-text="account.name"></td>
+              <td>
+                <span class="badge badge-success badge-sm">Revenue</span>
+              </td>
+              <td x-text="account.level"></td>
+              <td class="font-mono" x-text="account.balance"></td>
+              <td class="text-center">
+                <div class="flex items-center justify-center gap-2">
+                  <button class="btn btn-ghost btn-xs" @click="editAccount(account)">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-ghost btn-xs text-error" @click="deleteAccount(account)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </template>
+
+          <!-- Expense Accounts -->
+          <template x-for="account in filteredAccounts.filter(a => a.type === 'expense')" :key="account.id">
+            <tr class="hover:bg-base-200">
+              <td class="font-mono text-sm font-semibold text-base-content/60" x-text="account.code"></td>
+              <td x-text="account.name"></td>
+              <td>
+                <span class="badge badge-error badge-sm">Expense</span>
+              </td>
+              <td x-text="account.level"></td>
+              <td class="font-mono" x-text="account.balance"></td>
+              <td class="text-center">
+                <div class="flex items-center justify-center gap-2">
+                  <button class="btn btn-ghost btn-xs" @click="editAccount(account)">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-ghost btn-xs text-error" @click="deleteAccount(account)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </template>
+
+          <!-- Empty State -->
+          <tr x-show="filteredAccounts.length === 0">
+            <td colspan="6" class="text-center py-8 text-base-content/60">
+              <i class="fas fa-inbox text-4xl mb-4 block text-base-content/30"></i>
+              Tidak ada akun yang ditemukan
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+function coaApp() {
+  return {
+    filterType: 'all',
+    searchTerm: '',
+    accounts: [
+      { id: 1, code: '1100', name: 'Kas', type: 'asset', level: 1, balance: 'Rp 50,000,000' },
+      { id: 2, code: '1200', name: 'Piutang Usaha', type: 'asset', level: 1, balance: 'Rp 25,000,000' },
+      { id: 3, code: '1300', name: 'Persediaan', type: 'asset', level: 1, balance: 'Rp 75,000,000' },
+      { id: 4, code: '2100', name: 'Hutang Usaha', type: 'liability', level: 1, balance: 'Rp 15,000,000' },
+      { id: 5, code: '3100', name: 'Modal', type: 'equity', level: 1, balance: 'Rp 100,000,000' },
+      { id: 6, code: '4100', name: 'Penjualan', type: 'revenue', level: 1, balance: 'Rp 200,000,000' },
+      { id: 7, code: '5100', name: 'HPP', type: 'expense', level: 1, balance: 'Rp 80,000,000' },
+      { id: 8, code: '5200', name: 'Biaya Operasional', type: 'expense', level: 1, balance: 'Rp 35,000,000' }
+    ],
+    filteredAccounts: [],
+    
+    init() {
+      this.filteredAccounts = this.accounts;
+    },
+    
+    filterAccounts() {
+      this.filteredAccounts = this.accounts.filter(account => {
+        const matchesType = this.filterType === 'all' || account.type === this.filterType;
+        const matchesSearch = this.searchTerm === '' || 
+          account.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          account.code.toLowerCase().includes(this.searchTerm.toLowerCase());
+        return matchesType && matchesSearch;
+      });
+    },
+    
+    editAccount(account) {
+      console.log('Edit account:', account);
+    },
+    
+    deleteAccount(account) {
+      if (confirm(`Hapus akun "${account.name}"?`)) {
+        console.log('Delete account:', account);
+      }
+    }
+  }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,974 @@
+{% extends 'base/base.html' %}
+{% block title %}About — Universal Retail Engine{% endblock %}
+
+{% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --emerald: var(--color-emerald-700);
+    --emerald-light: var(--color-emerald-600);
+    --blue: var(--color-0ea5e9);
+    --slate-950: var(--color-020617);
+    --slate-900: var(--color-slate-900);
+  }
+
+  /* ══ BASE ══ */
+  .about-page { font-family:'DM Sans',sans-serif; overflow-x:hidden; }
+  .about-page h1, .about-page h2, .about-page .display-font { font-family:'Playfair Display',serif; }
+
+  /* ══ BLOBS ══ */
+  .blob {
+    position:absolute; border-radius:50%;
+    filter:blur(120px); pointer-events:var(--shadow-sm-16);
+    animation:drift 26s ease-in-out infinite;
+  }
+  @keyframes drift { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(28px,20px) scale(1.05)} }
+
+  /* ══ SCROLL REVEAL ══ */
+  .reveal        { opacity:0; transform:translateY(24px); transition:opacity .6s ease,transform .6s ease; }
+  .reveal.up     { transform:translateY(24px); }
+  .reveal.left   { transform:translateX(-24px); }
+  .reveal.right  { transform:translateX(24px); }
+  .reveal.scale  { transform:scale(.96); }
+  .reveal.visible{ opacity:1; transform:var(--shadow-sm-16); }
+
+  /* ══ GLASS ══ */
+  .glass {
+    background:var(--color-white-a74);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border:1px solid var(--color-white-a92);
+    border-radius:20px;
+    box-shadow:0 4px 24px var(--color-black-a07),0 0 0 .5px var(--color-black-a03);
+  }
+  .glass-dark {
+    background:var(--color-slate-900-a72);
+    backdrop-filter: var(--glass-blur) saturate(140%);
+    border:1px solid var(--color-white-a07-2);
+    border-radius:20px;
+  }
+
+  /* ══ HERO ══ */
+  .hero-section {
+    position:relative; overflow:hidden;
+    padding:120px 0 100px;
+    background:linear-gradient(160deg, var(--color-f0fdf4) 0%, var(--color-slate-50) 40%, var(--color-eff6ff) 100%);
+  }
+  .hero-eyebrow {
+    font-size:10px; font-weight:900; letter-spacing:.35em;
+    text-transform:uppercase; color:var(--emerald);
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content:''; display:block; width:28px; height:1px; background:var(--emerald); opacity:.5;
+  }
+  .hero-title {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(52px,8vw,88px);
+    font-weight:900; font-style:italic;
+    line-height:.95; letter-spacing:-.03em;
+    color:var(--color-slate-900);
+  }
+  .hero-title .gradient-text {
+    background:linear-gradient(135deg, var(--emerald) 0%, var(--blue) 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    background-clip:text;
+  }
+  .hero-badge {
+    display:inline-flex; align-items:center; gap:6px;
+    padding:5px 12px; border-radius:99px;
+    background:var(--color-emerald-700-a08); border:1px solid var(--color-emerald-700-a2);
+    font-size:10px; font-weight:800; color:var(--emerald);
+    letter-spacing:.06em; text-transform:uppercase;
+  }
+
+  /* ══ STATS TICKER ══ */
+  .ticker-section {
+    background:var(--slate-950);
+    padding:20px 0; overflow:hidden;
+    border-top:1px solid var(--color-white-a04);
+    border-bottom:1px solid var(--color-white-a04);
+  }
+  .ticker-track {
+    display:flex; gap:0;
+    animation:ticker 28s linear infinite;
+    white-space:nowrap;
+  }
+  @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  .ticker-item {
+    display:inline-flex; align-items:center; gap:16px;
+    padding:0 40px; flex-shrink:0;
+    font-size:11px; font-weight:800; text-transform:uppercase;
+    letter-spacing:.12em; color:var(--color-white-a3);
+  }
+  .ticker-item .dot { width:4px; height:4px; border-radius:50%; background:var(--emerald); flex-shrink:0; }
+  .ticker-item .highlight { color:var(--color-white-a8); }
+
+  /* ══ DARK SECTION ══ */
+  .dark-section {
+    background:var(--slate-950);
+    position:relative; overflow:hidden;
+  }
+  .dark-section::before {
+    content:'';
+    position:absolute; inset:0;
+    background:radial-gradient(ellipse 80% 60% at 20% 50%, var(--color-emerald-700-a06) 0%, transparent 70%),
+               radial-gradient(ellipse 60% 80% at 80% 50%, var(--color-rgba-14-165-233-a05) 0%, transparent 70%);
+  }
+
+  /* ══ GRID NOISE ══ */
+  .grid-noise {
+    position:absolute; inset:0; opacity:.018;
+    background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,var(--color-white-a5) 39px,var(--color-white-a5) 40px),
+                     repeating-linear-gradient(90deg,transparent,transparent 39px,var(--color-white-a5) 39px,var(--color-white-a5) 40px);
+  }
+
+  /* ══ DIAGONAL DIVIDER ══ */
+  .diagonal-top {
+    position:relative;
+  }
+  .diagonal-top::before {
+    content:'';
+    position:absolute; top:-1px; left:0; right:0; height:80px;
+    background:inherit;
+    clip-path:polygon(0 0,100% 0,100% 100%,0 0);
+    z-index:1;
+  }
+
+  /* ══ COUNTER ══ */
+  .counter-num {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(40px,6vw,72px);
+    font-weight:900; line-height:1;
+    background:linear-gradient(135deg,var(--color-fff) 60%,var(--color-white-a5));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    background-clip:text;
+  }
+  .counter-label {
+    font-size:10px; font-weight:800; text-transform:uppercase;
+    letter-spacing:.15em; color:var(--color-white-a35);
+    margin-top:6px;
+  }
+  .counter-sub {
+    font-size:11px; color:var(--color-white-a45); margin-top:4px; font-weight:500;
+  }
+
+  /* ══ PRICING CARDS ══ */
+  .pricing-card {
+    border-radius:24px; padding:32px 28px;
+    position:relative; overflow:hidden;
+    transition:transform .25s, box-shadow .25s;
+  }
+  .pricing-card:hover { transform:translateY(-6px); }
+
+  .pricing-card.boutique {
+    background:var(--color-white-a78);
+    border:1px solid var(--color-white-a9);
+    box-shadow:0 4px 30px var(--color-black-a07);
+  }
+  .pricing-card.warehouse {
+    background:var(--color-slate-900-a9);
+    border:1px solid var(--color-emerald-700-a25);
+    box-shadow:0 4px 40px var(--color-emerald-700-a12),0 0 0 1px var(--color-emerald-700-a1);
+  }
+  .pricing-card.titan {
+    background:linear-gradient(145deg,var(--color-slate-900-a97),var(--color-rgba-2-6-23-a98));
+    border:1px solid var(--color-white-a08-2);
+    box-shadow:0 8px 60px var(--color-black-a4);
+  }
+  .pricing-card.titan::before {
+    content:'';
+    position:absolute; inset:0;
+    background:linear-gradient(135deg,var(--color-emerald-700-a08) 0%,var(--color-rgba-14-165-233-a06) 100%);
+    border-radius:inherit;
+  }
+
+  .price-tag {
+    font-family:'Playfair Display',serif;
+    font-size:48px; font-weight:900; line-height:1;
+    letter-spacing:-.02em;
+  }
+  .feature-row {
+    display:flex; align-items:flex-start; gap:10px;
+    padding:9px 0; border-bottom:1px solid var(--color-black-a04);
+    font-size:12px; font-weight:600;
+  }
+  .feature-row:last-child { border-bottom:var(--shadow-sm-16); }
+  .feature-row .check { color:var(--emerald); flex-shrink:0; margin-top:1px; }
+  .feature-row.dark-row { border-bottom-color:var(--color-white-a06-2); color:var(--color-white-a75); }
+
+  .popular-badge {
+    position:absolute; top:20px; right:20px;
+    background:linear-gradient(135deg,var(--emerald),var(--blue));
+    color:var(--color-fff); font-size:9px; font-weight:900; letter-spacing:.1em; text-transform:uppercase;
+    padding:5px 12px; border-radius:99px;
+    box-shadow:0 4px 14px var(--color-emerald-700-a4);
+  }
+
+  /* ══ BUSINESS GRID ══ */
+  .biz-card {
+    border-radius:20px; padding:28px 24px;
+    background:var(--color-white-a7);
+    border:1px solid var(--color-white-a9);
+    box-shadow:0 2px 16px var(--color-black-a05);
+    transition:transform .2s, box-shadow .2s;
+    position:relative; overflow:hidden;
+  }
+  .biz-card:hover { transform:translateY(-4px); box-shadow:0 8px 30px var(--color-black-a1); }
+  .biz-card::before {
+    content:''; position:absolute; top:0; right:0;
+    width:80px; height:80px; border-radius:50%;
+    opacity:.06;
+  }
+  .biz-card.minimarket::before { background:var(--color-emerald-700); }
+  .biz-card.fashion::before    { background:var(--color-ec4899); }
+  .biz-card.hardware::before   { background:var(--color-f59e0b); }
+  .biz-card.fnb::before        { background:var(--color-0ea5e9); }
+
+  .biz-icon {
+    width:48px; height:48px; border-radius:14px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:22px; margin-bottom:16px;
+    box-shadow:0 4px 12px var(--color-black-a08);
+  }
+
+  /* ══ MOCKUP FRAME ══ */
+  .mockup-frame {
+    border-radius:16px; overflow:hidden;
+    background:var(--slate-900);
+    border:1px solid var(--color-white-a06-2);
+    box-shadow:0 24px 80px var(--color-black-a5),
+               0 0 0 1px var(--color-white-a04),
+               inset 0 1px 0 var(--color-white-a06-2);
+  }
+  .mockup-titlebar {
+    display:flex; align-items:center; gap:6px;
+    padding:10px 14px; background:var(--color-white-a04);
+    border-bottom:1px solid var(--color-white-a05);
+  }
+  .mockup-dot { width:10px; height:10px; border-radius:50%; }
+
+  /* ══ WHY CARDS ══ */
+  .why-card {
+    border-radius:20px; padding:28px 26px;
+    background:var(--color-white-a05);
+    border:1px solid var(--color-white-a08-2);
+    transition:background .2s, border-color .2s;
+  }
+  .why-card:hover { background:var(--color-white-a08-2); border-color:var(--color-emerald-700-a25); }
+
+  .why-num {
+    font-family:'Playfair Display',serif;
+    font-size:56px; font-weight:900; font-style:italic; line-height:1;
+    color:var(--color-white-a06-2); position:absolute; top:16px; right:20px;
+  }
+
+  /* ══ TIMELINE ══ */
+  .scale-line {
+    position:relative; padding-left:28px;
+  }
+  .scale-line::before {
+    content:''; position:absolute; left:8px; top:6px; bottom:6px;
+    width:2px; background:linear-gradient(180deg,var(--emerald),var(--blue),var(--color-rgba-14-165-233-a1));
+    border-radius:99px;
+  }
+  .scale-dot {
+    position:absolute; left:2px; top:4px;
+    width:14px; height:14px; border-radius:50%;
+    border:2px solid; background:var(--slate-950);
+    flex-shrink:0;
+  }
+
+  /* ══ CTA ══ */
+  .cta-section {
+    position:relative; overflow:hidden;
+    background:linear-gradient(135deg, var(--color-020617) 0%, var(--color-0a1628) 50%, var(--color-020617) 100%);
+    padding:100px 0;
+  }
+  .cta-glow {
+    position:absolute; border-radius:50%;
+    filter:blur(100px); pointer-events:var(--shadow-sm-16); animation:drift 20s ease-in-out infinite;
+  }
+
+  /* ══ BUTTONS ══ */
+  .btn-hero {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:14px 28px; border-radius:14px;
+    background:linear-gradient(135deg,var(--emerald),var(--blue));
+    color:var(--color-fff); font-weight:800; font-size:13px;
+    box-shadow:0 6px 24px var(--color-emerald-700-a35);
+    border:var(--shadow-sm-16); cursor:pointer; text-decoration:var(--shadow-sm-16);
+    transition:transform .15s, box-shadow .15s, opacity .15s;
+  }
+  .btn-hero:hover { transform:translateY(-2px); box-shadow:0 10px 32px var(--color-emerald-700-a45); }
+
+  .btn-outline {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:13px 26px; border-radius:14px;
+    border:1.5px solid var(--color-white-a15);
+    color:var(--color-white-a7); font-weight:700; font-size:13px;
+    background:transparent; cursor:pointer; text-decoration:var(--shadow-sm-16);
+    transition:border-color .15s, color .15s, background .15s;
+  }
+  .btn-outline:hover { border-color:var(--color-white-a4); color:var(--color-fff); background:var(--color-white-a05); }
+
+  /* ══ SECTION LABEL ══ */
+  .section-label {
+    font-size:10px; font-weight:900; text-transform:uppercase;
+    letter-spacing:.3em; color:var(--emerald);
+    display:flex; align-items:center; gap:10px;
+  }
+  .section-label::before {
+    content:''; display:block; width:24px; height:1.5px;
+    background:var(--emerald); border-radius:99px;
+  }
+
+  /* ══ SEPARATOR ══ */
+  .sep { height:1px; background:linear-gradient(90deg,transparent,var(--color-black-a06),transparent); margin:0; }
+  .sep-dark { height:1px; background:linear-gradient(90deg,transparent,var(--color-white-a07-2),transparent); margin:0; }
+
+  /* ══ SCROLLBAR ══ */
+  ::-webkit-scrollbar { width:5px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:var(--color-slate-200); border-radius:99px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="about-page">
+
+<!--{# ════════════════════════════════════════════
+   § 1  HERO
+════════════════════════════════════════════ #}-->
+<section class="hero-section">
+  <!-- Ambient blobs -->
+  <div class="blob" style="width:560px;height:560px;background:var(--color-primary);opacity:.055;top:-160px;left:-120px;animation-delay:0s;"></div>
+  <div class="blob" style="width:400px;height:400px;background:var(--color-info);opacity:.05;bottom:-80px;right:-80px;animation-delay:-11s;"></div>
+  <div class="blob" style="width:260px;height:260px;background:var(--color-violet-500);opacity:.04;top:30%;left:55%;animation-delay:-5s;"></div>
+
+  <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+
+    <!-- Eyebrow -->
+    <div class="reveal flex justify-center mb-6">
+      <span class="hero-eyebrow">Engineered for Every Retail</span>
+    </div>
+
+    <!-- Title -->
+    <div class="reveal" style="transition-delay:.07s">
+      <h1 class="hero-title">
+        SATU SISTEM.<br>
+        <span class="gradient-text">SEJUTA SKU.</span>
+      </h1>
+    </div>
+
+    <!-- Subtitle -->
+    <p class="reveal mt-7 max-w-xl mx-auto text-slate-500 text-[14px] font-medium leading-relaxed"
+       style="transition-delay:.14s">
+      Dari butik kecil hingga pergudangan masif. Sistem ini dirancang untuk
+      skalabilitas tanpa batas — mengolah data retail paling kompleks dengan
+      keanggunan desain dashboard modern.
+    </p>
+
+    <!-- Badges -->
+    <div class="reveal flex flex-wrap justify-center gap-2.5 mt-7" style="transition-delay:.21s">
+      <span class="hero-badge"><i class="fas fa-database text-[9px]"></i> PostgreSQL Powered</span>
+      <span class="hero-badge"><i class="fas fa-shield-alt text-[9px]"></i> Multi-Tenant Secure</span>
+      <span class="hero-badge"><i class="fas fa-infinity text-[9px]"></i> Unlimited SKU</span>
+      <span class="hero-badge"><i class="fas fa-bolt text-[9px]"></i> Sub-100ms Queries</span>
+    </div>
+
+    <!-- CTA -->
+    <div class="reveal flex flex-wrap justify-center gap-3 mt-9" style="transition-delay:.28s">
+      <a href="{% url 'dashboard' %}" class="btn-hero">
+        <i class="fas fa-rocket text-[11px]"></i> Mulai Sekarang
+      </a>
+      <a href="#pricing" class="btn-outline" style="color:var(--color-text-muted);border-color:rgba(71,85,105,.2);background:rgba(255,255,255,.6);">
+        <i class="fas fa-tag text-[11px]"></i> Lihat Paket
+      </a>
+    </div>
+
+    <!-- Mockup Dashboard Frame -->
+    <div class="reveal mt-16 mx-auto max-w-3xl" style="transition-delay:.35s">
+      <div style="
+        background:var(--glass-bg-strong);
+        border-radius:18px;
+        border:1px solid var(--glass-dark-border);
+        box-shadow:0 32px 100px rgba(0,0,0,.25), 0 0 0 1px rgba(255,255,255,.05), 0 -1px 0 rgba(255,255,255,.06) inset;
+        overflow:hidden;
+      ">
+        <!-- Titlebar -->
+        <div class="mockup-titlebar">
+          <div class="mockup-dot" style="background:#ff5f57;"></div>
+          <div class="mockup-dot" style="background:#febc2e;"></div>
+          <div class="mockup-dot" style="background:#28c840;"></div>
+          <div style="flex:1; height:20px; border-radius:5px; background:rgba(255,255,255,.05); margin:0 8px; display:flex; align-items:center; justify-content:center;">
+            <span style="font-size:9px; font-family:monospace; color:rgba(255,255,255,.25);">retail-engine.app / dashboard</span>
+          </div>
+        </div>
+        <!-- Fake dashboard UI -->
+        <div style="padding:18px; display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px;">
+          <!-- KPI cards -->
+          <template x-if="false"></template>
+          <div style="background:var(--color-primary-a12);border:1px solid var(--color-primary-a25);border-radius:10px;padding:12px;">
+            <div style="font-size:8px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;font-weight:800;">Revenue</div>
+            <div style="font-size:18px;font-weight:900;color:var(--color-fff);margin-top:4px;font-family:'DM Mono',monospace;">Rp 128M</div>
+            <div style="font-size:8px;color:var(--color-emerald-600);margin-top:2px;">↑ 24.5%</div>
+          </div>
+          <div style="background:var(--color-sky-a10);border:1px solid rgba(14,165,233,.15);border-radius:10px;padding:12px;">
+            <div style="font-size:8px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;font-weight:800;">Total SKU</div>
+            <div style="font-size:18px;font-weight:900;color:var(--color-fff);margin-top:4px;font-family:'DM Mono',monospace;">118.4k</div>
+            <div style="font-size:8px;color:var(--color-sky-400);margin-top:2px;">↑ 1.2k baru</div>
+          </div>
+          <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.15);border-radius:10px;padding:12px;">
+            <div style="font-size:8px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;font-weight:800;">Orders</div>
+            <div style="font-size:18px;font-weight:900;color:var(--color-fff);margin-top:4px;font-family:'DM Mono',monospace;">4,821</div>
+            <div style="font-size:8px;color:var(--color-warning);margin-top:2px;">↑ 8.3%</div>
+          </div>
+          <div style="background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.15);border-radius:10px;padding:12px;">
+            <div style="font-size:8px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;font-weight:800;">Cabang</div>
+            <div style="font-size:18px;font-weight:900;color:var(--color-fff);margin-top:4px;font-family:'DM Mono',monospace;">12</div>
+            <div style="font-size:8px;color:var(--color-violet-400);margin-top:2px;">Multi-Tenant</div>
+          </div>
+        </div>
+        <!-- Fake chart bar -->
+        <div style="padding:0 18px 18px;">
+          <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:14px;">
+            <div style="font-size:8px;color:var(--color-white-a030);font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;">Sales — 12 Bulan Terakhir</div>
+            <div style="display:flex;align-items:flex-end;gap:6px;height:48px;">
+              {% for h in "30,45,35,60,50,70,55,80,65,90,75,100"|split:"," %}
+              <div style="flex:1;background:linear-gradient(180deg,var(--color-primary-a60),var(--color-primary-a25));border-radius:3px 3px 0 0;height:{{ h }}%;"></div>
+              {% endfor %}
+              <!-- Fallback static bars -->
+              <style>
+              .fake-bar { flex:1; background:linear-gradient(180deg,var(--color-emerald-700-a6),var(--color-emerald-700-a2)); border-radius:3px 3px 0 0; }
+              </style>
+            </div>
+            <!-- Static bars since Django template can't do the loop above cleanly -->
+            <div style="display:flex;align-items:flex-end;gap:5px;height:44px;margin-top:-44px;">
+              <div class="fake-bar" style="height:32%;"></div>
+              <div class="fake-bar" style="height:48%;"></div>
+              <div class="fake-bar" style="height:38%;"></div>
+              <div class="fake-bar" style="height:62%;"></div>
+              <div class="fake-bar" style="height:52%;"></div>
+              <div class="fake-bar" style="height:71%;"></div>
+              <div class="fake-bar" style="height:58%;"></div>
+              <div class="fake-bar" style="height:82%;"></div>
+              <div class="fake-bar" style="height:67%;"></div>
+              <div class="fake-bar" style="height:91%;background:linear-gradient(180deg,var(--color-primary-a90),var(--color-primary-a40));"></div>
+              <div class="fake-bar" style="height:77%;"></div>
+              <div class="fake-bar" style="height:100%;background:linear-gradient(180deg,var(--color-emerald-600),var(--color-primary-a50));box-shadow:0 0 10px var(--color-primary-a40);"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!--{# ════════════════════════════════════════════
+   § 2  TICKER
+════════════════════════════════════════════ #}-->
+<div class="ticker-section">
+  <div class="ticker-track">
+    {% for _ in "x x x x"|split:" " %}
+    <span class="ticker-item"><span class="dot"></span> <span class="highlight">118,000+</span> SKU Tested</span>
+    <span class="ticker-item"><span class="dot"></span> Sub-100ms Query Speed</span>
+    <span class="ticker-item"><span class="dot"></span> <span class="highlight">PostgreSQL</span> Native</span>
+    <span class="ticker-item"><span class="dot"></span> Multi-Tenant Architecture</span>
+    <span class="ticker-item"><span class="dot"></span> <span class="highlight">Zero Downtime</span> Migration</span>
+    <span class="ticker-item"><span class="dot"></span> Glassmorphism UI</span>
+    <span class="ticker-item"><span class="dot"></span> <span class="highlight">CSRF Protected</span></span>
+    <span class="ticker-item"><span class="dot"></span> Alpine.js Reactive</span>
+    {% endfor %}
+  </div>
+</div>
+
+<!--{# ════════════════════════════════════════════
+   § 3  COUNTERS (DARK)
+════════════════════════════════════════════ #}-->
+<section class="dark-section py-20">
+  <div class="grid-noise"></div>
+  <div class="max-w-5xl mx-auto px-6 relative z-10">
+
+    <div class="reveal text-center mb-12">
+      <p class="section-label justify-center" style="color:var(--color-primary-a70)">
+        Angka Yang Bicara Sendiri
+      </p>
+      <h2 class="display-font text-4xl font-bold text-white mt-4 italic">
+        Diuji. Dibuktikan. <span style="color:var(--emerald);">Dipercaya.</span>
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="reveal text-center" data-count="118000" data-suffix="+" style="transition-delay:.0s">
+        <div class="counter-num count-up" id="c-sku">0</div>
+        <div class="counter-label">SKU Maksimum</div>
+        <div class="counter-sub">Diuji tanpa degradasi performa</div>
+      </div>
+      <div class="reveal text-center" data-count="99" data-suffix="ms" style="transition-delay:.08s">
+        <div class="counter-num count-up" id="c-speed">&lt;100ms</div>
+        <div class="counter-label">Query Response</div>
+        <div class="counter-sub">PostgreSQL indexed search</div>
+      </div>
+      <div class="reveal text-center" data-count="12" data-suffix=" cabang" style="transition-delay:.16s">
+        <div class="counter-num count-up" id="c-branch">0</div>
+        <div class="counter-label">Multi-Tenant</div>
+        <div class="counter-sub">Cabang independen, satu sistem</div>
+      </div>
+      <div class="reveal text-center" data-count="100" data-suffix="%" style="transition-delay:.24s">
+        <div class="counter-num count-up" id="c-uptime">0</div>
+        <div class="counter-label">Data Isolation</div>
+        <div class="counter-sub">Tenant data sepenuhnya terpisah</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="sep-dark"></div>
+
+<!--{# ════════════════════════════════════════════
+   § 4  BUSINESS GRID — Any Business, One UI
+════════════════════════════════════════════ #}-->
+<section style="background:linear-gradient(160deg,var(--color-slate-50) 0%,var(--color-green-100) 50%,var(--color-slate-50) 100%);padding:88px 0;">
+  <div class="max-w-5xl mx-auto px-6">
+
+    <div class="reveal text-center mb-12">
+      <p class="section-label justify-center">Any Business, One UI</p>
+      <h2 class="display-font text-4xl font-bold text-slate-800 mt-4 italic">
+        Satu Antarmuka,<br>
+        <span style="color:var(--emerald);">Ribuan Kebutuhan.</span>
+      </h2>
+      <p class="text-slate-400 text-[13px] mt-3 max-w-md mx-auto font-medium">
+        Tidak peduli industri Anda — sistem ini sudah mempertimbangkan kompleksitasnya.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+      <div class="reveal biz-card minimarket" style="transition-delay:.0s">
+        <div class="biz-icon" style="background:linear-gradient(135deg,var(--color-primary-a12),var(--color-primary-a06));">🛒</div>
+        <h3 style="font-size:14px;font-weight:900;color:var(--color-slate-800);margin-bottom:8px;">Minimarket</h3>
+        <p style="font-size:12px;color:var(--color-slate-500);line-height:1.6;font-weight:500;">
+          Scan ribuan barcode tanpa delay. Stok real-time per cabang. POS yang berjalan bahkan offline.
+        </p>
+        <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(0,0,0,.05);">
+          <span style="font-size:10px;font-weight:800;color:var(--emerald);text-transform:uppercase;letter-spacing:.08em;">Barcode · POS · Real-time Stock</span>
+        </div>
+      </div>
+
+      <div class="reveal biz-card fashion" style="transition-delay:.07s">
+        <div class="biz-icon" style="background:linear-gradient(135deg,rgba(236,72,153,.1),rgba(236,72,153,.05));">👕</div>
+        <h3 style="font-size:14px;font-weight:900;color:var(--color-slate-800);margin-bottom:8px;">Fashion & Apparel</h3>
+        <p style="font-size:12px;color:var(--color-slate-500);line-height:1.6;font-weight:500;">
+          Kelola varian warna & ukuran secara masif. Matrix SKU otomatis. Laporan per varian.
+        </p>
+        <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(0,0,0,.05);">
+          <span style="font-size:10px;font-weight:800;color:var(--color-pink-400);text-transform:uppercase;letter-spacing:.08em;">Variant Matrix · Size Grid</span>
+        </div>
+      </div>
+
+      <div class="reveal biz-card hardware" style="transition-delay:.14s">
+        <div class="biz-icon" style="background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(245,158,11,.06));">🛠️</div>
+        <h3 style="font-size:14px;font-weight:900;color:var(--color-slate-800);margin-bottom:8px;">Hardware Store</h3>
+        <p style="font-size:12px;color:var(--color-slate-500);line-height:1.6;font-weight:500;">
+          Stok bahan bangunan dalam satuan berat, panjang, dan volume. Purchasing dari multi-vendor.
+        </p>
+        <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(0,0,0,.05);">
+          <span style="font-size:10px;font-weight:800;color:var(--color-warning);text-transform:uppercase;letter-spacing:.08em;">Unit Conversion · Bulk Vendor</span>
+        </div>
+      </div>
+
+      <div class="reveal biz-card fnb" style="transition-delay:.21s">
+        <div class="biz-icon" style="background:linear-gradient(135deg,var(--color-sky-a10),rgba(14,165,233,.05));">☕</div>
+        <h3 style="font-size:14px;font-weight:900;color:var(--color-slate-800);margin-bottom:8px;">F&B & Kafe</h3>
+        <p style="font-size:12px;color:var(--color-slate-500);line-height:1.6;font-weight:500;">
+          Manajemen bahan baku terintegrasi. Recipe costing otomatis. Sales per menu item.
+        </p>
+        <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(0,0,0,.05);">
+          <span style="font-size:10px;font-weight:800;color:var(--color-info);text-transform:uppercase;letter-spacing:.08em;">Recipe Costing · Bahan Baku</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!--{# ════════════════════════════════════════════
+   § 5  WHY — Point of Interest (DARK)
+════════════════════════════════════════════ #}-->
+<section class="dark-section py-20">
+  <div class="grid-noise"></div>
+  <div class="max-w-5xl mx-auto px-6 relative z-10">
+
+    <div class="reveal text-center mb-12">
+      <p class="section-label justify-center" style="color:var(--color-primary-a70);">Kenapa Memilih Sistem Ini?</p>
+      <h2 class="display-font text-4xl font-bold text-white mt-4 italic">
+        Bukan Sekadar Software. <br>
+        <span style="color:var(--emerald);">Infrastruktur Bisnis.</span>
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+      <div class="reveal why-card relative" style="transition-delay:.0s">
+        <span class="why-num">01</span>
+        <div class="w-10 h-10 rounded-2xl flex items-center justify-center mb-5"
+             style="background:var(--color-primary-a15);border:1px solid var(--color-primary-a25);">
+          <i class="fas fa-bolt text-emerald-400 text-[14px]"></i>
+        </div>
+        <h3 style="font-size:16px;font-weight:900;color:var(--color-fff);margin-bottom:10px;font-family:'Playfair Display',serif;font-style:italic;">Performance First</h3>
+        <p style="font-size:12px;color:var(--color-white-a050);line-height:1.7;font-weight:500;">
+          Tidak ada lagi sistem "lemot" saat stok mencapai puluhan ribu. 
+          PostgreSQL dengan index yang tepat memastikan pencarian instan bahkan di 118k+ SKU.
+        </p>
+        <div style="margin-top:16px;padding:10px 14px;border-radius:10px;background:var(--color-primary-a08);border:1px solid var(--color-primary-a15);">
+          <span style="font-size:10px;font-family:'DM Mono',monospace;color:rgba(4,120,87,.8);">SELECT * WHERE sku ILIKE … → 12ms</span>
+        </div>
+      </div>
+
+      <div class="reveal why-card relative" style="transition-delay:.08s">
+        <span class="why-num">02</span>
+        <div class="w-10 h-10 rounded-2xl flex items-center justify-center mb-5"
+             style="background:rgba(14,165,233,.12);border:1px solid rgba(14,165,233,.18);">
+          <i class="fas fa-eye text-sky-400 text-[14px]"></i>
+        </div>
+        <h3 style="font-size:16px;font-weight:900;color:var(--color-fff);margin-bottom:10px;font-family:'Playfair Display',serif;font-style:italic;">Beautifully Logical</h3>
+        <p style="font-size:12px;color:var(--color-white-a050);line-height:1.7;font-weight:500;">
+          Desain Glassmorphism yang tidak membosankan bagi admin yang menatap layar 8 jam sehari. 
+          Setiap piksel dipikirkan untuk mengurangi cognitive load.
+        </p>
+        <div style="margin-top:16px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span style="font-size:9px;font-weight:800;padding:3px 8px;border-radius:99px;background:var(--color-sky-a10);border:1px solid rgba(14,165,233,.2);color:rgba(14,165,233,.8);text-transform:uppercase;letter-spacing:.06em;">Glass UI</span>
+          <span style="font-size:9px;font-weight:800;padding:3px 8px;border-radius:99px;background:var(--color-sky-a10);border:1px solid rgba(14,165,233,.2);color:rgba(14,165,233,.8);text-transform:uppercase;letter-spacing:.06em;">Alpine.js</span>
+          <span style="font-size:9px;font-weight:800;padding:3px 8px;border-radius:99px;background:var(--color-sky-a10);border:1px solid rgba(14,165,233,.2);color:rgba(14,165,233,.8);text-transform:uppercase;letter-spacing:.06em;">Zero Refresh</span>
+        </div>
+      </div>
+
+      <div class="reveal why-card relative" style="transition-delay:.16s">
+        <span class="why-num">03</span>
+        <div class="w-10 h-10 rounded-2xl flex items-center justify-center mb-5"
+             style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.18);">
+          <i class="fas fa-radar text-purple-400 text-[14px]"></i>
+        </div>
+        <h3 style="font-size:16px;font-weight:900;color:var(--color-fff);margin-bottom:10px;font-family:'Playfair Display',serif;font-style:italic;">Seamless Movement</h3>
+        <p style="font-size:12px;color:var(--color-white-a050);line-height:1.7;font-weight:500;">
+          Lacak perpindahan barang dari gudang pusat ke cabang mana pun seolah melihat radar. 
+          Stock Movement Control Tower memberi visibilitas 360°.
+        </p>
+        <div style="margin-top:16px;padding:10px 14px;border-radius:10px;background:rgba(139,92,246,.07);border:1px solid rgba(139,92,246,.14);">
+          <div style="display:flex;align-items:center;gap:6px;font-size:10px;color:rgba(139,92,246,.8);font-weight:700;">
+            <span>Gudang Pusat</span>
+            <i class="fas fa-arrow-right text-[8px]"></i>
+            <span>Cabang A</span>
+            <i class="fas fa-arrow-right text-[8px]"></i>
+            <span style="color:var(--color-emerald-600);">Diterima ✓</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Security row -->
+    <div class="reveal mt-8" style="transition-delay:.24s">
+      <div class="glass-dark p-6 flex flex-col md:flex-row items-center gap-6">
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
+             style="background:linear-gradient(135deg,var(--color-primary-a25),rgba(14,165,233,.15));border:1px solid var(--color-primary-a25);">
+          <i class="fas fa-shield-alt text-emerald-400 text-lg"></i>
+        </div>
+        <div class="flex-1">
+          <h4 style="font-size:14px;font-weight:900;color:var(--color-fff);margin-bottom:4px;">Data Isolation Penuh — Multi-Tenancy Sejati</h4>
+          <p style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.6;font-weight:500;">
+            Setiap klien memiliki "ruang rahasia" sendiri. Tidak ada data yang bocor antar tenant. 
+            Didukung CSRF protection, session management, dan row-level security PostgreSQL.
+          </p>
+        </div>
+        <div class="flex gap-2 flex-shrink-0 flex-wrap justify-center">
+          <span style="font-size:9px;font-weight:800;padding:4px 10px;border-radius:99px;background:var(--color-primary-a12);border:1px solid var(--color-primary-a25);color:var(--color-primary-a80);text-transform:uppercase;letter-spacing:.06em;">CSRF</span>
+          <span style="font-size:9px;font-weight:800;padding:4px 10px;border-radius:99px;background:var(--color-primary-a12);border:1px solid var(--color-primary-a25);color:var(--color-primary-a80);text-transform:uppercase;letter-spacing:.06em;">RLS</span>
+          <span style="font-size:9px;font-weight:800;padding:4px 10px;border-radius:99px;background:var(--color-primary-a12);border:1px solid var(--color-primary-a25);color:var(--color-primary-a80);text-transform:uppercase;letter-spacing:.06em;">JWT Ready</span>
+          <span style="font-size:9px;font-weight:800;padding:4px 10px;border-radius:99px;background:var(--color-primary-a12);border:1px solid var(--color-primary-a25);color:var(--color-primary-a80);text-transform:uppercase;letter-spacing:.06em;">2FA</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="sep-dark"></div>
+
+<!--{# ════════════════════════════════════════════
+   § 6  PRICING
+════════════════════════════════════════════ #}-->
+<section id="pricing" style="background:linear-gradient(160deg,var(--color-slate-50) 0%,var(--color-green-100) 40%,var(--color-indigo-50) 100%);padding:88px 0;">
+  <div class="max-w-5xl mx-auto px-6">
+
+    <div class="reveal text-center mb-14">
+      <p class="section-label justify-center">Paket & Harga</p>
+      <h2 class="display-font text-4xl font-bold text-slate-800 mt-4 italic">
+        Mulai Kecil,<br>
+        <span style="color:var(--emerald);">Tumbuh Tanpa Batas.</span>
+      </h2>
+      <p class="text-slate-400 text-[13px] mt-3 max-w-md mx-auto font-medium">
+        Scale as you grow — upgrade paket kapan saja tanpa migrasi data, tanpa downtime.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
+
+      <!--{# Boutique #}-->
+      <div class="reveal pricing-card boutique" style="transition-delay:.0s">
+        <p style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--color-text-subtle);margin-bottom:12px;">Boutique</p>
+        <div class="price-tag" style="color:var(--color-slate-800);">Free</div>
+        <p style="font-size:11px;color:var(--color-text-subtle);margin-top:4px;font-weight:600;">Untuk memulai</p>
+        <div style="height:1px;background:var(--color-black-a006);margin:20px 0;"></div>
+        <p style="font-size:11px;font-weight:700;color:var(--color-text-muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.08em;">Target: Toko Kecil / Kafe</p>
+        <div class="space-y-1">
+          <div class="feature-row"><i class="fas fa-check check text-[11px]"></i><span style="color:var(--color-text-muted);">Manajemen hingga <strong>5.000 SKU</strong></span></div>
+          <div class="feature-row"><i class="fas fa-check check text-[11px]"></i><span style="color:var(--color-text-muted);">Sales Report & POS Ringan</span></div>
+          <div class="feature-row"><i class="fas fa-check check text-[11px]"></i><span style="color:var(--color-text-muted);">1 Lokasi / Cabang</span></div>
+          <div class="feature-row"><i class="fas fa-check check text-[11px]"></i><span style="color:var(--color-text-muted);">Inbox & Notifikasi</span></div>
+          <div class="feature-row"><i class="fas fa-check check text-[11px]"></i><span style="color:var(--color-text-muted);">Dashboard Dasar</span></div>
+          <div class="feature-row" style="opacity:.4"><i class="fas fa-times text-slate-300 text-[11px]"></i><span style="color:var(--color-text-subtle);">Stock Movement</span></div>
+          <div class="feature-row" style="opacity:.4"><i class="fas fa-times text-slate-300 text-[11px]"></i><span style="color:var(--color-text-subtle);">Vendor Portal</span></div>
+          <div class="feature-row" style="opacity:.4"><i class="fas fa-times text-slate-300 text-[11px]"></i><span style="color:var(--color-text-subtle);">Multi-Tenant</span></div>
+        </div>
+        <a href="{% url 'dashboard' %}" style="display:flex;align-items:center;justify-content:center;gap:7px;width:100%;margin-top:24px;padding:12px;border-radius:12px;border:1.5px solid var(--color-primary-a30);background:var(--color-primary-a06);color:var(--emerald);font-weight:800;font-size:12px;text-decoration:none;transition:background .15s;">
+          Mulai Gratis <i class="fas fa-arrow-right text-[10px]"></i>
+        </a>
+      </div>
+
+      <!--{# Warehouse — POPULAR #}-->
+      <div class="reveal pricing-card warehouse" style="transition-delay:.08s">
+        <span class="popular-badge">Paling Populer</span>
+        <p style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:var(--color-primary-a60);margin-bottom:12px;">Warehouse</p>
+        <div class="price-tag" style="background:linear-gradient(135deg,var(--color-fff),var(--glass-bg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Rp 499k</div>
+        <p style="font-size:11px;color:var(--color-white-a040);margin-top:4px;font-weight:600;">per bulan</p>
+        <div style="height:1px;background:var(--color-primary-a25);margin:20px 0;"></div>
+        <p style="font-size:11px;font-weight:700;color:var(--color-white-a040);margin-bottom:12px;text-transform:uppercase;letter-spacing:.08em;">Target: Distribusi / Grosir</p>
+        <div class="space-y-1">
+          <div class="feature-row dark-row"><i class="fas fa-check check text-[11px]"></i><span>Manajemen hingga <strong style="color:var(--color-fff);">50.000 SKU</strong></span></div>
+          <div class="feature-row dark-row"><i class="fas fa-check check text-[11px]"></i><span>Stock Movement Control Tower</span></div>
+          <div class="feature-row dark-row"><i class="fas fa-check check text-[11px]"></i><span>Vendor Portal & Purchasing</span></div>
+          <div class="feature-row dark-row"><i class="fas fa-check check text-[11px]"></i><span>Multi-Lokasi hingga 5 Cabang</span></div>
+          <div class="feature-row dark-row"><i class="fas fa-check check text-[11px]"></i><span>Sales & Financial Reports</span></div>
+          <div class="feature-row dark-row"><i class="fas fa-check check text-[11px]"></i><span>Import / Export CSV</span></div>
+          <div class="feature-row dark-row" style="opacity:.4"><i class="fas fa-times text-slate-600 text-[11px]"></i><span style="color:var(--color-white-a030);">Unlimited SKU</span></div>
+          <div class="feature-row dark-row" style="opacity:.4"><i class="fas fa-times text-slate-600 text-[11px]"></i><span style="color:var(--color-white-a030);">Audit Trail</span></div>
+        </div>
+        <a href="#" style="display:flex;align-items:center;justify-content:center;gap:7px;width:100%;margin-top:24px;padding:12px;border-radius:12px;background:linear-gradient(135deg,var(--emerald),var(--blue));color:var(--color-fff);font-weight:800;font-size:12px;text-decoration:none;box-shadow:0 6px 20px var(--color-primary-a35);">
+          Mulai Trial 14 Hari <i class="fas fa-arrow-right text-[10px]"></i>
+        </a>
+      </div>
+
+      <!--{# Titan #}-->
+      <div class="reveal pricing-card titan" style="transition-delay:.16s">
+        <p style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:rgba(139,92,246,.7);margin-bottom:12px;position:relative;z-index:1;">Titan</p>
+        <div class="price-tag" style="background:linear-gradient(135deg,var(--color-fff) 50%,rgba(139,92,246,.6));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;position:relative;z-index:1;">Custom</div>
+        <p style="font-size:11px;color:var(--color-white-a030);margin-top:4px;font-weight:600;position:relative;z-index:1;">Hubungi kami</p>
+        <div style="height:1px;background:rgba(255,255,255,.07);margin:20px 0;position:relative;z-index:1;"></div>
+        <p style="font-size:11px;font-weight:700;color:var(--color-white-a030);margin-bottom:12px;text-transform:uppercase;letter-spacing:.08em;position:relative;z-index:1;">Target: Multi-Cabang / Hypermarket</p>
+        <div class="space-y-1" style="position:relative;z-index:1;">
+          <div class="feature-row dark-row"><i class="fas fa-check check text-[11px]"></i><span><strong style="color:var(--color-fff);">Unlimited SKU</strong> (tested 118k+)</span></div>
+          <div class="feature-row dark-row"><i class="fas fa-check check text-[11px]"></i><span>Audit Trail Lengkap</span></div>
+          <div class="feature-row dark-row"><i class="fas fa-check check text-[11px]"></i><span>Multi-Tenant Architecture</span></div>
+          <div class="feature-row dark-row"><i class="fas fa-check check text-[11px]"></i><span>Unlimited Cabang & Lokasi</span></div>
+          <div class="feature-row dark-row"><i class="fas fa-check check text-[11px]"></i><span>Dedicated Support & SLA</span></div>
+          <div class="feature-row dark-row"><i class="fas fa-check check text-[11px]"></i><span>Custom Integration & API</span></div>
+          <div class="feature-row dark-row"><i class="fas fa-check check text-[11px]"></i><span>White-label Option</span></div>
+          <div class="feature-row dark-row"><i class="fas fa-check check text-[11px]"></i><span>Zero-downtime Migration</span></div>
+        </div>
+        <a href="#" style="display:flex;align-items:center;justify-content:center;gap:7px;width:100%;margin-top:24px;padding:12px;border-radius:12px;border:1.5px solid rgba(139,92,246,.3);background:rgba(139,92,246,.08);color:rgba(167,139,250,.9);font-weight:800;font-size:12px;text-decoration:none;position:relative;z-index:1;">
+          Hubungi Sales <i class="fas fa-arrow-right text-[10px]"></i>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Scale note -->
+    <div class="reveal mt-8 text-center" style="transition-delay:.24s">
+      <p style="font-size:12px;color:var(--color-text-subtle);font-weight:500;">
+        <i class="fas fa-exchange-alt text-emerald-400 mr-1.5 text-[10px]"></i>
+        Upgrade atau downgrade kapan saja · Data tetap utuh · Tidak perlu migrasi
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!--{# ════════════════════════════════════════════
+   § 7  SCALE TIMELINE (DARK)
+════════════════════════════════════════════ #}-->
+<section class="dark-section py-20">
+  <div class="grid-noise"></div>
+  <div class="max-w-3xl mx-auto px-6 relative z-10">
+
+    <div class="reveal text-center mb-12">
+      <p class="section-label justify-center" style="color:var(--color-primary-a70);">Scale as You Grow</p>
+      <h2 class="display-font text-4xl font-bold text-white mt-4 italic">
+        Mulai Hari Ini,<br>
+        <span style="color:var(--emerald);">Skala Besok.</span>
+      </h2>
+    </div>
+
+    <div class="space-y-0 relative">
+      <!-- Vertical line -->
+      <div style="position:absolute;left:20px;top:20px;bottom:20px;width:2px;background:linear-gradient(180deg,var(--emerald),var(--blue),var(--color-sky-a10));border-radius:99px;"></div>
+
+      <!-- Step 1 -->
+      <div class="reveal flex gap-6 pb-10" style="transition-delay:.0s">
+        <div style="width:42px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;padding-top:4px;">
+          <div style="width:14px;height:14px;border-radius:50%;background:var(--emerald);border:2px solid var(--emerald);box-shadow:0 0 12px var(--color-primary-a50);z-index:1;"></div>
+        </div>
+        <div class="glass-dark p-5 flex-1">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--emerald);">Hari 1</span>
+            <span style="font-size:10px;font-weight:800;color:var(--color-white-a050);">Paket Boutique</span>
+          </div>
+          <h4 style="font-size:14px;font-weight:900;color:var(--color-fff);font-family:'Playfair Display',serif;font-style:italic;">Setup dalam 10 Menit</h4>
+          <p style="font-size:12px;color:var(--color-white-a040);margin-top:4px;line-height:1.6;font-weight:500;">Tambahkan produk, atur kategori, mulai berjualan. Tidak perlu konfigurasi server.</p>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="reveal flex gap-6 pb-10" style="transition-delay:.1s">
+        <div style="width:42px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;padding-top:4px;">
+          <div style="width:14px;height:14px;border-radius:50%;background:var(--blue);border:2px solid var(--blue);box-shadow:0 0 12px rgba(14,165,233,.5);z-index:1;"></div>
+        </div>
+        <div class="glass-dark p-5 flex-1">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);">Bulan 3–6</span>
+            <span style="font-size:10px;font-weight:800;color:var(--color-white-a050);">Upgrade ke Warehouse</span>
+          </div>
+          <h4 style="font-size:14px;font-weight:900;color:var(--color-fff);font-family:'Playfair Display',serif;font-style:italic;">Bisnis Berkembang, Sistem Ikut</h4>
+          <p style="font-size:12px;color:var(--color-white-a040);margin-top:4px;line-height:1.6;font-weight:500;">Buka cabang kedua, kelola vendor, aktifkan Stock Movement. Semua data lama tetap utuh.</p>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="reveal flex gap-6" style="transition-delay:.2s">
+        <div style="width:42px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;padding-top:4px;">
+          <div style="width:14px;height:14px;border-radius:50%;background:var(--color-violet-400);border:2px solid var(--color-violet-400);box-shadow:0 0 12px rgba(167,139,250,.5);z-index:1;"></div>
+        </div>
+        <div class="glass-dark p-5 flex-1">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.12em;color:var(--color-violet-400);">Kapan Saja</span>
+            <span style="font-size:10px;font-weight:800;color:var(--color-white-a050);">Titan / Custom</span>
+          </div>
+          <h4 style="font-size:14px;font-weight:900;color:var(--color-fff);font-family:'Playfair Display',serif;font-style:italic;">Unlimited Scale, Zero Migration</h4>
+          <p style="font-size:12px;color:var(--color-white-a040);margin-top:4px;line-height:1.6;font-weight:500;">Ratusan ribu SKU, belasan cabang, ribuan transaksi per hari. Infrastruktur yang sudah siap dari hari pertama.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!--{# ════════════════════════════════════════════
+   § 8  CTA FINAL
+════════════════════════════════════════════ #}-->
+<section class="cta-section">
+  <div class="cta-glow" style="width:500px;height:500px;background:var(--color-primary-a12);top:-100px;left:-100px;animation-delay:0s;"></div>
+  <div class="cta-glow" style="width:400px;height:400px;background:rgba(14,165,233,.08);bottom:-80px;right:-80px;animation-delay:-10s;"></div>
+  <div class="grid-noise" style="opacity:.012;"></div>
+
+  <div class="max-w-2xl mx-auto px-6 text-center relative z-10">
+    <div class="reveal">
+      <p class="section-label justify-center" style="color:var(--color-primary-a60);">Siap Memulai?</p>
+      <h2 class="display-font text-4xl md:text-5xl font-bold text-white mt-5 italic leading-tight">
+        Retail Anda Layak<br>Mendapat yang Terbaik.
+      </h2>
+      <p style="font-size:14px;color:var(--color-white-a040);margin-top:16px;line-height:1.7;font-weight:500;">
+        Bergabung dengan bisnis yang sudah mempercayakan operasi retail mereka pada platform ini. 
+        Mulai gratis, upgrade saat Anda siap.
+      </p>
+
+      <div class="flex flex-wrap justify-center gap-3 mt-10">
+        <a href="{% url 'dashboard' %}" class="btn-hero" style="font-size:14px;padding:16px 32px;">
+          <i class="fas fa-rocket text-[12px]"></i> Mulai Sekarang — Gratis
+        </a>
+        <a href="{% url 'contact' %}" class="btn-outline" style="font-size:14px;padding:15px 28px;">
+          <i class="fas fa-comments text-[12px]"></i> Bicara dengan Tim
+        </a>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-6 mt-10">
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--color-white-a030);font-weight:600;">
+          <i class="fas fa-check text-emerald-500 text-[9px]"></i> Gratis selamanya untuk Boutique
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--color-white-a030);font-weight:600;">
+          <i class="fas fa-check text-emerald-500 text-[9px]"></i> Tidak perlu kartu kredit
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--color-white-a030);font-weight:600;">
+          <i class="fas fa-check text-emerald-500 text-[9px]"></i> Setup 10 menit
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!--{# end about-page #}-->
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+/* ══ SCROLL REVEAL ══ */
+(function(){
+  const io = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        const delay = parseFloat(e.target.style.transitionDelay || 0) * 1000;
+        setTimeout(() => e.target.classList.add('visible'), delay);
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: .08 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+})();
+
+/* ══ COUNTER ANIMATION ══ */
+(function(){
+  const counters = {
+    'c-sku'   : { target: 118000, suffix: '+',      format: n => n.toLocaleString('id-ID') },
+    'c-speed' : { target: null,   suffix: '',        format: () => '<100ms' },
+    'c-branch': { target: 12,     suffix: ' cabang', format: n => n },
+    'c-uptime': { target: 100,    suffix: '%',       format: n => n },
+  };
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const id   = e.target.id;
+      const cfg  = counters[id];
+      if (!cfg || cfg.target === null) return;
+
+      io.unobserve(e.target);
+      const el    = e.target;
+      const start = performance.now();
+      const dur   = 1800;
+
+      function step(now) {
+        const p = Math.min((now - start) / dur, 1);
+        const ease = 1 - Math.pow(1 - p, 3); /* ease-out-cubic */
+        const val = Math.round(cfg.target * ease);
+        el.innerHTML = cfg.format(val) + cfg.suffix;
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }, { threshold: .3 });
+
+  Object.keys(counters).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) io.observe(el);
+  });
+})();
+</script>
+{% endblock %}

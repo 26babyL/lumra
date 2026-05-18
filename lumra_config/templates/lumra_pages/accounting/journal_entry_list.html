@@ -1,0 +1,228 @@
+{% extends "base/base_hybrid.html" %}
+{% load static %}
+
+<style>
+/* Loading Animation */
+.loading-dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.loading-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: currentColor;
+    animation: loading-bounce 1.4s infinite ease-in-out both;
+}
+
+.loading-dot:nth-child(1) { animation-delay: -0.32s; }
+.loading-dot:nth-child(2) { animation-delay: -0.16s; }
+.loading-dot:nth-child(3) { animation-delay: 0s; }
+
+@keyframes loading-bounce {
+    0%, 80%, 100% {
+        transform: scale(0);
+    }
+    40% {
+        transform: scale(1);
+    }
+}
+</style>
+
+{% block title %}Journal Entries{% endblock %}
+{% block page_title %}Journal Entries{% endblock %}
+{% block page_subtitle %}Manage accounting journal entries{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Header Actions -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <div class="flex gap-2">
+            <button class="btn btn-primary">
+                <i class="fas fa-plus mr-2"></i>
+                New Journal Entry
+            </button>
+            <button class="btn btn-outline">
+                <i class="fas fa-download mr-2"></i>
+                Export
+            </button>
+        </div>
+        <div class="flex gap-2">
+            <div class="form-control">
+                <input type="text" placeholder="Search journal entries..." class="input input-bordered" />
+            </div>
+            <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-outline">
+                    <i class="fas fa-filter mr-2"></i>
+                    Filter
+                </label>
+                <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-52">
+                    <li><a href="#">This Month</a></li>
+                    <li><a href="#">Last Month</a></li>
+                    <li><a href="#">This Quarter</a></li>
+                    <li><a href="#">This Year</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Journal Entries Table -->
+    <div class="card bg-base-100 shadow-lg">
+        <div class="card-body p-0">
+            <div class="overflow-x-auto">
+                <table class="table table-compact w-full">
+                    <thead>
+                        <tr>
+                            <th>
+                                <label>
+                                    <input type="checkbox" class="checkbox checkbox-sm" />
+                                </label>
+                            </th>
+                            <th>Date</th>
+                            <th>Entry No</th>
+                            <th>Description</th>
+                            <th>Reference</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for journal in journals %}
+                        <tr class="hover">
+                            <td>
+                                <label>
+                                    <input type="checkbox" class="checkbox checkbox-sm" />
+                                </label>
+                            </td>
+                            <td>{{ journal.date|date:"Y-m-d" }}</td>
+                            <td class="font-mono">{{ journal.entry_number }}</td>
+                            <td>{{ journal.description }}</td>
+                            <td class="font-mono">{{ journal.reference }}</td>
+                            <td class="text-right">
+                                {% if journal.total_debit %}Rp {{ journal.total_debit|floatformat:0|intcomma }}{% endif %}
+                            </td>
+                            <td class="text-right">
+                                {% if journal.total_credit %}Rp {{ journal.total_credit|floatformat:0|intcomma }}{% endif %}
+                            </td>
+                            <td>
+                                <span class="badge badge-{{ journal.status|lower }} badge-sm">{{ journal.status }}</span>
+                            </td>
+                            <td>
+                                <div class="dropdown dropdown-end">
+                                    <label tabindex="0" class="btn btn-ghost btn-sm btn-circle">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </label>
+                                    <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-48">
+                                        <li><a href="#"><i class="fas fa-eye mr-2"></i>View</a></li>
+                                        <li><a href="#"><i class="fas fa-edit mr-2"></i>Edit</a></li>
+                                        <li><a href="#"><i class="fas fa-print mr-2"></i>Print</a></li>
+                                        <li><a href="#"><i class="fas fa-trash mr-2"></i>Delete</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center py-8">
+                                <div class="text-base-content/60">
+                                    <i class="fas fa-inbox text-4xl mb-4"></i>
+                                    <p class="text-lg font-medium">No journal entries found</p>
+                                    <p class="text-sm">Create your first journal entry to get started.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+        <div class="stat bg-base-100 rounded-lg shadow">
+            <div class="stat-figure text-primary">
+                <i class="fas fa-journal-whills text-3xl"></i>
+            </div>
+            <div class="stat-title">Total Entries</div>
+            <div class="stat-value text-primary">{{ total_count }}</div>
+            <div class="stat-desc">All entries</div>
+        </div>
+        
+        <div class="stat bg-base-100 rounded-lg shadow">
+            <div class="stat-figure text-success">
+                <i class="fas fa-check-circle text-3xl"></i>
+            </div>
+            <div class="stat-title">Posted</div>
+            <div class="stat-value text-success">142</div>
+            <div class="stat-desc">This month</div>
+        </div>
+        
+        <div class="stat bg-base-100 rounded-lg shadow">
+            <div class="stat-figure text-warning">
+                <i class="fas fa-clock text-3xl"></i>
+            </div>
+            <div class="stat-title">Draft</div>
+            <div class="stat-value text-warning">14</div>
+            <div class="stat-desc">Pending review</div>
+        </div>
+        
+        <div class="stat bg-base-100 rounded-lg shadow">
+            <div class="stat-figure text-info">
+                <i class="fas fa-balance-scale text-3xl"></i>
+            </div>
+            <div class="stat-title">Total Balance</div>
+            <div class="stat-value text-info">Rp 0</div>
+            <div class="stat-desc">Balanced</div>
+        </div>
+    </div>
+
+    <!-- Lazy Loading & Pagination -->
+    <div class="flex justify-between items-center mt-6" x-data="{ 
+        currentPage: {{ current_page }}, 
+        hasMore: {{ has_more }}, 
+        isLoadingMore: false 
+    }">
+        <div class="text-sm text-base-content/60">
+            <span x-show="!isLoadingMore">
+                Menampilkan {{ per_page }} dari {{ total_count }} data
+                <span x-show="hasMore"> (halaman {{ current_page }})</span>
+            </span>
+            <span x-show="isLoadingMore" class="loading loading-dots">
+                <span class="loading-dot"></span>
+                <span class="loading-dot"></span>
+                <span class="loading-dot"></span>
+                <span> memuat data...</span>
+            </span>
+        </div>
+        
+        <div class="join">
+            <button class="join-item btn btn-outline" 
+                    x-show="currentPage > 1" 
+                    @click="window.location.href='?page=' + (currentPage - 1)">«</button>
+            <button class="join-item btn btn-outline" 
+                    x-show="currentPage > 2" 
+                    @click="window.location.href='?page=' + (currentPage - 2)">‹</button>
+            <template x-for="page in [Math.max(1, currentPage - 2), currentPage, currentPage + 1, currentPage + 2].slice(0, 5)">
+                <button class="join-item" 
+                        :class="page === currentPage ? 'btn-primary' : 'btn-outline'"
+                        @click="window.location.href='?page=' + page">{{ page }}</button>
+            </template>
+            <button class="join-item btn btn-outline" 
+                    x-show="hasMore" 
+                    @click="isLoadingMore = true; $nextTick(() => { window.location.href='?page=' + (currentPage + 1) })">
+                <span x-show="isLoadingMore" class="loading loading-dots">
+                    <span class="loading-dot"></span>
+                    <span class="loading-dot"></span>
+                    <span class="loading-dot"></span>
+                </span>
+                <span x-show="!isLoadingMore">»</span>
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

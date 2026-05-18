@@ -1,0 +1,401 @@
+{% extends 'lumra_pages/reports/base_report.html' %}
+{% load custom_filters %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<style>
+  [x-cloak] { display:var(--shadow-sm-16) !important; }
+
+  .bg-blob{position:fixed;border-radius:50%;filter:blur(100px);opacity:.08;pointer-events:var(--shadow-sm-16);z-index:0;animation:drift 18s ease-in-out infinite alternate;}
+  .bg-blob-1{width:420px;height:420px;background:var(--color-emerald-600);top:-120px;left:-160px;}
+  .bg-blob-2{width:280px;height:280px;background:var(--color-emerald-700);bottom:-60px;right:-80px;animation-delay:-7s;}
+  @keyframes drift{from{transform:translate(0,0) scale(1);}to{transform:translate(20px,28px) scale(1.06);}}
+
+  .reveal{opacity:0;transform:translateY(12px);transition:opacity .4s ease,transform .4s ease;}
+  .reveal.visible{opacity:1;transform:var(--shadow-sm-16);}
+
+  /* ════ FORM CARD ════ */
+  .form-card{
+    background:var(--color-white-a084);
+    backdrop-filter:var(--backdrop-blur-24px-saturate-160);
+    -webkit-backdrop-filter:var(--backdrop-blur-24px-saturate-160);
+    border:1px solid var(--color-white-a095);
+    border-radius:22px;
+    box-shadow:0 4px 28px var(--color-black-a008);
+  }
+
+  /* ════ FIELD STYLES ════ */
+  .field-group{position:relative;}
+  .field-label{
+    font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;
+    color:var(--color-slate-400);margin-bottom:6px;display:block;
+    transition:color .15s;
+  }
+  .field-input{
+    width:100%;
+    padding:11px 14px 11px 40px;
+    background:var(--color-slate-50-a08);
+    border:1.5px solid var(--color-slate-300-a04);
+    border-radius:12px;
+    font-size:13px;color:var(--color-slate-800);
+    outline:var(--shadow-sm-16);
+    transition:all .15s;
+    font-family:inherit;
+  }
+  .field-input:focus{
+    background:var(--color-white-a095);
+    border-color:var(--color-emerald-600-a04);
+    box-shadow:0 0 0 3px var(--color-emerald-600-a008);
+  }
+  .field-input.no-icon{padding-left:14px;}
+  .field-input::placeholder{color:var(--color-slate-300);}
+  .field-icon{
+    position:absolute;left:13px;top:50%;transform:translateY(-50%);
+    color:var(--color-slate-300);font-size:11px;pointer-events:var(--shadow-sm-16);
+    transition:color .15s;
+  }
+  .field-group:focus-within .field-icon{color:var(--color-emerald-600);}
+  .field-group:focus-within .field-label{color:var(--color-emerald-700);}
+
+  /* Select */
+  select.field-input{
+    appearance:var(--shadow-sm-16);-webkit-appearance:var(--shadow-sm-16);cursor:pointer;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='var(--shadow-sm-16)' stroke='%23cbd5e1' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:calc(100% - 12px) 50%;
+    padding-right:30px;
+  }
+
+  /* Textarea */
+  textarea.field-input{resize:var(--shadow-sm-16);padding-top:11px;padding-bottom:11px;min-height:80px;}
+
+  /* ════ PREVIEW AVATAR ════ */
+  #avatarPreview{
+    width:56px;height:56px;border-radius:16px;
+    background:linear-gradient(135deg,var(--color-emerald-600),var(--color-emerald-700));
+    display:flex;align-items:center;justify-content:center;
+    font-weight:900;font-size:18px;color:white;
+    border:2px solid var(--color-emerald-600-a02);
+    transition:all .2s;
+    user-select:var(--shadow-sm-16);
+  }
+
+  /* ════ BUTTONS ════ */
+  .btn-submit{
+    padding:12px 28px;border-radius:13px;
+    background:linear-gradient(135deg,var(--color-emerald-600) 0%,var(--color-emerald-700) 100%);
+    color:var(--color-fff);font-size:13px;font-weight:800;
+    border:var(--shadow-sm-16);cursor:pointer;width:100%;
+    box-shadow:0 4px 14px var(--color-emerald-600-a028);
+    transition:box-shadow .15s,transform .15s;
+  }
+  .btn-submit:hover{box-shadow:0 6px 20px var(--color-emerald-600-a040);transform:translateY(-1px);}
+  .btn-cancel{
+    padding:12px 20px;border-radius:13px;
+    background:var(--color-slate-50-a09);
+    border:1.5px solid var(--color-slate-300-a05);
+    color:var(--color-slate-500);font-size:13px;font-weight:700;
+    cursor:pointer;transition:all .15s;text-decoration:var(--shadow-sm-16);
+    display:block;text-align:center;
+  }
+  .btn-cancel:hover{background:var(--color-fff);border-color:var(--color-slate-300);color:var(--color-slate-600);}
+
+  /* ════ TIER SELECTOR ════ */
+  .tier-option{
+    position:relative;cursor:pointer;
+  }
+  .tier-option input[type="radio"]{position:absolute;opacity:0;width:0;height:0;}
+  .tier-option-label{
+    display:flex;flex-direction:column;align-items:center;gap:2px;
+    padding:8px 10px;border-radius:12px;font-size:11px;font-weight:700;
+    border:1.5px solid var(--color-slate-300-a04);
+    background:var(--color-slate-50-a08);color:var(--color-slate-400);
+    transition:all .15s;cursor:pointer;
+  }
+  .tier-option input:checked + .tier-option-label{
+    border-color:var(--color-emerald-600-a04);
+    background:var(--color-emerald-600-a007);
+    color:var(--color-emerald-700);
+    box-shadow:0 0 0 3px var(--color-emerald-600-a008);
+  }
+  .tier-option-label:hover{border-color:var(--color-emerald-300);color:var(--color-emerald-700);}
+  .tier-emoji{font-size:16px;line-height:1;}
+
+  /* ════ SECTION DIVIDER ════ */
+  .form-section-title{
+    font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;
+    color:var(--color-slate-400);display:flex;align-items:center;gap:8px;margin-bottom:14px;
+  }
+  .form-section-title::after{content:'';flex:1;height:1px;background:var(--color-slate-300-a03);}
+
+  /* Error state */
+  .field-error{font-size:10px;color:var(--color-ef4444);margin-top:4px;font-weight:600;}
+  .field-input.has-error{border-color:var(--color-rgba-239-68-68-a05);background:var(--color-rgba-254-242-242-a05);}
+  .field-input.has-error:focus{box-shadow:0 0 0 3px var(--color-rgba-239-68-68-a008);}
+
+  /* WhatsApp prefix */
+  .wa-prefix{
+    position:absolute;left:40px;top:50%;transform:translateY(-50%);
+    font-size:12px;font-weight:700;color:var(--color-16a34a);pointer-events:var(--shadow-sm-16);
+  }
+  .wa-field{padding-left:72px !important;}
+
+  /* ════ ISELLER ID BADGE ════ */
+  .iseller-note{background:var(--color-rgba-59-130-246-a006);border:1px solid var(--color-rgba-59-130-246-a015);border-radius:10px;padding:10px 12px;font-size:11px;color:var(--color-3b82f6);}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+
+<div class="w-full max-w-2xl mx-auto space-y-4 relative z-10"
+     x-data="customerForm()"
+     x-init="init()"
+     x-cloak>
+
+  <!-- HEADER -->
+  <div class="reveal">
+    <nav class="flex items-center gap-2 text-xs text-emerald-600 mb-2">
+      <a href="{% url 'dashboard' %}" class="hover:text-emerald-800 transition-colors">Dashboard</a>
+      <span class="text-slate-300">/</span>
+      <a href="{% url 'customer_list' %}" class="hover:text-emerald-800 transition-colors">Pelanggan</a>
+      <span class="text-slate-300">/</span>
+      <span class="text-slate-600 font-medium">{% if form.instance.pk %}Edit{% else %}Tambah Baru{% endif %}</span>
+    </nav>
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-800">
+          {% if form.instance.pk %}Edit Pelanggan{% else %}Tambah Pelanggan Baru{% endif %}
+        </h1>
+        <p class="text-xs text-slate-400 mt-0.5">
+          {% if form.instance.pk %}Perbarui informasi {{ form.instance.name }}{% else %}Isi data lengkap pelanggan{% endif %}
+        </p>
+      </div>
+      <!-- Live avatar preview -->
+      <div id="avatarPreview" x-text="initials">?</div>
+    </div>
+  </div>
+
+  <!-- FORM CARD -->
+  <form method="post" id="customerFormEl" @submit="onSubmit($event)">
+    {% csrf_token %}
+    <div class="reveal form-card p-6 space-y-6">
+
+      <!-- ════ IDENTITAS ════ -->
+      <div>
+        <p class="form-section-title"><i class="fas fa-user text-emerald-400"></i> Identitas Pelanggan</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+          <!-- Nama -->
+          <div class="field-group sm:col-span-2">
+            <label for="id_name" class="field-label">Nama Lengkap *</label>
+            <i class="field-icon fas fa-user"></i>
+            <input type="text" name="name" id="id_name"
+                   value="{{ form.name.value|default:'' }}"
+                   @input="updateInitials($event.target.value)"
+                   class="field-input {% if form.name.errors %}has-error{% endif %}"
+                   placeholder="Nama lengkap pelanggan" required>
+            {% for err in form.name.errors %}<p class="field-error">{{ err }}</p>{% endfor %}
+          </div>
+
+          <!-- WhatsApp -->
+          <div class="field-group">
+            <label for="id_whatsapp" class="field-label">Nomor WhatsApp</label>
+            <i class="field-icon fab fa-whatsapp" style="color:#16a34a;"></i>
+            <span class="wa-prefix">+62</span>
+            <input type="text" name="whatsapp" id="id_whatsapp"
+                   value="{{ form.whatsapp.value|default:'' }}"
+                   class="field-input wa-field {% if form.whatsapp.errors %}has-error{% endif %}"
+                   placeholder="81234567890"
+                   @input="formatWA($event)">
+            {% for err in form.whatsapp.errors %}<p class="field-error">{{ err }}</p>{% endfor %}
+          </div>
+
+          <!-- Email -->
+          <div class="field-group">
+            <label for="id_email" class="field-label">Email</label>
+            <i class="field-icon fas fa-envelope"></i>
+            <input type="email" name="email" id="id_email"
+                   value="{{ form.email.value|default:'' }}"
+                   class="field-input {% if form.email.errors %}has-error{% endif %}"
+                   placeholder="email@domain.com">
+            {% for err in form.email.errors %}<p class="field-error">{{ err }}</p>{% endfor %}
+          </div>
+
+          <!-- Tanggal Lahir -->
+          <div class="field-group">
+            <label for="id_birth_date" class="field-label">Tanggal Lahir 🎂</label>
+            <i class="field-icon fas fa-birthday-cake"></i>
+            <input type="text" name="birth_date" id="id_birth_date"
+                   value="{{ form.birth_date.value|default:'' }}"
+                   class="field-input {% if form.birth_date.errors %}has-error{% endif %}"
+                   placeholder="Pilih tanggal lahir" readonly>
+            {% for err in form.birth_date.errors %}<p class="field-error">{{ err }}</p>{% endfor %}
+          </div>
+
+          <!-- Alamat -->
+          <div class="field-group sm:col-span-2">
+            <label for="id_address" class="field-label">Alamat</label>
+            <i class="field-icon fas fa-map-marker-alt" style="top:18px;transform:none;"></i>
+            <textarea name="address" id="id_address"
+                      class="field-input {% if form.address.errors %}has-error{% endif %}"
+                      placeholder="Alamat lengkap pelanggan...">{{ form.address.value|default:'' }}</textarea>
+            {% for err in form.address.errors %}<p class="field-error">{{ err }}</p>{% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ MEMBERSHIP ════ -->
+      <div>
+        <p class="form-section-title"><i class="fas fa-crown text-amber-400"></i> Membership & Loyalty</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+          <!-- Tier selector -->
+          <div class="sm:col-span-2">
+            <label class="field-label block mb-2">Loyalty Tier</label>
+            <div class="grid grid-cols-5 gap-2">
+              {% for tier_key, tier_label in tier_choices %}
+              <label class="tier-option">
+                <input type="radio" name="tier" value="{{ tier_key }}"
+                       {% if form.tier.value == tier_key or not form.tier.value and tier_key == 'regular' %}checked{% endif %}>
+                <span class="tier-option-label">
+                  <span class="tier-emoji">{% if tier_key == 'vip' %}👑{% elif tier_key == 'gold' %}⭐{% elif tier_key == 'platinum' %}💎{% elif tier_key == 'silver' %}🥈{% else %}👤{% endif %}</span>
+                  {{ tier_label }}
+                </span>
+              </label>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Initial points (create only) -->
+          {% if not form.instance.pk %}
+          <div class="field-group">
+            <label for="id_initial_points" class="field-label">Poin Awal</label>
+            <i class="field-icon fas fa-coins"></i>
+            <input type="number" name="initial_points" id="id_initial_points"
+                   value="{{ form.initial_points.value|default:0 }}"
+                   class="field-input" min="0" placeholder="0">
+            <p class="text-[10px] text-slate-400 mt-1">Kosongkan jika 0</p>
+          </div>
+          {% endif %}
+
+          <!-- Points expiry -->
+          <div class="field-group">
+            <label for="id_points_expiry" class="field-label">Tanggal Kadaluarsa Poin ⏰</label>
+            <i class="field-icon fas fa-clock"></i>
+            <input type="text" name="points_expiry" id="id_points_expiry"
+                   value="{{ form.points_expiry.value|default:'' }}"
+                   class="field-input" placeholder="Opsional" readonly>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ ISELLER INTEGRATION ════ -->
+      <div>
+        <p class="form-section-title"><i class="fas fa-plug text-blue-400"></i> Integrasi iSeller</p>
+        <div class="iseller-note mb-3 flex items-start gap-2">
+          <i class="fas fa-info-circle mt-0.5 flex-shrink-0"></i>
+          <span>Masukkan Customer ID dari iSeller agar riwayat transaksi tersinkronisasi otomatis. Jika dikosongkan, sinkronisasi tidak akan berjalan untuk pelanggan ini.</span>
+        </div>
+        <div class="field-group" style="max-width:240px;">
+          <label for="id_iseller_id" class="field-label">iSeller Customer ID</label>
+          <i class="field-icon fas fa-link"></i>
+          <input type="text" name="iseller_id" id="id_iseller_id"
+                 value="{{ form.iseller_id.value|default:'' }}"
+                 class="field-input {% if form.iseller_id.errors %}has-error{% endif %}"
+                 placeholder="CUS-XXXXXXXX">
+          {% for err in form.iseller_id.errors %}<p class="field-error">{{ err }}</p>{% endfor %}
+        </div>
+      </div>
+
+      <!-- ════ NOTES ════ -->
+      <div>
+        <p class="form-section-title"><i class="fas fa-sticky-note text-violet-400"></i> Catatan Tambahan</p>
+        <div class="field-group">
+          <i class="field-icon fas fa-comment" style="top:18px;transform:none;"></i>
+          <textarea name="notes" id="id_notes"
+                    class="field-input"
+                    placeholder="Preferensi minuman, alergi, atau catatan khusus...">{{ form.notes.value|default:'' }}</textarea>
+        </div>
+      </div>
+
+      <!-- ════ SUBMIT ════ -->
+      <div class="flex flex-col sm:flex-row gap-3 pt-2">
+        <button type="submit" class="btn-submit flex-1">
+          <i class="fas fa-{% if form.instance.pk %}save{% else %}user-plus{% endif %} mr-2"></i>
+          {% if form.instance.pk %}Simpan Perubahan{% else %}Tambah Pelanggan{% endif %}
+        </button>
+        <a href="{% if form.instance.pk %}{% url 'customer_detail' form.instance.pk %}{% else %}{% url 'customer_list' %}{% endif %}"
+           class="btn-cancel sm:w-auto">
+          Batal
+        </a>
+      </div>
+
+    </div>
+  </form>
+
+</div>
+
+<div id="loadingIndicator" class="fixed inset-0 hidden z-50 flex items-center justify-center" style="background:rgba(255,255,255,0.7);backdrop-filter:blur(8px);">
+  <div class="flex items-center gap-3 bg-white px-5 py-3.5 rounded-2xl shadow-xl border border-slate-100">
+    <svg class="w-5 h-5 animate-spin text-emerald-500" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+    </svg>
+    <span class="text-sm font-semibold text-slate-600">Menyimpan...</span>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function customerForm() {
+  return {
+    initials: '{{ form.name.value|default:"?"|slice:":2"|upper }}',
+
+    init() {
+      /* Scroll reveal */
+      const io = new IntersectionObserver(entries => {
+        entries.forEach((e,i) => { if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('visible'),i*70); io.unobserve(e.target); } });
+      }, {threshold:.06});
+      document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+      /* Flatpickr for birth date */
+      flatpickr('#id_birth_date', {
+        dateFormat: 'Y-m-d',
+        maxDate: 'today',
+        defaultDate: '{{ form.birth_date.value|default:"" }}' || null,
+      });
+
+      /* Flatpickr for points expiry */
+      flatpickr('#id_points_expiry', {
+        dateFormat: 'Y-m-d',
+        minDate: 'today',
+        defaultDate: '{{ form.points_expiry.value|default:"" }}' || null,
+      });
+    },
+
+    updateInitials(name) {
+      const parts = name.trim().split(/\s+/);
+      if (parts.length >= 2) this.initials = (parts[0][0] + parts[1][0]).toUpperCase();
+      else if (parts[0]) this.initials = parts[0].slice(0, 2).toUpperCase();
+      else this.initials = '?';
+    },
+
+    formatWA(e) {
+      // Strip leading 0 or +62
+      let val = e.target.value.replace(/\D/g, '');
+      if (val.startsWith('62')) val = val.slice(2);
+      if (val.startsWith('0')) val = val.slice(1);
+      e.target.value = val;
+    },
+
+    onSubmit() {
+      document.getElementById('loadingIndicator').classList.remove('hidden');
+    },
+  };
+}
+</script>
+{% endblock %}

@@ -1,0 +1,352 @@
+{
+  "filename": "users.html",
+  "title": "Users & Roles",
+  "components": [
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "w-full flex-1 relative z-10 space-y-6",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": "usersDirectory()"
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "flex items-end justify-between gap-4 flex-wrap",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h1",
+      "label": "HEADING (H1)",
+      "depth": 4,
+      "path": "root/body/div/div/div/h1",
+      "classes": "text-3xl font-bold text-slate-900 mt-1",
+      "text_preview": "Users & Roles",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "a",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/a",
+      "classes": "inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [GRID 1 cols]",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "GRID 1 cols",
+      "is_interactive": false,
+      "children_count": 4,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "panel p-5",
+      "text_preview": "Total User {{ total_users|default:0 }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "panel p-5",
+      "text_preview": "Aktif {{ online_count|default:0 }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "panel p-5",
+      "text_preview": "Admin Role {{ admin_count|default:0 }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "panel p-5",
+      "text_preview": "2FA Aktif {{ twofa_count|default:0 }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "card",
+      "tag": "div",
+      "label": "CARD",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "panel p-5",
+      "text_preview": "user ditemukan User Role Lokasi Status Last Login Belum ada user yang cocok deng…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "flex flex-col gap-3 md:flex-row md:items-center md:justify-between",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (column)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "input",
+      "tag": "input",
+      "label": "INPUT [search] Cari nama, email, atau role...",
+      "depth": 4,
+      "path": "root/body/div/div/div/input",
+      "classes": "w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm outline-none focus:border-emerald-400 md:max-w-sm",
+      "text_preview": "Cari nama, email, atau role...",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": true,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "table",
+      "tag": "table",
+      "label": "[ TABLE ]",
+      "depth": 4,
+      "path": "root/body/div/div/div/table",
+      "classes": "min-w-full text-sm",
+      "text_preview": "User Role Lokasi Status Last Login Belum ada user yang cocok dengan pencarian.",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "badge",
+      "tag": "span",
+      "label": "BADGE / STATUS",
+      "depth": 9,
+      "path": "root/body/div/div/div/table/tbody/template/tr/td/span",
+      "classes": "status-pill",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/h1",
+      "type": "heading",
+      "label": "HEADING (H1)",
+      "text_preview": "Users & Roles"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/a",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [GRID 1 cols]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "Total User {{ total_users|default:0 }}"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "Aktif {{ online_count|default:0 }}"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "Admin Role {{ admin_count|default:0 }}"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "2FA Aktif {{ twofa_count|default:0 }}"
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "card",
+      "label": "CARD",
+      "text_preview": "user ditemukan User Role Lokasi Status Last Login Belum ada user yang cocok deng…"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/input",
+      "type": "input",
+      "label": "INPUT [search] Cari nama, email, atau role...",
+      "text_preview": "Cari nama, email, atau role..."
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/table",
+      "type": "table",
+      "label": "[ TABLE ]",
+      "text_preview": "User Role Lokasi Status Last Login Belum ada user yang cocok dengan pencarian."
+    },
+    {
+      "depth": 9,
+      "path": "root/body/div/div/div/table/tbody/template/tr/td/span",
+      "type": "badge",
+      "label": "BADGE / STATUS",
+      "text_preview": ""
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 14,
+    "by_type": {
+      "layout": 5,
+      "heading": 1,
+      "card": 5,
+      "input": 1,
+      "table": 1,
+      "badge": 1
+    },
+    "interactive": 1,
+    "with_scroll": 0,
+    "with_form_fields": 4,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

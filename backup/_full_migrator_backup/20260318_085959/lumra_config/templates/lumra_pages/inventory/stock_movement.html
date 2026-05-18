@@ -1,0 +1,1031 @@
+{% extends 'base/base.html' %}
+{% block title %}Stock Movement — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: var(--shadow-sm-16) !important; }
+
+  :root {
+    --glass-bg    : var(--color-white-a074);
+    --glass-blur  : var(--backdrop-blur-20px-saturate-160);
+    --glass-border: var(--color-white-a020);
+    --r           : 18px;
+  }
+
+  @keyframes drift {
+    0%,100%{ transform:translate(0,0) scale(1); }
+    50%    { transform:translate(25px,20px) scale(1.04); }
+  }
+
+  .stat-card {
+    background:var(--color-white-a072);
+    backdrop-filter:var(--backdrop-var-glass-blur);
+    border:1px solid var(--glass-border);
+    border-radius:16px; padding:18px 20px;
+    transition:box-shadow .2s,transform .2s;
+    position:relative; overflow:hidden;
+  }
+
+  .stat-card:hover { box-shadow:0 8px 28px var(--color-black-a09); transform:translateY(-2px); }
+
+  .stat-card::before {
+    content:''; position:absolute; top:0; right:0;
+    width:60px; height:60px; border-radius:0 16px 0 60px; opacity:.07;
+  }
+
+  .stat-card.blue::before   { background:var(--color-2563eb); }
+
+  .stat-card.purple::before { background:var(--color-7c3aed); }
+
+  .stat-card.amber::before  { background:var(--color-f59e0b); }
+
+  .stat-card.emerald::before{ background:var(--color-emerald-700); }
+
+  .stat-icon {
+    width:38px; height:38px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:15px; flex-shrink:0;
+  }
+
+  @keyframes amber-pulse {
+    0%,100%{ box-shadow:0 0 0 0 var(--color-rgba-245-158-11-a35); }
+    50%    { box-shadow:0 0 0 6px var(--color-rgba-245-158-11-a0); }
+  }
+
+  .amber-pulse { animation:amber-pulse 2s ease-in-out infinite; }
+
+  .search-input {
+    background:var(--color-white-a6);
+    border:1px solid var(--color-slate-300-a5);
+    border-radius:12px;
+    transition:background .15s,border-color .15s,box-shadow .15s;
+  }
+
+  .search-input:focus {
+    background:var(--color-fff); border-color:var(--color-rgba-37-99-235-a4);
+    box-shadow:0 0 0 3px var(--color-rgba-37-99-235-a08); outline:var(--shadow-sm-16);
+  }
+
+  .mov-row {
+    border-bottom:1px solid var(--color-slate-200-a6);
+    transition:background .15s;
+  }
+
+  .mov-row:last-of-type { border-bottom:var(--shadow-sm-16); }
+
+  .mov-row:hover td { background:var(--color-slate-50-a6-2) !important; }
+
+  .pill {
+    display:inline-flex; align-items:center; gap:5px;
+    padding:4px 10px; border-radius:99px;
+    font-size:9px; font-weight:900; text-transform:uppercase; letter-spacing:.08em;
+  }
+
+  .pill-draft   { background:var(--color-rgba-245-158-11-a1); border:1px solid var(--color-rgba-245-158-11-a25); color:var(--color-b45309); }
+
+  .pill-approved{ background:var(--color-emerald-600-a1);  border:1px solid var(--color-emerald-600-a25); color:var(--color-emerald-950); }
+
+  .pill-shipped { background:var(--color-rgba-37-99-235-a1);   border:1px solid var(--color-rgba-37-99-235-a25);  color:var(--color-1d4ed8); }
+
+  .pill-received{ background:var(--color-emerald-600-a12); border:1px solid var(--color-emerald-600-a3);  color:var(--color-emerald-700); }
+
+  .pill-rejected{ background:var(--color-rgba-244-63-94-a08);  border:1px solid var(--color-rgba-244-63-94-a2);   color:var(--color-be185d); }
+
+  .type-po       { color:var(--color-3b82f6); }
+
+  .type-transfer { color:var(--color-8b5cf6); }
+
+  .type-adj      { color:var(--color-f59e0b); }
+
+  .type-out      { color:var(--color-f43f5e); }
+
+  .flow-arrow { display:flex; align-items:center; gap:0; }
+
+  .flow-dot-grey  { width:8px; height:8px; border-radius:50%; background:var(--color-slate-200); flex-shrink:0; }
+
+  .flow-dot-green {
+    width:8px; height:8px; border-radius:50%; background:var(--color-emerald-600); flex-shrink:0;
+    box-shadow:0 0 8px var(--color-emerald-600-a45);
+  }
+
+  .flow-line { flex:1; height:1px; border-top:1.5px dashed var(--color-slate-200); min-width:28px; }
+
+  .step-done   { background:var(--color-emerald-600); color:var(--color-fff); box-shadow:0 0 12px var(--color-emerald-600-a4); }
+
+  .step-active { background:var(--color-2563eb); color:var(--color-fff); box-shadow:0 0 12px var(--color-rgba-37-99-235-a4);  }
+
+  .step-todo   { background:var(--color-fff); border:2px solid var(--color-slate-200); color:var(--color-slate-400); }
+
+  .step-line-done { background:var(--color-emerald-600); }
+
+  .step-line-todo { background:var(--color-slate-200); }
+
+  @keyframes slideIn { from{transform:translateX(100%)} to{transform:translateX(0)} }
+
+  .slide-in { animation:slideIn .28s cubic-bezier(.22,1,.36,1); }
+
+  .bulk-bar {
+    background:var(--color-rgba-37-99-235-a92); backdrop-filter:var(--backdrop-blur-12px);
+    border-radius:14px; padding:10px 16px;
+    display:flex; align-items:center; gap:12px;
+    box-shadow:0 4px 20px var(--color-rgba-37-99-235-a30);
+    animation:slideUp .22s ease;
+  }
+
+  @keyframes slideUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:var(--shadow-sm-16)} }
+
+  .mov-check {
+    width:16px; height:16px; border-radius:5px; cursor:pointer;
+    border:1.5px solid var(--color-slate-300); background:var(--color-white-a7);
+    display:flex; align-items:center; justify-content:center;
+    transition:border-color .12s,background .12s;
+    flex-shrink:0;
+  }
+
+  .mov-check.checked { border-color:var(--color-2563eb); background:var(--color-2563eb); }
+
+  .btn-ghost {
+    border:1.5px solid var(--color-slate-200-a8);
+    border-radius:10px; background:var(--color-white-a6);
+    color:var(--color-slate-500); font-size:11px; font-weight:700;
+    padding:7px 14px; cursor:pointer;
+    transition:background .13s,border-color .13s;
+    display:flex; align-items:center; gap:6px;
+  }
+
+  .btn-ghost:hover { background:var(--color-fff); border-color:var(--color-slate-300); }
+
+  .custom-scroll::-webkit-scrollbar { width:4px; }
+
+  .custom-scroll::-webkit-scrollbar-track { background:transparent; }
+
+  .custom-scroll::-webkit-scrollbar-thumb { background:var(--color-slate-200); border-radius:99px; }
+
+  @keyframes toastIn  { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:var(--shadow-sm-16)} }
+
+  @keyframes toastOut { from{opacity:1} to{opacity:0;pointer-events:var(--shadow-sm-16)} }
+
+  .kbd {
+    display:inline-block; padding:1px 5px;
+    background:var(--color-slate-100); border:1px solid var(--color-slate-200); border-bottom-width:2px;
+    border-radius:5px; font-size:9px; font-weight:700; color:var(--color-slate-400); font-family:monospace;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!--{# Ambient blobs #}-->
+<div class="blob blob-a"></div>
+<div class="blob blob-b"></div>
+<div class="blob blob-c"></div>
+
+<div class="w-full flex-1 space-y-5 relative z-10"
+     x-data="stockMovement()"
+     x-init="init()"
+     x-cloak
+     @keydown.window="handleKey($event)">
+
+  <!--{# ══════════════════════════════════════
+     HEADER
+  ══════════════════════════════════════ #}-->
+  <div class="reveal flex items-end justify-between gap-3 flex-wrap">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-blue-500 mb-1">
+        <a href="{% url 'dashboard' %}" class="hover:text-blue-700 transition-colors">Dashboard</a>
+        <span class="text-slate-300">/</span>
+        <span class="text-slate-600 font-medium">Stock Movement</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800">
+        Stock <span class="text-blue-600">Movement</span>
+        <span class="ml-2 text-slate-300 font-light">Control Tower</span>
+      </h1>
+      <p class="text-sm text-slate-400 mt-0.5">
+        Lacak setiap pergerakan inventori ·
+        <span class="kbd">/</span> cari ·
+        <span class="kbd">A</span> bulk approve
+      </p>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <!--{# Export dropdown #}-->
+      <div class="relative" x-data="{open:false}">
+        <button @click="open=!open" class="btn-ghost">
+          <i class="fas fa-file-export text-[11px]"></i> Export
+          <i class="fas fa-chevron-down text-[9px] transition-transform" :class="open?'rotate-180':''"></i>
+        </button>
+        <div x-show="open" @click.outside="open=false"
+             x-transition:enter="transition ease-out duration-100"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             class="absolute right-0 top-full mt-2 w-44 glass z-20 overflow-hidden"
+             style="display:none;">
+          <a href="{% url 'stock_movement_export' %}?format=csv{{ request.GET.urlencode|add:'&' }}"
+             class="flex items-center gap-3 px-4 py-3 text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 transition">
+            <i class="fas fa-file-csv text-emerald-500 w-4"></i> CSV
+          </a>
+          <a href="{% url 'stock_movement_export' %}?format=excel{{ request.GET.urlencode|add:'&' }}"
+             class="flex items-center gap-3 px-4 py-3 text-[11px] font-semibold text-slate-600 hover:bg-emerald-50 transition border-t border-slate-100/60">
+            <i class="fas fa-file-excel text-emerald-500 w-4"></i> Excel
+          </a>
+        </div>
+      </div>
+
+      <!--{# Add movement #}-->
+      <a href="{% url 'add_stock_movement' %}" class="btn-primary">
+        <i class="fas fa-plus text-[11px]"></i> Tambah Movement
+      </a>
+    </div>
+  </div>
+
+  <!--{# ══════════════════════════════════════
+     STAT CARDS — Movement Radar
+  ══════════════════════════════════════ #}-->
+  <div class="reveal grid grid-cols-2 sm:grid-cols-4 gap-3">
+
+    <!--{# Total #}-->
+    <div class="stat-card blue flex items-center gap-3">
+      <div class="stat-icon bg-blue-50 text-blue-600"><i class="fas fa-exchange-alt"></i></div>
+      <div>
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Total</p>
+        <p class="text-2xl font-bold text-slate-800">{{ total_movements|default:0 }}</p>
+        <p class="text-[10px] text-slate-400 mt-0.5">This period</p>
+      </div>
+    </div>
+
+    <!--{# Inbound (Vendor / PO) — Deep Blue #}-->
+    <div class="stat-card blue flex items-center gap-3">
+      <div class="stat-icon bg-blue-50 text-blue-600"><i class="fas fa-arrow-circle-down"></i></div>
+      <div>
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Inbound</p>
+        <p class="text-2xl font-bold text-blue-600">{{ stock_in_count|default:0 }}</p>
+        <p class="text-[10px] text-blue-400 font-semibold mt-0.5">Dari vendor / PO</p>
+      </div>
+    </div>
+
+    <!--{# Stock Out — Rose #}-->
+    <div class="stat-card" style="background:rgba(255,255,255,0.72);backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);border-radius:16px;padding:18px 20px;transition:box-shadow .2s,transform .2s;position:relative;overflow:hidden;"
+         onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 28px rgba(0,0,0,.09)'"
+         onmouseleave="this.style.transform='';this.style.boxShadow=''">
+      <div style="position:absolute;top:0;right:0;width:60px;height:60px;border-radius:0 16px 0 60px;opacity:.07;background:#f43f5e;"></div>
+      <div class="flex items-center gap-3">
+        <div class="stat-icon bg-rose-50 text-rose-500"><i class="fas fa-arrow-circle-up"></i></div>
+        <div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Stock Out</p>
+          <p class="text-2xl font-bold text-rose-500">{{ stock_out_count|default:0 }}</p>
+          <p class="text-[10px] text-rose-400 font-semibold mt-0.5">Keluar / terjual</p>
+        </div>
+      </div>
+    </div>
+
+    <!--{# Pending Drafts — Amber pulse #}-->
+    <div class="stat-card amber flex items-center gap-3">
+      <div class="stat-icon bg-amber-50 text-amber-500 amber-pulse"><i class="fas fa-hourglass-half"></i></div>
+      <div>
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Pending</p>
+        <p class="text-2xl font-bold text-amber-600">{{ pending_count|default:0 }}</p>
+        <p class="text-[10px] text-amber-500 font-semibold mt-0.5">Butuh perhatian</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!--{# ══════════════════════════════════════
+     SEARCH & FILTER TOOLBAR
+  ══════════════════════════════════════ #}-->
+  <div class="reveal glass px-5 py-4">
+    <form method="GET" action="" class="flex flex-col sm:flex-row items-start sm:items-center gap-3 flex-wrap">
+
+      <!--{# Search #}-->
+      <div class="relative flex-1 min-w-[200px]">
+        <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-300 text-[12px] pointer-events-none"></i>
+        <input
+          id="searchInput" x-ref="searchInput"
+          type="text" name="q" value="{{ query|default:'' }}"
+          placeholder="Cari produk, referensi, atau SKU…"
+          class="search-input w-full pl-10 pr-14 py-2.5 text-[13px] font-semibold text-slate-700 placeholder-slate-300"
+        >
+        <span class="absolute right-3 top-1/2 -translate-y-1/2 kbd pointer-events-none">/</span>
+      </div>
+
+      <!--{# Type filter #}-->
+      <select name="type" class="search-input px-3 py-2.5 text-[12px] font-semibold text-slate-600 w-full sm:w-auto">
+        <option value=""           {% if not movement_type    %}selected{% endif %}>Semua Tipe</option>
+        <option value="in"         {% if movement_type == 'in'%}selected{% endif %}>📦 Stock In</option>
+        <option value="out"        {% if movement_type == 'out'%}selected{% endif %}>📤 Stock Out</option>
+        <option value="transfer"   {% if movement_type == 'transfer'%}selected{% endif %}>🔀 Transfer</option>
+        <option value="adjustment" {% if movement_type == 'adjustment'%}selected{% endif %}>⚖️ Adjustment</option>
+      </select>
+
+      <!--{# Status filter #}-->
+      <select name="status" class="search-input px-3 py-2.5 text-[12px] font-semibold text-slate-600 w-full sm:w-auto">
+        <option value="">Semua Status</option>
+        <option value="draft"    {% if filter_status == 'draft'    %}selected{% endif %}>⏳ Draft</option>
+        <option value="approved" {% if filter_status == 'approved' %}selected{% endif %}>✅ Approved</option>
+        <option value="shipped"  {% if filter_status == 'shipped'  %}selected{% endif %}>🚚 Dikirim</option>
+        <option value="received" {% if filter_status == 'received' %}selected{% endif %}>📦 Diterima</option>
+        <option value="rejected" {% if filter_status == 'rejected' %}selected{% endif %}>❌ Ditolak</option>
+      </select>
+
+      <!--{# Date range #}-->
+      <input type="date" name="start_date" value="{{ start_date|default:'' }}"
+             class="search-input px-3 py-2.5 text-[12px] font-semibold text-slate-600 w-full sm:w-auto">
+      <input type="date" name="end_date" value="{{ end_date|default:'' }}"
+             class="search-input px-3 py-2.5 text-[12px] font-semibold text-slate-600 w-full sm:w-auto">
+
+      <div class="flex gap-2">
+        <button type="submit"
+                class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[12px] font-bold text-white
+                       bg-gradient-to-r from-blue-600 to-indigo-600
+                       shadow-[0_4px_14px_rgba(37,99,235,.30)]
+                       hover:opacity-90 transition">
+          <i class="fas fa-search text-[10px]"></i> Filter
+        </button>
+        <a href="{% url 'stock_movement' %}"
+           class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[12px] font-bold text-slate-500 border border-slate-200/80 hover:bg-white transition" style="background:var(--color-surface)">
+          <i class="fas fa-times text-[10px]"></i> Reset
+        </a>
+      </div>
+    </form>
+  </div>
+
+  <!--{# ══════════════════════════════════════
+     BULK ACTION BAR (shown when rows selected)
+  ══════════════════════════════════════ #}-->
+  <div x-show="selected.length > 0" x-cloak style="display:none;">
+    <div class="bulk-bar">
+      <span class="text-white text-[12px] font-black" x-text="selected.length+' dipilih'"></span>
+      <button @click="bulkApprove()"
+              class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/20 border border-white/30 text-white text-[11px] font-black hover:bg-white/30 transition">
+        <i class="fas fa-check-double text-[11px]"></i> Approve Semua
+      </button>
+      <button @click="bulkReject()"
+              class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white/80 text-[11px] font-bold hover:bg-white/20 transition">
+        <i class="fas fa-times text-[10px]"></i> Tolak Semua
+      </button>
+      <button @click="selected=[]"
+              class="ml-auto w-7 h-7 rounded-xl flex items-center justify-center text-white/60 hover:text-white hover:bg-white/20 transition text-[11px]">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <!--{# ══════════════════════════════════════
+     MOVEMENT TRACKER TABLE
+  ══════════════════════════════════════ #}-->
+  <div class="reveal glass overflow-hidden">
+
+    <!--{# Toolbar #}-->
+    <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100/60 bg-white/30">
+      <div class="flex items-center gap-3">
+        <div class="w-1.5 h-6 bg-blue-500 rounded-full"></div>
+        <div>
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.12em]">Movement Tracker</p>
+          <p class="text-[12px] font-bold text-slate-700 mt-0.5">
+            {% if is_paginated %}
+              Hal. {{ page_obj.number }} dari {{ page_obj.paginator.num_pages }}
+              · <span class="text-slate-400 font-normal">{{ page_obj.paginator.count }} record</span>
+            {% else %}
+              {{ movements|length }} record
+            {% endif %}
+          </p>
+        </div>
+      </div>
+
+      <!--{# Select all checkbox #}-->
+      <div class="flex items-center gap-2">
+        <span class="text-[10px] text-slate-400 font-semibold">Pilih Semua</span>
+        <div class="mov-check" :class="{checked: allSelected}"
+             @click="toggleAll()"
+             role="checkbox" :aria-checked="allSelected.toString()">
+          <template x-if="allSelected">
+            <i class="fas fa-check text-white text-[8px]"></i>
+          </template>
+        </div>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full border-separate border-spacing-0" aria-label="Stock Movement Records">
+
+        <!--{# ── THEAD ── #}-->
+        <thead>
+          <tr class="sticky top-0 z-10 backdrop-blur-md" style="background:var(--color-bg)">
+            <th class="px-4 py-3.5 w-8"></th><!--{# checkbox #}-->
+            <th class="px-5 py-3.5 text-left">
+              <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Ref / Tipe</span>
+            </th>
+            <th class="px-5 py-3.5 text-left">
+              <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Produk</span>
+            </th>
+            <th class="px-5 py-3.5 text-left">
+              <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Rute</span>
+            </th>
+            <th class="px-5 py-3.5 text-center">
+              <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</span>
+            </th>
+            <th class="px-5 py-3.5 text-right">
+              <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Qty</span>
+            </th>
+            <th class="px-5 py-3.5 text-left">
+              <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tanggal</span>
+            </th>
+            <th class="px-5 py-3.5 text-left">
+              <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">User</span>
+            </th>
+            <th class="px-5 py-3.5 w-10"></th><!--{# detail btn #}-->
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for movement in movements %}
+          <!--{# ── ROW ── #}-->
+          <tr class="mov-row group {% if forloop.counter|divisibleby:2 %}bg-slate-50/20{% endif %}"
+              data-mov-id="{{ movement.id }}">
+
+            <!--{# Checkbox #}-->
+            <td class="px-4 py-4">
+              <div class="mov-check"
+                   :class="{checked: selected.includes('{{ movement.id }}')}"
+                   @click="toggleRow('{{ movement.id }}')"
+                   role="checkbox"
+                   :aria-checked="selected.includes('{{ movement.id }}').toString()">
+                <template x-if="selected.includes('{{ movement.id }}')">
+                  <i class="fas fa-check text-white text-[8px]"></i>
+                </template>
+              </div>
+            </td>
+
+            <!--{# Ref + Type #}-->
+            <td class="px-5 py-4">
+              <div class="leading-tight">
+                <span class="text-[9px] font-black uppercase tracking-widest
+                  {% if movement.type == 'in' %}type-po
+                  {% elif movement.type == 'out' %}type-out
+                  {% elif movement.type == 'adjustment' %}type-adj
+                  {% else %}type-transfer{% endif %}">
+                  {% if movement.type == 'in' %}PO / Inbound
+                  {% elif movement.type == 'out' %}Stock Out
+                  {% elif movement.type == 'adjustment' %}Adjustment
+                  {% else %}Transfer{% endif %}
+                </span>
+                <span class="block text-[11px] font-black text-slate-700 mt-0.5">
+                  #{{ movement.reference|default:"MOV-"|add:movement.id }}
+                </span>
+              </div>
+            </td>
+
+            <!--{# Product + SKU #}-->
+            <td class="px-5 py-4">
+              <p class="text-[11px] font-bold text-slate-700 group-hover:text-slate-900 transition-colors truncate max-w-[160px]"
+                 title="{{ movement.variant.product.name|default:movement.product.name }}">
+                {{ movement.variant.product.name|default:movement.product.name }}
+              </p>
+              <p class="text-[9px] font-mono text-slate-300 mt-0.5">
+                {{ movement.variant.sku|default:movement.reference|default:"—" }}
+              </p>
+            </td>
+
+            <!--{# Route: Origin → Destination #}-->
+            <td class="px-5 py-4">
+              <div class="flex items-center gap-1.5">
+                <div class="flex flex-col items-end">
+                  <span class="text-[10px] font-bold text-slate-600 whitespace-nowrap">
+                    {{ movement.source_location|default:"Vendor" }}
+                  </span>
+                  <span class="text-[8px] text-slate-300 uppercase tracking-wider">Origin</span>
+                </div>
+                <!--{# Arrow #}-->
+                <div class="flow-arrow flex-shrink-0">
+                  <div class="flow-dot-grey"></div>
+                  <div class="flow-line"></div>
+                  <i class="fas fa-chevron-right text-[8px] text-slate-300 -mx-0.5"></i>
+                  <div class="flow-dot-green"></div>
+                </div>
+                <div class="flex flex-col items-start">
+                  <span class="text-[10px] font-bold text-slate-600 whitespace-nowrap">
+                    {{ movement.destination_location|default:"Gudang" }}
+                  </span>
+                  <span class="text-[8px] text-slate-300 uppercase tracking-wider">Dest.</span>
+                </div>
+              </div>
+            </td>
+
+            <!--{# Status pill #}-->
+            <td class="px-5 py-4 text-center">
+              <span class="pill
+                {% if movement.status == 'draft'    %}pill-draft
+                {% elif movement.status == 'approved' %}pill-approved
+                {% elif movement.status == 'shipped'  %}pill-shipped
+                {% elif movement.status == 'received' %}pill-received
+                {% else %}pill-rejected{% endif %}">
+                <span class="w-1.5 h-1.5 rounded-full inline-block
+                  {% if movement.status == 'draft'    %}bg-amber-400
+                  {% elif movement.status == 'approved' %}bg-emerald-400
+                  {% elif movement.status == 'shipped'  %}bg-blue-400
+                  {% elif movement.status == 'received' %}bg-emerald-500
+                  {% else %}bg-rose-400{% endif %}">
+                </span>
+                {{ movement.status|default:"draft"|title }}
+              </span>
+            </td>
+
+            <!--{# Qty #}-->
+            <td class="px-5 py-4 text-right">
+              <span class="text-[12px] font-black
+                {% if movement.type == 'in' %}text-blue-600
+                {% elif movement.type == 'out' %}text-rose-500
+                {% else %}text-amber-600{% endif %}
+                group-hover:opacity-100 transition">
+                {% if movement.type == 'in' %}+{% elif movement.type == 'out' %}−{% endif %}{{ movement.quantity }}
+              </span>
+            </td>
+
+            <!--{# Date — two-line #}-->
+            <td class="px-5 py-4">
+              <span class="block text-[11px] font-bold text-slate-600">{{ movement.date|date:"d M Y" }}</span>
+              <span class="block text-[9px] text-slate-300 uppercase tracking-wider mt-0.5">{{ movement.date|date:"H:i" }} WIB</span>
+            </td>
+
+            <!--{# User #}-->
+            <td class="px-5 py-4">
+              <div class="flex items-center gap-1.5">
+                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500
+                            flex items-center justify-center text-white text-[9px] font-black flex-shrink-0">
+                  {{ movement.user.username|slice:":1"|upper }}
+                </div>
+                <span class="text-[11px] font-semibold text-slate-500 hidden sm:block">{{ movement.user.get_short_name|default:movement.user.username }}</span>
+              </div>
+            </td>
+
+            <!--{# Detail button #}-->
+            <td class="px-4 py-4">
+              <button
+                @click="openDetail('{{ movement.id }}')"
+                class="w-7 h-7 rounded-xl flex items-center justify-center
+                       text-slate-200 hover:text-blue-500 hover:bg-blue-50
+                       opacity-0 group-hover:opacity-100 transition-all"
+                title="Lihat detail">
+                <i class="fas fa-external-link-alt text-[10px]"></i>
+              </button>
+            </td>
+
+          </tr>
+          {% empty %}
+
+          <!--{# ── EMPTY STATE ── #}-->
+          <tr>
+            <td colspan="9" class="px-6 py-0">
+              <div class="flex flex-col items-center justify-center py-20 text-center select-none">
+                <svg width="120" height="90" viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-5 opacity-50">
+                  <!--{# Warehouse #}-->
+                  <rect x="15" y="35" width="60" height="44" rx="4" stroke="#bfdbfe" stroke-width="2" fill="rgba(239,246,255,0.7)"/>
+                  <path d="M15 42l30-20 30 20" stroke="#bfdbfe" stroke-width="2" fill="none"/>
+                  <!--{# Door #}-->
+                  <rect x="35" y="58" width="20" height="21" rx="3" stroke="#bfdbfe" stroke-width="1.5" fill="rgba(255,255,255,0.6)"/>
+                  <!--{# Arrow left→right #}-->
+                  <line x1="82" y1="52" x2="108" y2="52" stroke="#c7d2fe" stroke-width="2" stroke-dasharray="4 3" stroke-linecap="round"/>
+                  <path d="M104 47l6 5-6 5" stroke="#c7d2fe" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                  <!--{# Search dot #}-->
+                  <circle cx="100" cy="30" r="12" stroke="#bfdbfe" stroke-width="2" fill="rgba(239,246,255,.8)"/>
+                  <line x1="109" y1="39" x2="116" y2="46" stroke="#bfdbfe" stroke-width="2.5" stroke-linecap="round"/>
+                  <line x1="95" y1="25" x2="105" y2="35" stroke="#dbeafe" stroke-width="1.5" stroke-linecap="round"/>
+                  <line x1="105" y1="25" x2="95" y2="35" stroke="#dbeafe" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <p class="text-[14px] font-black text-slate-400 tracking-tight">No Movement Records</p>
+                <p class="text-[11px] text-slate-300 mt-1.5 max-w-xs leading-relaxed">
+                  Belum ada pergerakan stok untuk filter yang aktif.<br>
+                  Coba ubah rentang tanggal atau tipe movement.
+                </p>
+                <div class="flex items-center gap-2 mt-5 flex-wrap justify-center">
+                  <span class="px-3 py-1 rounded-full border border-slate-200/70 text-[9px] font-black text-slate-300 uppercase tracking-wider" style="background:var(--color-bg)">Tanggal</span>
+                  <span class="text-slate-200">·</span>
+                  <span class="px-3 py-1 rounded-full border border-slate-200/70 text-[9px] font-black text-slate-300 uppercase tracking-wider" style="background:var(--color-bg)">Tipe</span>
+                  <span class="text-slate-200">·</span>
+                  <span class="px-3 py-1 rounded-full border border-slate-200/70 text-[9px] font-black text-slate-300 uppercase tracking-wider" style="background:var(--color-bg)">Status</span>
+                </div>
+                <a href="{% url 'add_stock_movement' %}"
+                   class="mt-6 flex items-center gap-2 px-5 py-2.5 rounded-xl
+                          bg-gradient-to-r from-blue-600 to-indigo-600
+                          text-white text-[12px] font-bold
+                          shadow-[0_4px_14px_rgba(37,99,235,.25)]
+                          hover:opacity-90 transition">
+                  <i class="fas fa-plus text-[10px]"></i> Tambah Movement Pertama
+                </a>
+              </div>
+            </td>
+          </tr>
+
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!--{# ── PAGINATION ── #}-->
+    {% if is_paginated %}
+    <nav class="flex justify-center px-5 py-4 border-t border-slate-100/60">
+      <div class="flex items-center gap-1.5">
+        {% if page_obj.has_previous %}
+        <a href="?page=1&{{ request.GET.urlencode }}"
+           class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200/80 text-slate-500 hover:border-blue-400 hover:text-blue-600 transition text-[10px]" style="background:var(--color-surface)">
+          <i class="fas fa-angle-double-left"></i>
+        </a>
+        <a href="?page={{ page_obj.previous_page_number }}&{{ request.GET.urlencode }}"
+           class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200/80 text-slate-500 hover:border-blue-400 hover:text-blue-600 transition text-[10px]" style="background:var(--color-surface)">
+          <i class="fas fa-angle-left"></i>
+        </a>
+        {% endif %}
+
+        {% with c=page_obj.number t=page_obj.paginator.num_pages %}
+          {% if c > 4 %}
+            <a href="?page=1&{{ request.GET.urlencode }}" class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200/80 text-[11px] font-semibold text-slate-500 hover:border-blue-400 hover:text-blue-600 transition" style="background:var(--color-surface)">1</a>
+            <span class="text-slate-300 text-[11px]">…</span>
+          {% endif %}
+          {% for num in page_obj.paginator.page_range %}
+            {% if num >= c|add:"-3" and num <= c|add:"3" %}
+              {% if page_obj.number == num %}
+                <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-600 text-white text-[11px] font-black">{{ num }}</span>
+              {% else %}
+                <a href="?page={{ num }}&{{ request.GET.urlencode }}" class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200/80 text-[11px] font-semibold text-slate-500 hover:border-blue-400 hover:text-blue-600 transition" style="background:var(--color-surface)">{{ num }}</a>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+          {% if c < t|add:"-3" %}
+            <span class="text-slate-300 text-[11px]">…</span>
+            <a href="?page={{ t }}&{{ request.GET.urlencode }}" class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200/80 text-[11px] font-semibold text-slate-500 hover:border-blue-400 hover:text-blue-600 transition" style="background:var(--color-surface)">{{ t }}</a>
+          {% endif %}
+        {% endwith %}
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}&{{ request.GET.urlencode }}"
+           class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200/80 text-slate-500 hover:border-blue-400 hover:text-blue-600 transition text-[10px]" style="background:var(--color-surface)">
+          <i class="fas fa-angle-right"></i>
+        </a>
+        <a href="?page={{ page_obj.paginator.num_pages }}&{{ request.GET.urlencode }}"
+           class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200/80 text-slate-500 hover:border-blue-400 hover:text-blue-600 transition text-[10px]" style="background:var(--color-surface)">
+          <i class="fas fa-angle-double-right"></i>
+        </a>
+        {% endif %}
+      </div>
+    </nav>
+    {% endif %}
+
+  </div><!--{# end table glass card #}-->
+
+  <!--{# Toast #}-->
+  <div class="fixed top-5 right-5 z-[100] flex flex-col gap-2" id="toastContainer"></div>
+
+  <!--{# ══════════════════════════════════════
+     SLIDE-OVER — Movement Detail + Lifecycle
+  ══════════════════════════════════════ #}-->
+  <div x-show="showDetail"
+       x-transition:enter="transition ease-out duration-200"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       class="fixed inset-0 z-50 overflow-hidden"
+       style="display:none;">
+    <div class="absolute inset-0 bg-black/25 backdrop-blur-sm" @click="showDetail=false"></div>
+    <div class="absolute inset-y-0 right-0 flex">
+      <div class="slide-in glass w-full max-w-md flex flex-col h-full"
+           style="border-radius:20px 0 0 20px;">
+
+        <!--{# Header #}-->
+        <div class="px-5 py-4 border-b border-slate-100/60 flex items-center justify-between flex-shrink-0">
+          <div>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[.12em]">Movement Detail</p>
+            <p class="text-[14px] font-black text-slate-800 mt-0.5" x-text="detail.ref || '—'"></p>
+          </div>
+          <button @click="showDetail=false"
+                  class="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 hover:bg-slate-200 transition" style="background:var(--color-bg)">
+            <i class="fas fa-times text-[11px]"></i>
+          </button>
+        </div>
+
+        <!--{# Loading #}-->
+        <template x-if="detailLoading">
+          <div class="flex-1 flex items-center justify-center">
+            <i class="fas fa-circle-notch fa-spin text-blue-400 text-2xl"></i>
+          </div>
+        </template>
+
+        <template x-if="!detailLoading && detail.id">
+          <div class="flex-1 overflow-y-auto custom-scroll px-5 py-4 space-y-5">
+
+            <!--{# ── LIFECYCLE STEPPER ── #}-->
+            <div class="rounded-2xl p-5 border border-white/80" style="background:var(--color-bg)">
+              <p class="text-[9px] font-black text-slate-400 uppercase tracking-[.12em] mb-4">Lifecycle</p>
+              <div class="flex items-center">
+
+                <!--{# Draft #}-->
+                <div class="flex flex-col items-center gap-1.5 flex-shrink-0">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center"
+                       :class="stepDone('draft') ? 'step-done' : stepActive('draft') ? 'step-active' : 'step-todo'">
+                    <i class="fas fa-file-alt text-[10px]"></i>
+                  </div>
+                  <span class="text-[8px] font-black uppercase tracking-wider"
+                        :class="stepDone('draft')||stepActive('draft') ? 'text-slate-700' : 'text-slate-300'">Draft</span>
+                </div>
+
+                <div class="flex-1 h-[2px] mx-1.5" :class="stepDone('draft') ? 'step-line-done' : 'step-line-todo'"></div>
+
+                <!--{# Approved #}-->
+                <div class="flex flex-col items-center gap-1.5 flex-shrink-0">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center"
+                       :class="stepDone('approved') ? 'step-done' : stepActive('approved') ? 'step-active' : 'step-todo'">
+                    <i class="fas fa-check text-[10px]"></i>
+                  </div>
+                  <span class="text-[8px] font-black uppercase tracking-wider"
+                        :class="stepDone('approved')||stepActive('approved') ? 'text-slate-700' : 'text-slate-300'">Approved</span>
+                </div>
+
+                <div class="flex-1 h-[2px] mx-1.5" :class="stepDone('approved') ? 'step-line-done' : 'step-line-todo'"></div>
+
+                <!--{# Shipped #}-->
+                <div class="flex flex-col items-center gap-1.5 flex-shrink-0">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center"
+                       :class="stepDone('shipped') ? 'step-done' : stepActive('shipped') ? 'step-active' : 'step-todo'">
+                    <i class="fas fa-truck text-[10px]"></i>
+                  </div>
+                  <span class="text-[8px] font-black uppercase tracking-wider"
+                        :class="stepDone('shipped')||stepActive('shipped') ? 'text-slate-700' : 'text-slate-300'">Dikirim</span>
+                </div>
+
+                <div class="flex-1 h-[2px] mx-1.5" :class="stepDone('shipped') ? 'step-line-done' : 'step-line-todo'"></div>
+
+                <!--{# Received #}-->
+                <div class="flex flex-col items-center gap-1.5 flex-shrink-0">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center"
+                       :class="stepDone('received') ? 'step-done' : stepActive('received') ? 'step-active' : 'step-todo'">
+                    <i class="fas fa-check-double text-[10px]"></i>
+                  </div>
+                  <span class="text-[8px] font-black uppercase tracking-wider"
+                        :class="stepDone('received')||stepActive('received') ? 'text-slate-700' : 'text-slate-300'">Diterima</span>
+                </div>
+
+              </div>
+
+              <!--{# Rejected state overlay #}-->
+              <template x-if="detail.status==='rejected'">
+                <div class="mt-3 px-3 py-2 rounded-xl bg-rose-50 border border-rose-200/60 flex items-center gap-2">
+                  <i class="fas fa-times-circle text-rose-400 text-[12px]"></i>
+                  <div>
+                    <p class="text-[10px] font-black text-rose-600">Ditolak</p>
+                    <p class="text-[9px] text-rose-400 mt-0.5" x-text="detail.reject_reason || 'Tidak ada alasan tercatat'"></p>
+                  </div>
+                </div>
+              </template>
+            </div>
+
+            <!--{# ── INFO ── #}-->
+            <div class="grid grid-cols-2 gap-2.5">
+              <div class="px-4 py-3 rounded-xl border border-slate-100/70" style="background:var(--color-surface)">
+                <p class="text-[9px] font-black text-slate-300 uppercase tracking-wider">Tipe</p>
+                <p class="text-[12px] font-black text-slate-700 mt-0.5" x-text="detail.type_label||'—'"></p>
+              </div>
+              <div class="px-4 py-3 rounded-xl border border-slate-100/70" style="background:var(--color-surface)">
+                <p class="text-[9px] font-black text-slate-300 uppercase tracking-wider">Qty</p>
+                <p class="text-[12px] font-black mt-0.5"
+                   :class="detail.qty_sign==='+' ? 'text-blue-600' : 'text-rose-500'"
+                   x-text="(detail.qty_sign||'')+detail.quantity"></p>
+              </div>
+              <div class="px-4 py-3 rounded-xl border border-slate-100/70" style="background:var(--color-surface)">
+                <p class="text-[9px] font-black text-slate-300 uppercase tracking-wider">Origin</p>
+                <p class="text-[11px] font-bold text-slate-600 mt-0.5" x-text="detail.source||'—'"></p>
+              </div>
+              <div class="px-4 py-3 rounded-xl border border-slate-100/70" style="background:var(--color-surface)">
+                <p class="text-[9px] font-black text-slate-300 uppercase tracking-wider">Dest.</p>
+                <p class="text-[11px] font-bold text-slate-600 mt-0.5" x-text="detail.destination||'—'"></p>
+              </div>
+            </div>
+
+            <!--{# ── Smart Inspection: Items ── #}-->
+            <template x-if="detail.items && detail.items.length">
+              <div>
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-[.12em] mb-2">Smart Inspection</p>
+                <div class="space-y-1.5">
+                  <template x-for="item in detail.items" :key="item.id">
+                    <div class="flex items-center gap-3 px-4 py-3 rounded-xl border"
+                         :class="item.checked ? 'bg-emerald-50/60 border-emerald-200/60' : 'bg-white/50 border-slate-100/70'">
+                      <div class="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
+                           :class="item.checked ? 'bg-emerald-500' : 'bg-slate-100 border border-slate-200'">
+                        <template x-if="item.checked">
+                          <i class="fas fa-check text-white text-[8px]"></i>
+                        </template>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <p class="text-[11px] font-bold text-slate-700 truncate" x-text="item.name"></p>
+                        <p class="text-[9px] font-mono text-slate-400" x-text="item.sku"></p>
+                      </div>
+                      <div class="text-right flex-shrink-0">
+                        <p class="text-[11px] font-black text-slate-700" x-text="item.qty_actual+' / '+item.qty_expected"></p>
+                        <p class="text-[8px] text-slate-300 uppercase tracking-wider">aktual / PO</p>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </template>
+
+            <!--{# ── Notes ── #}-->
+            <template x-if="detail.notes">
+              <div class="px-4 py-3 rounded-xl border border-slate-100/70" style="background:var(--color-bg)">
+                <p class="text-[9px] font-black text-slate-300 uppercase tracking-wider mb-1">Catatan</p>
+                <p class="text-[11px] text-slate-500 leading-relaxed" x-text="detail.notes"></p>
+              </div>
+            </template>
+
+            <!--{# ── Actions ── #}-->
+            <template x-if="detail.status==='draft'">
+              <div class="flex gap-2 pt-2">
+                <button @click="approveMovement(detail.id)"
+                        class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl
+                               bg-gradient-to-r from-blue-600 to-indigo-600
+                               text-white text-[12px] font-black
+                               shadow-[0_4px_14px_rgba(37,99,235,.30)]
+                               hover:opacity-90 transition">
+                  <i class="fas fa-check-double text-[11px]"></i> Approve
+                </button>
+                <button @click="rejectMovement(detail.id)"
+                        class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl
+                               border border-rose-200 bg-rose-50/60 text-rose-500
+                               text-[12px] font-black hover:bg-rose-100/60 transition">
+                  <i class="fas fa-times text-[10px]"></i> Tolak
+                </button>
+              </div>
+            </template>
+
+          </div>
+        </template>
+
+      </div>
+    </div>
+  </div>
+
+</div><!--{# end x-data #}-->
+{% endblock %}
+
+{% block scripts %}
+<script>
+function stockMovement() {
+  return {
+
+    selected     : [],
+    showDetail   : false,
+    detailLoading: false,
+    detail       : {},
+
+    /* ── Lifecycle step helpers ── */
+    stepOrder: ['draft','approved','shipped','received'],
+    stepDone(step) {
+      const cur = this.stepOrder.indexOf(this.detail.status);
+      const tgt = this.stepOrder.indexOf(step);
+      return cur > tgt;
+    },
+    stepActive(step) { return this.detail.status === step; },
+
+    /* ── Init ── */
+    init() {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach((e,i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i * 60);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold:.08 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    },
+
+    /* ── Keyboard ── */
+    handleKey(e) {
+      const typing = ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName);
+      if (e.key==='/' && !typing) { e.preventDefault(); document.getElementById('searchInput')?.focus(); }
+      if (e.key==='a' && !typing && this.selected.length) { e.preventDefault(); this.bulkApprove(); }
+      if (e.key==='Escape') { this.showDetail=false; }
+    },
+
+    /* ── Row selection ── */
+    toggleRow(id) {
+      const i = this.selected.indexOf(id);
+      i >= 0 ? this.selected.splice(i,1) : this.selected.push(id);
+    },
+    get allSelected() {
+      /* check against rendered rows — compare length as proxy */
+      return this.selected.length > 0;
+    },
+    toggleAll() {
+      /* Collect IDs from visible rows via data attributes */
+      const ids = [...document.querySelectorAll('[data-mov-id]')].map(el=>el.dataset.movId);
+      if (this.selected.length === ids.length) { this.selected = []; }
+      else { this.selected = [...ids]; }
+    },
+
+    /* ── Bulk actions ── */
+    bulkApprove() {
+      if (!this.selected.length) return;
+      this._post('/api/stock-movement/bulk-approve/', { ids: this.selected })
+        .then(d => {
+          if (d.success) {
+            this._toast(`${this.selected.length} movement diapprove`);
+            this.selected = [];
+            setTimeout(() => location.reload(), 900);
+          } else { this._toast(d.message||'Gagal', 'error'); }
+        });
+    },
+    bulkReject() {
+      if (!this.selected.length) return;
+      this._post('/api/stock-movement/bulk-reject/', { ids: this.selected })
+        .then(d => {
+          if (d.success) {
+            this._toast(`${this.selected.length} movement ditolak`, 'warn');
+            this.selected = [];
+            setTimeout(() => location.reload(), 900);
+          } else { this._toast(d.message||'Gagal', 'error'); }
+        });
+    },
+
+    /* ── Single actions ── */
+    approveMovement(id) {
+      this._post('/api/stock-movement/approve/', { id })
+        .then(d => {
+          if (d.success) {
+            this.detail.status = 'approved';
+            this._toast('Movement diapprove');
+          } else { this._toast(d.message||'Gagal', 'error'); }
+        });
+    },
+    rejectMovement(id) {
+      const reason = prompt('Alasan penolakan (opsional):') || '';
+      this._post('/api/stock-movement/reject/', { id, reason })
+        .then(d => {
+          if (d.success) {
+            this.detail.status = 'rejected';
+            this.detail.reject_reason = reason;
+            this._toast('Movement ditolak', 'warn');
+          } else { this._toast(d.message||'Gagal', 'error'); }
+        });
+    },
+
+    /* ── Detail slide-over ── */
+    openDetail(id) {
+      this.showDetail   = true;
+      this.detailLoading= true;
+      this.detail       = {};
+
+      /* TODO: replace with real endpoint */
+      fetch(`/api/stock-movement/${id}/`, {
+        headers:{'X-Requested-With':'XMLHttpRequest'}
+      })
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(data => {
+        this.detail       = data;
+        this.detailLoading= false;
+      })
+      .catch(() => {
+        /* Fallback mock for development */
+        this.detail = {
+          id, ref:`#MOV-${id}`,
+          status:'draft',
+          type_label:'PO / Inbound',
+          quantity:120, qty_sign:'+',
+          source:'PT Kopi Nusantara',
+          destination:'Gudang Pusat',
+          notes:'Pengiriman bulan Juli. Cek kualitas Aceh Gayo Arutala.',
+          reject_reason:'',
+          items:[
+            {id:1,name:'Aceh Gayo Arutala 250g',sku:'AG-250-ART',qty_expected:60,qty_actual:60,checked:true},
+            {id:2,name:'Aceh Gayo Arutala 500g',sku:'AG-500-ART',qty_expected:60,qty_actual:55,checked:false},
+          ],
+        };
+        this.detailLoading = false;
+      });
+    },
+
+    /* ── Helpers ── */
+    _post(url, body) {
+      return fetch(url, {
+        method :'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'X-CSRFToken': document.cookie.match(/csrftoken=([^;]+)/)?.[1]||'',
+        },
+        body: JSON.stringify(body),
+      }).then(r => r.ok ? r.json() : { success:false, message:'Network error' });
+    },
+
+    _toast(msg, type='success') {
+      const c = document.getElementById('toastContainer');
+      if (!c) return;
+      const colors = { success:'border-emerald-400', info:'border-sky-400', warn:'border-amber-400', error:'border-rose-400' };
+      const icons  = { success:'check-circle', info:'info-circle', warn:'exclamation-triangle', error:'times-circle' };
+      const el = document.createElement('div');
+      el.className = `toast flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl min-w-56 max-w-xs text-white text-[12px] font-semibold border-l-4 ${colors[type]||colors.success}`;
+      el.style.cssText = 'background:rgba(15,23,42,.92);backdrop-filter:blur(12px);';
+      el.innerHTML = `<i class="fas fa-${icons[type]||icons.success} text-xs flex-shrink-0"></i><span>${msg}</span>`;
+      c.appendChild(el);
+      setTimeout(() => el.remove(), 3000);
+    },
+  };
+}
+</script>
+{% endblock %}

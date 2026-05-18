@@ -1,0 +1,234 @@
+[
+  {
+    "file": "journal_entry_list.html",
+    "module": "Accounting",
+    "status": "warn",
+    "changes": [
+      "Fix init() — tambah getElementById untuk script tags yang ada"
+    ],
+    "timestamp": "2026-04-18T11:23:24.425242"
+  },
+  {
+    "file": "customer_detail.html",
+    "module": "Other",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:23:24.454214"
+  },
+  {
+    "file": "recipe_detail.html",
+    "module": "Production",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:23:24.484688"
+  },
+  {
+    "file": "recipe_form.html",
+    "module": "Production",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:23:24.523386"
+  },
+  {
+    "file": "recipe_list.html",
+    "module": "Production",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:23:24.555933"
+  },
+  {
+    "file": "base_report.html",
+    "module": "Reports",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:23:24.593309"
+  },
+  {
+    "file": "reporting.html",
+    "module": "Reports",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:23:24.623628"
+  },
+  {
+    "file": "dashboard.html",
+    "module": "Other",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:23:24.673379"
+  },
+  {
+    "file": "journal_entry_list.html",
+    "module": "Accounting",
+    "status": "warn",
+    "changes": [
+      "Fix init() — tambah getElementById untuk script tags yang ada"
+    ],
+    "timestamp": "2026-04-18T11:23:33.408848"
+  },
+  {
+    "file": "customer_detail.html",
+    "module": "Other",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:23:33.431383"
+  },
+  {
+    "file": "recipe_detail.html",
+    "module": "Production",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:23:33.468584"
+  },
+  {
+    "file": "recipe_form.html",
+    "module": "Production",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:23:33.505474"
+  },
+  {
+    "file": "recipe_list.html",
+    "module": "Production",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:23:33.539522"
+  },
+  {
+    "file": "base_report.html",
+    "module": "Reports",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:23:33.573483"
+  },
+  {
+    "file": "reporting.html",
+    "module": "Reports",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:23:33.616131"
+  },
+  {
+    "file": "dashboard.html",
+    "module": "Other",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:23:33.655974"
+  },
+  {
+    "file": "journal_entry_list.html",
+    "module": "Accounting",
+    "status": "warn",
+    "changes": [
+      "Fix init() — tambah getElementById untuk script tags yang ada"
+    ],
+    "timestamp": "2026-04-18T11:24:05.897788"
+  },
+  {
+    "file": "customer_detail.html",
+    "module": "Other",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:24:05.924724"
+  },
+  {
+    "file": "recipe_detail.html",
+    "module": "Production",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:24:05.968725"
+  },
+  {
+    "file": "recipe_form.html",
+    "module": "Production",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:24:06.006569"
+  },
+  {
+    "file": "recipe_list.html",
+    "module": "Production",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:24:06.043323"
+  },
+  {
+    "file": "base_report.html",
+    "module": "Reports",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:24:06.083288"
+  },
+  {
+    "file": "reporting.html",
+    "module": "Reports",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:24:06.113521"
+  },
+  {
+    "file": "dashboard.html",
+    "module": "Other",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-18T11:24:06.162311"
+  },
+  {
+    "file": "journal_entry_list.html",
+    "module": "Accounting",
+    "status": "warn",
+    "changes": [
+      "Fix init() — tambah getElementById untuk script tags yang ada"
+    ],
+    "timestamp": "2026-04-19T05:53:06.153317"
+  },
+  {
+    "file": "customer_detail.html",
+    "module": "Other",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-19T05:53:06.193110"
+  },
+  {
+    "file": "recipe_detail.html",
+    "module": "Production",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-19T05:53:06.256031"
+  },
+  {
+    "file": "recipe_form.html",
+    "module": "Production",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-19T05:53:06.308972"
+  },
+  {
+    "file": "recipe_list.html",
+    "module": "Production",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-19T05:53:06.384744"
+  },
+  {
+    "file": "base_report.html",
+    "module": "Reports",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-19T05:53:06.452628"
+  },
+  {
+    "file": "reporting.html",
+    "module": "Reports",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-19T05:53:06.532533"
+  },
+  {
+    "file": "dashboard.html",
+    "module": "Other",
+    "status": "warn",
+    "changes": [],
+    "timestamp": "2026-04-19T05:53:06.902621"
+  }
+]

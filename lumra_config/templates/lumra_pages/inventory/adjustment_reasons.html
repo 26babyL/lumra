@@ -1,0 +1,275 @@
+{% extends 'base/base_hybrid.html' %}
+
+{% block title %}Alasan Koreksi — LUMRA{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="adjReasonApp()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-base-content">Master Data Alasan Koreksi</h1>
+      <p class="text-sm text-base-content/60 mt-0.5">Definisi alasan perubahan stok (Stock Adjustment).</p>
+    </div>
+    <button @click="openModal()" class="btn btn-primary">
+      <i class="fas fa-plus mr-2"></i> Tambah Alasan
+    </button>
+  </div>
+
+  <!-- List -->
+  <div class="card bg-base-100 shadow-lg border border-base-300">
+    <div class="card-body p-0">
+      <div class="overflow-x-auto">
+        <table class="table table-compact w-full">
+          <thead>
+            <tr class="bg-base-200">
+              <th class="text-left">Kode</th>
+              <th class="text-left">Nama Alasan</th>
+              <th class="text-left">Tipe Koreksi</th>
+              <th class="text-left">Deskripsi Singkat</th>
+              <th class="text-center">Status</th>
+              <th class="text-center">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="reason in reasons" :key="reason.id">
+              <tr class="hover:bg-base-200">
+                <td class="font-mono" x-text="reason.code"></td>
+                <td class="font-semibold" x-text="reason.name"></td>
+                <td>
+                  <span class="badge badge-sm" :class="reason.type === 'add' ? 'badge-success' : 'badge-error'" x-text="reason.type === 'add' ? 'Tambah' : 'Kurang'"></span>
+                </td>
+                <td class="text-sm" x-text="reason.description"></td>
+                <td class="text-center">
+                  <label class="swap swap-rotate">
+                    <input type="checkbox" :checked="reason.is_active" @change="toggleStatus(reason.id)">
+                    <div class="swap-on">Aktif</div>
+                    <div class="swap-off">Nonaktif</div>
+                  </label>
+                </td>
+                <td class="text-center">
+                  <div class="flex gap-2 justify-center">
+                    <button class="btn btn-ghost btn-xs" @click="editReason(reason)">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-ghost btn-xs text-error" @click="deleteReason(reason.id)">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal" :class="showModal ? 'modal-open' : ''">
+  <div class="modal-box">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="font-bold text-lg" x-text="editingReason ? 'Edit Alasan' : 'Tambah Alasan'"></h3>
+        <button class="btn btn-ghost btn-sm" @click="closeModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form @submit.prevent="saveReason()" class="space-y-4">
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Kode</span>
+            </label>
+            <input 
+              type="text" 
+              x-model="form.code" 
+              placeholder="ADJ-001"
+              class="input input-bordered"
+              required
+            >
+          </div>
+          
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Nama Alasan</span>
+            </label>
+            <input 
+              type="text" 
+              x-model="form.name" 
+              placeholder="Nama alasan koreksi"
+              class="input input-bordered"
+              required
+            >
+          </div>
+          
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Tipe Koreksi</span>
+            </label>
+            <select x-model="form.type" class="select select-bordered">
+              <option value="add">Tambah Stok</option>
+              <option value="subtract">Kurang Stok</option>
+            </select>
+          </div>
+          
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Deskripsi</span>
+            </label>
+            <textarea 
+              x-model="form.description" 
+              placeholder="Deskripsi lengkap alasan..."
+              class="textarea textarea-bordered"
+              rows="3"
+            ></textarea>
+          </div>
+          
+          <div class="form-control">
+            <label class="label cursor-pointer">
+              <input type="checkbox" x-model="form.is_active" class="checkbox checkbox-primary">
+              <span class="label-text">Aktif</span>
+            </label>
+          </div>
+          
+          <div class="flex gap-4">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save mr-2"></i> Simpan
+            </button>
+            <button type="button" @click="closeModal()" class="btn btn-ghost">
+              <i class="fas fa-times mr-2"></i> Batal
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function adjReasonApp() {
+  return {
+    reasons: [],
+    showModal: false,
+    editingReason: null,
+    form: {
+      code: '',
+      name: '',
+      type: 'add',
+      description: '',
+      is_active: true
+    },
+    
+    init() {
+      this.loadReasons();
+    },
+    
+    loadReasons() {
+      // Mock data - replace with actual API call
+      this.reasons = [
+        {
+          id: 1,
+          code: 'ADJ-001',
+          name: 'Barang Rusak',
+          type: 'subtract',
+          description: 'Barang yang rusak dan tidak bisa dijual',
+          is_active: true
+        },
+        {
+          id: 2,
+          code: 'ADJ-002',
+          name: 'Selisih Stok',
+          type: 'add',
+          description: 'Penyesuaian selisih stok fisik',
+          is_active: true
+        },
+        {
+          id: 3,
+          code: 'ADJ-003',
+          name: 'Barang Kadaluarsa',
+          type: 'subtract',
+          description: 'Barang yang sudah melewati tanggal kadaluarsa',
+          is_active: false
+        }
+      ];
+    },
+    
+    openModal() {
+      this.showModal = true;
+      this.editingReason = null;
+      this.resetForm();
+    },
+    
+    closeModal() {
+      this.showModal = false;
+      this.editingReason = null;
+      this.resetForm();
+    },
+    
+    editReason(reason) {
+      this.editingReason = reason;
+      this.form = {
+        code: reason.code,
+        name: reason.name,
+        type: reason.type,
+        description: reason.description,
+        is_active: reason.is_active
+      };
+      this.showModal = true;
+    },
+    
+    saveReason() {
+      if (this.editingReason) {
+        // Update existing reason
+        const index = this.reasons.findIndex(r => r.id === this.editingReason.id);
+        if (index !== -1) {
+          this.reasons[index] = {
+            ...this.reasons[index],
+            ...this.form
+          };
+        }
+      } else {
+        // Add new reason
+        const newId = Math.max(...this.reasons.map(r => r.id)) + 1;
+        this.reasons.push({
+          id: newId,
+          ...this.form
+        });
+      }
+      
+      this.closeModal();
+    },
+    
+    deleteReason(id) {
+      if (confirm('Apakah Anda yakin ingin menghapus alasan ini?')) {
+        this.reasons = this.reasons.filter(r => r.id !== id);
+      }
+    },
+    
+    toggleStatus(id) {
+      const reason = this.reasons.find(r => r.id === id);
+      if (reason) {
+        reason.is_active = !reason.is_active;
+      }
+    },
+    
+    resetForm() {
+      this.form = {
+        code: '',
+        name: '',
+        type: 'add',
+        description: '',
+        is_active: true
+      };
+    }
+  }
+}
+</script>
+{% endblock %}

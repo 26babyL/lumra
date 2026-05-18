@@ -1,0 +1,545 @@
+{
+  "filename": "requisition_detail.html",
+  "title": "",
+  "components": [
+    {
+      "type": "alpine-root",
+      "tag": "div",
+      "label": "ALPINE COMPONENT [reqDetailApp()]",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "w-full max-w-5xl mx-auto relative z-10 space-y-6",
+      "text_preview": "Dibuat pada Kembali Rute Pengiriman Dari Ke Barang Diminta P…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": "reqDetailApp()"
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "flex items-center justify-between",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "classes": "flex items-center gap-3 mb-1",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h1",
+      "label": "HEADING (H1)",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/h1",
+      "classes": "text-2xl font-bold text-slate-800",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "badge",
+      "tag": "span",
+      "label": "BADGE / STATUS",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/span",
+      "classes": "status-chip",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "classes": "flex gap-2",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: [icon]",
+      "depth": 4,
+      "path": "root/body/div/div/div/button",
+      "classes": "w-10 h-10 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center shadow-sm",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [GRID 1 cols]",
+      "depth": 2,
+      "path": "root/body/div/div",
+      "classes": "grid grid-cols-1 lg:grid-cols-3 gap-6",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "GRID 1 cols",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h2",
+      "label": "HEADING (H2)",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/h2",
+      "classes": "font-bold text-slate-700 mb-4",
+      "text_preview": "Rute Pengiriman",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/div",
+      "classes": "flex items-center justify-between bg-slate-50 p-4 rounded-xl",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "depth": 6,
+      "path": "root/body/div/div/div/div/div/div",
+      "classes": "flex-1 px-4 flex flex-col items-center",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (column)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h3",
+      "label": "HEADING (H3)",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/h3",
+      "classes": "font-bold text-slate-700 mb-4",
+      "text_preview": "Barang Diminta",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "table",
+      "tag": "table",
+      "label": "[ TABLE ]",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/table",
+      "classes": "w-full text-sm text-left",
+      "text_preview": "Produk Qty Satuan",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h3",
+      "label": "HEADING (H3)",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/h3",
+      "classes": "font-bold text-slate-700 mb-4",
+      "text_preview": "Tindakan",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: [icon]",
+      "depth": 8,
+      "path": "root/body/div/div/div/div/div/template/div/button",
+      "classes": "w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold shadow-md shadow-emerald-200 transition flex items-center justify-center gap-2 mb-2",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: [icon]",
+      "depth": 8,
+      "path": "root/body/div/div/div/div/div/template/div/button",
+      "classes": "w-full py-3 bg-white border border-rose-200 text-rose-500 hover:bg-rose-50 rounded-xl font-bold transition flex items-center justify-center gap-2",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: [icon]",
+      "depth": 7,
+      "path": "root/body/div/div/div/div/div/template/button",
+      "classes": "w-full py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-bold shadow-md shadow-blue-200 transition flex items-center justify-center gap-2",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: [icon]",
+      "depth": 7,
+      "path": "root/body/div/div/div/div/div/template/button",
+      "classes": "w-full py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold shadow-md transition flex items-center justify-center gap-2",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h3",
+      "label": "HEADING (H3)",
+      "depth": 5,
+      "path": "root/body/div/div/div/div/h3",
+      "classes": "font-bold text-slate-700 mb-4",
+      "text_preview": "Riwayat",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "timeline",
+      "tag": "div",
+      "label": "TIMELINE",
+      "depth": 6,
+      "path": "root/body/div/div/div/div/div/div",
+      "classes": "timeline-item active",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "timeline",
+      "tag": "div",
+      "label": "TIMELINE",
+      "depth": 6,
+      "path": "root/body/div/div/div/div/div/div",
+      "classes": "timeline-item",
+      "text_preview": "Permintaan Dibuat",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "alpine-root",
+      "label": "ALPINE COMPONENT [reqDetailApp()]",
+      "text_preview": "Dibuat pada Kembali Rute Pengiriman Dari Ke Barang Diminta P…"
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/h1",
+      "type": "heading",
+      "label": "HEADING (H1)",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/span",
+      "type": "badge",
+      "label": "BADGE / STATUS",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/div/div/div/button",
+      "type": "button",
+      "label": "BUTTON: [icon]",
+      "text_preview": ""
+    },
+    {
+      "depth": 2,
+      "path": "root/body/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [GRID 1 cols]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/h2",
+      "type": "heading",
+      "label": "HEADING (H2)",
+      "text_preview": "Rute Pengiriman"
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/h3",
+      "type": "heading",
+      "label": "HEADING (H3)",
+      "text_preview": "Barang Diminta"
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/table",
+      "type": "table",
+      "label": "[ TABLE ]",
+      "text_preview": "Produk Qty Satuan"
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/h3",
+      "type": "heading",
+      "label": "HEADING (H3)",
+      "text_preview": "Tindakan"
+    },
+    {
+      "depth": 8,
+      "path": "root/body/div/div/div/div/div/template/div/button",
+      "type": "button",
+      "label": "BUTTON: [icon]",
+      "text_preview": ""
+    },
+    {
+      "depth": 8,
+      "path": "root/body/div/div/div/div/div/template/div/button",
+      "type": "button",
+      "label": "BUTTON: [icon]",
+      "text_preview": ""
+    },
+    {
+      "depth": 7,
+      "path": "root/body/div/div/div/div/div/template/button",
+      "type": "button",
+      "label": "BUTTON: [icon]",
+      "text_preview": ""
+    },
+    {
+      "depth": 7,
+      "path": "root/body/div/div/div/div/div/template/button",
+      "type": "button",
+      "label": "BUTTON: [icon]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/div/div/div/div/h3",
+      "type": "heading",
+      "label": "HEADING (H3)",
+      "text_preview": "Riwayat"
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/div/div/div/div",
+      "type": "timeline",
+      "label": "TIMELINE",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/div/div/div/div/div/div",
+      "type": "timeline",
+      "label": "TIMELINE",
+      "text_preview": "Permintaan Dibuat"
+    }
+  ],
+  "issues": [
+    {
+      "type": "empty_button",
+      "severity": "warning",
+      "message": "Tombol tanpa teks/aria-label: <button> id='' class='w-full py-3 bg-emerald-500 hover:bg-emerald-600 te'",
+      "path": ""
+    },
+    {
+      "type": "empty_button",
+      "severity": "warning",
+      "message": "Tombol tanpa teks/aria-label: <button> id='' class='w-full py-3 bg-white border border-rose-200 text-r'",
+      "path": ""
+    },
+    {
+      "type": "empty_button",
+      "severity": "warning",
+      "message": "Tombol tanpa teks/aria-label: <button> id='' class='w-full py-3 bg-blue-500 hover:bg-blue-600 text-whi'",
+      "path": ""
+    },
+    {
+      "type": "empty_button",
+      "severity": "warning",
+      "message": "Tombol tanpa teks/aria-label: <button> id='' class='w-full py-3 bg-slate-800 hover:bg-slate-700 text-w'",
+      "path": ""
+    },
+    {
+      "type": "alpine_xcloak",
+      "severity": "info",
+      "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template",
+      "path": ""
+    }
+  ],
+  "stats": {
+    "total_components": 21,
+    "by_type": {
+      "alpine-root": 1,
+      "layout": 6,
+      "heading": 5,
+      "badge": 1,
+      "button": 5,
+      "table": 1,
+      "timeline": 2
+    },
+    "interactive": 6,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 5,
+    "issues_by_severity": {
+      "warning": 4,
+      "info": 1
+    }
+  }
+}

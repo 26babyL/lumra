@@ -1,0 +1,560 @@
+{
+  "filename": "sidebar_right.html",
+  "title": "sidebar_right",
+  "components": [
+    {
+      "type": "aside",
+      "tag": "aside",
+      "label": "[ SIDEBAR ]",
+      "depth": 2,
+      "path": "root/body/p/aside",
+      "classes": "flex flex-col h-full",
+      "text_preview": "Semua Baru Perjalanan Kritis Lihat semua notifikasi",
+      "has_scroll": false,
+      "grid_info": "FLEX (column)",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": "activityPulse()"
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 3,
+      "path": "root/body/p/aside/div",
+      "classes": "flex-shrink-0 px-4 pt-4 pb-3 border-b border-slate-100/70",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 4,
+      "path": "root/body/p/aside/div/div",
+      "classes": "flex items-center justify-between mb-3",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 5,
+      "path": "root/body/p/aside/div/div/div",
+      "classes": "flex items-center gap-2",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 6,
+      "path": "root/body/p/aside/div/div/div/div",
+      "classes": "flex items-center gap-1.5",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: [icon]",
+      "depth": 7,
+      "path": "root/body/p/aside/div/div/div/div/button",
+      "classes": "p-1.5 rounded-lg transition-all",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: [icon]",
+      "depth": 7,
+      "path": "root/body/p/aside/div/div/div/div/button",
+      "classes": "p-1.5 rounded-lg transition-all",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 5,
+      "path": "root/body/p/aside/div/div/div",
+      "classes": "flex gap-1 overflow-x-auto pb-0.5",
+      "text_preview": "",
+      "has_scroll": true,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 4,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "filter",
+      "tag": "button",
+      "label": "FILTER / TAB",
+      "depth": 6,
+      "path": "root/body/p/aside/div/div/div/button",
+      "classes": "feed-tab",
+      "text_preview": "Semua",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "filter",
+      "tag": "button",
+      "label": "FILTER / TAB",
+      "depth": 6,
+      "path": "root/body/p/aside/div/div/div/button",
+      "classes": "feed-tab",
+      "text_preview": "Baru",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "filter",
+      "tag": "button",
+      "label": "FILTER / TAB",
+      "depth": 6,
+      "path": "root/body/p/aside/div/div/div/button",
+      "classes": "feed-tab",
+      "text_preview": "Perjalanan",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "filter",
+      "tag": "button",
+      "label": "FILTER / TAB",
+      "depth": 6,
+      "path": "root/body/p/aside/div/div/div/button",
+      "classes": "feed-tab",
+      "text_preview": "Kritis",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 4,
+      "path": "root/body/p/aside/div/div",
+      "classes": "feed-scroll flex-1 overflow-y-auto px-4 py-2",
+      "text_preview": "",
+      "has_scroll": true,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 8,
+      "path": "root/body/p/aside/div/div/template/div/template/div",
+      "classes": "flex items-start gap-3 py-2",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "depth": 6,
+      "path": "root/body/p/aside/div/div/template/div",
+      "classes": "flex flex-col items-center justify-center py-12 text-center",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (column)",
+      "is_interactive": false,
+      "children_count": 3,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 7,
+      "path": "root/body/p/aside/div/div/template/div/div",
+      "classes": "empty-pulse w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center mb-3",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "badge",
+      "tag": "span",
+      "label": "BADGE / STATUS",
+      "depth": 11,
+      "path": "root/body/p/aside/div/div/template/div/template/div/div/div/span",
+      "classes": "status-chip flex-shrink-0",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: [icon]",
+      "depth": 11,
+      "path": "root/body/p/aside/div/div/template/div/template/div/div/div/button",
+      "classes": "ml-auto flex-shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full transition-all border",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "button",
+      "tag": "button",
+      "label": "BUTTON: [icon]",
+      "depth": 7,
+      "path": "root/body/p/aside/div/div/template/div/button",
+      "classes": "w-full mt-2 py-2.5 text-xs font-semibold text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition-all",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": true,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 7,
+      "path": "root/body/p/aside/div/div/template/div/div",
+      "classes": "flex justify-center py-3",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 4,
+      "path": "root/body/p/aside/div/div",
+      "classes": "flex-shrink-0 border-t border-slate-100/70 px-4 py-3",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "layout",
+      "tag": "a",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "depth": 5,
+      "path": "root/body/p/aside/div/div/a",
+      "classes": "flex items-center justify-between w-full text-xs font-semibold text-emerald-600 hover:text-emerald-800 transition-colors group",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (row)",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 2,
+      "path": "root/body/p/aside",
+      "type": "aside",
+      "label": "[ SIDEBAR ]",
+      "text_preview": "Semua Baru Perjalanan Kritis Lihat semua notifikasi"
+    },
+    {
+      "depth": 3,
+      "path": "root/body/p/aside/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/p/aside/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/p/aside/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/p/aside/div/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 7,
+      "path": "root/body/p/aside/div/div/div/div/button",
+      "type": "button",
+      "label": "BUTTON: [icon]",
+      "text_preview": ""
+    },
+    {
+      "depth": 7,
+      "path": "root/body/p/aside/div/div/div/div/button",
+      "type": "button",
+      "label": "BUTTON: [icon]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/p/aside/div/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/p/aside/div/div/div/button",
+      "type": "filter",
+      "label": "FILTER / TAB",
+      "text_preview": "Semua"
+    },
+    {
+      "depth": 6,
+      "path": "root/body/p/aside/div/div/div/button",
+      "type": "filter",
+      "label": "FILTER / TAB",
+      "text_preview": "Baru"
+    },
+    {
+      "depth": 6,
+      "path": "root/body/p/aside/div/div/div/button",
+      "type": "filter",
+      "label": "FILTER / TAB",
+      "text_preview": "Perjalanan"
+    },
+    {
+      "depth": 6,
+      "path": "root/body/p/aside/div/div/div/button",
+      "type": "filter",
+      "label": "FILTER / TAB",
+      "text_preview": "Kritis"
+    },
+    {
+      "depth": 4,
+      "path": "root/body/p/aside/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 8,
+      "path": "root/body/p/aside/div/div/template/div/template/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 6,
+      "path": "root/body/p/aside/div/div/template/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 7,
+      "path": "root/body/p/aside/div/div/template/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 11,
+      "path": "root/body/p/aside/div/div/template/div/template/div/div/div/span",
+      "type": "badge",
+      "label": "BADGE / STATUS",
+      "text_preview": ""
+    },
+    {
+      "depth": 11,
+      "path": "root/body/p/aside/div/div/template/div/template/div/div/div/button",
+      "type": "button",
+      "label": "BUTTON: [icon]",
+      "text_preview": ""
+    },
+    {
+      "depth": 7,
+      "path": "root/body/p/aside/div/div/template/div/button",
+      "type": "button",
+      "label": "BUTTON: [icon]",
+      "text_preview": ""
+    },
+    {
+      "depth": 7,
+      "path": "root/body/p/aside/div/div/template/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 4,
+      "path": "root/body/p/aside/div/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 5,
+      "path": "root/body/p/aside/div/div/a",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (row)]",
+      "text_preview": ""
+    }
+  ],
+  "issues": [
+    {
+      "type": "empty_button",
+      "severity": "warning",
+      "message": "Tombol tanpa teks/aria-label: <button> id='' class='p-1.5 rounded-lg transition-all'",
+      "path": ""
+    },
+    {
+      "type": "empty_button",
+      "severity": "warning",
+      "message": "Tombol tanpa teks/aria-label: <button> id='' class='ml-auto flex-shrink-0 text-[10px] font-bold px-2 p'",
+      "path": ""
+    },
+    {
+      "type": "empty_button",
+      "severity": "warning",
+      "message": "Tombol tanpa teks/aria-label: <button> id='' class='w-full mt-2 py-2.5 text-xs font-semibold text-emer'",
+      "path": ""
+    },
+    {
+      "type": "alpine_xcloak",
+      "severity": "info",
+      "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template",
+      "path": ""
+    }
+  ],
+  "stats": {
+    "total_components": 22,
+    "by_type": {
+      "aside": 1,
+      "layout": 12,
+      "button": 4,
+      "filter": 4,
+      "badge": 1
+    },
+    "interactive": 4,
+    "with_scroll": 2,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 4,
+    "issues_by_severity": {
+      "warning": 3,
+      "info": 1
+    }
+  }
+}

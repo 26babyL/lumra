@@ -1,0 +1,77 @@
+/* lumra_typography.css 
+    Single Source of Truth untuk Tipografi Lumra ERP
+*/
+
+@import './lumra_tokens.css';
+
+/* 1. Import Fonts dari Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+    /* Font Family Tokens */
+    --font-standard: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    --font-display: 'Syne', sans-serif;
+    --font-numeric: 'DM Mono', monospace;
+
+    /* Font Size Tokens (Scale) */
+    --text-xs: 0.75rem;    /* 12px */
+    --text-sm: 0.875rem;   /* 14px */
+    --text-base: 1rem;     /* 16px */
+    --text-lg: 1.125rem;   /* 18px */
+    --text-xl: 1.25rem;    /* 20px */
+    --text-2xl: 1.5rem;    /* 24px */
+    --text-3xl: 1.875rem;  /* 30px */
+
+    /* Line Height */
+    --leading-tight: 1.25;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.625;
+}
+
+/* 2. Global Defaults (Locations & Standard ERP) */
+body {
+    font-family: var(--font-standard);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    color: var(--color-slate-900, #1e293b);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* 3. Heading Styles (Menggunakan Syne untuk kesan Emerald Luxury) */
+h1, h2, h3, .lumra-display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: var(--leading-tight);
+    letter-spacing: -0.02em;
+    color: var(--color-primary, #00674F); /* Emerald Green */
+}
+
+h1 { font-size: var(--text-3xl); }
+h2 { font-size: var(--text-2xl); }
+h3 { font-size: var(--text-xl); }
+
+/* 4. Financial Specifics (Utility Classes) */
+/* Gunakan class ini di financial_reports.html */
+
+.financial-data {
+    font-family: var(--font-numeric) !important;
+    font-variant-numeric: tabular-nums; /* Memastikan angka sejajar sempurna */
+    letter-spacing: -0.01em;
+}
+
+.report-header {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* 5. Utility Typography */
+.text-xs { font-size: var(--text-xs); }
+.text-sm { font-size: var(--text-sm); }
+.font-bold { font-weight: 700; }
+.font-medium { font-weight: 500; }
+
+/* Menangani keluhan "sakit mata" dengan kontras yang pas */
+.text-muted {
+    color: var(--color-slate-500, #64748b);
+}

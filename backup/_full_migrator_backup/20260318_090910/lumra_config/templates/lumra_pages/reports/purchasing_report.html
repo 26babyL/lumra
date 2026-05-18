@@ -1,0 +1,915 @@
+{% extends 'lumra_pages/reports/base_report.html' %}
+{% load custom_filters_settings %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<style>
+  [x-cloak] { display:var(--shadow-sm-16) !important; }
+
+  @keyframes drift{from{transform:translate(0,0) scale(1);}to{transform:translate(20px,28px) scale(1.06);}}
+
+  .bar-divider{width:1px;height:24px;background:var(--color-slate-300-a05);flex-shrink:0;}
+
+  .bar-input{
+    background   : transparent;
+    border       : var(--shadow-sm-16);
+    font-size    : 13px; color:var(--color-slate-800);
+    padding      : 4px 0;
+    outline      : var(--shadow-sm-16); min-width:0;
+  }
+
+  .bar-input::placeholder{color:var(--color-slate-400);}
+
+  .bar-input-wrap{
+    display:flex;align-items:center;gap:6px;
+    padding:4px 10px; border-radius:9px;
+    transition:background .12s;
+  }
+
+  .bar-input-wrap:focus-within{background:var(--color-rgba-59-130-246-a007);}
+
+  .bar-input-wrap i{color:var(--color-slate-400);font-size:11px;flex-shrink:0;}
+
+  .bar-select{
+    background:transparent; border:var(--shadow-sm-16);
+    font-size:13px; color:var(--color-slate-800);
+    padding:4px 20px 4px 0; outline:var(--shadow-sm-16);
+    appearance:var(--shadow-sm-16); -webkit-appearance:var(--shadow-sm-16);
+    cursor:pointer; min-width:80px; max-width:140px;
+  }
+
+  .date-pill{
+    display:flex;align-items:center;gap:6px;
+    padding:5px 12px; border-radius:99px;
+    background:var(--color-rgba-59-130-246-a008);
+    border:1px solid var(--color-rgba-59-130-246-a02);
+    font-size:12px;font-weight:600;color:var(--color-2563eb);
+    cursor:pointer; white-space:nowrap;
+    transition:background .15s, box-shadow .15s;
+  }
+
+  .date-pill:hover{background:var(--color-rgba-59-130-246-a014);box-shadow:0 0 0 3px var(--color-rgba-59-130-246-a008);}
+
+  .date-pill.has-range{background:var(--color-rgba-59-130-246-a014);border-color:var(--color-rgba-59-130-246-a04-2);}
+
+  .btn-export{
+    padding:7px 14px; border-radius:10px;
+    background:var(--color-white-a08);
+    border:1px solid var(--color-slate-300-a06);
+    color:var(--color-slate-600);font-size:12px;font-weight:600;
+    cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:5px;
+    transition:background .12s,border-color .12s;
+    flex-shrink:0;
+  }
+
+  .btn-export:hover{background:var(--color-fff);border-color:var(--color-93c5fd);color:var(--color-2563eb);}
+
+  .btn-reset{
+    font-size:11px;font-weight:600;color:var(--color-slate-400);
+    background:var(--shadow-sm-16);border:var(--shadow-sm-16);cursor:pointer;padding:4px 6px;
+    transition:color .12s;white-space:nowrap;flex-shrink:0;
+  }
+
+  .btn-reset:hover{color:var(--color-slate-600);}
+
+  .adv-panel{
+    background     : var(--color-white-a092);
+    backdrop-filter: var(--backdrop-blur-20px);
+    border         : 1px solid var(--color-white-a09);
+    border-radius  : 14px;
+    box-shadow     : 0 4px 20px var(--color-black-a008);
+    overflow       : hidden;
+    transition     : max-height .3s cubic-bezier(.4,0,.2,1), opacity .25s ease;
+  }
+
+  .adv-panel.collapsed{max-height:0;opacity:0;}
+
+  .adv-panel.expanded {max-height:340px;opacity:1;}
+
+  .pay-badge{
+    display:inline-flex;align-items:center;gap:5px;
+    padding:5px 11px;border-radius:8px;font-size:11px;font-weight:600;
+    border:1.5px solid var(--color-slate-300-a05);
+    background:var(--color-slate-50-a08);color:var(--color-slate-400);
+    cursor:pointer;transition:all .12s;
+  }
+
+  .pay-badge.on.cash    {background:var(--color-rgba-59-130-246-a010);color:var(--color-2563eb);border-color:var(--color-rgba-59-130-246-a03);}
+
+  .pay-badge.on.transfer{background:var(--color-rgba-59-130-246-a010);color:var(--color-2563eb);border-color:var(--color-rgba-59-130-246-a03);}
+
+  .pay-badge.on.qris    {background:var(--color-rgba-139-92-246-a010);color:var(--color-7c3aed);border-color:var(--color-rgba-139-92-246-a03);}
+
+  .stype-wrap{display:flex;border:1px solid var(--color-slate-300-a05);border-radius:8px;overflow:hidden;}
+
+  .stype-btn{
+    flex:1;padding:4px 8px;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+    background:transparent;border:var(--shadow-sm-16);cursor:pointer;color:var(--color-slate-400);transition:background .1s,color .1s;
+  }
+
+  .stype-btn.on{background:var(--color-rgba-59-130-246-a010);color:var(--color-2563eb);}
+
+  input[type=range]{
+    -webkit-appearance:var(--shadow-sm-16);width:100%;height:3px;
+    border-radius:99px;background:var(--color-dbeafe);outline:var(--shadow-sm-16);
+  }
+
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:var(--shadow-sm-16);width:16px;height:16px;border-radius:99px;
+    background:var(--color-2563eb);border:2.5px solid var(--color-fff);box-shadow:var(--shadow-sm-43);cursor:pointer;
+  }
+
+  .filter-chip{
+    display:inline-flex;align-items:center;gap:4px;
+    padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600;
+    background:var(--color-rgba-59-130-246-a010);color:var(--color-2563eb);
+    border:1px solid var(--color-rgba-59-130-246-a02);
+  }
+
+  .filter-chip button{background:var(--shadow-sm-16);border:var(--shadow-sm-16);cursor:pointer;color:inherit;opacity:.6;line-height:1;padding:0 0 0 2px;}
+
+  .filter-chip button:hover{opacity:1;}
+
+  .table-card{
+    background     : var(--color-white-a088);
+    backdrop-filter: var(--backdrop-blur-20px-saturate-150);
+    -webkit-backdrop-filter: var(--backdrop-blur-20px-saturate-150);
+    border         : 1px solid var(--color-white-a09);
+    border-radius  : 18px;
+    box-shadow     : 0 2px 16px var(--color-black-a006);
+    overflow       : hidden;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar { height:4px; }
+
+  .custom-scrollbar::-webkit-scrollbar-track { background:transparent; }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb { background:var(--color-slate-200); border-radius:99px; }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover { background:var(--color-slate-300); }
+
+  tr.data-row { transition:background .12s; }
+
+  tr.data-row:hover td { background:var(--color-rgba-239-246-255-a055) !important; }
+
+  .export-menu{
+    background     : var(--color-white-a097);
+    backdrop-filter: var(--backdrop-blur-20px);
+    border         : 1px solid var(--color-white-a09);
+    border-radius  : 14px;
+    box-shadow     : 0 12px 40px var(--color-black-a012);
+  }
+
+  .export-item{
+    display:flex;align-items:center;gap:10px;padding:9px 14px;
+    font-size:12px;font-weight:600;color:var(--color-slate-600);
+    transition:background .1s;border-radius:8px;text-decoration:var(--shadow-sm-16);cursor:pointer;
+  }
+
+  .export-item:hover{background:var(--color-rgba-59-130-246-a006);color:var(--color-2563eb);}
+
+  .export-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+
+  .flatpickr-calendar{border-radius:14px !important;box-shadow:0 12px 40px var(--color-black-a012) !important;border:1px solid var(--color-slate-300-a05) !important;}
+
+  #loadingIndicator{
+    background:var(--color-white-a07);backdrop-filter:var(--backdrop-blur-8px);
+  }
+
+  .micro-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--color-slate-400);margin-bottom:5px;}
+
+  @keyframes tIn {from{opacity:0;transform:translateX(16px);}to{opacity:1;transform:var(--shadow-sm-16);}}
+
+  @keyframes tOut{from{opacity:1;}to{opacity:0;pointer-events:var(--shadow-sm-16);}}
+</style>
+{% endblock %}
+
+
+<!--{# ── KPI row (kept minimal — overrides parent block) ── #}-->
+{% block summary_stats %}
+<div class="reveal grid grid-cols-2 xl:grid-cols-4 gap-3">
+
+  <div class="kpi-glass accent-emerald p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Items Sold</p>
+        <p class="text-2xl font-bold text-slate-800">{{ total_qty|default:0 }}</p>
+        <p class="text-[11px] text-slate-400 mt-0.5">All items</p>
+      </div>
+      <div class="kpi-icon bg-blue-50 text-blue-600"><i class="fas fa-boxes"></i></div>
+    </div>
+  </div>
+
+  <div class="kpi-glass accent-blue p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Revenue</p>
+        <p class="text-2xl font-bold text-slate-800">Rp {{ total_amount|floatformat:0|default:0 }}</p>
+        <p class="text-[11px] text-slate-400 mt-0.5">Invoice total</p>
+      </div>
+      <div class="kpi-icon bg-blue-50 text-blue-500"><i class="fas fa-coins"></i></div>
+    </div>
+  </div>
+
+  <div class="kpi-glass accent-amber p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Avg / Item</p>
+        <p class="text-2xl font-bold text-slate-800">
+          Rp {% if total_qty > 0 %}{{ total_amount|div:total_qty|floatformat:0 }}{% else %}0{% endif %}
+        </p>
+        <p class="text-[11px] text-slate-400 mt-0.5">Average unit</p>
+      </div>
+      <div class="kpi-icon bg-amber-50 text-amber-500"><i class="fas fa-calculator"></i></div>
+    </div>
+  </div>
+
+  <div class="kpi-glass accent-violet p-4">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Orders</p>
+        <p class="text-2xl font-bold text-slate-800">{{ total_orders|default:0 }}</p>
+        <p class="text-[11px] text-slate-400 mt-0.5">Transactions</p>
+      </div>
+      <div class="kpi-icon bg-violet-50 text-violet-500"><i class="fas fa-shopping-cart"></i></div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+
+{% block content %}
+
+<!--{# ── Background ── #}-->
+<div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+
+<div class="w-full flex-1 space-y-4 relative z-10"
+     x-data="salesFilter()"
+     x-init="init()"
+     x-cloak>
+
+  <!--{# ══════════════════════════════════════════
+     HEADER ROW
+  ══════════════════════════════════════════ #}-->
+  <div class="reveal flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-blue-600 mb-1">
+        <a href="{% url 'dashboard' %}" class="hover:text-blue-800 transition-colors">Dashboard</a>
+        <span class="text-slate-300">/</span>
+        <a href="#" class="hover:text-blue-800 transition-colors">Reports</a>
+        <span class="text-slate-300">/</span>
+        <span class="text-slate-600 font-medium">Sales</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800">Sales Report</h1>
+      <div class="flex items-center gap-2 mt-1">
+        <span class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></span>
+        <span class="text-xs text-slate-400">Generated <span id="reportTime">{% now "H:i" %}</span></span>
+      </div>
+    </div>
+
+    <!--{# ── Export dropdown ── #}-->
+    <div class="relative flex-shrink-0" x-data="{ open:false }">
+      <button @click="open=!open" @click.away="open=false"
+              class="btn-export">
+        <i class="fas fa-file-export text-[11px]"></i>
+        Export
+        <i class="fas fa-chevron-down text-[9px] opacity-50 transition-transform duration-200" :class="open?'rotate-180':''"></i>
+      </button>
+      <div x-show="open"
+           x-transition:enter="transition duration-150"
+           x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
+           x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+           x-transition:leave="transition duration-100"
+           x-transition:leave-end="opacity-0 scale-97"
+           class="export-menu absolute right-0 mt-2 w-52 z-50 p-1.5">
+        <a href="?export=csv{% for key, value in request.GET.items %}{% if key != 'export' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+           class="export-item export-link">
+          <div class="export-icon bg-blue-50 text-blue-600"><i class="fas fa-file-csv"></i></div>
+          <div><p class="font-bold text-slate-700 text-[12px]">CSV</p><p class="text-[10px] text-slate-400">Spreadsheet</p></div>
+        </a>
+        <a href="?export=excel{% for key, value in request.GET.items %}{% if key != 'export' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+           class="export-item export-link">
+          <div class="export-icon bg-green-50 text-green-600"><i class="fas fa-file-excel"></i></div>
+          <div><p class="font-bold text-slate-700 text-[12px]">Excel</p><p class="text-[10px] text-slate-400">Full formatting</p></div>
+        </a>
+        <a href="?export=pdf{% for key, value in request.GET.items %}{% if key != 'export' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+           class="export-item export-link">
+          <div class="export-icon bg-red-50 text-red-500"><i class="fas fa-file-pdf"></i></div>
+          <div><p class="font-bold text-slate-700 text-[12px]">PDF</p><p class="text-[10px] text-slate-400">Print-ready</p></div>
+        </a>
+        <div class="border-t border-slate-100 mt-1 pt-1">
+          <button onclick="window.print()" class="export-item w-full">
+            <div class="export-icon text-slate-400" style="background:var(--color-bg)"><i class="fas fa-print"></i></div>
+            <p class="font-semibold text-slate-500 text-[11px]">Quick Print</p>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--{# ══════════════════════════════════════════
+     ACTION BAR — satu baris, compressed
+  ══════════════════════════════════════════ #}-->
+  <form method="get" id="filterForm" @submit="onSubmit($event)">
+    <div class="reveal action-bar">
+
+      <!--{# Search (with type toggle) #}-->
+      <div class="bar-input-wrap flex-1" style="min-width:160px;">
+        <i class="fas fa-search"></i>
+        <input type="text" name="search" id="searchInput"
+               value="{{ request.GET.search }}"
+               :placeholder="searchPlaceholder"
+               class="bar-input flex-1"
+               style="min-width:0;">
+        <!--{# Search type mini toggle #}-->
+        <div class="stype-wrap flex-shrink-0">
+          <button type="button" class="stype-btn" :class="searchBy==='customer'?'on':''" @click="setSearchType('customer')">Cust</button>
+          <button type="button" class="stype-btn" :class="searchBy==='product'?'on':''"  @click="setSearchType('product')">Prod</button>
+          <button type="button" class="stype-btn" :class="searchBy==='sku'?'on':''"      @click="setSearchType('sku')">SKU</button>
+        </div>
+        <input type="hidden" name="search_by" :value="searchBy">
+      </div>
+
+      <div class="bar-divider hidden sm:block"></div>
+
+      <!--{# Store selector #}-->
+      <div class="bar-input-wrap relative flex-shrink-0">
+        <i class="fas fa-store"></i>
+        <select name="store" class="bar-select">
+          <option value="">Semua Toko</option>
+          {% for store in stores %}
+          <option value="{{ store.id }}"
+            {% if request.GET.store == store.id|stringformat:"i" %}selected{% endif %}>
+            {{ store.name }}
+          </option>
+          {% endfor %}
+        </select>
+        <i class="fas fa-chevron-down text-[9px] text-slate-300 pointer-events-none"></i>
+      </div>
+
+      <div class="bar-divider hidden sm:block"></div>
+
+      <!--{# Date pill — opens flatpickr popup #}-->
+      <div class="relative flex-shrink-0">
+        <button type="button" @click="toggleDatePicker()"
+                class="date-pill" :class="dateLabel !== 'Pilih Tanggal' ? 'has-range' : ''">
+          <i class="fas fa-calendar-alt text-[11px]"></i>
+          <span x-text="dateLabel">Pilih Tanggal</span>
+          <i x-show="dateLabel !== 'Pilih Tanggal'" @click.stop="clearDates()"
+             class="fas fa-times text-[9px] opacity-60 hover:opacity-100 transition-opacity"></i>
+        </button>
+        <!--{# Hidden flatpickr anchor #}-->
+        <input type="text" id="fpAnchor" style="position:absolute;top:100%;left:0;width:0;height:0;opacity:0;pointer-events:none;">
+        <input type="hidden" name="date_start" id="date_start" value="{{ request.GET.date_start }}">
+        <input type="hidden" name="date_end"   id="date_end"   value="{{ request.GET.date_end }}">
+      </div>
+
+      <div class="bar-divider hidden sm:block"></div>
+
+      <!--{# Advanced filter toggle #}-->
+      <button type="button" @click="advOpen=!advOpen"
+              class="btn-reset flex items-center gap-1.5 flex-shrink-0"
+              :class="advOpen ? 'text-blue-600' : ''">
+        <i class="fas fa-sliders-h text-[10px]"></i>
+        <span>Filter</span>
+        <span x-show="activeAdvCount > 0"
+              class="w-4 h-4 bg-blue-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none"
+              x-text="activeAdvCount">
+        </span>
+      </button>
+
+      <!--{# Apply #}-->
+      <button type="submit" class="btn-apply flex-shrink-0">
+        <i class="fas fa-arrow-right text-[10px] mr-1.5"></i>Terapkan
+      </button>
+
+      <!--{# Reset #}-->
+      <button type="button" @click="resetAll()" class="btn-reset flex-shrink-0">Reset</button>
+
+      <input type="hidden" name="sort_by" value="{{ sort_by }}">
+      <input type="hidden" name="order"   value="{{ order }}">
+    </div>
+
+    <!--{# ══════════════════════════════════════════
+       ADVANCED PANEL — collapsible
+    ══════════════════════════════════════════ #}-->
+    <div class="adv-panel mt-2" :class="advOpen ? 'expanded' : 'collapsed'">
+      <div class="px-5 py-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <!--{# Payment method #}-->
+        <div>
+          <p class="micro-label">💳 Metode Pembayaran</p>
+          <div class="flex flex-wrap gap-2">
+            <button type="button"
+                    class="pay-badge" :class="pay.cash ? 'on cash' : ''"
+                    @click="pay.cash=!pay.cash; syncPay()">
+              <i class="fas fa-money-bill-wave text-[10px]"></i> Cash
+            </button>
+            <button type="button"
+                    class="pay-badge" :class="pay.transfer ? 'on transfer' : ''"
+                    @click="pay.transfer=!pay.transfer; syncPay()">
+              <i class="fas fa-university text-[10px]"></i> Transfer
+            </button>
+            <button type="button"
+                    class="pay-badge" :class="pay.qris ? 'on qris' : ''"
+                    @click="pay.qris=!pay.qris; syncPay()">
+              <i class="fas fa-qrcode text-[10px]"></i> QRIS
+            </button>
+          </div>
+          <input type="hidden" name="payment_method" :value="payValue">
+        </div>
+
+        <!--{# Min amount slider #}-->
+        <div>
+          <p class="micro-label">💰 Min. Nilai Transaksi</p>
+          <input type="range" min="0" max="5000000" step="50000"
+                 x-model.number="minAmount"
+                 @input="minAmountInput">
+          <p class="text-xs text-blue-700 font-semibold mt-1.5">
+            <span x-text="minAmount === 0 ? 'Semua transaksi' : 'Min: Rp ' + minAmount.toLocaleString('id-ID')"></span>
+          </p>
+          <input type="hidden" name="min_amount" :value="minAmount">
+        </div>
+
+        <!--{# Quick period row (moved here from clutter) #}-->
+        <div>
+          <p class="micro-label">📅 Periode Cepat</p>
+          <div class="flex flex-wrap gap-1.5">
+            <template x-for="(p, key) in presets" :key="key">
+              <button type="button"
+                      class="text-[11px] font-semibold px-3 py-1.5 rounded-lg border transition-all"
+                      :class="activePreset===key
+                        ? 'bg-blue-500 text-white border-blue-500'
+                        : 'bg-white text-slate-500 border-slate-200 hover:border-blue-300 hover:text-blue-700'"
+                      @click="applyPreset(key)"
+                      x-text="p.label">
+              </button>
+            </template>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </form>
+
+  <!--{# ══════════════════════════════════════════
+     ACTIVE FILTER CHIPS
+  ══════════════════════════════════════════ #}-->
+  <div x-show="hasActiveFilters"
+       x-transition:enter="transition duration-150"
+       x-transition:enter-start="opacity-0 -translate-y-1"
+       x-transition:enter-end="opacity-100 translate-y-0"
+       class="flex flex-wrap items-center gap-2 text-[11px]">
+    <span class="text-slate-400 font-semibold text-[10px] uppercase tracking-wider">Filter aktif:</span>
+
+    {% if request.GET.search %}
+    <span class="filter-chip">
+      <i class="fas fa-search text-[9px]"></i>
+      {{ request.GET.search }}
+      <button onclick="window.location='{{ request.path }}{% querystring request.GET search=None %}'">×</button>
+    </span>
+    {% endif %}
+
+    {% if request.GET.store %}
+    <span class="filter-chip">
+      <i class="fas fa-store text-[9px]"></i>
+      {% for store in stores %}{% if store.id|stringformat:"i" == request.GET.store %}{{ store.name }}{% endif %}{% endfor %}
+      <button onclick="window.location='{{ request.path }}{% querystring request.GET store=None %}'">×</button>
+    </span>
+    {% endif %}
+
+    {% if request.GET.date_start %}
+    <span class="filter-chip">
+      <i class="fas fa-calendar text-[9px]"></i>
+      {{ request.GET.date_start }}{% if request.GET.date_end %} → {{ request.GET.date_end }}{% endif %}
+      <button onclick="window.location='{{ request.path }}{% querystring request.GET date_start=None date_end=None %}'">×</button>
+    </span>
+    {% endif %}
+
+    {% if request.GET.payment_method %}
+    <span class="filter-chip">
+      <i class="fas fa-credit-card text-[9px]"></i>
+      {{ request.GET.payment_method }}
+      <button onclick="window.location='{{ request.path }}{% querystring request.GET payment_method=None %}'">×</button>
+    </span>
+    {% endif %}
+
+    <a href="{{ request.path }}" class="text-slate-400 hover:text-rose-500 font-semibold transition-colors ml-auto text-[10px]">
+      Hapus semua ×
+    </a>
+  </div>
+
+  <!--{# ══════════════════════════════════════════
+     SALES TABLE
+  ══════════════════════════════════════════ #}-->
+  <div class="reveal table-card">
+
+    <!--{# ── Toolbar ── #}-->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100/60 bg-white/30">
+      <div class="flex items-center gap-3">
+        <div class="w-1.5 h-6 bg-blue-500 rounded-full"></div>
+        <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">
+          {% if page_obj %}
+            Menampilkan <span class="text-slate-800">{{ page_obj.start_index }}–{{ page_obj.end_index }}</span> dari {{ page_obj.paginator.count }} Transaksi
+          {% else %}
+            <span class="text-slate-800">{{ sales|length }}</span> Total Transaksi
+          {% endif %}
+        </p>
+      </div>
+      <div class="flex items-center gap-2 px-3 py-1.5 bg-slate-100/50 rounded-full border border-slate-200/40 text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+        <i class="fas fa-clock text-blue-500/60"></i>
+        <span id="tableTime">{% now "H:i, j M Y" %}</span>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto custom-scrollbar">
+      <table class="min-w-full border-separate border-spacing-0" aria-label="Sales Report">
+
+        {% block table_header %}
+        <thead>
+          <tr class="sticky top-0 z-10 backdrop-blur-md border-b border-slate-100" style="background:var(--color-bg)">
+            {% with sb=sort_by o=order %}
+
+            <th class="px-6 py-4 text-left group transition-all">
+              <a href="?sort_by=order.id&order={% if sb == 'order.id' and o == 'asc' %}desc{% else %}asc{% endif %}{% for k,v in request.GET.items %}{% if k not in 'sort_by,order' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+                 class="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-blue-600 transition-colors">
+                Order ID
+                <i class="fas fa-{% if sb == 'order.id' %}{% if o == 'asc' %}sort-up text-blue-500{% else %}sort-down text-blue-500{% endif %}{% else %}sort opacity-20{% endif %} text-[9px]"></i>
+              </a>
+            </th>
+
+            <th class="px-6 py-4 text-left group transition-all">
+              <a href="?sort_by=order.customer_name&order={% if sb == 'order.customer_name' and o == 'asc' %}desc{% else %}asc{% endif %}{% for k,v in request.GET.items %}{% if k not in 'sort_by,order' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+                 class="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-blue-600 transition-colors">
+                Customer
+                <i class="fas fa-{% if sb == 'order.customer_name' %}{% if o == 'asc' %}sort-up text-blue-500{% else %}sort-down text-blue-500{% endif %}{% else %}sort opacity-20{% endif %} text-[9px]"></i>
+              </a>
+            </th>
+
+            <th class="px-6 py-4 text-left group transition-all">
+              <a href="?sort_by=order.created_at&order={% if sb == 'order.created_at' and o == 'asc' %}desc{% else %}asc{% endif %}{% for k,v in request.GET.items %}{% if k not in 'sort_by,order' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+                 class="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-blue-600 transition-colors">
+                Tanggal
+                <i class="fas fa-{% if sb == 'order.created_at' %}{% if o == 'asc' %}sort-up text-blue-500{% else %}sort-down text-blue-500{% endif %}{% else %}sort opacity-20{% endif %} text-[9px]"></i>
+              </a>
+            </th>
+
+            <th class="px-6 py-4 text-left">
+              <span class="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">SKU</span>
+            </th>
+
+            <th class="px-6 py-4 text-left group transition-all">
+              <a href="?sort_by=variant.product.name&order={% if sb == 'variant.product.name' and o == 'asc' %}desc{% else %}asc{% endif %}{% for k,v in request.GET.items %}{% if k not in 'sort_by,order' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+                 class="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-blue-600 transition-colors">
+                Produk
+                <i class="fas fa-{% if sb == 'variant.product.name' %}{% if o == 'asc' %}sort-up text-blue-500{% else %}sort-down text-blue-500{% endif %}{% else %}sort opacity-20{% endif %} text-[9px]"></i>
+              </a>
+            </th>
+
+            <th class="px-6 py-4 text-right group transition-all">
+              <a href="?sort_by=quantity&order={% if sb == 'quantity' and o == 'asc' %}desc{% else %}asc{% endif %}{% for k,v in request.GET.items %}{% if k not in 'sort_by,order' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+                 class="flex items-center justify-end gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-blue-600 transition-colors">
+                Qty
+                <i class="fas fa-{% if sb == 'quantity' %}{% if o == 'asc' %}sort-up text-blue-500{% else %}sort-down text-blue-500{% endif %}{% else %}sort opacity-20{% endif %} text-[9px]"></i>
+              </a>
+            </th>
+
+            <th class="px-6 py-4 text-right group transition-all">
+              <a href="?sort_by=price&order={% if sb == 'price' and o == 'asc' %}desc{% else %}asc{% endif %}{% for k,v in request.GET.items %}{% if k not in 'sort_by,order' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+                 class="flex items-center justify-end gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-blue-600 transition-colors">
+                Harga
+                <i class="fas fa-{% if sb == 'price' %}{% if o == 'asc' %}sort-up text-blue-500{% else %}sort-down text-blue-500{% endif %}{% else %}sort opacity-20{% endif %} text-[9px]"></i>
+              </a>
+            </th>
+
+            <th class="px-6 py-4 text-right group transition-all">
+              <a href="?sort_by=total&order={% if sb == 'total' and o == 'asc' %}desc{% else %}asc{% endif %}{% for k,v in request.GET.items %}{% if k not in 'sort_by,order' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+                 class="flex items-center justify-end gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-blue-600 transition-colors">
+                Total
+                <i class="fas fa-{% if sb == 'total' %}{% if o == 'asc' %}sort-up text-blue-500{% else %}sort-down text-blue-500{% endif %}{% else %}sort opacity-20{% endif %} text-[9px]"></i>
+              </a>
+            </th>
+
+            {% endwith %}
+          </tr>
+        </thead>
+        {% endblock %}
+
+        {% block table_body %}
+        <tbody>
+          {% for item in sales %}
+          <!--{# Zebra: even rows get a very faint wash #}-->
+          <tr class="data-row group {% if forloop.counter|divisibleby:2 %}bg-slate-50/30{% endif %}">
+
+            <td class="px-6 py-4 border-b border-slate-100/60 group-hover:border-blue-100/60">
+              <span class="text-[11px] font-black text-slate-400 group-hover:text-blue-600 transition-colors">#{{ item.order.id }}</span>
+            </td>
+
+            <td class="px-6 py-4 border-b border-slate-100/60 group-hover:border-blue-100/60">
+              <div class="flex items-center gap-2">
+                <!--{# Avatar initial #}-->
+                <div class="w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center flex-shrink-0 text-white font-black text-[9px] select-none">
+                  {{ item.order.customer_name|slice:":1"|upper }}
+                </div>
+                <span class="text-[12px] font-semibold text-slate-700 group-hover:text-slate-900 transition-colors">{{ item.order.customer_name }}</span>
+              </div>
+            </td>
+
+            <td class="px-6 py-4 border-b border-slate-100/60 group-hover:border-blue-100/60">
+              <span class="text-[11px] text-slate-400 group-hover:text-slate-600 transition-colors">{{ item.order.created_at|date:"d M Y" }}</span>
+              <span class="block text-[10px] text-slate-300">{{ item.order.created_at|date:"H:i" }}</span>
+            </td>
+
+            <td class="px-6 py-4 border-b border-slate-100/60 group-hover:border-blue-100/60">
+              <code class="text-[10px] font-bold text-slate-500 group-hover:bg-blue-50 group-hover:text-blue-700 px-2 py-1 rounded-lg transition-all" style="background:var(--color-bg)">{{ item.variant.sku }}</code>
+            </td>
+
+            <td class="px-6 py-4 border-b border-slate-100/60 group-hover:border-blue-100/60">
+              <span class="text-[12px] text-slate-600 group-hover:text-slate-800 transition-colors">{{ item.variant.product.name }}</span>
+            </td>
+
+            <td class="px-6 py-4 border-b border-slate-100/60 group-hover:border-blue-100/60 text-right">
+              <span class="text-[11px] font-bold text-slate-600 group-hover:text-slate-800 transition-colors">{{ item.quantity }}</span>
+            </td>
+
+            <td class="px-6 py-4 border-b border-slate-100/60 group-hover:border-blue-100/60 text-right">
+              <span class="text-[11px] text-slate-400 group-hover:text-slate-600 transition-colors">Rp {{ item.price|floatformat:0 }}</span>
+            </td>
+
+            <td class="px-6 py-4 border-b border-slate-100/60 group-hover:border-blue-100/60 text-right">
+              <!--{# Glass highlight on total cell #}-->
+              <span class="inline-block text-[12px] font-black text-slate-800
+                           group-hover:text-blue-700
+                           group-hover:bg-blue-50/80
+                           group-hover:shadow-[0_0_0_1px_rgba(59,130,246,0.15),0_2px_8px_rgba(59,130,246,0.10)]
+                           px-2.5 py-1 rounded-lg transition-all duration-150">
+                Rp {{ item.quantity|mul:item.price|floatformat:0 }}
+              </span>
+            </td>
+
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="8" class="px-6 py-16 text-center">
+              <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3" style="background:var(--color-bg)">
+                <i class="fas fa-chart-line text-slate-200 text-xl"></i>
+              </div>
+              <p class="text-sm font-semibold text-slate-500">Tidak ada data penjualan</p>
+              <p class="text-xs text-slate-400 mt-0.5">Coba ubah filter atau rentang tanggal</p>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+
+        <!--{# ── Footer totals ── #}-->
+        <tfoot>
+          <tr class="bg-gradient-to-r from-blue-50/60 to-slate-50/60">
+            <td colspan="5" class="px-6 py-4 text-right">
+              <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">Grand Total</span>
+            </td>
+            <td class="px-6 py-4 text-right">
+              <span class="text-[12px] font-black text-slate-700">{{ total_qty|default:0 }}</span>
+              <span class="block text-[9px] text-slate-300 uppercase tracking-wider">items</span>
+            </td>
+            <td class="px-6 py-4 text-right">
+              {% if total_qty > 0 %}
+              <span class="text-[11px] text-slate-400">Rp {{ total_amount|div:total_qty|floatformat:0 }}</span>
+              <span class="block text-[9px] text-slate-300 uppercase tracking-wider">avg/item</span>
+              {% else %}<span class="text-slate-300">—</span>{% endif %}
+            </td>
+            <td class="px-6 py-4 text-right">
+              <span class="inline-block text-[13px] font-black text-blue-700
+                           bg-blue-50 border border-blue-100
+                           shadow-[0_0_0_1px_rgba(59,130,246,0.12),0_4px_16px_rgba(59,130,246,0.12)]
+                           px-3 py-1.5 rounded-xl">
+                Rp {{ total_amount|floatformat:0|default:0 }}
+              </span>
+            </td>
+          </tr>
+        </tfoot>
+        {% endblock %}
+
+      </table>
+    </div>
+  </div>
+
+  <!--{# ── Pagination ── #}-->
+  {% if page_obj.has_other_pages %}
+  <nav class="flex justify-center" aria-label="Pagination">
+    <div class="flex items-center gap-1.5">
+      {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+         class="page-btn" aria-label="Sebelumnya"><i class="fas fa-chevron-left text-[10px]"></i></a>
+      {% else %}
+      <span class="page-btn disabled"><i class="fas fa-chevron-left text-[10px]"></i></span>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <span class="page-btn active">{{ num }}</span>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <a href="?page={{ num }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+             class="page-btn">{{ num }}</a>
+        {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}
+          <span class="page-btn disabled" style="border:none;background:none;">…</span>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"
+         class="page-btn" aria-label="Berikutnya"><i class="fas fa-chevron-right text-[10px]"></i></a>
+      {% else %}
+      <span class="page-btn disabled"><i class="fas fa-chevron-right text-[10px]"></i></span>
+      {% endif %}
+    </div>
+  </nav>
+  {% endif %}
+
+</div>
+
+<!--{# Loading overlay #}-->
+<div id="loadingIndicator"
+     class="fixed inset-0 hidden z-50 flex items-center justify-center"
+     style="background:var(--glass-bg);backdrop-filter:blur(8px);">
+  <div class="flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl border border-slate-100" style="background:var(--color-surface)">
+    <svg class="w-5 h-5 animate-spin text-blue-500" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+    </svg>
+    <span class="text-sm font-semibold text-slate-600">Memuat...</span>
+  </div>
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+function salesFilter() {
+  return {
+    /* ── State ── */
+    searchBy       : '{{ request.GET.search_by|default:"customer" }}',
+    advOpen        : false,
+    minAmount      : {{ request.GET.min_amount|default:0 }},
+    activePreset   : '',
+    pay            : { cash:true, transfer:true, qris:true },
+    _fp            : null,   /* flatpickr instance */
+
+    /* Preset definitions */
+    presets: {
+      today     : { label:'Hari Ini' },
+      yesterday : { label:'Kemarin' },
+      week      : { label:'7 Hari' },
+      month     : { label:'Bulan Ini' },
+      last_month: { label:'Bulan Lalu' },
+    },
+
+    /* ── Computed ── */
+    get searchPlaceholder() {
+      return { customer:'Cari customer...', product:'Cari produk...', sku:'Cari SKU...' }[this.searchBy];
+    },
+    get dateLabel() {
+      const s = document.getElementById('date_start')?.value;
+      const e = document.getElementById('date_end')?.value;
+      if (s && e && s !== e) return `${this._fmtDisplay(s)} → ${this._fmtDisplay(e)}`;
+      if (s) return this._fmtDisplay(s);
+      return 'Pilih Tanggal';
+    },
+    get payValue() {
+      return Object.keys(this.pay).filter(k => this.pay[k]).join(',') || '';
+    },
+    get activeAdvCount() {
+      let c = 0;
+      if (this.minAmount > 0) c++;
+      if (!this.pay.cash || !this.pay.transfer || !this.pay.qris) c++;
+      return c;
+    },
+    get hasActiveFilters() {
+      return !!(
+        '{{ request.GET.search }}' ||
+        '{{ request.GET.store }}' ||
+        '{{ request.GET.date_start }}' ||
+        '{{ request.GET.payment_method }}'
+      );
+    },
+
+    /* ── Init ── */
+    init() {
+      /* Restore payment state from URL */
+      const pm = '{{ request.GET.payment_method|default:"cash,transfer,qris" }}';
+      if (pm) {
+        this.pay.cash     = pm.includes('cash');
+        this.pay.transfer = pm.includes('transfer');
+        this.pay.qris     = pm.includes('qris');
+      }
+
+      /* Auto-submit on store change */
+      document.querySelector('select[name="store"]')?.addEventListener('change', () => {
+        document.getElementById('filterForm').submit();
+      });
+
+      /* Export links show loading */
+      document.querySelectorAll('.export-link').forEach(a => {
+        a.addEventListener('click', () => {
+          document.getElementById('loadingIndicator').classList.remove('hidden');
+          setTimeout(() => document.getElementById('loadingIndicator').classList.add('hidden'), 3000);
+        });
+      });
+
+      /* Scroll reveal */
+      const io = new IntersectionObserver(entries => {
+        entries.forEach((e,i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i*60);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold:.06 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    },
+
+    /* ── Flatpickr ── */
+    toggleDatePicker() {
+      if (!this._fp) {
+        this._fp = flatpickr('#fpAnchor', {
+          mode      : 'range',
+          dateFormat: 'Y-m-d',
+          defaultDate: [
+            document.getElementById('date_start').value,
+            document.getElementById('date_end').value
+          ].filter(Boolean),
+          onClose: ([s,e]) => {
+            document.getElementById('date_start').value = s ? this._fmtISO(s) : '';
+            document.getElementById('date_end').value   = e ? this._fmtISO(e) : '';
+            this.activePreset = '';
+          },
+        });
+      }
+      this._fp.open();
+    },
+    clearDates() {
+      document.getElementById('date_start').value = '';
+      document.getElementById('date_end').value   = '';
+      this.activePreset = '';
+      if (this._fp) this._fp.clear();
+    },
+
+    /* ── Presets ── */
+    applyPreset(key) {
+      this.activePreset = key;
+      const { s, e } = this._calcPreset(key);
+      document.getElementById('date_start').value = s;
+      document.getElementById('date_end').value   = e;
+      if (this._fp) this._fp.setDate([s,e]);
+    },
+    _calcPreset(key) {
+      const fmt = d => d.toISOString().split('T')[0];
+      const today = new Date();
+      const y = today.getFullYear(), m = today.getMonth();
+      switch(key) {
+        case 'today'     : return { s:fmt(today), e:fmt(today) };
+        case 'yesterday' : { const d=new Date(today); d.setDate(d.getDate()-1); return {s:fmt(d),e:fmt(d)}; }
+        case 'week'      : { const d=new Date(today); d.setDate(d.getDate()-6); return {s:fmt(d),e:fmt(today)}; }
+        case 'month'     : return { s:fmt(new Date(y,m,1)), e:fmt(today) };
+        case 'last_month': return { s:fmt(new Date(y,m-1,1)), e:fmt(new Date(y,m,0)) };
+        default          : return { s:'', e:'' };
+      }
+    },
+
+    /* ── Helpers ── */
+    setSearchType(t) { this.searchBy = t; },
+    syncPay()        { /* reactivity handles payValue */ },
+    minAmountInput() { /* x-model handles it */ },
+
+    onSubmit() {
+      document.getElementById('loadingIndicator').classList.remove('hidden');
+    },
+    resetAll() {
+      this.searchBy     = 'customer';
+      this.minAmount    = 0;
+      this.activePreset = '';
+      this.pay          = { cash:true, transfer:true, qris:true };
+      this.clearDates();
+      document.getElementById('searchInput').value = '';
+      document.querySelector('select[name="store"]').value = '';
+      document.getElementById('filterForm').submit();
+    },
+
+    _fmtISO(d) {
+      if (!d) return '';
+      return [d.getFullYear(), String(d.getMonth()+1).padStart(2,'0'), String(d.getDate()).padStart(2,'0')].join('-');
+    },
+    _fmtDisplay(iso) {
+      if (!iso) return '';
+      const [y,m,d] = iso.split('-');
+      const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+      return `${parseInt(d)} ${months[parseInt(m)-1]}`;
+    },
+  };
+}
+</script>
+{% endblock %}

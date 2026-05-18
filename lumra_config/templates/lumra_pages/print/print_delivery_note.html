@@ -1,0 +1,68 @@
+{% extends 'lumra_pages/print/print_base.html' %}
+
+{% block content %}
+<div class="border-double mb-4 pb-4">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+            <div class="font-bold" style="font-size: 24px;">SURAT JALAN</div>
+            <div class="text-sm">{{ document_number }}</div>
+            <div class="text-xs">Tanggal: {{ document_date|date:"d M Y H:i" }}</div>
+        </div>
+        <div class="text-right">
+            <div class="text-xs text-slate-400">Referensi</div>
+            <div class="font-bold">{{ reference_number }}</div>
+        </div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;" class="mb-4">
+    <div>
+        <div class="text-xs text-slate-400">Dikirim Dari</div>
+        <div class="font-bold">{{ source_name }}</div>
+        <div class="text-sm">{{ source_address }}</div>
+    </div>
+    <div class="text-right">
+        <div class="text-xs text-slate-400">Dikirim Kepada</div>
+        <div class="font-bold">{{ customer_name }}</div>
+        <div class="text-sm">{{ customer_address|default:"-" }}</div>
+    </div>
+</div>
+
+<table class="table-w-full">
+    <thead>
+        <tr>
+            <th>SKU</th>
+            <th>Produk</th>
+            <th>Deskripsi</th>
+            <th class="text-center">Unit</th>
+            <th class="text-right">Qty</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.sku }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.description }}</td>
+            <td class="text-center">{{ item.unit }}</td>
+            <td class="text-right">{{ item.quantity }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="mt-4" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; padding-top: 36px;">
+    <div class="text-center">
+        <div class="text-xs text-slate-400">Pengirim</div>
+        <div style="height: 64px; border-bottom: 1px solid #cbd5e1;"></div>
+    </div>
+    <div class="text-center">
+        <div class="text-xs text-slate-400">Sopir</div>
+        <div style="height: 64px; border-bottom: 1px solid #cbd5e1;"></div>
+    </div>
+    <div class="text-center">
+        <div class="text-xs text-slate-400">Penerima</div>
+        <div style="height: 64px; border-bottom: 1px solid #cbd5e1;"></div>
+    </div>
+</div>
+{% endblock %}

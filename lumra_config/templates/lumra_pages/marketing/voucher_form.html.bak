@@ -1,0 +1,744 @@
+{% extends 'base/base.html' %}
+
+{% block title %}{% block form_title %}Buat Voucher{% endblock %} — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+
+  .form-card {
+    background     : var(--color-surface-mid);
+    backdrop-filter: var(--glass-blur);
+    border         : 1px solid rgba(255, 255, 255, 0.85);
+    border-radius  : 20px;
+    box-shadow     : 0 4px 24px var(--color-black-a008);
+  }
+
+  .field-label {
+    display        : block;
+    font-size      : 10px;
+    font-weight    : 700;
+    color          : #64748B;
+    text-transform : uppercase;
+    letter-spacing : 0.05em;
+    margin-bottom  : 6px;
+  }
+
+  .input-field {
+    width           : 100%;
+    background      : rgba(255, 255, 255, 0.85);
+    border          : 1px solid rgba(226, 232, 240, 0.8);
+    border-radius   : 12px;
+    padding         : 11px 14px;
+    font-size       : 0.875rem;
+    color           : #334155;
+    transition      : all .2s;
+    font-family     : 'Inter', sans-serif;
+  }
+  .input-field:focus {
+    outline         : none;
+    border-color    : var(--color-emerald-600);
+    box-shadow      : 0 0 0 3px var(--color-emerald-600-a08);
+    background      : #FFF;
+  }
+  .input-field::placeholder { color: #94A3B8; }
+  .input-field:disabled { background: #F8FAFC; color: #94A3B8; cursor: not-allowed; }
+
+  select.input-field { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
+
+  /* ── Type Toggle ── */
+  .type-toggle {
+    display        : flex; gap: 0;
+    background     : #F1F5F9;
+    border-radius  : 12px;
+    padding        : 4px;
+  }
+  .type-option {
+    flex           : 1;
+    padding        : 10px 16px;
+    border-radius  : 10px;
+    font-size      : 12px; font-weight: 600;
+    text-align     : center;
+    cursor         : pointer;
+    transition     : all .2s;
+    color          : #64748B;
+    border         : none; background: transparent;
+    font-family    : 'Inter', sans-serif;
+  }
+  .type-option.active {
+    background     : white;
+    color          : var(--color-primary);
+    box-shadow     : 0 2px 6px rgba(0,0,0,0.06);
+  }
+  .type-option:not(.active):hover { color: #334155; background: rgba(255,255,255,0.5); }
+
+  /* ── Product Tag ── */
+  .product-tag {
+    display        : inline-flex; align-items: center; gap: 5px;
+    padding        : 5px 10px;
+    border-radius  : 8px;
+    font-size      : 11px; font-weight: 600;
+    cursor         : pointer;
+    transition     : all .15s;
+    border         : 1px solid;
+    user-select    : none;
+  }
+  .product-tag.selected {
+    border-color : var(--color-emerald-600);
+    background   : var(--color-emerald-600-a08);
+    color        : var(--color-primary);
+  }
+  .product-tag:not(.selected) {
+    border-color : #E2E8F0;
+    background   : rgba(255,255,255,0.4);
+    color        : #64748B;
+  }
+  .product-tag:not(.selected):hover {
+    border-color : var(--color-emerald-600-a05);
+    color        : var(--color-emerald-600);
+  }
+
+  /* ── Preview Card ── */
+  .voucher-preview {
+    background     : white;
+    border-radius  : 16px;
+    overflow       : hidden;
+    box-shadow     : 0 2px 12px rgba(0,0,0,0.06);
+    position       : relative;
+  }
+  .voucher-preview-header {
+    padding        : 20px 24px;
+    position       : relative;
+    overflow       : hidden;
+  }
+  .voucher-preview-header::after {
+    content        : '';
+    position       : absolute;
+    bottom         : -1px; left: 0; right: 0;
+    height         : 12px;
+    background     : white;
+    border-radius  : 12px 12px 0 0;
+  }
+  .voucher-dashes {
+    position       : absolute;
+    bottom         : 5px; left: 20px; right: 20px;
+    display        : flex; justify-content: space-between;
+    z-index        : 2;
+  }
+  .voucher-dashes span {
+    width      : 12px; height: 12px;
+    border-radius: 50%;
+    background : white;
+  }
+  .voucher-code-display {
+    font-family    : 'Courier New', monospace;
+    font-size      : 20px;
+    font-weight    : 800;
+    letter-spacing : 3px;
+    color          : white;
+    text-shadow    : 0 1px 3px rgba(0,0,0,0.15);
+  }
+  .voucher-preview-body {
+    padding        : 16px 24px 20px;
+  }
+
+  /* ── Button ── */
+  .btn {
+    display         : inline-flex; align-items: center; justify-content: center;
+    padding         : 10px 20px; font-size: 13px; font-weight: 600;
+    border-radius   : 10px; cursor: pointer; gap: 8px;
+    transition      : all .2s; border: 1px solid transparent;
+    font-family     : 'Inter', sans-serif;
+  }
+  .btn-primary { background: var(--color-emerald-600); color: white; box-shadow: 0 4px 14px rgba(5,150,105,0.25); }
+  .btn-primary:hover { background: #047857; }
+  .btn-primary:disabled { opacity: .5; cursor: not-allowed; box-shadow: none; }
+  .btn-outline { border-color: #CBD5E1; color: #475569; background: rgba(255,255,255,0.5); }
+  .btn-outline:hover { background: white; border-color: var(--color-emerald-600); color: var(--color-emerald-600); }
+  .btn-ghost { background: transparent; color: #64748B; }
+  .btn-ghost:hover { background: rgba(0,0,0,0.04); color: var(--color-emerald-600); }
+
+  /* ── Error ── */
+  .field-error { font-size: 11px; color: #E11D48; font-weight: 500; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+
+  /* ── Toggle Switch ── */
+  .toggle-track {
+    width: 40px; height: 22px; border-radius: 11px;
+    background: #CBD5E1; cursor: pointer;
+    transition: background .2s; position: relative;
+  }
+  .toggle-track.active { background: var(--color-emerald-600); }
+  .toggle-knob {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: white; position: absolute; top: 2px; left: 2px;
+    transition: transform .2s; box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+  .toggle-track.active .toggle-knob { transform: translateX(18px); }
+
+  @keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  .animate-in { animation: slideUp .3s ease-out forwards; }
+
+  @keyframes confettiPop { 0%{transform:scale(0.8);opacity:0;} 50%{transform:scale(1.05);} 100%{transform:scale(1);opacity:1;} }
+  .confetti-pop { animation: confettiPop .35s ease-out; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+
+<div class="w-full flex-1 space-y-5 relative z-10"
+     x-data="voucherFormApp({% if edit_voucher %}{{ edit_voucher_json|safe }}{% else %}null{% endif %})"
+     x-init="init()"
+     x-cloak>
+
+  {# ── HEADER ── #}
+  <div class="reveal">
+    <nav class="flex items-center gap-2 text-xs mb-1" style="color:var(--color-emerald-600);" aria-label="Breadcrumb">
+      <a href="{% url 'dashboard' %}" class="hover:text-slate-700 transition-colors">Dashboard</a>
+      <span class="text-slate-300">/</span>
+      <a href="{% url 'voucher_list' %}" class="hover:text-slate-700 transition-colors">Voucher</a>
+      <span class="text-slate-300">/</span>
+      <span class="text-slate-600 font-medium" x-text="isEdit ? 'Edit Voucher' : 'Buat Voucher'"></span>
+    </nav>
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-800" x-text="isEdit ? 'Edit Voucher' : 'Buat Voucher Baru'"></h1>
+        <p class="text-sm text-slate-400 mt-0.5" x-text="isEdit ? 'Ubah pengaturan voucher yang sudah ada' : 'Atur mekanisme diskon untuk pelanggan'"></p>
+      </div>
+      <a href="{% url 'voucher_list' %}"
+         class="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">
+        <i class="fas fa-arrow-left text-xs"></i> Kembali
+      </a>
+    </div>
+  </div>
+
+  {# ── FORM ── #}
+  <div class="reveal form-card p-6 sm:p-8 animate-in">
+    <form @submit.prevent="saveVoucher()">
+
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+
+        {# ══════════ LEFT: Form Fields ══════════ #}
+        <div class="lg:col-span-3 space-y-6">
+
+          {# ── Section: Info Dasar ── #}
+          <div>
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <i class="fas fa-info-circle"></i> Informasi Dasar
+            </h3>
+
+            <div class="space-y-4">
+              {# Nama Voucher #}
+              <div>
+                <label class="field-label">Nama Voucher</label>
+                <input type="text" x-model="form.name" class="input-field"
+                       placeholder="contoh: Diskon Akhir Tahun Gayo Wine"
+                       maxlength="80">
+                <p x-show="errors.name" class="field-error"><i class="fas fa-exclamation-circle"></i> <span x-text="errors.name"></span></p>
+              </div>
+
+              {# Kode Voucher #}
+              <div>
+                <label class="field-label">Kode Voucher</label>
+                <div class="flex gap-2">
+                  <input type="text" x-model="form.code" class="input-field font-mono tracking-wider"
+                         placeholder="GAYO10" maxlength="20"
+                         :disabled="form.autoCode"
+                         style="text-transform:uppercase;">
+                  <button type="button" @click="toggleAutoCode()"
+                          class="btn btn-ghost flex-shrink-0 text-xs whitespace-nowrap"
+                          :class="form.autoCode ? 'text-emerald-600' : ''">
+                    <i :class="form.autoCode ? 'fas fa-lock' : 'fas fa-magic'"></i>
+                    <span x-text="form.autoCode ? 'Otomatis' : 'Auto-generate'"></span>
+                  </button>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-1" x-show="form.autoCode">
+                  <i class="fas fa-info-circle mr-1"></i> Kode akan dibuat otomatis saat disimpan
+                </p>
+                <p x-show="errors.code" class="field-error"><i class="fas fa-exclamation-circle"></i> <span x-text="errors.code"></span></p>
+              </div>
+
+              {# Deskripsi #}
+              <div>
+                <label class="field-label">Deskripsi <span class="font-normal opacity-60">(opsional)</span></label>
+                <textarea x-model="form.description" class="input-field" rows="2"
+                          placeholder="Jelaskan syarat/ketentuan singkat…" maxlength="200"></textarea>
+              </div>
+            </div>
+          </div>
+
+          {# ── Section: Mekanisme Diskon ── #}
+          <div>
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <i class="fas fa-percent"></i> Mekanisme Diskon
+            </h3>
+
+            <div class="space-y-4">
+              {# Tipe Diskon Toggle #}
+              <div>
+                <label class="field-label">Tipe Diskon</label>
+                <div class="type-toggle">
+                  <button type="button" class="type-option" :class="{ 'active': form.type === 'percentage' }"
+                          @click="form.type = 'percentage'">
+                    <i class="fas fa-percent mr-1.5 text-xs"></i> Persentase (%)
+                  </button>
+                  <button type="button" class="type-option" :class="{ 'active': form.type === 'fixed' }"
+                          @click="form.type = 'fixed'">
+                    <i class="fas fa-money-bill-wave mr-1.5 text-xs"></i> Nominal (Rp)
+                  </button>
+                </div>
+              </div>
+
+              {# Nilai Diskon #}
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="field-label" x-text="form.type === 'percentage' ? 'Diskon (%)' : 'Diskon (Rp)'"></label>
+                  <div class="relative">
+                    <input type="number" x-model="form.value" class="input-field"
+                           :placeholder="form.type === 'percentage' ? '10' : '5000'"
+                           min="0" :max="form.type === 'percentage' ? 100 : 999999999"
+                           @input="errors.value = ''">
+                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-400 font-semibold"
+                          x-text="form.type === 'percentage' ? '%' : 'Rp'"></span>
+                  </div>
+                  <p x-show="errors.value" class="field-error"><i class="fas fa-exclamation-circle"></i> <span x-text="errors.value"></span></p>
+                  <p x-show="form.type === 'percentage' && form.value > 100" class="field-error">
+                    Maksimal 100%
+                  </p>
+                </div>
+
+                {# Maks Diskon (hanya untuk persentase) #}
+                <div x-show="form.type === 'percentage'" x-transition>
+                  <label class="field-label">Maks. Diskon (Rp)</label>
+                  <div class="relative">
+                    <input type="number" x-model="form.maxDiscount" class="input-field"
+                           placeholder="50000" min="0">
+                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-400 font-semibold">Rp</span>
+                  </div>
+                  <p class="text-[10px] text-slate-400 mt-1">
+                    <i class="fas fa-shield-alt mr-1"></i> Batas atas potongan meski % besar
+                  </p>
+                </div>
+              </div>
+
+              {# Minimum Pembelian #}
+              <div>
+                <label class="field-label">Minimum Pembelian <span class="font-normal opacity-60">(opsional)</span></label>
+                <div class="relative">
+                  <input type="number" x-model="form.minPurchase" class="input-field"
+                         placeholder="0 = tanpa minimum" min="0">
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-400 font-semibold">Rp</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {# ── Section: Masa Berlaku ── #}
+          <div>
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <i class="fas fa-calendar-alt"></i> Masa Berlaku
+            </h3>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="field-label">Mulai</label>
+                <input type="datetime-local" x-model="form.validFrom" class="input-field">
+                <p x-show="errors.validFrom" class="field-error"><i class="fas fa-exclamation-circle"></i> <span x-text="errors.validFrom"></span></p>
+              </div>
+              <div>
+                <label class="field-label">Berakhir</label>
+                <input type="datetime-local" x-model="form.validTo" class="input-field">
+                <p x-show="errors.validTo" class="field-error"><i class="fas fa-exclamation-circle"></i> <span x-text="errors.validTo"></span></p>
+              </div>
+            </div>
+
+            {# Durasi shortcut #}
+            <div class="flex flex-wrap gap-2 mt-3">
+              <button type="button" @click="setDuration(1)" class="text-[10px] font-semibold text-slate-500 px-2.5 py-1 rounded-lg border border-slate-200 hover:border-emerald-400 hover:text-emerald-600 transition-all">1 Hari</button>
+              <button type="button" @click="setDuration(3)" class="text-[10px] font-semibold text-slate-500 px-2.5 py-1 rounded-lg border border-slate-200 hover:border-emerald-400 hover:text-emerald-600 transition-all">3 Hari</button>
+              <button type="button" @click="setDuration(7)" class="text-[10px] font-semibold text-slate-500 px-2.5 py-1 rounded-lg border border-slate-200 hover:border-emerald-400 hover:text-emerald-600 transition-all">1 Minggu</button>
+              <button type="button" @click="setDuration(30)" class="text-[10px] font-semibold text-slate-500 px-2.5 py-1 rounded-lg border border-slate-200 hover:border-emerald-400 hover:text-emerald-600 transition-all">1 Bulan</button>
+              <button type="button" @click="setDuration(90)" class="text-[10px] font-semibold text-slate-500 px-2.5 py-1 rounded-lg border border-slate-200 hover:border-emerald-400 hover:text-emerald-600 transition-all">3 Bulan</button>
+            </div>
+          </div>
+
+          {# ── Section: Penggunaan ── #}
+          <div>
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <i class="fas fa-users"></i> Batas Penggunaan
+            </h3>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="field-label">Total Kuota</label>
+                <input type="number" x-model="form.usageLimit" class="input-field"
+                       placeholder="0 = unlimited" min="0">
+                <p class="text-[10px] text-slate-400 mt-1">Berapa kali voucher bisa dipakai secara total</p>
+              </div>
+              <div>
+                <label class="field-label">Per Pelanggan</label>
+                <input type="number" x-model="form.perUserLimit" class="input-field"
+                       placeholder="1" min="1" max="99">
+                <p class="text-[10px] text-slate-400 mt-1">Berapa kali 1 pelanggan boleh pakai</p>
+              </div>
+            </div>
+          </div>
+
+          {# ── Section: Produk Terapan ── #}
+          <div>
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <i class="fas fa-coffee"></i> Berlaku Untuk
+            </h3>
+
+            <div class="space-y-3">
+              <label class="flex items-center gap-3 cursor-pointer p-3 rounded-xl border border-slate-200 hover:border-emerald-300 transition-all"
+                     :class="form.scope === 'all' ? 'border-emerald-400 bg-emerald-50/50' : ''">
+                <input type="radio" value="all" x-model="form.scope" class="accent-emerald-500">
+                <div>
+                  <span class="text-sm font-semibold text-slate-700">Semua Produk</span>
+                  <p class="text-[10px] text-slate-400">Voucher berlaku untuk seluruh menu</p>
+                </div>
+              </label>
+
+              <label class="flex items-center gap-3 cursor-pointer p-3 rounded-xl border border-slate-200 hover:border-emerald-300 transition-all"
+                     :class="form.scope === 'category' ? 'border-emerald-400 bg-emerald-50/50' : ''">
+                <input type="radio" value="category" x-model="form.scope" class="accent-emerald-500">
+                <div>
+                  <span class="text-sm font-semibold text-slate-700">Per Kategori</span>
+                  <p class="text-[10px] text-slate-400">Pilih kategori produk tertentu</p>
+                </div>
+              </label>
+
+              <label class="flex items-center gap-3 cursor-pointer p-3 rounded-xl border border-slate-200 hover:border-emerald-300 transition-all"
+                     :class="form.scope === 'product' ? 'border-emerald-400 bg-emerald-50/50' : ''">
+                <input type="radio" value="product" x-model="form.scope" class="accent-emerald-500">
+                <div>
+                  <span class="text-sm font-semibold text-slate-700">Produk Spesifik</span>
+                  <p class="text-[10px] text-slate-400">Pilih produk satu per satu</p>
+                </div>
+              </label>
+
+              {# Tag selector (muncul jika bukan "all") #}
+              <div x-show="form.scope !== 'all'" x-transition class="flex flex-wrap gap-2 pt-1">
+                <template x-for="item in (form.scope === 'category' ? categories : products)" :key="item.id">
+                  <button type="button" class="product-tag" :class="{ 'selected': form.selectedItems.includes(item.id) }"
+                          @click="toggleItem(item.id)">
+                    <i :class="form.selectedItems.includes(item.id) ? 'fas fa-check-circle' : 'far fa-circle'" class="text-[10px]"></i>
+                    <span x-text="item.name"></span>
+                  </button>
+                </template>
+              </div>
+            </div>
+          </div>
+
+          {# ── Section: Status ── #}
+          <div>
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <i class="fas fa-toggle-on"></i> Status
+            </h3>
+            <div class="flex items-center justify-between p-4 rounded-xl border border-slate-200 bg-white/50">
+              <div>
+                <p class="text-sm font-semibold text-slate-700" x-text="form.isActive ? 'Aktif' : 'Draft (Nonaktif)'"></p>
+                <p class="text-[10px] text-slate-400" x-text="form.isActive ? 'Voucher bisa langsung digunakan pelanggan' : 'Voucher disimpan tapi belum bisa dipakai'"></p>
+              </div>
+              <div class="toggle-track" :class="{ 'active': form.isActive }" @click="form.isActive = !form.isActive" role="switch" :aria-checked="form.isActive.toString()">
+                <div class="toggle-knob"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {# ══════════ RIGHT: Live Preview ══════════ #}
+        <div class="lg:col-span-2">
+          <div class="sticky top-6 space-y-4">
+            <p class="field-label">Preview Voucher</p>
+
+            <div class="voucher-preview confetti-pop" :key="previewKey">
+              {# Header berwarna #}
+              <div class="voucher-preview-header"
+                   :style="'background: linear-gradient(135deg, ' + (form.type === 'percentage' ? '#059669, #047857' : '#2563EB, #1D4ED8') + ')'">
+                <p class="text-[10px] font-semibold text-white/70 uppercase tracking-widest mb-1">Voucher</p>
+                <p class="voucher-code-display" x-text="(form.code || (form.autoCode ? 'XXXX-XXXX' : '-----')).toUpperCase()"></p>
+                <div class="voucher-dashes">
+                  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+
+              {# Body #}
+              <div class="voucher-preview-body space-y-3">
+                <div>
+                  <p class="text-base font-bold text-slate-800" x-text="form.name || 'Nama Voucher'"></p>
+                  <p class="text-xs text-slate-400 mt-0.5 line-clamp-2" x-text="form.description || 'Deskripsi voucher akan muncul di sini'"></p>
+                </div>
+
+                {# Nilai diskon besar #}
+                <div class="py-3 border-y border-dashed border-slate-200 text-center">
+                  <span class="text-3xl font-extrabold"
+                        :style="'color:' + (form.type === 'percentage' ? 'var(--color-emerald-600)' : '#2563EB')"
+                        x-text="discountDisplay"></span>
+                  <p x-show="form.minPurchase > 0" class="text-[10px] text-slate-400 mt-1">
+                    Min. pembelian <span class="font-semibold" x-text="'Rp ' + Number(form.minPurchase).toLocaleString('id-ID')"></span>
+                  </p>
+                </div>
+
+                {# Info badges #}
+                <div class="flex flex-wrap gap-2">
+                  <span class="text-[10px] font-semibold px-2 py-1 rounded-md bg-slate-100 text-slate-500">
+                    <i class="fas fa-calendar mr-1"></i>
+                    <span x-text="validityLabel || 'Belum ditentukan'"></span>
+                  </span>
+                  <span class="text-[10px] font-semibold px-2 py-1 rounded-md bg-slate-100 text-slate-500">
+                    <i class="fas fa-redo mr-1"></i>
+                    <span x-text="form.perUserLimit + 'x / pelanggan'"></span>
+                  </span>
+                  <span x-show="form.usageLimit > 0"
+                        class="text-[10px] font-semibold px-2 py-1 rounded-md bg-slate-100 text-slate-500">
+                    <i class="fas fa-ticket-alt mr-1"></i>
+                    Kuota: <span x-text="form.usageLimit"></span>
+                  </span>
+                </div>
+
+                {# Scope info #}
+                <div class="text-[10px] text-slate-400 flex items-start gap-1.5 pt-1">
+                  <i class="fas fa-tag mt-0.5"></i>
+                  <span x-text="scopeLabel"></span>
+                </div>
+
+                {# Status badge #}
+                <div class="flex items-center justify-between pt-2">
+                  <span class="text-[10px] font-bold px-2.5 py-1 rounded-md"
+                        :class="form.isActive ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400'"
+                        x-text="form.isActive ? '● Aktif' : '○ Draft'"></span>
+                </div>
+              </div>
+            </div>
+
+            {# Actions #}
+            <div class="flex gap-2">
+              <a href="{% url 'voucher_list' %}" class="btn btn-outline flex-1">Batal</a>
+              <button type="submit" class="btn btn-primary flex-1" :disabled="isSaving">
+                <i :class="isSaving ? 'fas fa-spinner fa-spin' : 'fas fa-save'" class="text-xs"></i>
+                <span x-text="isSaving ? 'Menyimpan…' : (isEdit ? 'Simpan Perubahan' : 'Buat Voucher')"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+</div>
+
+{# ── TOAST ── #}
+<div class="fixed bottom-4 right-4 z-50 space-y-2" x-data aria-live="polite" aria-atomic="true">
+  <template x-for="t in $store.toasts.list" :key="t.id">
+    <div class="flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl min-w-56 max-w-xs text-white text-sm"
+         style="background:rgba(15,23,42,0.9); backdrop-filter:var(--glass-blur);"
+         :class="{
+           'border-l-4 border-emerald-400': t.type==='success',
+           'border-l-4 border-blue-400'   : t.type==='info',
+           'border-l-4 border-amber-400'  : t.type==='warning',
+           'border-l-4 border-rose-400'   : t.type==='error',
+         }">
+      <i :class="t.icon" class="text-xs flex-shrink-0"></i>
+      <span x-text="t.message"></span>
+    </div>
+  </template>
+</div>
+
+{# ── Reference data JSON ── #}
+<script id="form-categories-data" type="application/json">{{ categories_json|default:"[]"|safe }}</script>
+<script id="form-products-data" type="application/json">{{ products_json|default:"[]"|safe }}</script>
+{% endblock %}
+
+{% block dashboard_scripts %}
+<script>
+document.addEventListener('alpine:init', () => {
+  if (!Alpine.store('toasts')) {
+    Alpine.store('toasts', {
+      list: [], _id: 0,
+      show(message, type='success', icon='fas fa-check-circle') {
+        const id = ++this._id;
+        this.list.push({ id, message, type, icon });
+        setTimeout(() => { this.list = this.list.filter(t => t.id !== id); }, 2900);
+      }
+    });
+  }
+});
+</script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function voucherFormApp(editData) {
+  return {
+    isEdit        : false,
+    isSaving      : false,
+    previewKey    : 0,
+    errors        : {},
+    categories    : [],
+    products      : [],
+
+    form: {
+      name        : '',
+      code        : '',
+      autoCode    : true,
+      description : '',
+      type        : 'percentage',   // percentage | fixed
+      value       : '',
+      maxDiscount : '',
+      minPurchase : 0,
+      validFrom   : '',
+      validTo     : '',
+      usageLimit  : 0,
+      perUserLimit: 1,
+      scope       : 'all',           // all | category | product
+      selectedItems: [],
+      isActive    : true,
+    },
+
+    init() {
+      this.isEdit = !!editData;
+
+      /* Load reference data */
+      const catRaw = document.getElementById('form-categories-data');
+      if (catRaw?.textContent) { try { const p = JSON.parse(catRaw.textContent); if (Array.isArray(p)) this.categories = p; } catch {} }
+      const prodRaw = document.getElementById('form-products-data');
+      if (prodRaw?.textContent) { try { const p = JSON.parse(prodRaw.textContent); if (Array.isArray(p)) this.products = p; } catch {} }
+
+      /* Fallback mock */
+      if (this.categories.length === 0) {
+        this.categories = [
+          { id: 1, name: 'Coffee' }, { id: 2, name: 'Non-Coffee' },
+          { id: 3, name: 'Pastry' }, { id: 4, name: 'Merchandise' },
+        ];
+      }
+      if (this.products.length === 0) {
+        this.products = [
+          { id: 1, name: 'Gayo Wine' }, { id: 2, name: 'Es Kopi Susu' },
+          { id: 3, name: 'Matcha Latte' }, { id: 4, name: 'Croissant' },
+          { id: 5, name: 'Tumbler 500ml' },
+        ];
+      }
+
+      /* Populate from edit data */
+      if (editData) {
+        Object.keys(this.form).forEach(k => { if (editData[k] !== undefined) this.form[k] = editData[k]; });
+        if (editData.categories) this.form.selectedItems = editData.categories.map(c => c.id);
+        if (editData.products)   this.form.selectedItems = editData.products.map(p => p.id);
+      }
+
+      /* Set default validFrom = now */
+      if (!this.form.validFrom) {
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        this.form.validFrom = now.toISOString().slice(0, 16);
+      }
+
+      /* Scroll reveal */
+      const io = new IntersectionObserver(entries => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 60); io.unobserve(e.target); }
+        });
+      }, { threshold: .08 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    },
+
+    /* ── Computed ── */
+    get discountDisplay() {
+      if (!this.form.value) return this.form.type === 'percentage' ? '0%' : 'Rp 0';
+      if (this.form.type === 'percentage') return this.form.value + '%';
+      return 'Rp ' + Number(this.form.value).toLocaleString('id-ID');
+    },
+
+    get validityLabel() {
+      if (!this.form.validFrom || !this.form.validTo) return 'Belum ditentukan';
+      try {
+        const f = new Date(this.form.validFrom), t = new Date(this.form.validTo);
+        return f.toLocaleDateString('id-ID', { day:'numeric', month:'short' }) + ' – ' + t.toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+      } catch { return '-'; }
+    },
+
+    get scopeLabel() {
+      if (this.form.scope === 'all') return 'Berlaku untuk semua produk';
+      const items = this.form.scope === 'category' ? this.categories : this.products;
+      const sel = items.filter(i => this.form.selectedItems.includes(i.id));
+      if (sel.length === 0) return 'Belum ada item dipilih';
+      return 'Berlaku untuk: ' + sel.map(i => i.name).join(', ');
+    },
+
+    /* ── Methods ── */
+    toggleAutoCode() {
+      this.form.autoCode = !this.form.autoCode;
+      if (this.form.autoCode) this.form.code = '';
+    },
+
+    setDuration(days) {
+      const from = this.form.validFrom ? new Date(this.form.validFrom) : new Date();
+      const to = new Date(from.getTime() + days * 86400000);
+      to.setMinutes(to.getMinutes() - to.getTimezoneOffset());
+      if (!this.form.validFrom) {
+        from.setMinutes(from.getMinutes() - from.getTimezoneOffset());
+        this.form.validFrom = from.toISOString().slice(0, 16);
+      }
+      this.form.validTo = to.toISOString().slice(0, 16);
+    },
+
+    toggleItem(id) {
+      const idx = this.form.selectedItems.indexOf(id);
+      idx >= 0 ? this.form.selectedItems.splice(idx, 1) : this.form.selectedItems.push(id);
+    },
+
+    validate() {
+      this.errors = {};
+      if (!this.form.name.trim()) this.errors.name = 'Nama wajib diisi';
+      if (!this.form.autoCode && !this.form.code.trim()) this.errors.code = 'Kode wajib diisi (atau gunakan auto-generate)';
+      if (!this.form.value || Number(this.form.value) <= 0) this.errors.value = 'Nilai diskon harus lebih dari 0';
+      if (this.form.type === 'percentage' && Number(this.form.value) > 100) this.errors.value = 'Maksimal 100%';
+      if (!this.form.validFrom) this.errors.validFrom = 'Tanggal mulai wajib';
+      if (!this.form.validTo) this.errors.validTo = 'Tanggal berakhir wajib';
+      if (this.form.validFrom && this.form.validTo && new Date(this.form.validTo) <= new Date(this.form.validFrom)) {
+        this.errors.validTo = 'Harus setelah tanggal mulai';
+      }
+      if (this.form.scope !== 'all' && this.form.selectedItems.length === 0) {
+        this.errors._scope = 'Pilih minimal satu item';
+      }
+      return Object.keys(this.errors).length === 0;
+    },
+
+    saveVoucher() {
+      if (!this.validate()) {
+        Alpine.store('toasts').show('Lengkapi form yang bertanda merah', 'error', 'fas fa-exclamation-circle');
+        return;
+      }
+
+      this.isSaving = true;
+
+      /*
+       * === INTEGRASI DJANGO ===
+       * fetch(this.isEdit ? '{% url "edit_voucher" pk=edit_voucher.id %}' : '{% url "create_voucher" %}', {
+       *   method: 'POST',
+       *   headers: { 'X-CSRFToken': '{{ csrf_token }}', 'Content-Type': 'application/json' },
+       *   body: JSON.stringify(this.form)
+       * })
+       * .then(r => r.json())
+       * .then(data => { ... redirect ... })
+       * .catch(err => { this.errors = err.errors || {}; });
+       */
+
+      setTimeout(() => {
+        this.isSaving = false;
+        this.previewKey++;
+        Alpine.store('toasts').show(
+          this.isEdit ? 'Voucher "' + this.form.name + '" diperbarui' : 'Voucher "' + this.form.name + '" berhasil dibuat',
+          'success', 'fas fa-check-circle'
+        );
+        setTimeout(() => { window.location.href = '{% url "voucher_list" %}'; }, 900);
+      }, 1200);
+    },
+  };
+}
+</script>
+{% endblock %}

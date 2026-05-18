@@ -1,0 +1,191 @@
+{% extends 'base/base.html' %}
+{% block title %}Laba Rugi - Lumra ERP{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-card {
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.95);
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+  .pl-table { width: 100%; border-collapse: collapse; }
+  .pl-table td {
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 13px;
+    color: #334155;
+    vertical-align: top;
+  }
+  .pl-label { padding-right: 20px; }
+  .pl-value { text-align: right; font-family: monospace; font-weight: 700; }
+  .section-row td {
+    padding-top: 16px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: #64748b;
+  }
+  .total-row td {
+    border-top: 1px solid #cbd5e1;
+    font-weight: 800;
+    color: #0f172a;
+  }
+  .grand-row td {
+    border-top: 2px solid #94a3b8;
+    font-size: 15px;
+    font-weight: 900;
+    color: #0f172a;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="profitLossApp()" x-init="init()" x-cloak>
+  <div class="flex items-end justify-between gap-4 flex-wrap">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">Laporan Laba Rugi</h1>
+      <p class="text-sm text-slate-400 mt-0.5">Ringkasan pendapatan dan beban untuk periode berjalan.</p>
+    </div>
+    <div class="flex items-center gap-3 glass-card px-4 py-2">
+      <label class="text-xs font-bold uppercase text-slate-500">Periode</label>
+      <input type="month" x-model="period" @change="window.location.href=`?period=${period}`" class="bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-sm font-bold text-slate-700 outline-none focus:border-slate-400">
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+    <div class="glass-card p-5">
+      <p class="text-xs font-bold uppercase text-slate-400">Total Pendapatan</p>
+      <p class="mt-2 text-2xl font-bold text-emerald-600" x-text="formatCurrency(totalRevenue)"></p>
+    </div>
+    <div class="glass-card p-5">
+      <p class="text-xs font-bold uppercase text-slate-400">Total Beban</p>
+      <p class="mt-2 text-2xl font-bold text-rose-600" x-text="formatCurrency(totalExpense)"></p>
+    </div>
+    <div class="glass-card p-5">
+      <p class="text-xs font-bold uppercase text-slate-400">Laba Bersih</p>
+      <p class="mt-2 text-2xl font-bold" :class="netProfit >= 0 ? 'text-emerald-600' : 'text-rose-600'" x-text="formatCurrency(netProfit)"></p>
+    </div>
+  </div>
+
+  <div class="glass-card p-8">
+    <div class="mb-6">
+      <h2 class="text-lg font-bold text-slate-800">Periode <span x-text="periodLabel"></span></h2>
+      <p class="text-sm text-slate-500 mt-1">Pendapatan dan beban diambil dari jurnal yang sudah berstatus `posted`.</p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-10 xl:grid-cols-2">
+      <div>
+        <table class="pl-table">
+          <tbody>
+            <tr class="section-row"><td colspan="2">Pendapatan</td></tr>
+            <template x-for="item in revenue" :key="item.code + item.name">
+              <tr>
+                <td class="pl-label">
+                  <div class="font-semibold text-slate-700" x-text="item.name"></div>
+                  <div class="text-xs text-slate-400 font-mono" x-text="item.code"></div>
+                </td>
+                <td class="pl-value text-emerald-600" x-text="formatCurrency(item.amount)"></td>
+              </tr>
+            </template>
+            <tr x-show="revenue.length === 0">
+              <td colspan="2" class="text-slate-400">Belum ada pendapatan tercatat pada periode ini.</td>
+            </tr>
+            <tr class="total-row">
+              <td class="pl-label">Total Pendapatan</td>
+              <td class="pl-value text-emerald-600" x-text="formatCurrency(totalRevenue)"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <table class="pl-table">
+          <tbody>
+            <tr class="section-row"><td colspan="2">Beban</td></tr>
+            <template x-for="item in expense" :key="item.code + item.name">
+              <tr>
+                <td class="pl-label">
+                  <div class="font-semibold text-slate-700" x-text="item.name"></div>
+                  <div class="text-xs text-slate-400 font-mono" x-text="item.code"></div>
+                </td>
+                <td class="pl-value text-rose-600" x-text="formatCurrency(item.amount)"></td>
+              </tr>
+            </template>
+            <tr x-show="expense.length === 0">
+              <td colspan="2" class="text-slate-400">Belum ada beban tercatat pada periode ini.</td>
+            </tr>
+            <tr class="total-row">
+              <td class="pl-label">Total Beban</td>
+              <td class="pl-value text-rose-600" x-text="formatCurrency(totalExpense)"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <table class="pl-table mt-8">
+      <tbody>
+        <tr class="total-row">
+          <td class="pl-label">Laba Kotor</td>
+          <td class="pl-value" :class="grossProfit >= 0 ? 'text-emerald-600' : 'text-rose-600'" x-text="formatCurrency(grossProfit)"></td>
+        </tr>
+        <tr class="grand-row">
+          <td class="pl-label">Laba Bersih</td>
+          <td class="pl-value" :class="netProfit >= 0 ? 'text-emerald-600' : 'text-rose-600'" x-text="formatCurrency(netProfit)"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script id="revenue-data" type="application/json">
+{{ revenue_json|safe }}
+</script>
+
+<script id="expense-data" type="application/json">
+{{ expense_json|safe }}
+</script>
+
+<script>
+function profitLossApp() {
+  return {
+    period: '{{ period|escapejs }}',
+    revenue: [],
+    expense: [],
+    totalRevenue: {{ total_revenue|default:0 }},
+    totalExpense: {{ total_expense|default:0 }},
+    grossProfit: {{ gross_profit|default:0 }},
+    netProfit: {{ net_profit|default:0 }},
+    get periodLabel() {
+      if (!this.period) return '-';
+      const [year, month] = this.period.split('-');
+      return new Date(year, month - 1).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+    },
+    formatCurrency(num) {
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0
+      }).format(num || 0);
+    },
+    init() {
+      const _revenueRaw = document.getElementById('revenue-data');
+      if (_revenueRaw) {
+        try { this.revenue = JSON.parse(_revenueRaw.textContent); }
+        catch(e) { console.error('revenue-data parse error:', e); }
+      }
+      const _expenseRaw = document.getElementById('expense-data');
+      if (_expenseRaw) {
+        try { this.expense = JSON.parse(_expenseRaw.textContent); }
+        catch(e) { console.error('expense-data parse error:', e); }
+      }}
+  }
+}
+</script>
+{% endblock %}

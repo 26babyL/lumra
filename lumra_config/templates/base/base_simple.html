@@ -1,0 +1,112 @@
+{% load tailwind_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard 2{% endblock %}</title>
+
+    {% tailwind_css %}
+
+    <!-- DaisyUI CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css" />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    {% block extra_head %}{% endblock %}
+    {% block extra_css %}{% endblock %}
+
+    <style>
+        [x-cloak]{display:none!important}
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        
+        .sidebar-transition {
+            transition: width 0.3s ease-in-out;
+        }
+        
+        .content-shift {
+            transition: margin-left 0.3s ease-in-out;
+        }
+        
+        @media (max-width: 767px) {
+            .content-shift { 
+                margin-left: 0 !important; 
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-base-200 text-base-content">
+
+    <!-- Skip link untuk aksesibilitas -->
+    <a href="#main-content" class="sr-only">Lompat ke konten</a>
+
+    <div class="flex h-screen" x-data="sidebarApp()" x-init="init()">
+
+        {% include 'base/sidebar_simple.html' %}
+
+        <div class="flex-1 flex flex-col overflow-hidden content-shift"
+             :style="sidebarOpen ? 'margin-left: 16rem' : 'margin-left: 4.5rem'">
+
+            {% include 'base/navbar_simple.html' %}
+
+            <main id="main-content"
+                  role="main"
+                  tabindex="-1"
+                  class="flex-1 overflow-x-hidden overflow-y-auto p-4 md:p-6">
+                {% block content %}{% endblock %}
+            </main>
+
+        </div>
+
+    </div>
+
+    {% block dashboard_scripts %}{% endblock %}
+    {% block scripts %}{% endblock %}
+
+    <script>
+    function sidebarApp() {
+        return {
+            sidebarOpen: true,
+            
+            init() {
+                // Load sidebar state dari localStorage
+                const saved = localStorage.getItem('sidebarOpen');
+                this.sidebarOpen = saved !== 'false';
+                
+                // Apply state ke body
+                this.updateBodyClass();
+            },
+            
+            toggle() {
+                this.sidebarOpen = !this.sidebarOpen;
+                localStorage.setItem('sidebarOpen', this.sidebarOpen.toString());
+                this.updateBodyClass();
+            },
+            
+            updateBodyClass() {
+                if (this.sidebarOpen) {
+                    document.body.classList.add('sidebar-open');
+                } else {
+                    document.body.classList.remove('sidebar-open');
+                }
+            }
+        }
+    }
+    </script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+</body>
+</html>

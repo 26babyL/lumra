@@ -1,0 +1,2472 @@
+{
+  "module_name": "inventory",
+  "template_total": 27,
+  "templates": [
+    {
+      "template_name": "lumra_pages/inventory/product_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/product_list.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 1,
+      "structure_stats": {
+        "component_total": 115,
+        "interactive_total": 52,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "#} {% block content %} Master Data Daftar Produk Kelola semua produk, harga, sto…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Daftar Produk"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Import",
+            "text_preview": "Import"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Export CSV",
+            "text_preview": "Export CSV"
+          },
+          {
+            "type": "button-primary",
+            "label": "BUTTON (Primary)",
+            "text_preview": "Tambah Produk N"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/stock_overview.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/stock_overview.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 1,
+      "structure_stats": {
+        "component_total": 81,
+        "interactive_total": 32,
+        "issue_total": 4,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "#} {% block content %} {{ inventory_items|json_script:\"inventory-items-data\" }}…"
+          },
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [inventoryPlanner()]",
+            "text_preview": "{# ── HEADER ── #} Dashboard / Inventory Planner Inventory P…"
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Inventory Planner"
+          },
+          {
+            "type": "ol",
+            "label": "[ ORDERED LIST ]",
+            "text_preview": "Dashboard / Inventory Planner"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Inventory Planner"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='p-1.5 text-slate-400 hover:text-blue-600 hover:bg-'"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='p-1.5 text-slate-400 hover:style='"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='p-1.5 text-slate-400 hover:text-purple-600 hover:b'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/add_stock_movement.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/add_stock_movement.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 38,
+        "interactive_total": 9,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Record"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "{% csrf_token %} Record Movement Manage your 118K SKU Flow Tipe Pergerakan Stock…"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/adjustment_reasons.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/adjustment_reasons.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 19,
+        "interactive_total": 10,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Master Data Alasan Koreksi"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Tambah Alasan",
+            "text_preview": "Tambah Alasan"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Kode Nama Alasan Tipe Koreksi Deskripsi Singkat Status Aksi"
+          },
+          {
+            "type": "table",
+            "label": "[ TABLE ]",
+            "text_preview": "Kode Nama Alasan Tipe Koreksi Deskripsi Singkat Status Aksi"
+          },
+          {
+            "type": "badge",
+            "label": "BADGE / STATUS",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT [checkbox] ",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/batch_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/batch_list.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 25,
+        "interactive_total": 1,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Inventory / Manajemen Batch"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Batch & Lot Tracking"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Total Batch"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/expiry_tracking.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/expiry_tracking.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 23,
+        "interactive_total": 6,
+        "issue_total": 3,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "QC / Pantauan Kedaluwarsa"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Dashboard Kedaluwarsa"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Export Laporan",
+            "text_preview": "Export Laporan"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H2)",
+            "text_preview": "Distribusi Risiko Stok"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='flex-1 py-2 bg-slate-50 text-slate-600 rounded-lg '"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='flex-1 py-2 bg-white border border-slate-200 text-'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/requisition_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/requisition_list.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 24,
+        "interactive_total": 0,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Logistik / Permintaan Stok"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Permintaan Stok (Requisition)"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Total Req"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Pending"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/stock_movement_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/stock_movement_form.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 38,
+        "interactive_total": 9,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Record"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "{% csrf_token %} Record Movement Manage your 118K SKU Flow Tipe Pergerakan Stock…"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/stock_opname_approvals.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/stock_opname_approvals.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 30,
+        "interactive_total": 11,
+        "issue_total": 3,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "#} {% block content %} {# ── HEADER ────────────────────────────────────────────…"
+          },
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [approvalsManager()]",
+            "text_preview": "{# ── HEADER ───────────────────────────────────────────────…"
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Approvals"
+          },
+          {
+            "type": "ol",
+            "label": "[ ORDERED LIST ]",
+            "text_preview": "Dashboard / Approvals"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Stock Opname Approvals"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: {{ tab.label }} {% if tab.count is not N…",
+            "text_preview": "{{ tab.label }} {% if tab.count is not None %} {{ tab.count…"
+          },
+          {
+            "type": "filter",
+            "label": "FILTER / TAB",
+            "text_preview": "{{ tab.count }}"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='inline-flex items-center gap-1 text-xs font-medium'"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='inline-flex items-center gap-1 text-xs font-medium'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/supplier_evaluation.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/supplier_evaluation.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 21,
+        "interactive_total": 2,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Evaluasi Performa Supplier"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Tambah Vendor",
+            "text_preview": "Tambah Vendor"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Supplier Terbaik Bulan Ini Skor Kualitas"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H2)",
+            "text_preview": "Supplier Terbaik Bulan Ini"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H2)",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='text-xs font-bold text-slate-600 hover:text-emeral'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/supplier_price_confirm_delete.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/supplier_price_confirm_delete.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 47,
+        "interactive_total": 17,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "#} {% block content %} {% csrf_token %} Dashboard / Supplier Prices Supplier Pri…"
+          },
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [supplierPriceManager()]",
+            "text_preview": "{% csrf_token %} Dashboard / Supplier Prices Supplier Price…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Supplier Prices"
+          },
+          {
+            "type": "ol",
+            "label": "[ ORDERED LIST ]",
+            "text_preview": "Dashboard / Supplier Prices"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Supplier Price List"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Tambah Harga",
+            "text_preview": "Tambah Harga"
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "Cari supplier, produk, atau harga Filter supplier Semua Supplier Filter Reset"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/supplier_price_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/supplier_price_form.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 8,
+        "interactive_total": 2,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [supplierPriceForm()]",
+            "text_preview": "{# ── HEADER ───────────────────────────────────────────────…"
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Supplier Prices / {% if is_edit %}Edit{% else %}Tambah{% endif %} Ha…"
+          },
+          {
+            "type": "ol",
+            "label": "[ ORDERED LIST ]",
+            "text_preview": "Dashboard / Supplier Prices / {% if is_edit %}Edit{% else %}Tambah{% endif %} Ha…"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{% if is_edit %}Edit Supplier Price{% else %}Tambah Supplier Price{% endif %}"
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "{% csrf_token %} {# Supplier #} Supplier * {{ form.supplier }} {# x-text aman —…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: [icon]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/warehouse_zones.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/warehouse_zones.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 30,
+        "interactive_total": 1,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Logistik / Manajemen Zona"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Zona Gudang"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Total Zona"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/batch_detail.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/batch_detail.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 24,
+        "interactive_total": 4,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [batchDetailApp()]",
+            "text_preview": "ID Referensi: #REF-99281 Cetak Label Kembali Total Masuk Sis…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Cetak Label",
+            "text_preview": "Cetak Label"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/batch_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/batch_form.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 5,
+      "structure_stats": {
+        "component_total": 18,
+        "interactive_total": 2,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Input Batch Baru Catat kedatangan barang dengan detail lot Kode Batch / Lot Prod…"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Input Batch Baru"
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "Kode Batch / Lot Produk Pilih Produk... Lokasi Pilih Lokasi... Zona (Opsional) -…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT FIELD",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT FIELD",
+            "text_preview": "Pilih Produk..."
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/product_details.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/product_details.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 27,
+        "interactive_total": 4,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [productDetail()]",
+            "text_preview": "{# ── BREADCRUMB ── #} Dashboard / Products / {{ product.nam…"
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Products / {{ product.name }}"
+          },
+          {
+            "type": "ol",
+            "label": "[ ORDERED LIST ]",
+            "text_preview": "Dashboard / Products / {{ product.name }}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "image",
+            "label": "IMAGE [{{ product.name }}]",
+            "text_preview": "{{ product.name }}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/products.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/products.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 105,
+        "interactive_total": 56,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Produk"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Template CSV",
+            "text_preview": "Template CSV"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Import CSV",
+            "text_preview": "Import CSV"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Export CSV",
+            "text_preview": "Export CSV"
+          },
+          {
+            "type": "button-primary",
+            "label": "BUTTON (Primary)",
+            "text_preview": "Tambah Produk"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/requisition_detail.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/requisition_detail.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 21,
+        "interactive_total": 6,
+        "issue_total": 5,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [reqDetailApp()]",
+            "text_preview": "Dibuat pada Kembali Rute Pengiriman Dari Ke Barang Diminta P…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": ""
+          },
+          {
+            "type": "badge",
+            "label": "BADGE / STATUS",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: [icon]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='w-full py-3 bg-emerald-500 hover:bg-emerald-600 te'"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='w-full py-3 bg-white border border-rose-200 text-r'"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='w-full py-3 bg-blue-500 hover:bg-blue-600 text-whi'"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='w-full py-3 bg-slate-800 hover:bg-slate-700 text-w'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/requisition_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/requisition_form.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 5,
+      "structure_stats": {
+        "component_total": 18,
+        "interactive_total": 7,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [reqFormApp()]",
+            "text_preview": "Buat Permintaan Stok Isi detail untuk memindahkan stok antar…"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Buat Permintaan Stok"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Lokasi Asal (Dari) Pilih Lokasi Asal... Lokasi Tujuan (Ke) Pilih Lokasi Tujuan..…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT FIELD",
+            "text_preview": "Pilih Lokasi Asal..."
+          },
+          {
+            "type": "input",
+            "label": "INPUT FIELD",
+            "text_preview": "Pilih Lokasi Tujuan..."
+          },
+          {
+            "type": "input",
+            "label": "INPUT FIELD",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/stock_movement.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/stock_movement.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 58,
+        "interactive_total": 11,
+        "issue_total": 3,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "#} {% block content %} Dashboard / Stock Movement Stock Movement Control Tower L…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Stock Movement"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Stock Movement Control Tower"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [{open:false}]",
+            "text_preview": "Export CSV Excel"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Export",
+            "text_preview": "Export"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='flex-1 flex items-center justify-center gap-2 py-3'"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='flex-1 flex items-center justify-center gap-2 py-3'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/stock_opname_approval_detail.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/stock_opname_approval_detail.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 5,
+      "structure_stats": {
+        "component_total": 22,
+        "interactive_total": 8,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "#} {% block content %} {# ── HEADER ────────────────────────────────────────────…"
+          },
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [sessionDetail()]",
+            "text_preview": "{# ── HEADER ───────────────────────────────────────────────…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Opname Locations / {{ session.location.name }} #{{ session.id }}"
+          },
+          {
+            "type": "ol",
+            "label": "[ ORDERED LIST ]",
+            "text_preview": "Dashboard / Opname Locations / {{ session.location.name }} #{{ session.id }}"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Session Detail — {{ session.location.name }}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Print",
+            "text_preview": "Print"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/stock_opname_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/stock_opname_form.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 5,
+      "structure_stats": {
+        "component_total": 35,
+        "interactive_total": 11,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [stockOpnameForm()]",
+            "text_preview": "{# ── HEADER ───────────────────────────────────────────────…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Opname Locations / {{ selected_location.name }}"
+          },
+          {
+            "type": "ol",
+            "label": "[ ORDERED LIST ]",
+            "text_preview": "Dashboard / Opname Locations / {{ selected_location.name }}"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Stock Opname — {{ selected_location.name }}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Import CSV",
+            "text_preview": "Import CSV"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/stock_opname_locations.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/stock_opname_locations.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 42,
+        "interactive_total": 15,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "#} {% block content %} {# ── HEADER ────────────────────────────────────────────…"
+          },
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [opnameLocations()]",
+            "text_preview": "{# ── HEADER ───────────────────────────────────────────────…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Stock Opname"
+          },
+          {
+            "type": "ol",
+            "label": "[ ORDERED LIST ]",
+            "text_preview": "Dashboard / Stock Opname"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Stock Opname"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Tambah Lokasi",
+            "text_preview": "Tambah Lokasi"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/stock_planning.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/stock_planning.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 70,
+        "interactive_total": 13,
+        "issue_total": 4,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "#} {% block content %} Dashboard / Stock Planning Stock Planning Ajukan perminta…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Stock Planning"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Stock Planning"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Draft Order",
+            "text_preview": "Draft Order"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='text-[11px] font-bold text-indigo-500 hover:text-i'"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='btn-submit mt-4 disabled:opacity-40'"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='w-full mt-2 py-1.5 rounded-lg text-[10px] font-bol'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/stock_purchasing.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/stock_purchasing.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 70,
+        "interactive_total": 13,
+        "issue_total": 4,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "#} {% block content %} Dashboard / Purchasing Purchasing Management Susun Purcha…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Purchasing"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Purchasing Management"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Draft Order",
+            "text_preview": "Draft Order"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='text-[11px] font-bold text-indigo-500 hover:text-i'"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='btn-submit mt-4 disabled:opacity-40'"
+          },
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='w-full mt-2 py-1.5 rounded-lg text-[10px] font-bol'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/supplier_price_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/supplier_price_list.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 47,
+        "interactive_total": 17,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "#} {% block content %} {% csrf_token %} Dashboard / Supplier Prices Supplier Pri…"
+          },
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [supplierPriceManager()]",
+            "text_preview": "{% csrf_token %} Dashboard / Supplier Prices Supplier Price…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Supplier Prices"
+          },
+          {
+            "type": "ol",
+            "label": "[ ORDERED LIST ]",
+            "text_preview": "Dashboard / Supplier Prices"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Supplier Price List"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Tambah Harga",
+            "text_preview": "Tambah Harga"
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "Cari supplier, produk, atau harga Filter supplier Semua Supplier Filter Reset"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/inventory/warehouse_zone_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/inventory/warehouse_zone_form.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 5,
+      "structure_stats": {
+        "component_total": 19,
+        "interactive_total": 2,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Tambah Zona Baru Tentukan area penyimpanan fisik barang Tipe Penyimpanan Rack Ra…"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Tambah Zona Baru"
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "Tipe Penyimpanan Rack Rak Cold Dingin Frozen Beku Kode Zona Nama Area Lokasi Fis…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 3 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Rack Rak"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Cold Dingin"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Frozen Beku"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    }
+  ],
+  "views": [
+    {
+      "view_name": "products_view",
+      "view_module": "lumra_config.views.inventory_views",
+      "view_file": "lumra_config/views/inventory_views.py",
+      "line": 522,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "ctx",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def products_view(request):\n    _ensure_user_profile(request)\n\n    q = request.GET.get(\"q\", \"\").strip()\n    category_id = request.GET.get(\"category\", \"\").strip()\n    stock_filter = request.GET.get(\"stock\", \"\").strip()\n    status_filter = request.GET.get(\"status\", \"\").strip()\n    page_size = min(max(_parse_int(request.GET.get(\"page_size\", \"50\"), 50), 10), 200)\n    low_stock_threshold = 10\n\n    total_products = Product.objects.only(\"id\").count()\n    total_sku = ProductVariant.objects.only(\"id\").count()\n    categories = Category.objects.filter(is_active=True).order_by(\"name\")\n\n    if total_products == 0:\n        ctx = create_empty_context(\"Products\", \"Data produk tidak ditemukan. Silahkan tambah produk terlebih dahulu.\")\n        ctx.update({\n            \"categories\": categories,\n            \"page_obj\": Paginator([], page_size).get_page(1),\n            \"total_products\": 0,\n            \"filtered_total\": 0,\n            \"low_stock_count\": 0,\n            \"out_of_stock_count\": 0,\n            \"average_price\": 0,\n            \"total_sku\": 0,\n            \"query\": q,\n            \"selected_category\": category_id,\n            \"selected_stock\": stock_filter,\n            \"selected_status\": status_filter,\n            \"page_size\": page_size,\n            \"export_query\": \"\",\n            \"page_window\": [],\n            \"page_low_stock_count\": 0,\n            \"page_out_of_stock_count\": 0,\n            \"page_average_price\": 0,\n        })\n        return render(request, \"lumra_pages/inventory/products.html\", ctx)\n\n    products_qs = Product.objects.select_related(\"category\", \"vendor\").order_by(\"name\")\n    filtered_qs = products_qs\n\n    if q:\n        filtered_qs = filtered_qs.filter(\n            Q(name__icontains=q) |\n            Q(description__icontains=q) |\n            Q(barcode__icontains=q) |\n            Q(variants__sku__icontains=q)\n        ).distinct()\n\n    if category_id:\n        filtered_qs = filtered_qs.filter(category_id=category_id)\n\n    if status_filter == \"active\":\n        filtered_qs = filtered_qs.filter(is_active=True)\n    elif status_filter == \"inactive\":\n        filtered_qs = filtered_qs.filter(is_active=False)\n\n    if stock_filter:\n        variants_with_stock = _variants_with_stock_qs()\n        if stock_filter == \"out\":\n            matching_product_ids = variants_with_stock.filter(net_stock__lte=0).values_list(\"product_id\", flat=True)\n        elif stock_filter == \"low\":\n            matching_product_ids = variants_with_stock.filter(\n                net_stock__gt=0,\n                net_stock__lt=low_stock_threshold,\n            ).values_list(\"product_id\", flat=True)\n        else:\n            matching_product_ids = variants_with_stock.filter(\n                net_stock__gte=low_stock_threshold\n            ).values_list(\"product_id\", flat=True)\n        filtered_qs = filtered_qs.filter(id__in=matching_product_ids).distinct()\n\n    if request.GET.get(\"export\") == \"csv\":\n        return _product_csv_response(filtered_qs)\n\n    filtered_total = filtered_qs.count()\n    paginator = Paginator(filtered_qs, page_size)\n    page_obj = paginator.get_page(request.GET.get(\"page\"))\n    page_products = list(page_obj.object_list)\n    page_product_ids = [product.id for product in page_products]\n\n    variants_by_product = {product_id: [] for product_id in page_product_ids}\n    page_low_stock_count = 0\n    page_out_of_stock_count = 0\n    page_average_price = 0\n\n    if page_product_ids:\n        page_variants = list(\n            _variants_with_stock_qs()\n            .filter(product_id__in=page_product_ids)\n            .order_by(\"product_id\", \"sku\")\n        )\n        total_sell_price = 0\n        has_low_stock = set()\n        has_out_of_stock = set()\n\n        for variant in page_variants:\n            variants_by_product.setdefault(variant.product_id, []).append(variant)\n            total_sell_price += float(variant.price_sell or 0)\n            if (variant.net_stock or 0) <= 0:\n                has_out_of_stock.add(variant.product_id)\n            elif (variant.net_stock or 0) < low_stock_threshold:\n                has_low_stock.add(variant.product_id)\n\n        for product in page_products:\n            product.variants_with_stock = variants_by_product.get(product.id, [])\n\n        page_low_stock_count = len(has_low_stock)\n        page_out_of_stock_count = len(has_out_of_stock)\n        if page_variants:\n            page_average_price = total_sell_price / len(page_variants)\n    else:\n        for product in page_products:\n            product.variants_with_stock = []\n\n    page_obj.object_list = page_products\n\n    query_dict = request.GET.copy()\n    query_dict.pop(\"page\", None)\n    query_dict[\"export\"] = \"csv\"\n\n    context = {\n        \"report_title\": \"Products\",\n        \"is_empty\": False,\n        \"page_obj\": page_obj,\n        \"categories\": categories,\n        \"total_products\": total_products,\n        \"filtered_total\": filtered_total,\n        \"low_stock_count\": page_low_stock_count,\n        \"out_of_stock_count\": page_out_of_stock_count,\n        \"average_price\": page_average_price,\n        \"total_sku\": total_sku,\n        \"low_stock_threshold\": low_stock_threshold,\n        \"query\": q,\n        \"selected_category\": category_id,\n        \"selected_stock\": stock_filter,\n        \"selected_status\": status_filter,\n        \"page_size\": page_size,\n        \"export_query\": query_dict.urlencode(),\n        \"page_window\": _page_window(page_obj),\n        \"page_low_stock_count\": page_low_stock_count,\n        \"page_out_of_stock_count\": page_out_of_stock_count,\n        \"page_average_price\": page_average_price,\n    }\n    return render(request, \"lumra_pages/inventory/products.html\", context)"
+    },
+    {
+      "view_name": "products_view",
+      "view_module": "lumra_config.views.inventory_views",
+      "view_file": "lumra_config/views/inventory_views.py",
+      "line": 630,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def products_view(request):\n    _ensure_user_profile(request)\n\n    q = request.GET.get(\"q\", \"\").strip()\n    category_id = request.GET.get(\"category\", \"\").strip()\n    stock_filter = request.GET.get(\"stock\", \"\").strip()\n    status_filter = request.GET.get(\"status\", \"\").strip()\n    page_size = min(max(_parse_int(request.GET.get(\"page_size\", \"50\"), 50), 10), 200)\n    low_stock_threshold = 10\n\n    total_products = Product.objects.only(\"id\").count()\n    total_sku = ProductVariant.objects.only(\"id\").count()\n    categories = Category.objects.filter(is_active=True).order_by(\"name\")\n\n    if total_products == 0:\n        ctx = create_empty_context(\"Products\", \"Data produk tidak ditemukan. Silahkan tambah produk terlebih dahulu.\")\n        ctx.update({\n            \"categories\": categories,\n            \"page_obj\": Paginator([], page_size).get_page(1),\n            \"total_products\": 0,\n            \"filtered_total\": 0,\n            \"low_stock_count\": 0,\n            \"out_of_stock_count\": 0,\n            \"average_price\": 0,\n            \"total_sku\": 0,\n            \"query\": q,\n            \"selected_category\": category_id,\n            \"selected_stock\": stock_filter,\n            \"selected_status\": status_filter,\n            \"page_size\": page_size,\n            \"export_query\": \"\",\n            \"page_window\": [],\n            \"page_low_stock_count\": 0,\n            \"page_out_of_stock_count\": 0,\n            \"page_average_price\": 0,\n        })\n        return render(request, \"lumra_pages/inventory/products.html\", ctx)\n\n    products_qs = Product.objects.select_related(\"category\", \"vendor\").order_by(\"name\")\n    filtered_qs = products_qs\n\n    if q:\n        filtered_qs = filtered_qs.filter(\n            Q(name__icontains=q) |\n            Q(description__icontains=q) |\n            Q(barcode__icontains=q) |\n            Q(variants__sku__icontains=q)\n        ).distinct()\n\n    if category_id:\n        filtered_qs = filtered_qs.filter(category_id=category_id)\n\n    if status_filter == \"active\":\n        filtered_qs = filtered_qs.filter(is_active=True)\n    elif status_filter == \"inactive\":\n        filtered_qs = filtered_qs.filter(is_active=False)\n\n    if stock_filter:\n        variants_with_stock = _variants_with_stock_qs()\n        if stock_filter == \"out\":\n            matching_product_ids = variants_with_stock.filter(net_stock__lte=0).values_list(\"product_id\", flat=True)\n        elif stock_filter == \"low\":\n            matching_product_ids = variants_with_stock.filter(\n                net_stock__gt=0,\n                net_stock__lt=low_stock_threshold,\n            ).values_list(\"product_id\", flat=True)\n        else:\n            matching_product_ids = variants_with_stock.filter(\n                net_stock__gte=low_stock_threshold\n            ).values_list(\"product_id\", flat=True)\n        filtered_qs = filtered_qs.filter(id__in=matching_product_ids).distinct()\n\n    if request.GET.get(\"export\") == \"csv\":\n        return _product_csv_response(filtered_qs)\n\n    filtered_total = filtered_qs.count()\n    paginator = Paginator(filtered_qs, page_size)\n    page_obj = paginator.get_page(request.GET.get(\"page\"))\n    page_products = list(page_obj.object_list)\n    page_product_ids = [product.id for product in page_products]\n\n    variants_by_product = {product_id: [] for product_id in page_product_ids}\n    page_low_stock_count = 0\n    page_out_of_stock_count = 0\n    page_average_price = 0\n\n    if page_product_ids:\n        page_variants = list(\n            _variants_with_stock_qs()\n            .filter(product_id__in=page_product_ids)\n            .order_by(\"product_id\", \"sku\")\n        )\n        total_sell_price = 0\n        has_low_stock = set()\n        has_out_of_stock = set()\n\n        for variant in page_variants:\n            variants_by_product.setdefault(variant.product_id, []).append(variant)\n            total_sell_price += float(variant.price_sell or 0)\n            if (variant.net_stock or 0) <= 0:\n                has_out_of_stock.add(variant.product_id)\n            elif (variant.net_stock or 0) < low_stock_threshold:\n                has_low_stock.add(variant.product_id)\n\n        for product in page_products:\n            product.variants_with_stock = variants_by_product.get(product.id, [])\n\n        page_low_stock_count = len(has_low_stock)\n        page_out_of_stock_count = len(has_out_of_stock)\n        if page_variants:\n            page_average_price = total_sell_price / len(page_variants)\n    else:\n        for product in page_products:\n            product.variants_with_stock = []\n\n    page_obj.object_list = page_products\n\n    query_dict = request.GET.copy()\n    query_dict.pop(\"page\", None)\n    query_dict[\"export\"] = \"csv\"\n\n    context = {\n        \"report_title\": \"Products\",\n        \"is_empty\": False,\n        \"page_obj\": page_obj,\n        \"categories\": categories,\n        \"total_products\": total_products,\n        \"filtered_total\": filtered_total,\n        \"low_stock_count\": page_low_stock_count,\n        \"out_of_stock_count\": page_out_of_stock_count,\n        \"average_price\": page_average_price,\n        \"total_sku\": total_sku,\n        \"low_stock_threshold\": low_stock_threshold,\n        \"query\": q,\n        \"selected_category\": category_id,\n        \"selected_stock\": stock_filter,\n        \"selected_status\": status_filter,\n        \"page_size\": page_size,\n        \"export_query\": query_dict.urlencode(),\n        \"page_window\": _page_window(page_obj),\n        \"page_low_stock_count\": page_low_stock_count,\n        \"page_out_of_stock_count\": page_out_of_stock_count,\n        \"page_average_price\": page_average_price,\n    }\n    return render(request, \"lumra_pages/inventory/products.html\", context)"
+    },
+    {
+      "view_name": "product_detail_view",
+      "view_module": "lumra_config.views.inventory_views",
+      "view_file": "lumra_config/views/inventory_views.py",
+      "line": 822,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def product_detail_view(request, product_id):\n    \"\"\"\n    Product detail with per-variant net stock.\n\n    Optimisations vs. original:\n    - Stock aggregated in a single bulk query (dict lookup), not N loops\n    - Net stock calculated correctly (inbound − outbound)\n    \"\"\"\n\n    product = get_object_or_404(\n        Product.objects.select_related(\"category\", \"vendor\", \"tax\", \"unit\")\n                       .prefetch_related(\"variants__attributes\"),\n        id=product_id,\n    )\n\n    # Single bulk aggregate for all variants of this product\n    variant_ids = list(product.variants.values_list(\"id\", flat=True))\n\n    inbound_qs = (\n        Stock.objects\n        .filter(\n            variant_id__in=variant_ids,\n            transaction_type__in=(\"in\", \"transfer_received\", \"adjustment\"),\n        )\n        .values(\"variant_id\")\n        .annotate(total=Sum(\"quantity\"))\n    )\n    outbound_qs = (\n        Stock.objects\n        .filter(\n            variant_id__in=variant_ids,\n            transaction_type__in=(\"out\", \"transfer_sent\"),\n        )\n        .values(\"variant_id\")\n        .annotate(total=Sum(\"quantity\"))\n    )\n\n    inbound_map  = {row[\"variant_id\"]: row[\"total\"] for row in inbound_qs}\n    outbound_map = {row[\"variant_id\"]: row[\"total\"] for row in outbound_qs}\n\n    for variant in product.variants.all():\n        net = (inbound_map.get(variant.id) or 0) - (outbound_map.get(variant.id) or 0)\n        variant._cached_total_stock = net\n\n    context = {\n        \"product\":      product,\n        \"report_title\": f\"Product Detail - {product.name}\",\n    }\n\n    return render(request, \"lumra_pages/inventory/product_details.html\", context)"
+    },
+    {
+      "view_name": "stock_planning_view",
+      "view_module": "lumra_config.views.inventory_views",
+      "view_file": "lumra_config/views/inventory_views.py",
+      "line": 872,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "create_empty_context('Stock Planning', 'Data varian produk tidak ditemukan. Silahkan tambah produk dan varian terlebih dahulu.')",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def stock_planning_view(request):\n    \"\"\"\n    Stock planning / allocation view.\n\n    Optimisations vs. original:\n    - annotated_total_stock assigned directly to _cached_total_stock\n      without a second per-object query\n    - Net stock annotation (inbound − outbound) instead of raw Sum\n    \"\"\"\n\n    q = request.GET.get(\"q\", \"\").strip()\n\n    variants = (\n        ProductVariant.objects\n        .select_related(\"product\")\n        .annotate(\n            inbound=Sum(\n                \"stock_entries__quantity\",\n                filter=Q(stock_entries__transaction_type__in=(\n                    \"in\", \"transfer_received\", \"adjustment\"\n                )),\n            ),\n            outbound=Sum(\n                \"stock_entries__quantity\",\n                filter=Q(stock_entries__transaction_type__in=(\n                    \"out\", \"transfer_sent\"\n                )),\n            ),\n        )\n        .order_by(\"sku\")\n    )\n\n    if q:\n        variants = variants.filter(\n            Q(sku__icontains=q) | Q(product__name__icontains=q)\n        )\n\n    # Check if variants is empty\n    if not variants.exists():\n        return render(\n            request,\n            \"lumra_pages/inventory/stock_planning.html\",\n            create_empty_context(\"Stock Planning\", \"Data varian produk tidak ditemukan. Silahkan tambah produk dan varian terlebih dahulu.\")\n        )\n\n    paginator = Paginator(variants, 10)\n    page_obj  = paginator.get_page(request.GET.get(\"page\"))\n    # TODO[C5-N1]: Query di dalam loop → pindahkan ke atas loop.\n    # Gunakan: queryset = Model.objects.select_related(...).prefetch_related(...)\n    # lalu iterasi queryset di luar, TANPA query tambahan di dalam loop.\n # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n # Gunakan Model.objects.select_related('...').prefetch_related('...')\n # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n\n    # Cache net stock — no extra queries\n    for v in page_obj.object_list:\n        v._cached_total_stock = (v.inbound or 0) - (v.outbound or 0)\n\n    requisition_count = Requisition.objects.filter(\n        requested_by=request.user\n    # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n    # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n    # Gunakan Model.objects.select_related('...').prefetch_related('...')\n    # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n    ).count()\n\n    context = {\n        \"page_obj\":          page_obj,\n        \"locations\":         Location.objects.all().order_by(\"name\"),\n        \"requisition_count\": requisition_count,\n        \"query\":             q,\n        \"report_title\":      \"Stock Planning\",\n        \"is_empty\": False,\n    }\n\n    return render(request, \"lumra_pages/inventory/stock_planning.html\", context)"
+    },
+    {
+      "view_name": "stock_planning_view",
+      "view_module": "lumra_config.views.inventory_views",
+      "view_file": "lumra_config/views/inventory_views.py",
+      "line": 909,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def stock_planning_view(request):\n    \"\"\"\n    Stock planning / allocation view.\n\n    Optimisations vs. original:\n    - annotated_total_stock assigned directly to _cached_total_stock\n      without a second per-object query\n    - Net stock annotation (inbound − outbound) instead of raw Sum\n    \"\"\"\n\n    q = request.GET.get(\"q\", \"\").strip()\n\n    variants = (\n        ProductVariant.objects\n        .select_related(\"product\")\n        .annotate(\n            inbound=Sum(\n                \"stock_entries__quantity\",\n                filter=Q(stock_entries__transaction_type__in=(\n                    \"in\", \"transfer_received\", \"adjustment\"\n                )),\n            ),\n            outbound=Sum(\n                \"stock_entries__quantity\",\n                filter=Q(stock_entries__transaction_type__in=(\n                    \"out\", \"transfer_sent\"\n                )),\n            ),\n        )\n        .order_by(\"sku\")\n    )\n\n    if q:\n        variants = variants.filter(\n            Q(sku__icontains=q) | Q(product__name__icontains=q)\n        )\n\n    # Check if variants is empty\n    if not variants.exists():\n        return render(\n            request,\n            \"lumra_pages/inventory/stock_planning.html\",\n            create_empty_context(\"Stock Planning\", \"Data varian produk tidak ditemukan. Silahkan tambah produk dan varian terlebih dahulu.\")\n        )\n\n    paginator = Paginator(variants, 10)\n    page_obj  = paginator.get_page(request.GET.get(\"page\"))\n    # TODO[C5-N1]: Query di dalam loop → pindahkan ke atas loop.\n    # Gunakan: queryset = Model.objects.select_related(...).prefetch_related(...)\n    # lalu iterasi queryset di luar, TANPA query tambahan di dalam loop.\n # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n # Gunakan Model.objects.select_related('...').prefetch_related('...')\n # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n\n    # Cache net stock — no extra queries\n    for v in page_obj.object_list:\n        v._cached_total_stock = (v.inbound or 0) - (v.outbound or 0)\n\n    requisition_count = Requisition.objects.filter(\n        requested_by=request.user\n    # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n    # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n    # Gunakan Model.objects.select_related('...').prefetch_related('...')\n    # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n    ).count()\n\n    context = {\n        \"page_obj\":          page_obj,\n        \"locations\":         Location.objects.all().order_by(\"name\"),\n        \"requisition_count\": requisition_count,\n        \"query\":             q,\n        \"report_title\":      \"Stock Planning\",\n        \"is_empty\": False,\n    }\n\n    return render(request, \"lumra_pages/inventory/stock_planning.html\", context)"
+    },
+    {
+      "view_name": "batch_list",
+      "view_module": "lumra_config.views.logistics_views",
+      "view_file": "lumra_config/views/logistics_views.py",
+      "line": 91,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def batch_list(request):\n    query = request.GET.get(\"q\", \"\").strip()\n    status_filter = request.GET.get(\"status\", \"\").strip()  # fresh|warning|expired\n\n    batches = InventoryBatch.objects.select_related(\"variant\", \"variant__product\", \"location\").all()\n    if query:\n        batches = batches.filter(\n            Q(code__icontains=query)\n            | Q(variant__sku__icontains=query)\n            | Q(variant__product__name__icontains=query)\n        )\n\n    today = date.today()\n    warning_threshold = today + timedelta(days=30)\n\n    def _status_for(expiry_date):\n        if not expiry_date:\n            return \"fresh\"\n        if expiry_date < today:\n            return \"expired\"\n        if expiry_date <= warning_threshold:\n            return \"warning\"\n        return \"fresh\"\n\n    batch_rows = []\n    for b in batches.order_by(\"-created_at\")[:500]:\n        batch_rows.append({\n            \"id\": b.id,\n            \"code\": b.code,\n            \"product\": b.variant.product.name if b.variant and b.variant.product else b.variant.sku,\n            \"sku\": b.variant.sku,\n            \"qty\": b.quantity_on_hand,\n            \"prod_date\": b.production_date.isoformat() if b.production_date else \"\",\n            \"exp_date\": b.expiry_date.isoformat() if b.expiry_date else \"\",\n            \"status\": _status_for(b.expiry_date),\n            \"location\": b.location.name,\n        })\n\n    if status_filter in {\"fresh\", \"warning\", \"expired\"}:\n        batch_rows = [r for r in batch_rows if r[\"status\"] == status_filter]\n\n    context = {\"batches_data\": batch_rows, \"report_title\": \"Batch & Lot Tracking\"}\n    return render(request, \"lumra_pages/inventory/batch_list.html\", context)"
+    },
+    {
+      "view_name": "batch_form",
+      "view_module": "lumra_config.views.logistics_views",
+      "view_file": "lumra_config/views/logistics_views.py",
+      "line": 152,
+      "decorators": [
+        "login_required",
+        "require_http_methods"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def batch_form(request, pk=None):\n    batch = get_object_or_404(InventoryBatch, pk=pk) if pk else None\n\n    if request.method == \"POST\":\n        payload, err = _parse_json_body(request)\n        if err:\n            return err\n\n        required = [\"variant_id\", \"location_id\", \"code\", \"quantity_on_hand\"]\n        missing = [k for k in required if k not in payload]\n        if missing:\n            return JsonResponse({\"success\": False, \"error\": f\"Missing fields: {', '.join(missing)}.\"}, status=400)\n\n        variant = get_object_or_404(ProductVariant, pk=payload[\"variant_id\"])\n        location = get_object_or_404(Location, pk=payload[\"location_id\"])\n        zone = None\n        if payload.get(\"zone_id\"):\n            zone = get_object_or_404(WarehouseZone, pk=payload[\"zone_id\"])\n\n        if batch:\n            obj = batch\n        else:\n            obj = InventoryBatch(created_by=request.user)\n\n        obj.variant = variant\n        obj.location = location\n        obj.zone = zone\n        obj.code = str(payload[\"code\"]).strip()\n        obj.quantity_on_hand = int(payload[\"quantity_on_hand\"] or 0)\n        obj.production_date = _parse_iso_date(payload.get(\"production_date\"))\n        obj.expiry_date = _parse_iso_date(payload.get(\"expiry_date\"))\n        obj.notes = payload.get(\"notes\", \"\").strip()\n        obj.save()\n\n        return JsonResponse({\"success\": True, \"id\": obj.id})\n\n    variants = ProductVariant.objects.select_related(\"product\").order_by(\"sku\")[:1000]\n    locations = Location.objects.order_by(\"name\")\n    zones = WarehouseZone.objects.select_related(\"location\").filter(is_active=True).order_by(\"location__name\", \"code\")\n\n    context = {\n        \"is_edit\": bool(batch),\n        \"batch_id\": batch.id if batch else None,\n        \"variants_data\": [\n            {\"id\": v.id, \"sku\": v.sku, \"product\": v.product.name if v.product else v.sku}\n            for v in variants\n        ],\n        \"locations_data\": [{\"id\": l.id, \"name\": l.name} for l in locations],\n        \"zones_data\": [\n            {\"id\": z.id, \"location_id\": z.location_id, \"code\": z.code, \"name\": z.name}\n            for z in zones\n        ],\n        \"submit_url\": request.path,\n        \"list_url\": \"/inventory/batch/\",\n        \"report_title\": \"Input Batch\",\n    }\n    return render(request, \"lumra_pages/inventory/batch_form.html\", context)"
+    },
+    {
+      "view_name": "batch_detail",
+      "view_module": "lumra_config.views.logistics_views",
+      "view_file": "lumra_config/views/logistics_views.py",
+      "line": 175,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def batch_detail(request, pk):\n    batch = get_object_or_404(\n        InventoryBatch.objects.select_related(\"variant\", \"variant__product\", \"location\", \"zone\"),\n        pk=pk,\n    )\n    data = {\n        \"id\": batch.id,\n        \"code\": batch.code,\n        \"sku\": batch.variant.sku,\n        \"product\": batch.variant.product.name if batch.variant.product else batch.variant.sku,\n        \"qty\": batch.quantity_on_hand,\n        \"location\": batch.location.name,\n        \"zone\": batch.zone.code if batch.zone else \"\",\n        \"production_date\": batch.production_date.isoformat() if batch.production_date else \"\",\n        \"expiry_date\": batch.expiry_date.isoformat() if batch.expiry_date else \"\",\n        \"created_at\": localtime(batch.created_at).strftime(\"%Y-%m-%d %H:%M\"),\n        \"notes\": batch.notes,\n    }\n    context = {\"batch_data\": data, \"report_title\": f\"Batch Detail - {batch.code}\"}\n    return render(request, \"lumra_pages/inventory/batch_detail.html\", context)"
+    },
+    {
+      "view_name": "expiry_tracking",
+      "view_module": "lumra_config.views.logistics_views",
+      "view_file": "lumra_config/views/logistics_views.py",
+      "line": 200,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def expiry_tracking(request):\n    today = date.today()\n    horizon = today + timedelta(days=90)\n\n    batches = (\n        InventoryBatch.objects\n        .select_related(\"variant\", \"variant__product\", \"location\")\n        .filter(expiry_date__isnull=False, expiry_date__lte=horizon)\n        .order_by(\"expiry_date\")\n    )\n    rows = [{\n        \"id\": b.id,\n        \"code\": b.code,\n        \"sku\": b.variant.sku,\n        \"product\": b.variant.product.name if b.variant.product else b.variant.sku,\n        \"location\": b.location.name,\n        \"qty\": b.quantity_on_hand,\n        \"expiry_date\": b.expiry_date.isoformat() if b.expiry_date else \"\",\n    } for b in batches[:1000]]\n\n    context = {\"batches_data\": rows, \"report_title\": \"Expiry Tracking\"}\n    return render(request, \"lumra_pages/inventory/expiry_tracking.html\", context)"
+    },
+    {
+      "view_name": "requisition_list",
+      "view_module": "lumra_config.views.logistics_views",
+      "view_file": "lumra_config/views/logistics_views.py",
+      "line": 235,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def requisition_list(request):\n    query = request.GET.get(\"q\", \"\").strip()\n\n    qs = (\n        Requisition.objects\n        .select_related(\"from_location\", \"to_location\", \"requested_by\", \"approved_by\")\n        .order_by(\"-created_at\")\n    )\n    if query:\n        qs = qs.filter(\n            Q(id__icontains=query)\n            | Q(from_location__name__icontains=query)\n            | Q(to_location__name__icontains=query)\n        )\n\n    rows = []\n    for r in qs[:500]:\n        rows.append({\n            \"pk\": r.pk,\n            \"code\": f\"REQ-{r.pk:06d}\",\n            \"from\": r.from_location.name,\n            \"to\": r.to_location.name,\n            \"status\": r.status,\n            \"date\": localtime(r.created_at).strftime(\"%Y-%m-%d\"),\n        })\n\n    context = {\"requisitions_data\": rows, \"report_title\": \"Requisitions\"}\n    return render(request, \"lumra_pages/inventory/requisition_list.html\", context)"
+    },
+    {
+      "view_name": "requisition_form",
+      "view_module": "lumra_config.views.logistics_views",
+      "view_file": "lumra_config/views/logistics_views.py",
+      "line": 312,
+      "decorators": [
+        "login_required",
+        "require_http_methods"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def requisition_form(request, pk=None):\n    requisition = get_object_or_404(Requisition, pk=pk) if pk else None\n\n    if request.method == \"POST\":\n        payload, err = _parse_json_body(request)\n        if err:\n            return err\n\n        required = [\"from_location_id\", \"to_location_id\", \"items\"]\n        missing = [k for k in required if k not in payload]\n        if missing:\n            return JsonResponse({\"success\": False, \"error\": f\"Missing fields: {', '.join(missing)}.\"}, status=400)\n\n        from_location = get_object_or_404(Location, pk=payload[\"from_location_id\"])\n        to_location = get_object_or_404(Location, pk=payload[\"to_location_id\"])\n        items = payload[\"items\"]\n        if not isinstance(items, list) or len(items) == 0:\n            return JsonResponse({\"success\": False, \"error\": \"Items must be a non-empty list.\"}, status=400)\n\n        with transaction.atomic():\n            if requisition:\n                req_obj = requisition\n                req_obj.from_location = from_location\n                req_obj.to_location = to_location\n            else:\n                req_obj = Requisition.objects.create(\n                    from_location=from_location,\n                    to_location=to_location,\n                    requested_by=request.user,\n                    status=\"waiting\",\n                )\n\n            req_obj.save()\n\n            if requisition:\n                req_obj.items.all().delete()\n\n            item_objs = []\n            for it in items:\n                variant_id = it.get(\"variant_id\")\n                qty = it.get(\"quantity\")\n                if not variant_id or not qty:\n                    continue\n                variant = get_object_or_404(ProductVariant, pk=variant_id)\n                item_objs.append(RequisitionItem(\n                    requisition=req_obj,\n                    variant=variant,\n                    quantity=int(qty),\n                ))\n\n            if not item_objs:\n                return JsonResponse({\"success\": False, \"error\": \"No valid items provided.\"}, status=400)\n\n            RequisitionItem.objects.bulk_create(item_objs)\n\n        return JsonResponse({\"success\": True, \"pk\": req_obj.pk})\n\n    locations = Location.objects.order_by(\"name\")\n    variants = ProductVariant.objects.select_related(\"product\").order_by(\"sku\")[:2000]\n\n    context = {\n        \"is_edit\": bool(requisition),\n        \"requisition_pk\": requisition.pk if requisition else None,\n        \"locations_data\": [{\"id\": l.id, \"name\": l.name} for l in locations],\n        \"variants_data\": [\n            {\"id\": v.id, \"sku\": v.sku, \"name\": v.product.name if v.product else v.sku}\n            for v in variants\n        ],\n        \"submit_url\": request.path,\n        \"list_url\": \"/inventory/requisitions/\",\n        \"report_title\": \"Requisition Form\",\n    }\n    return render(request, \"lumra_pages/inventory/requisition_form.html\", context)"
+    },
+    {
+      "view_name": "requisition_detail",
+      "view_module": "lumra_config.views.logistics_views",
+      "view_file": "lumra_config/views/logistics_views.py",
+      "line": 341,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def requisition_detail(request, pk):\n    r = get_object_or_404(\n        Requisition.objects\n        .select_related(\"from_location\", \"to_location\", \"requested_by\", \"approved_by\")\n        .prefetch_related(\"items__variant\", \"items__variant__product\"),\n        pk=pk,\n    )\n    items = []\n    for it in r.items.all():\n        items.append({\n            \"sku\": it.variant.sku,\n            \"name\": it.variant.product.name if it.variant.product else it.variant.sku,\n            \"qty\": it.quantity,\n        })\n    data = {\n        \"pk\": r.pk,\n        \"code\": f\"REQ-{r.pk:06d}\",\n        \"status\": r.status,\n        \"from\": r.from_location.name,\n        \"to\": r.to_location.name,\n        \"created_at\": localtime(r.created_at).strftime(\"%Y-%m-%d %H:%M\"),\n        \"notes\": \"\",\n        \"items\": items,\n    }\n    context = {\"requisition_data\": data, \"report_title\": f\"Requisition Detail - {data['code']}\"}\n    return render(request, \"lumra_pages/inventory/requisition_detail.html\", context)"
+    },
+    {
+      "view_name": "warehouse_zones",
+      "view_module": "lumra_config.views.logistics_views",
+      "view_file": "lumra_config/views/logistics_views.py",
+      "line": 363,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def warehouse_zones(request):\n    zones = WarehouseZone.objects.select_related(\"location\").order_by(\"location__name\", \"code\")\n    rows = [{\n        \"id\": z.id,\n        \"location\": z.location.name,\n        \"location_id\": z.location_id,\n        \"code\": z.code,\n        \"name\": z.name,\n        \"zone_type\": z.zone_type,\n        \"capacity\": z.capacity,\n        \"is_active\": z.is_active,\n        \"notes\": z.notes,\n    } for z in zones[:1000]]\n    context = {\"zones_data\": rows, \"report_title\": \"Warehouse Zones\"}\n    return render(request, \"lumra_pages/inventory/warehouse_zones.html\", context)"
+    },
+    {
+      "view_name": "warehouse_zone_form",
+      "view_module": "lumra_config.views.logistics_views",
+      "view_file": "lumra_config/views/logistics_views.py",
+      "line": 403,
+      "decorators": [
+        "login_required",
+        "require_http_methods"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def warehouse_zone_form(request, pk=None):\n    zone = get_object_or_404(WarehouseZone, pk=pk) if pk else None\n\n    if request.method == \"POST\":\n        payload, err = _parse_json_body(request)\n        if err:\n            return err\n\n        required = [\"location_id\", \"code\", \"name\", \"zone_type\", \"capacity\"]\n        missing = [k for k in required if k not in payload]\n        if missing:\n            return JsonResponse({\"success\": False, \"error\": f\"Missing fields: {', '.join(missing)}.\"}, status=400)\n\n        location = get_object_or_404(Location, pk=payload[\"location_id\"])\n        obj = zone or WarehouseZone()\n        obj.location = location\n        obj.code = str(payload[\"code\"]).strip()\n        obj.name = str(payload[\"name\"]).strip()\n        obj.zone_type = str(payload[\"zone_type\"]).strip() or \"rack\"\n        obj.capacity = int(payload[\"capacity\"] or 0)\n        obj.is_active = bool(payload.get(\"is_active\", True))\n        obj.notes = str(payload.get(\"notes\", \"\")).strip()\n        obj.save()\n        return JsonResponse({\"success\": True, \"id\": obj.id})\n\n    locations = Location.objects.order_by(\"name\")\n    context = {\n        \"is_edit\": bool(zone),\n        \"zone_id\": zone.id if zone else None,\n        \"locations_data\": [{\"id\": l.id, \"name\": l.name} for l in locations],\n        \"zone_types_data\": [{\"id\": k, \"label\": v} for k, v in WarehouseZone.ZONE_TYPES],\n        \"submit_url\": request.path,\n        \"list_url\": \"/warehouse/zones/\",\n        \"report_title\": \"Warehouse Zone Form\",\n    }\n    return render(request, \"lumra_pages/inventory/warehouse_zone_form.html\", context)"
+    },
+    {
+      "view_name": "adjustment_reasons",
+      "view_module": "lumra_config.views.logistics_views",
+      "view_file": "lumra_config/views/logistics_views.py",
+      "line": 421,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def adjustment_reasons(request):\n    reasons = StockAdjustmentReason.objects.order_by(\"code\")\n    rows = [{\n        \"id\": r.id,\n        \"code\": r.code,\n        \"name\": r.name,\n        \"description\": r.description,\n        \"is_active\": r.is_active,\n    } for r in reasons[:2000]]\n    context = {\"reasons_data\": rows, \"report_title\": \"Adjustment Reasons\"}\n    return render(request, \"lumra_pages/inventory/adjustment_reasons.html\", context)"
+    },
+    {
+      "view_name": "supplier_evaluation",
+      "view_module": "lumra_config.views.logistics_views",
+      "view_file": "lumra_config/views/logistics_views.py",
+      "line": 455,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def supplier_evaluation(request):\n    \"\"\"\n    Lightweight vendor performance snapshot using data currently available\n    (SupplierPrice). Replace with PO/GRN-based metrics when purchasing module exists.\n    \"\"\"\n    vendors = Vendor.objects.filter(is_active=True).order_by(\"name\")\n    # Aggregate supplier prices per vendor as a proxy\n    price_stats = (\n        SupplierPrice.objects.filter(is_active=True)\n        .values(\"vendor_id\")\n        .annotate(\n            variants_count=Count(\"variant_id\", distinct=True),\n            avg_price=Avg(\"unit_price\"),\n            preferred_count=Count(\"id\", filter=Q(is_preferred=True)),\n        )\n    )\n    stats_by_vendor = {row[\"vendor_id\"]: row for row in price_stats}\n\n    rows = []\n    for v in vendors:\n        s = stats_by_vendor.get(v.id, {})\n        rows.append({\n            \"id\": v.id,\n            \"name\": v.name,\n            \"variants_count\": int(s.get(\"variants_count\") or 0),\n            \"preferred_count\": int(s.get(\"preferred_count\") or 0),\n            \"avg_price\": float(s.get(\"avg_price\") or 0),\n        })\n\n    context = {\"vendors_data\": rows, \"report_title\": \"Supplier Evaluation\"}\n    return render(request, \"lumra_pages/inventory/supplier_evaluation.html\", context)"
+    },
+    {
+      "view_name": "purchasing_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 259,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def purchasing_view(request):\n    \"\"\"Halaman untuk manajemen pembelian.\"\"\"\n    # FIX: annotate langsung, tidak perlu loop manual set _cached_total_stock\n    products = (\n        ProductVariant.objects\n        .select_related(\"product\")\n        .annotate(total_stock=Sum(\"stock_entries__quantity\"))\n        .order_by(\"sku\")\n    )\n\n    # Check if products/variants is empty\n    if not products.exists():\n        return render(\n            request,\n            \"lumra_pages/sales/purchasing.html\",\n            create_empty_context(\"Purchasing\", \"Data varian produk tidak ditemukan. Silahkan tambah produk terlebih dahulu.\")\n        )\n\n    paginator = Paginator(products, 10)\n    page_obj  = paginator.get_page(request.GET.get(\"page\"))\n\n    # prepare simple JSON list of locations for the Alpine component\n    locations = list(Location.objects.order_by(\"name\").values(\"id\",\"name\"))\n\n    context = {\n        \"page_obj\":          page_obj,\n        \"locations\":         Location.objects.order_by(\"name\"),\n        \"locations_json\":    json.dumps(locations),\n        \"requisition_count\": 0,\n        \"is_empty\": False,\n    # TODO[C3-LONG]: 'sales_history_view' = 142 baris (max 30). Pecah: sales_history_view_validate(), sales_history_view_query(), sales_history_view_render()\n    }\n    return render(request, \"lumra_pages/inventory/stock_purchasing.html\", context)"
+    },
+    {
+      "view_name": "supplier_price_list",
+      "view_module": "lumra_config.views.pricing_views",
+      "view_file": "lumra_config/views/pricing_views.py",
+      "line": 69,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def supplier_price_list(request):\n    \"\"\"\n    Menampilkan daftar harga supplier dengan filter vendor dan produk.\n    \"\"\"\n\n    vendor_filter = request.GET.get(\"vendor\")\n    product_filter = request.GET.get(\"product\")\n    query = request.GET.get(\"q\", \"\")\n\n    prices = SupplierPrice.objects.select_related(\n        \"vendor\",\n        \"variant\",\n        \"variant__product\"\n    ).filter(is_active=True)\n\n    # Filter vendor\n    if vendor_filter:\n        prices = prices.filter(vendor_id=vendor_filter)\n\n    # Filter product\n    if product_filter:\n        prices = prices.filter(variant__product_id=product_filter)\n\n    # Search query\n    if query:\n        prices = prices.filter(\n            Q(vendor__name__icontains=query) |\n            Q(variant__sku__icontains=query) |\n            Q(variant__product__name__icontains=query)\n        )\n\n    prices = prices.order_by(\"-is_preferred\", \"unit_price\")\n\n    # Check if prices is empty\n    if not prices.exists():\n        vendors = Vendor.objects.filter(is_active=True).order_by(\"name\")\n        products = Product.objects.order_by(\"name\")\n        context = create_empty_context(\"Supplier Pricing\", \"Data harga supplier tidak ditemukan.\")\n        context.update({\n            \"vendors\": vendors,\n            \"products\": products,\n            \"vendor_filter\": vendor_filter,\n            \"product_filter\": product_filter,\n            \"query\": query,\n        })\n        return render(request, \"lumra_pages/inventory/supplier_price_list.html\", context)\n\n    paginator = Paginator(prices, 30)\n    page_obj = paginator.get_page(request.GET.get(\"page\", 1))\n\n    vendors = Vendor.objects.filter(is_active=True).order_by(\"name\")\n    products = Product.objects.order_by(\"name\")\n\n    context = {\n        \"prices\": page_obj,\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        \"vendors\": vendors,\n        \"products\": products,\n        \"vendor_filter\": vendor_filter,\n        \"product_filter\": product_filter,\n        \"query\": query,\n        \"total_prices\": SupplierPrice.objects.filter(is_active=True).count(),\n        \"report_title\": \"Supplier Pricing\",\n        \"is_empty\": False,\n    }\n\n    return render(\n        request,\n        \"lumra_pages/inventory/supplier_price_list.html\",\n        context\n    )"
+    },
+    {
+      "view_name": "supplier_price_list",
+      "view_module": "lumra_config.views.pricing_views",
+      "view_file": "lumra_config/views/pricing_views.py",
+      "line": 92,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def supplier_price_list(request):\n    \"\"\"\n    Menampilkan daftar harga supplier dengan filter vendor dan produk.\n    \"\"\"\n\n    vendor_filter = request.GET.get(\"vendor\")\n    product_filter = request.GET.get(\"product\")\n    query = request.GET.get(\"q\", \"\")\n\n    prices = SupplierPrice.objects.select_related(\n        \"vendor\",\n        \"variant\",\n        \"variant__product\"\n    ).filter(is_active=True)\n\n    # Filter vendor\n    if vendor_filter:\n        prices = prices.filter(vendor_id=vendor_filter)\n\n    # Filter product\n    if product_filter:\n        prices = prices.filter(variant__product_id=product_filter)\n\n    # Search query\n    if query:\n        prices = prices.filter(\n            Q(vendor__name__icontains=query) |\n            Q(variant__sku__icontains=query) |\n            Q(variant__product__name__icontains=query)\n        )\n\n    prices = prices.order_by(\"-is_preferred\", \"unit_price\")\n\n    # Check if prices is empty\n    if not prices.exists():\n        vendors = Vendor.objects.filter(is_active=True).order_by(\"name\")\n        products = Product.objects.order_by(\"name\")\n        context = create_empty_context(\"Supplier Pricing\", \"Data harga supplier tidak ditemukan.\")\n        context.update({\n            \"vendors\": vendors,\n            \"products\": products,\n            \"vendor_filter\": vendor_filter,\n            \"product_filter\": product_filter,\n            \"query\": query,\n        })\n        return render(request, \"lumra_pages/inventory/supplier_price_list.html\", context)\n\n    paginator = Paginator(prices, 30)\n    page_obj = paginator.get_page(request.GET.get(\"page\", 1))\n\n    vendors = Vendor.objects.filter(is_active=True).order_by(\"name\")\n    products = Product.objects.order_by(\"name\")\n\n    context = {\n        \"prices\": page_obj,\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        \"vendors\": vendors,\n        \"products\": products,\n        \"vendor_filter\": vendor_filter,\n        \"product_filter\": product_filter,\n        \"query\": query,\n        \"total_prices\": SupplierPrice.objects.filter(is_active=True).count(),\n        \"report_title\": \"Supplier Pricing\",\n        \"is_empty\": False,\n    }\n\n    return render(\n        request,\n        \"lumra_pages/inventory/supplier_price_list.html\",\n        context\n    )"
+    },
+    {
+      "view_name": "supplier_price_form",
+      "view_module": "lumra_config.views.pricing_views",
+      "view_file": "lumra_config/views/pricing_views.py",
+      "line": 142,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def supplier_price_form(request):\n    \"\"\"\n    Tambah atau edit supplier pricing.\n    \"\"\"\n\n    price_id = request.GET.get(\"id\")\n\n    if price_id:\n        supplier_price = get_object_or_404(SupplierPrice, id=price_id)\n        is_edit = True\n    else:\n        supplier_price = None\n        is_edit = False\n\n    if request.method == \"POST\":\n        form = SupplierPriceForm(request.POST, instance=supplier_price)\n\n        if form.is_valid():\n            model_instance = form.save(commit=False)\n            obj.last_updated_by = request.user\n            obj.save()\n\n            messages.success(request, \"Supplier price saved successfully!\")\n            return redirect(\"supplier_price_list\")\n\n    else:\n        form = SupplierPriceForm(instance=supplier_price)\n\n    context = {\n        \"form\": form,\n        \"is_edit\": is_edit,\n        \"supplier_price\": supplier_price,\n        \"report_title\": \"Edit Supplier Price\" if is_edit else \"Add Supplier Price\",\n    }\n\n    return render(\n        request,\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        \"lumra_pages/inventory/supplier_price_form.html\",\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        context\n    )"
+    },
+    {
+      "view_name": "supplier_price_delete",
+      "view_module": "lumra_config.views.pricing_views",
+      "view_file": "lumra_config/views/pricing_views.py",
+      "line": 174,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def supplier_price_delete(request, price_id):\n    \"\"\"\n    Delete supplier pricing.\n    \"\"\"\n\n    supplier_price = get_object_or_404(SupplierPrice, id=price_id)\n\n    if request.method == \"POST\":\n        supplier_price.delete()\n        messages.success(request, \"Supplier price deleted successfully!\")\n        return redirect(\"supplier_price_list\")\n\n    context = {\n        \"supplier_price\": supplier_price,\n        \"report_title\": \"Delete Supplier Price\",\n    }\n\n    return render(\n        request,\n        \"lumra_pages/inventory/supplier_price_confirm_delete.html\",\n        context\n    )"
+    },
+    {
+      "view_name": "stock_movement_view",
+      "view_module": "lumra_config.views.stock_movement_views",
+      "view_file": "lumra_config/views/stock_movement_views.py",
+      "line": 68,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "create_empty_context('Stock Movement', 'Data pergerakan stok tidak ditemukan.')",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def stock_movement_view(request):\n    \"\"\"List stock movement entries with filters for search, type, and date.\"\"\"\n\n    qs = Stock.objects.select_related(\n        \"variant__product\", \"location\"\n    ).order_by(\"-created_at\")\n\n    # ── Filters ──────────────────────────────────────\n    q            = request.GET.get(\"q\", \"\").strip()\n    type_filter  = request.GET.get(\"type\", \"\").strip()\n    start_date   = request.GET.get(\"start_date\", \"\").strip()\n    end_date     = request.GET.get(\"end_date\", \"\").strip()\n\n    if q:\n        qs = qs.filter(\n            Q(variant__sku__icontains=q)           |  # FIX: tambah SKU search\n            Q(variant__product__name__icontains=q) |\n            Q(notes__icontains=q)\n        )\n\n    # FIX: whitelist tipe transaksi — cegah filter injection\n    if type_filter and type_filter in VALID_TXN_TYPES:\n        qs = qs.filter(transaction_type=type_filter)\n\n    # FIX: validasi format tanggal sebelum dipakai ke ORM\n    if start_date and parse_date(start_date):\n        qs = qs.filter(created_at__date__gte=start_date)\n    if end_date and parse_date(end_date):\n        qs = qs.filter(created_at__date__lte=end_date)\n\n    # Check if stock movements is empty\n    if not qs.exists():\n        return render(\n            request,\n            \"lumra_pages/inventory/stock_movement.html\",\n            create_empty_context(\"Stock Movement\", \"Data pergerakan stok tidak ditemukan.\")\n        )\n\n    # ── Metrics (dihitung dari qs sebelum paginate) ──\n    # FIX: gabungkan 3 query count + 1 aggregate → 1 query\n    aggregated = qs.aggregate(\n        stock_in_qty=Sum(\n            Case(When(transaction_type=TXN_IN, then=F(\"quantity\")),\n                 default=0, output_field=IntegerField())\n        ),\n        stock_out_qty=Sum(\n            Case(When(transaction_type=TXN_OUT, then=F(\"quantity\")),\n                 default=0, output_field=IntegerField())\n        ),\n        net=Sum(\n            Case(\n                When(transaction_type=TXN_IN,  then=F(\"quantity\")),\n                When(transaction_type=TXN_OUT, then=-F(\"quantity\")),\n                default=0,\n                output_field=IntegerField(),\n            )\n        ),\n    )\n    total_movements  = qs.count()\n    stock_in_count   = aggregated[\"stock_in_qty\"]  or 0\n    stock_out_count  = aggregated[\"stock_out_qty\"] or 0\n    net_change       = aggregated[\"net\"]           or 0\n\n    # ── Pagination ───────────────────────────────────\n    paginator  = Paginator(qs, PAGE_SIZE)\n    page_obj   = paginator.get_page(request.GET.get(\"page\"))\n\n    # FIX: hapus loop rebuild dict — kirim queryset langsung ke template\n    # Template tinggal pakai: movement.variant.product.name, movement.created_at, dst.\n\n    context = {\n        \"movements\":      page_obj,          # langsung queryset, bukan list dict\n        \"page_obj\":       page_obj,\n        \"is_paginated\":   page_obj.has_other_pages(),\n        \"total_movements\": total_movements,\n        \"stock_in_count\":  stock_in_count,\n        \"stock_out_count\": stock_out_count,\n        \"net_change\":      net_change,\n        \"query\":           q,\n        \"type\":            type_filter,\n        \"start_date\":      start_date,\n        \"end_date\":        end_date,\n        \"valid_txn_types\": sorted(VALID_TXN_TYPES),  # untuk dropdown template\n        \"report_title\":    \"Stock Movement\",\n        \"is_empty\": False,\n    }\n    return render(request, \"lumra_pages/inventory/stock_movement.html\", context)"
+    },
+    {
+      "view_name": "stock_movement_view",
+      "view_module": "lumra_config.views.stock_movement_views",
+      "view_file": "lumra_config/views/stock_movement_views.py",
+      "line": 122,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def stock_movement_view(request):\n    \"\"\"List stock movement entries with filters for search, type, and date.\"\"\"\n\n    qs = Stock.objects.select_related(\n        \"variant__product\", \"location\"\n    ).order_by(\"-created_at\")\n\n    # ── Filters ──────────────────────────────────────\n    q            = request.GET.get(\"q\", \"\").strip()\n    type_filter  = request.GET.get(\"type\", \"\").strip()\n    start_date   = request.GET.get(\"start_date\", \"\").strip()\n    end_date     = request.GET.get(\"end_date\", \"\").strip()\n\n    if q:\n        qs = qs.filter(\n            Q(variant__sku__icontains=q)           |  # FIX: tambah SKU search\n            Q(variant__product__name__icontains=q) |\n            Q(notes__icontains=q)\n        )\n\n    # FIX: whitelist tipe transaksi — cegah filter injection\n    if type_filter and type_filter in VALID_TXN_TYPES:\n        qs = qs.filter(transaction_type=type_filter)\n\n    # FIX: validasi format tanggal sebelum dipakai ke ORM\n    if start_date and parse_date(start_date):\n        qs = qs.filter(created_at__date__gte=start_date)\n    if end_date and parse_date(end_date):\n        qs = qs.filter(created_at__date__lte=end_date)\n\n    # Check if stock movements is empty\n    if not qs.exists():\n        return render(\n            request,\n            \"lumra_pages/inventory/stock_movement.html\",\n            create_empty_context(\"Stock Movement\", \"Data pergerakan stok tidak ditemukan.\")\n        )\n\n    # ── Metrics (dihitung dari qs sebelum paginate) ──\n    # FIX: gabungkan 3 query count + 1 aggregate → 1 query\n    aggregated = qs.aggregate(\n        stock_in_qty=Sum(\n            Case(When(transaction_type=TXN_IN, then=F(\"quantity\")),\n                 default=0, output_field=IntegerField())\n        ),\n        stock_out_qty=Sum(\n            Case(When(transaction_type=TXN_OUT, then=F(\"quantity\")),\n                 default=0, output_field=IntegerField())\n        ),\n        net=Sum(\n            Case(\n                When(transaction_type=TXN_IN,  then=F(\"quantity\")),\n                When(transaction_type=TXN_OUT, then=-F(\"quantity\")),\n                default=0,\n                output_field=IntegerField(),\n            )\n        ),\n    )\n    total_movements  = qs.count()\n    stock_in_count   = aggregated[\"stock_in_qty\"]  or 0\n    stock_out_count  = aggregated[\"stock_out_qty\"] or 0\n    net_change       = aggregated[\"net\"]           or 0\n\n    # ── Pagination ───────────────────────────────────\n    paginator  = Paginator(qs, PAGE_SIZE)\n    page_obj   = paginator.get_page(request.GET.get(\"page\"))\n\n    # FIX: hapus loop rebuild dict — kirim queryset langsung ke template\n    # Template tinggal pakai: movement.variant.product.name, movement.created_at, dst.\n\n    context = {\n        \"movements\":      page_obj,          # langsung queryset, bukan list dict\n        \"page_obj\":       page_obj,\n        \"is_paginated\":   page_obj.has_other_pages(),\n        \"total_movements\": total_movements,\n        \"stock_in_count\":  stock_in_count,\n        \"stock_out_count\": stock_out_count,\n        \"net_change\":      net_change,\n        \"query\":           q,\n        \"type\":            type_filter,\n        \"start_date\":      start_date,\n        \"end_date\":        end_date,\n        \"valid_txn_types\": sorted(VALID_TXN_TYPES),  # untuk dropdown template\n        \"report_title\":    \"Stock Movement\",\n        \"is_empty\": False,\n    }\n    return render(request, \"lumra_pages/inventory/stock_movement.html\", context)"
+    },
+    {
+      "view_name": "export_stock_movement",
+      "view_module": "lumra_config.views.stock_movement_views",
+      "view_file": "lumra_config/views/stock_movement_views.py",
+      "line": 139,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [
+        "error"
+      ],
+      "context_expression": "{'error': f'Format ekspor tidak dikenal: {fmt}'}",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def export_stock_movement(request):\n    \"\"\"Stub endpoint for exporting stock movement data.\n\n    The front‑end links here with ``?format=csv`` or ``?format=excel``.\n    This view currently performs basic validation and returns a placeholder\n    response; replace with real CSV/Excel generation logic as needed.\n    \"\"\"\n    fmt = request.GET.get(\"format\", \"csv\").lower()\n    if fmt not in (\"csv\", \"excel\"):\n        return render(request, \"lumra_pages/inventory/stock_movement.html\", {\n            \"error\": f\"Format ekspor tidak dikenal: {fmt}\",\n        })\n\n    # TODO: query the same filters as ``stock_movement_view`` and emit a file\n    return render(request, \"lumra_pages/inventory/stock_movement.html\", {\n        \"info\": f\"Ekspor '{fmt}' belum diimplementasi.\"\n    })"
+    },
+    {
+      "view_name": "export_stock_movement",
+      "view_module": "lumra_config.views.stock_movement_views",
+      "view_file": "lumra_config/views/stock_movement_views.py",
+      "line": 144,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [
+        "info"
+      ],
+      "context_expression": "{'info': f\"Ekspor '{fmt}' belum diimplementasi.\"}",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def export_stock_movement(request):\n    \"\"\"Stub endpoint for exporting stock movement data.\n\n    The front‑end links here with ``?format=csv`` or ``?format=excel``.\n    This view currently performs basic validation and returns a placeholder\n    response; replace with real CSV/Excel generation logic as needed.\n    \"\"\"\n    fmt = request.GET.get(\"format\", \"csv\").lower()\n    if fmt not in (\"csv\", \"excel\"):\n        return render(request, \"lumra_pages/inventory/stock_movement.html\", {\n            \"error\": f\"Format ekspor tidak dikenal: {fmt}\",\n        })\n\n    # TODO: query the same filters as ``stock_movement_view`` and emit a file\n    return render(request, \"lumra_pages/inventory/stock_movement.html\", {\n        \"info\": f\"Ekspor '{fmt}' belum diimplementasi.\"\n    })"
+    },
+    {
+      "view_name": "add_stock_movement_view",
+      "view_module": "lumra_config.views.stock_movement_views",
+      "view_file": "lumra_config/views/stock_movement_views.py",
+      "line": 190,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [
+        "locations",
+        "prev",
+        "valid_txn_types",
+        "variants"
+      ],
+      "context_expression": "{'variants': ProductVariant.objects.select_related('product').all(), 'locations': Location.objects.all(), 'valid_txn_types': sorted(VALID_TXN_TYPES), 'prev': request.POST}",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def add_stock_movement_view(request):\n    \"\"\"Form untuk membuat stock entry baru.\"\"\"\n\n    if request.method == \"POST\":\n        variant_id  = request.POST.get(\"variant\")\n        location_id = request.POST.get(\"location\")\n        raw_qty     = request.POST.get(\"quantity\", \"\").strip()\n        txn_type    = request.POST.get(\"transaction_type\", \"\").strip()\n        notes       = request.POST.get(\"notes\", \"\").strip()\n\n        # ── Validasi ─────────────────────────────────\n        errors = []\n\n        if not variant_id:\n            errors.append(\"Variant wajib dipilih.\")\n        if not location_id:\n            errors.append(\"Lokasi wajib dipilih.\")\n        if not raw_qty or not raw_qty.lstrip(\"-\").isdigit():\n            errors.append(\"Quantity harus berupa angka.\")\n        elif int(raw_qty) <= 0:\n            errors.append(\"Quantity harus lebih dari 0.\")\n        if txn_type not in VALID_TXN_TYPES:\n            errors.append(f\"Tipe transaksi tidak valid: {txn_type!r}\")\n\n        if errors:\n            for err in errors:\n                messages.error(request, err)\n    # TODO[C5-N1]: Query di dalam loop → pindahkan ke atas loop.\n    # Gunakan: queryset = Model.objects.select_related(...).prefetch_related(...)\n    # lalu iterasi queryset di luar, TANPA query tambahan di dalam loop.\n            # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n            # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n            # Kembalikan form dengan input yang sudah diisi (tidak hilang)\n            return render(request, \"lumra_pages/inventory/add_stock_movement.html\", {\n                # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n                # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n                # Gunakan Model.objects.select_related('...').prefetch_related('...')\n                # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n                \"variants\":        ProductVariant.objects.select_related(\"product\").all(),\n                \"locations\":       Location.objects.all(),\n                \"valid_txn_types\": sorted(VALID_TXN_TYPES),\n                \"prev\":            request.POST,   # repopulate form di template\n            })\n\n        # ── Simpan ───────────────────────────────────\n        try:\n            # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n            # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n            # Gunakan Model.objects.select_related('...').prefetch_related('...')\n            # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n            variant  = ProductVariant.objects.get(id=variant_id)\n            # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n            # Gunakan Model.objects.select_related('...').prefetch_related('...')\n            location = Location.objects.get(id=location_id)\n        # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n        # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n        except (ProductVariant.DoesNotExist, Location.DoesNotExist):\n            messages.error(request, \"Variant atau lokasi tidak ditemukan.\")\n            return redirect(\"add_stock_movement\")\n\n        Stock.objects.create(\n            variant=variant,\n            location=location,\n            quantity=int(raw_qty),\n            transaction_type=txn_type,\n            notes=notes,\n            # FIX: simpan user yang melakukan transaksi jika field tersedia\n            # created_by=request.user,\n        )\n\n        messages.success(\n            request,\n            f\"Stock movement ({txn_type}) untuk {variant} berhasil disimpan.\"\n        )\n        return redirect(\"stock_movement\")\n\n    # ── GET ───────────────────────────────────────────\n    context = {\n        \"variants\":        ProductVariant.objects.select_related(\"product\").order_by(\"sku\"),\n        \"locations\":       Location.objects.order_by(\"name\"),\n        \"valid_txn_types\": sorted(VALID_TXN_TYPES),\n    }\n    return render(request, \"lumra_pages/inventory/add_stock_movement.html\", context)"
+    },
+    {
+      "view_name": "add_stock_movement_view",
+      "view_module": "lumra_config.views.stock_movement_views",
+      "view_file": "lumra_config/views/stock_movement_views.py",
+      "line": 239,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def add_stock_movement_view(request):\n    \"\"\"Form untuk membuat stock entry baru.\"\"\"\n\n    if request.method == \"POST\":\n        variant_id  = request.POST.get(\"variant\")\n        location_id = request.POST.get(\"location\")\n        raw_qty     = request.POST.get(\"quantity\", \"\").strip()\n        txn_type    = request.POST.get(\"transaction_type\", \"\").strip()\n        notes       = request.POST.get(\"notes\", \"\").strip()\n\n        # ── Validasi ─────────────────────────────────\n        errors = []\n\n        if not variant_id:\n            errors.append(\"Variant wajib dipilih.\")\n        if not location_id:\n            errors.append(\"Lokasi wajib dipilih.\")\n        if not raw_qty or not raw_qty.lstrip(\"-\").isdigit():\n            errors.append(\"Quantity harus berupa angka.\")\n        elif int(raw_qty) <= 0:\n            errors.append(\"Quantity harus lebih dari 0.\")\n        if txn_type not in VALID_TXN_TYPES:\n            errors.append(f\"Tipe transaksi tidak valid: {txn_type!r}\")\n\n        if errors:\n            for err in errors:\n                messages.error(request, err)\n    # TODO[C5-N1]: Query di dalam loop → pindahkan ke atas loop.\n    # Gunakan: queryset = Model.objects.select_related(...).prefetch_related(...)\n    # lalu iterasi queryset di luar, TANPA query tambahan di dalam loop.\n            # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n            # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n            # Kembalikan form dengan input yang sudah diisi (tidak hilang)\n            return render(request, \"lumra_pages/inventory/add_stock_movement.html\", {\n                # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n                # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n                # Gunakan Model.objects.select_related('...').prefetch_related('...')\n                # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n                \"variants\":        ProductVariant.objects.select_related(\"product\").all(),\n                \"locations\":       Location.objects.all(),\n                \"valid_txn_types\": sorted(VALID_TXN_TYPES),\n                \"prev\":            request.POST,   # repopulate form di template\n            })\n\n        # ── Simpan ───────────────────────────────────\n        try:\n            # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n            # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n            # Gunakan Model.objects.select_related('...').prefetch_related('...')\n            # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n            variant  = ProductVariant.objects.get(id=variant_id)\n            # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n            # Gunakan Model.objects.select_related('...').prefetch_related('...')\n            location = Location.objects.get(id=location_id)\n        # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n        # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n        except (ProductVariant.DoesNotExist, Location.DoesNotExist):\n            messages.error(request, \"Variant atau lokasi tidak ditemukan.\")\n            return redirect(\"add_stock_movement\")\n\n        Stock.objects.create(\n            variant=variant,\n            location=location,\n            quantity=int(raw_qty),\n            transaction_type=txn_type,\n            notes=notes,\n            # FIX: simpan user yang melakukan transaksi jika field tersedia\n            # created_by=request.user,\n        )\n\n        messages.success(\n            request,\n            f\"Stock movement ({txn_type}) untuk {variant} berhasil disimpan.\"\n        )\n        return redirect(\"stock_movement\")\n\n    # ── GET ───────────────────────────────────────────\n    context = {\n        \"variants\":        ProductVariant.objects.select_related(\"product\").order_by(\"sku\"),\n        \"locations\":       Location.objects.order_by(\"name\"),\n        \"valid_txn_types\": sorted(VALID_TXN_TYPES),\n    }\n    return render(request, \"lumra_pages/inventory/add_stock_movement.html\", context)"
+    },
+    {
+      "view_name": "stock_opname_locations",
+      "view_module": "lumra_config.views.stock_opname_views",
+      "view_file": "lumra_config/views/stock_opname_views.py",
+      "line": 52,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "create_empty_context('Stock Opname', 'Data lokasi tidak ditemukan. Silahkan tambah lokasi terlebih dahulu.')",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def stock_opname_locations(request):\n    \"\"\"Step 1: User memilih lokasi untuk opname.\"\"\"\n\n    locations = Location.objects.all().order_by(\"name\")\n\n    # Check if locations is empty\n    if not locations.exists():\n        return render(\n            request,\n            \"lumra_pages/inventory/stock_opname_locations.html\",\n            create_empty_context(\"Stock Opname\", \"Data lokasi tidak ditemukan. Silahkan tambah lokasi terlebih dahulu.\")\n        )\n\n    context = {\n        \"locations\": locations,\n        \"report_title\": \"Select Location for Stock Opname\",\n        \"is_empty\": False,\n    }\n\n    return render(\n        request,\n        \"lumra_pages/inventory/stock_opname_locations.html\",\n        context,\n    )"
+    },
+    {
+      "view_name": "stock_opname_locations",
+      "view_module": "lumra_config.views.stock_opname_views",
+      "view_file": "lumra_config/views/stock_opname_views.py",
+      "line": 64,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def stock_opname_locations(request):\n    \"\"\"Step 1: User memilih lokasi untuk opname.\"\"\"\n\n    locations = Location.objects.all().order_by(\"name\")\n\n    # Check if locations is empty\n    if not locations.exists():\n        return render(\n            request,\n            \"lumra_pages/inventory/stock_opname_locations.html\",\n            create_empty_context(\"Stock Opname\", \"Data lokasi tidak ditemukan. Silahkan tambah lokasi terlebih dahulu.\")\n        )\n\n    context = {\n        \"locations\": locations,\n        \"report_title\": \"Select Location for Stock Opname\",\n        \"is_empty\": False,\n    }\n\n    return render(\n        request,\n        \"lumra_pages/inventory/stock_opname_locations.html\",\n        context,\n    )"
+    },
+    {
+      "view_name": "stock_opname_form",
+      "view_module": "lumra_config.views.stock_opname_views",
+      "view_file": "lumra_config/views/stock_opname_views.py",
+      "line": 254,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def stock_opname_form(request, location_id):\n    \"\"\"Step 2: Input opname manual atau import CSV.\"\"\"\n\n    location = get_object_or_404(Location, pk=location_id)\n\n    # FIX: Gunakan select_for_update-safe pattern — cari dulu, baru create\n    session = (\n        StockOpnameSession.objects\n        .filter(location=location, created_by=request.user, status=STATUS_IN_PROGRESS)\n        .first()\n    )\n    if not session:\n        session = StockOpnameSession.objects.create(\n            location=location,\n            created_by=request.user,\n            status=STATUS_IN_PROGRESS,\n        )\n\n    # ============================\n    # HANDLE CSV IMPORT\n    # ============================\n    if request.method == \"POST\" and \"import_csv\" in request.POST:\n\n        form = StockOpnameCSVImportForm(request.POST, request.FILES)\n\n        if form.is_valid():\n            csv_file = request.FILES[\"csv_file\"]\n            stream = io.TextIOWrapper(csv_file.file, encoding=\"utf-8\")\n            reader = csv.DictReader(stream)\n\n            # Pre-fetch semua SKU yang relevan sekali query\n            sku_list = []\n            rows = list(reader)\n            for row in rows:\n                sku = row.get(\"sku\", \"\").strip()\n                if sku:\n                    sku_list.append(sku)\n\n            variants_by_sku = {\n                v.sku: v\n                for v in ProductVariant.objects.filter(sku__in=sku_list)\n            }\n\n            # Pre-fetch current stocks sekali query\n            stocks_by_variant_id = {\n                s[\"variant_id\"]: s[\"total\"]\n                for s in Stock.objects.filter(\n                    variant__sku__in=sku_list,\n                    location=location,\n                ).values(\"variant_id\").annotate(total=Sum(\"quantity\"))\n            }\n\n            opname_items_to_upsert = []\n            for row in rows:\n                sku        = row.get(\"sku\", \"\").strip()\n                notes      = row.get(\"notes\", \"\").strip()\n\n                # FIX: Safe int conversion\n                try:\n                    counted_qty = int(row.get(\"counted_qty\", 0))\n                except (ValueError, TypeError):\n                    counted_qty = 0\n\n                variant = variants_by_sku.get(sku)\n                if not variant:\n                    continue\n\n                current_stock = stocks_by_variant_id.get(variant.id, 0)\n\n                StockOpnameItem.objects.update_or_create(\n                    session=session,\n                    variant=variant,\n                    defaults={\n                        \"current_stock\": current_stock,\n                        \"counted_qty\": counted_qty,\n                        \"notes\": notes,\n                    },\n                )\n\n            messages.success(request, \"CSV berhasil diimport.\")\n        else:\n            messages.error(request, \"File CSV tidak valid.\")\n\n        return redirect(\"stock_opname_form\", location_id=location.id)\n\n    # ============================\n    # HANDLE SUBMIT OPNAME\n    # ============================\n    if request.method == \"POST\" and \"submit_opname\" in request.POST:\n\n        for key, value in request.POST.items():\n            if key.startswith(\"counted_qty_\"):\n                item_id = key.replace(\"counted_qty_\", \"\")\n\n    # TODO[C5-N1]: Query di dalam loop → pindahkan ke atas loop.\n    # Gunakan: queryset = Model.objects.select_related(...).prefetch_related(...)\n    # lalu iterasi queryset di luar, TANPA query tambahan di dalam loop.\n                # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n                # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n                # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n                # Gunakan Model.objects.select_related('...').prefetch_related('...')\n                try:\n                    record_item = StockOpnameItem.objects.get(id=item_id, session=session)\n                    item.counted_qty = int(value) if value else 0\n                    item.notes = request.POST.get(f\"notes_{item_id}\", \"\")\n                    item.save()\n                except (StockOpnameItem.DoesNotExist, ValueError):\n                    continue\n\n        session.status = STATUS_SUBMITTED\n        session.submitted_at = timezone.now()\n        session.save()\n\n        messages.success(request, \"Opname berhasil disubmit, menunggu approval.\")\n        return redirect(\"stock_opname_approvals\")\n\n    # ============================\n    # GET — build products_data dengan efisien (FIX N+1)\n    # ============================\n\n    q = request.GET.get(\"q\", \"\").strip()\n\n    # Filter variants sebelum pagination\n    variants_qs = (\n        ProductVariant.objects\n        .select_related(\"product\")\n        .order_by(\"sku\")\n    )\n    if q:\n        variants_qs = variants_qs.filter(\n            models_Q(sku__icontains=q) | models_Q(product__name__icontains=q)\n        )\n\n    # Ambil semua stock & opname items dalam 2 query, bukan N query\n    all_variant_ids = list(variants_qs.values_list(\"id\", flat=True))\n\n    stock_map = {\n        s[\"variant_id\"]: s[\"total\"]\n        for s in Stock.objects.filter(\n            variant_id__in=all_variant_ids,\n            location=location,\n        ).values(\"variant_id\").annotate(total=Sum(\"quantity\"))\n    }\n\n    item_map = {\n        i.variant_id: i\n        for i in StockOpnameItem.objects.filter(\n            session=session,\n            variant_id__in=all_variant_ids,\n        )\n    }\n\n    products_data = [\n        {\n            \"variant\": var,\n            \"current_stock\": stock_map.get(var.id, 0),\n            \"item\": item_map.get(var.id),\n        }\n        for var in variants_qs\n    ]\n\n    # Pagination (search sudah diterapkan sebelum ini — FIX bug lama)\n    paginator = Paginator(products_data, 50)\n    page_number = request.GET.get(\"page\")\n    page_obj = paginator.get_page(page_number)\n\n    context = {\n        \"selected_location\": location,\n        \"products\": page_obj.object_list,\n        \"page_obj\": page_obj,\n        \"query\": q,\n        \"form\": StockOpnameCSVImportForm(),\n        \"report_title\": f\"Stock Opname - {location.name}\",\n    }\n\n    return render(\n        request,\n        \"lumra_pages/inventory/stock_opname_form.html\",\n        context,\n    )"
+    },
+    {
+      "view_name": "stock_opname_approvals",
+      "view_module": "lumra_config.views.stock_opname_views",
+      "view_file": "lumra_config/views/stock_opname_views.py",
+      "line": 297,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def stock_opname_approvals(request):\n    \"\"\"Step 3: Manager/Admin melihat session opname pending.\"\"\"\n\n    status_filter = request.GET.get(\"status\", \"pending\")\n\n    if status_filter == \"pending\":\n        sessions = StockOpnameSession.objects.filter(\n            status__in=[STATUS_SUBMITTED, STATUS_IN_PROGRESS]\n        )\n    else:\n        sessions = StockOpnameSession.objects.filter(status=status_filter)\n\n    sessions = sessions.select_related(\"location\", \"created_by\").order_by(\"-created_at\")\n\n    paginator = Paginator(sessions, 10)\n    page_number = request.GET.get(\"page\")\n    page_obj = paginator.get_page(page_number)\n\n    context = {\n        \"approvals\": page_obj.object_list,\n        \"page_obj\": page_obj,\n        \"status\": status_filter,\n        \"report_title\": \"Stock Opname Approvals\",\n    }\n\n    return render(\n        request,\n        \"lumra_pages/inventory/stock_opname_approvals.html\",\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        context,\n    )"
+    },
+    {
+      "view_name": "stock_opname_approval_detail",
+      "view_module": "lumra_config.views.stock_opname_views",
+      "view_file": "lumra_config/views/stock_opname_views.py",
+      "line": 379,
+      "decorators": [
+        "login_required",
+        "user_passes_test"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def stock_opname_approval_detail(request, session_id):\n    \"\"\"Step 4: Approve / Reject opname session.\"\"\"\n\n    session = get_object_or_404(StockOpnameSession, pk=session_id)\n    opname_items = session.items.select_related(\"variant\", \"variant__product\")\n\n    if request.method == \"POST\":\n        decision = request.POST.get(\"decision\")\n\n        # ============================\n        # APPROVE\n        # ============================\n        if decision == \"approve\":\n            with transaction.atomic():\n # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n # Gunakan queryset = Model.objects.select_related('...').prefetch_related('...')\n # TODO[C5-N1]: Pindahkan query ini ke atas loop.\n # Gunakan Model.objects.select_related('...').prefetch_related('...')\n\n                for item in opname_items:\n                    # FIX: Hapus semua stock lama, replace dengan satu entry bersih\n                    Stock.objects.filter(\n                        variant=item.variant,\n                        location=session.location,\n                    ).delete()\n\n                    Stock.objects.create(\n                        variant=item.variant,\n                        location=session.location,\n                        quantity=item.counted_qty,\n                        transaction_type=\"opname\",\n                        notes=f\"Approved Opname Session #{session.id}\",\n                        last_updated=timezone.now(),\n                    )\n\n                session.status = STATUS_APPROVED\n                session.approved_at = timezone.now()\n                session.approved_by = request.user\n                session.save()\n\n            messages.success(request, f\"Session #{session.id} berhasil di-approve.\")\n            return redirect(\"stock_opname_approvals\")\n\n        # ============================\n        # REJECT\n        # ============================\n        elif decision == \"reject\":\n            reason = request.POST.get(\"reason\", \"\").strip()\n            if not reason:\n                messages.error(request, \"Alasan penolakan wajib diisi.\")\n            else:\n                session.status = STATUS_REJECTED\n                session.notes = reason\n                session.save()\n                messages.warning(request, f\"Session #{session.id} ditolak.\")\n                return redirect(\"stock_opname_approvals\")\n\n    context = {\n        \"session\": session,\n        \"opname_data\": opname_items,\n        \"report_title\": f\"Approval Detail - {session.location.name}\",\n    }\n\n    return render(\n        request,\n        \"lumra_pages/inventory/stock_opname_approval_detail.html\",\n        context,\n    )"
+    }
+  ]
+}

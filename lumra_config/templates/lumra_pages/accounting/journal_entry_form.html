@@ -1,0 +1,203 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}Input Jurnal - CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>[x-cloak]{display:none!important}
+
+  .glass-panel { background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid white; padding: 32px; max-width: 800px; margin: 0 auto; }
+  .je-row { display: grid; grid-template-columns: 3fr 1fr 1fr 40px; gap: 12px; align-items: center; margin-bottom: 12px; }
+  .form-input { padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; background: white; outline: none; width: 100%; }
+  .footer-sticky { position: sticky; bottom: 0; background: white; padding: 16px; border-radius: 12px; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); margin-top: 20px; border: 1px solid #f1f5f9; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full relative z-10 space-y-6" x-data="journalFormApp()" x-init="init()" x-cloak>
+  <div class="max-w-5xl mx-auto">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-800">Input Jurnal Umum</h1>
+        <p class="text-sm text-slate-500">Pastikan Debit dan Kredit seimbang.</p>
+      </div>
+      <a href="{% url 'journal_entry_list' %}" class="text-slate-500 hover:text-slate-800 font-bold text-sm">Batal</a>
+    </div>
+
+    <form method="post" @submit="prepareSubmit" class="glass-panel">
+      {% csrf_token %}
+      <input type="hidden" name="lines_json" x-ref="linesInput">
+      <div class="grid grid-cols-2 gap-4 mb-6">
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Tanggal Transaksi</label>
+          <input aria-label="Tanggal" type="date" name="date" x-model="form.date" class="form-input">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase mb-1">No. Referensi</label>
+          <input aria-label="Input" type="text" :value="generatedNo" disabled class="form-input bg-slate-100 text-slate-500 font-mono">
+        </div>
+      </div>
+      <div class="mb-6">
+        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Deskripsi Transaksi</label>
+        <input type="text" name="description" x-model="form.description" class="form-input" placeholder="Cth: Pembayaran Listrik Bulan Oktober">
+      </div>
+
+      <div>
+        <div class="grid grid-cols-12 gap-2 text-xs font-bold text-slate-400 uppercase mb-2 px-1">
+          <div class="col-span-6">Akun</div>
+          <div class="col-span-2 text-right">Debit</div>
+          <div class="col-span-2 text-right">Kredit</div>
+          <div class="col-span-2 text-center">Aksi</div>
+        </div>
+
+        <div class="space-y-2">
+          <template x-for="(line, index) in form.lines" :key="index">
+            <div class="je-row bg-slate-50 p-2 rounded-lg border border-slate-100">
+              <div>
+                <select aria-label="Input" x-model="line.account_id" class="form-input text-sm">
+                  <option value="">-- Pilih Akun --</option>
+                  <template x-for="account in accounts" :key="account.id">
+                    <option :value="String(account.id)" x-text="`${account.code} ${account.name}`"></option>
+                  </template>
+                </select>
+              </div>
+              <div>
+                <input type="number" x-model.number="line.debit" @input="clearCredit(index)" class="form-input text-right font-bold text-slate-700" placeholder="0">
+              </div>
+              <div>
+                <input type="number" x-model.number="line.credit" @input="clearDebit(index)" class="form-input text-right font-bold text-slate-700" placeholder="0">
+              </div>
+              <div class="text-center">
+                <button aria-label="Hapus" type="button" @click="removeLine(index)" class="text-rose-400 hover:text-rose-600 p-2"><i class="fas fa-times"></i></button>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <button type="button" @click="addLine()" class="w-full mt-2 py-2 border border-dashed border-slate-300 rounded-lg text-slate-500 text-xs font-bold hover:bg-slate-50 transition">
+          <i class="fas fa-plus mr-1"></i> Tambah Baris Jurnal
+        </button>
+      </div>
+
+      <div class="footer-sticky">
+        <div class="grid grid-cols-2 gap-8">
+          <div class="flex justify-between items-center">
+            <span class="text-sm font-bold text-slate-500">Total Debit</span>
+            <span class="text-xl font-bold text-slate-800" x-text="formatCurrency(totalDebit)"></span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-sm font-bold text-slate-500">Total Kredit</span>
+            <span class="text-xl font-bold text-slate-800" x-text="formatCurrency(totalCredit)"></span>
+          </div>
+        </div>
+
+        <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-3 h-3 rounded-full" :class="isBalanced ? 'bg-emerald-500' : 'bg-rose-500'"></div>
+            <span class="text-xs font-bold" :class="isBalanced ? 'text-emerald-600' : 'text-rose-600'" x-text="isBalanced ? 'SEIMBANG' : 'TIDAK SEIMBANG'"></span>
+          </div>
+          <button type="submit" :disabled="!isBalanced" class="px-6 py-2.5 rounded-xl text-sm font-bold bg-slate-800 text-white shadow hover:bg-slate-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
+            Simpan Jurnal
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script id="posting-accounts-data" type="application/json">
+{{ posting_accounts_json|safe }}
+</script>
+
+<script id="initial-lines-data" type="application/json">
+{{ initial_lines_json|safe }}
+</script>
+
+<script id="posting-accounts-data" type="application/json">
+{{ posting_accounts_json|safe }}
+</script>
+
+<script id="initial-lines-data" type="application/json">
+{{ initial_lines_json|safe }}
+</script>
+
+<script>
+function journalFormApp() {
+  return {
+    generatedNo: '{{ generated_number|escapejs 
+
+    init() {
+      const _posting_accountsRaw = document.getElementById('posting-accounts-data');
+      if (_posting_accountsRaw) {
+        try { this.posting_accounts = JSON.parse(_posting_accountsRaw.textContent); }
+        catch(e) { console.error('posting-accounts-data parse error:', e); }
+      }
+      const _initial_linesRaw = document.getElementById('initial-lines-data');
+      if (_initial_linesRaw) {
+        try { this.initial_lines = JSON.parse(_initial_linesRaw.textContent); }
+        catch(e) { console.error('initial-lines-data parse error:', e); }
+      }
+    },
+  }}',
+    accounts: [],
+    form: {
+      date: '{{ entry.date|date:"Y-m-d"|default:""|escapejs }}' || new Date().toISOString().split('T')[0],
+      description: '{{ entry.description|default:""|escapejs }}',
+      lines: [],},
+
+    addLine() {
+      this.form.lines.push({ account_id: '', debit: 0, credit: 0 });
+    },
+
+    removeLine(index) {
+      if (this.form.lines.length > 2) {
+        this.form.lines.splice(index, 1);
+      }
+    },
+
+    clearCredit(index) {
+      if (this.form.lines[index].debit > 0) this.form.lines[index].credit = 0;
+    },
+
+    clearDebit(index) {
+      if (this.form.lines[index].credit > 0) this.form.lines[index].debit = 0;
+    },
+
+    get totalDebit() {
+      return this.form.lines.reduce((sum, line) => sum + (Number(line.debit) || 0), 0);
+    },
+
+    get totalCredit() {
+      return this.form.lines.reduce((sum, line) => sum + (Number(line.credit) || 0), 0);
+    },
+
+    get isBalanced() {
+      return this.totalDebit === this.totalCredit && this.totalDebit > 0;
+    },
+
+    formatCurrency(num) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num || 0);
+    },
+
+    prepareSubmit(event) {
+      if (!this.form.description) {
+        event.preventDefault();
+        alert('Mohon isi deskripsi');
+        return;
+      }
+      if (this.form.lines.some(line => !line.account_id)) {
+        event.preventDefault();
+        alert('Semua baris harus memilih akun');
+        return;
+      }
+      if (!this.isBalanced) {
+        event.preventDefault();
+        alert('Debit dan kredit harus seimbang');
+        return;
+      }
+      this.$refs.linesInput.value = JSON.stringify(this.form.lines);
+    }
+  }
+}
+</script>
+{% endblock %}

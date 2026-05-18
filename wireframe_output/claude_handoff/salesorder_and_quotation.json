@@ -1,0 +1,423 @@
+{
+  "module_name": "salesorder_and_quotation",
+  "template_total": 6,
+  "templates": [
+    {
+      "template_name": "lumra_pages/sales/salesorder_and_quotation/quotation_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/sales/salesorder_and_quotation/quotation_list.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 0,
+      "structure_stats": {
+        "component_total": 27,
+        "interactive_total": 3,
+        "issue_total": 2,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Penawaran Harga"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Daftar Penawaran"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Buat Penawaran",
+            "text_preview": "Buat Penawaran"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Total"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Terkirim"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class='px-3 py-1.5 bg-emerald-50 text-emerald-600 hover:b'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/sales/salesorder_and_quotation/sales_order_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/sales/salesorder_and_quotation/sales_order_list.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 0,
+      "structure_stats": {
+        "component_total": 27,
+        "interactive_total": 2,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Sales Order"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Daftar Sales Order"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Buat Order",
+            "text_preview": "Buat Order"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Total Order"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Belum Bayar"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/sales/salesorder_and_quotation/quotation_detail.html",
+      "template_file": "lumra_config/templates/lumra_pages/sales/salesorder_and_quotation/quotation_detail.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 5,
+        "interactive_total": 1,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{{ detail_title }}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Hapus",
+            "text_preview": "Hapus"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/sales/salesorder_and_quotation/quotation_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/sales/salesorder_and_quotation/quotation_form.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 4,
+        "interactive_total": 1,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{{ form_title }}"
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "{% csrf_token %} {% if form_errors %} {{ form_errors }} {% endif %} {% for field…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Simpan",
+            "text_preview": "Simpan"
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/sales/salesorder_and_quotation/sales_order_detail.html",
+      "template_file": "lumra_config/templates/lumra_pages/sales/salesorder_and_quotation/sales_order_detail.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 5,
+        "interactive_total": 1,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{{ detail_title }}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Hapus",
+            "text_preview": "Hapus"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/sales/salesorder_and_quotation/sales_order_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/sales/salesorder_and_quotation/sales_order_form.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 4,
+        "interactive_total": 1,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{{ form_title }}"
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "{% csrf_token %} {% if form_errors %} {{ form_errors }} {% endif %} {% for field…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Simpan",
+            "text_preview": "Simpan"
+          }
+        ],
+        "issues": []
+      }
+    }
+  ],
+  "views": [
+    {
+      "view_name": "sales_order_list",
+      "view_module": "lumra_config.views.sales_views",
+      "view_file": "lumra_config/views/sales_views.py",
+      "line": 118,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def sales_order_list(request):\n    \"\"\"List all Sales Orders.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/sales/salesorder_and_quotation/sales_order_list.html', context)"
+    },
+    {
+      "view_name": "sales_order_form",
+      "view_module": "lumra_config.views.sales_views",
+      "view_file": "lumra_config/views/sales_views.py",
+      "line": 125,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def sales_order_form(request, pk=None):\n    \"\"\"Create/Edit Sales Order.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/sales/salesorder_and_quotation/sales_order_form.html', context)"
+    },
+    {
+      "view_name": "sales_order_detail",
+      "view_module": "lumra_config.views.sales_views",
+      "view_file": "lumra_config/views/sales_views.py",
+      "line": 132,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def sales_order_detail(request, pk):\n    \"\"\"View Sales Order detail.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/sales/salesorder_and_quotation/sales_order_detail.html', context)"
+    },
+    {
+      "view_name": "quotation_list",
+      "view_module": "lumra_config.views.sales_views",
+      "view_file": "lumra_config/views/sales_views.py",
+      "line": 139,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def quotation_list(request):\n    \"\"\"List all Quotations.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/sales/salesorder_and_quotation/quotation_list.html', context)"
+    },
+    {
+      "view_name": "quotation_form",
+      "view_module": "lumra_config.views.sales_views",
+      "view_file": "lumra_config/views/sales_views.py",
+      "line": 146,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def quotation_form(request, pk=None):\n    \"\"\"Create/Edit Quotation.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/sales/salesorder_and_quotation/quotation_form.html', context)"
+    },
+    {
+      "view_name": "quotation_detail",
+      "view_module": "lumra_config.views.sales_views",
+      "view_file": "lumra_config/views/sales_views.py",
+      "line": 153,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def quotation_detail(request, pk):\n    \"\"\"View Quotation detail.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/sales/salesorder_and_quotation/quotation_detail.html', context)"
+    }
+  ]
+}

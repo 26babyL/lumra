@@ -1,0 +1,444 @@
+{% extends 'base/base.html' %}
+{% block title %}Feature Matrix{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  [x-cloak]{display:var(--shadow-sm-16)!important}
+
+  .blob{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:var(--shadow-sm-16);z-index:0;
+    animation:drift 26s ease-in-out infinite;}
+  @keyframes drift{0%,100%{transform:translate(0,0)scale(1)}50%{transform:translate(22px,18px)scale(1.04)}}
+
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .45s ease,transform .45s ease;}
+  .reveal.visible{opacity:1;transform:var(--shadow-sm-16);}
+
+  .glass{background:var(--color-white-a74);backdrop-filter:var(--backdrop-blur-20px-saturate-160);
+    -webkit-backdrop-filter:var(--backdrop-blur-20px-saturate-160);
+    border:1px solid var(--color-white-a92);border-radius:20px;
+    box-shadow:0 2px 14px var(--color-black-a06),0 0 0 .5px var(--color-black-a03);}
+
+  /* ══ FEATURE CARD ══ */
+  .feat-card{
+    border-radius:24px;padding:22px;position:relative;overflow:hidden;
+    transition:transform .2s,box-shadow .2s;
+  }
+  .feat-card.active{
+    background:var(--color-white-a78);border:1px solid var(--color-white-a92);
+    box-shadow:0 3px 16px var(--color-black-a07);
+  }
+  .feat-card.active:hover{transform:translateY(-3px);box-shadow:0 8px 28px var(--color-black-a10);}
+  .feat-card.locked{
+    background:var(--color-slate-50-a5);border:1.5px dashed var(--color-slate-200-a8);
+    opacity:.72;
+  }
+  .feat-card.locked:hover{opacity:.85;}
+
+  /* ══ FEATURE TOGGLE ══ */
+  .ftog{position:relative;width:38px;height:21px;border-radius:99px;
+    transition:background .35s ease;flex-shrink:0;}
+  .ftog.on {background:linear-gradient(135deg,var(--color-emerald-700),var(--color-emerald-600));cursor:pointer;}
+  .ftog.off{background:var(--color-slate-200);cursor:pointer;}
+  .ftog.locked-tog{background:var(--color-slate-100);cursor:not-allowed;}
+  .ftog .k{position:absolute;top:2.5px;width:16px;height:16px;border-radius:50%;
+    background:var(--color-fff);box-shadow:0 1px 4px var(--color-black-a2);
+    transition:transform .35s cubic-bezier(.4,0,.2,1);}
+  .ftog.on    .k{transform:translateX(19px);}
+  .ftog.off   .k{transform:translateX(2.5px);}
+  .ftog.locked-tog .k{transform:translateX(2.5px);}
+
+  /* ══ PLAN PILL ══ */
+  .plan-pill{display:inline-flex;align-items:center;gap:4px;
+    padding:3px 9px;border-radius:99px;
+    font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;}
+  .pp-titan    {background:linear-gradient(135deg,var(--color-emerald-700-a15),var(--color-rgba-99-102-241-a12));
+    color:var(--color-emerald-600);border:1px solid var(--color-emerald-700-a25);}
+  .pp-warehouse{background:var(--color-rgba-14-165-233-a1);color:var(--color-0ea5e9);border:1px solid var(--color-rgba-14-165-233-a2);}
+  .pp-boutique {background:var(--color-slate-400-a1);color:var(--color-slate-500);border:1px solid var(--color-slate-400-a2);}
+
+  /* ══ CATEGORY TAB ══ */
+  .ctab{padding:7px 14px;border-radius:12px;font-size:10px;font-weight:800;
+    cursor:pointer;transition:background .15s,color .15s;border:1px solid transparent;}
+  .ctab:hover{background:var(--color-white-a8);color:var(--color-slate-700);}
+  .ctab.active{background:var(--color-white-a95);color:var(--color-slate-800);
+    border-color:var(--color-slate-200-a8);box-shadow:0 1px 6px var(--color-black-a06);}
+  .ctab.inactive{color:var(--color-slate-400);}
+
+  /* ══ UPGRADE BANNER ══ */
+  .upgrade-banner{
+    border-radius:20px;padding:20px 24px;
+    background:linear-gradient(135deg,var(--color-0a1628),var(--color-slate-900));
+    border:1px solid var(--color-white-a05);
+    box-shadow:0 8px 32px var(--color-black-a2);
+    position:relative;overflow:hidden;
+  }
+  .upgrade-banner::before{content:'';position:absolute;inset:0;
+    background:radial-gradient(ellipse 60% 80% at 80% 50%,var(--color-emerald-700-a1) 0%,transparent 70%);}
+
+  /* ══ TOAST ══ */
+  .toast{animation:tIn .25s ease,tOut .25s ease 2.7s forwards;}
+  @keyframes tIn {from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:var(--shadow-sm-16)}}
+  @keyframes tOut{from{opacity:1}to{opacity:0;pointer-events:var(--shadow-sm-16)}}
+
+  /* ══ UNSAVED ══ */
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+  .blink{animation:blink 1.2s infinite;}
+
+  .cscroll::-webkit-scrollbar{width:4px;}
+  .cscroll::-webkit-scrollbar-thumb{background:var(--color-slate-200);border-radius:99px;}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="blob" style="width:480px;height:480px;background:#6366f1;opacity:.045;top:-80px;left:-80px;"></div>
+<div class="blob" style="width:360px;height:360px;background:#047857;opacity:.04;bottom:-60px;right:-60px;animation-delay:-11s;"></div>
+
+{{ features_json|json_script:"features-data" }}
+
+{# permissions for role-based control #}
+{{ perms_json|default:'{}'|json_script:"perms-data" }}
+{{ can_access_settings|yesno:"true,false"|default:'false'|json_script:"can-access" }} 
+
+{% if not can_access_settings %}
+<div class="p-12 text-center text-rose-500">
+  <i class="fas fa-lock fa-lg mr-2"></i>
+  Anda tidak memiliki izin untuk mengakses fitur bisnis.
+</div>
+{% else %}
+<div class="w-full flex-1 space-y-5 relative z-10"
+     x-data="featureMatrix()" x-init="init()" x-cloak>
+
+  <!--{# ══ HEADER ══ #}-->
+  <div class="reveal flex items-end justify-between gap-4 flex-wrap">
+    <div>
+      <p class="text-[10px] font-black text-violet-500 uppercase tracking-[.25em] mb-1">
+        Business Settings → Features
+      </p>
+      <h1 class="text-2xl font-black text-slate-800 tracking-tight"
+          style="font-family:'Syne',sans-serif;">
+        Feature <span class="text-violet-600">Matrix</span>
+      </h1>
+      <p class="text-sm text-slate-400 mt-0.5 font-medium">
+        Aktif / nonaktifkan fitur sesuai paket
+        <span class="font-black" :class="plan==='titan'?'text-emerald-500':plan==='warehouse'?'text-sky-500':'text-slate-500'"
+              x-text="planLabel"></span>
+      </p>
+    </div>
+    <div class="flex items-center gap-2">
+      <div x-show="hasChanges"
+           class="flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-50 border border-amber-200/60">
+        <div class="w-1.5 h-1.5 rounded-full bg-amber-400 blink"></div>
+        <span class="text-[10px] font-black text-amber-600">Belum disimpan</span>
+      </div>
+      <button @click="discardChanges()" x-show="hasChanges"
+              class="px-4 py-2.5 rounded-xl border border-slate-200/70 text-slate-500 text-[11px] font-700 hover:bg-slate-50 transition">
+        Batalkan
+      </button>
+      <button @click="saveAll()" :disabled="!hasChanges||isSaving"
+              class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[11px] font-800 transition shadow-md"
+              :class="hasChanges&&!isSaving?'bg-violet-600 text-white hover:bg-violet-700 shadow-violet-100':'bg-slate-100 text-slate-400 cursor-not-allowed'">
+        <i class="fas fa-save text-[10px]" :class="isSaving?'fas fa-spinner fa-spin':''"></i>
+        <span x-text="isSaving?'Menyimpan…':'Simpan Perubahan'"></span>
+      </button>
+      <a href="{% url 'business_settings' %}"
+         class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200/70 text-slate-600 text-[11px] font-700 hover:bg-white transition" style="background:var(--color-surface)">
+        <i class="fas fa-arrow-left text-[10px]"></i> Kembali
+      </a>
+    </div>
+  </div>
+
+  <!--{# ══ PLAN OVERVIEW CARDS ══ #}-->
+  <div class="reveal grid grid-cols-3 gap-3">
+    <template x-for="p in plans" :key="p.key">
+      <div class="glass p-4 relative overflow-hidden"
+           :class="plan===p.key?'border-2':''">
+        <div x-show="plan===p.key"
+             class="absolute top-3 right-3">
+          <span class="plan-pill" :class="`pp-${p.key}`">
+            <i class="fas fa-check text-[7px]"></i> Paket Anda
+          </span>
+        </div>
+        <p class="text-[10px] font-black uppercase tracking-[.15em] mb-1"
+           :class="plan===p.key?'text-emerald-500':'text-slate-400'"
+           x-text="p.label"></p>
+        <p class="text-xl font-black text-slate-800 italic"
+           style="font-family:'Syne',sans-serif;" x-text="p.sku"></p>
+        <p class="text-[9px] text-slate-400 mt-0.5 font-medium" x-text="p.desc"></p>
+        <div class="mt-3 flex items-center justify-between text-[9px]">
+          <span class="text-slate-400 font-bold">Fitur aktif:</span>
+          <span class="font-black text-slate-600">
+            <span x-text="countActiveForPlan(p.key)"></span>
+            / <span x-text="allFeatures.length"></span>
+          </span>
+        </div>
+        <div class="mt-1.5 h-1 rounded-full overflow-hidden" style="background:var(--color-bg)">
+          <div class="h-full rounded-full transition-all duration-500"
+               :style="`width:${(countActiveForPlan(p.key)/allFeatures.length)*100}%;background:${plan===p.key?'#059669':'#94a3b8'}`"></div>
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <!--{# ══ UPGRADE BANNER (if not titan) ══ #}-->
+  <div x-show="plan!=='titan'" class="reveal upgrade-banner">
+    <div class="relative z-10 flex items-center justify-between gap-4 flex-wrap">
+      <div>
+        <p class="text-[9px] font-black text-emerald-400 uppercase tracking-[.2em] mb-1">
+          Unlock More Power
+        </p>
+        <p class="text-[13px] font-black text-white"
+           style="font-family:'Syne',sans-serif;">
+          <span x-text="plan==='boutique'?'Naik ke Warehouse — 50k SKU & Stock Movement':'Naik ke Titan — Unlimited SKU & Multi-Tenant'"></span>
+        </p>
+      </div>
+      <a href="{% url 'pricing' %}"
+         class="px-5 py-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-white text-[10px] font-black uppercase tracking-widest transition flex-shrink-0">
+        Upgrade Sekarang →
+      </a>
+    </div>
+  </div>
+
+  <!--{# ══ CATEGORY FILTER ══ #}-->
+  <div class="reveal glass p-3 flex flex-wrap gap-2">
+    <div @click="activeCategory='all'"
+         class="ctab" :class="activeCategory==='all'?'active':'inactive'">
+      <i class="fas fa-th mr-1.5 text-[9px]"></i> Semua
+      <span class="ml-1.5 text-[9px] px-1.5 py-0.5 rounded-full font-black" style="background:var(--color-bg)"
+            x-text="allFeatures.length"></span>
+    </div>
+    <template x-for="cat in categories" :key="cat.key">
+      <div @click="activeCategory=cat.key"
+           class="ctab" :class="activeCategory===cat.key?'active':'inactive'">
+        <i :class="cat.icon+' mr-1.5 text-[9px]'"></i>
+        <span x-text="cat.label"></span>
+        <span class="ml-1.5 text-[9px] px-1.5 py-0.5 rounded-full font-black" style="background:var(--color-bg)"
+              x-text="allFeatures.filter(f=>f.category===cat.key).length"></span>
+      </div>
+    </template>
+  </div>
+
+  <!--{# ══ FEATURE GRID ══ #}-->
+  <div class="reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <template x-for="f in filteredFeatures" :key="f.key">
+      <div class="feat-card" :class="isLocked(f)?'locked':'active'">
+
+        <!--{# Lock overlay indicator #}-->
+        <div x-show="isLocked(f)"
+             class="absolute top-4 right-4">
+          <span class="plan-pill" :class="`pp-${f.min_plan}`">
+            <i class="fas fa-lock text-[7px]"></i>
+            <span x-text="f.min_plan==='titan'?'Titan Only':f.min_plan==='warehouse'?'Warehouse+':''"></span>
+          </span>
+        </div>
+
+        <!--{# Card header #}-->
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
+               :style="`background:${isLocked(f)?'rgba(241,245,249,.8)':f.bg};color:${isLocked(f)?'#94a3b8':f.color}`">
+            <i :class="f.icon" style="font-size:14px;"></i>
+          </div>
+          <div x-show="!isLocked(f)"
+               @click="toggleFeature(f.key)"
+               class="ftog" :class="features[f.key]?'on':'off'">
+            <div class="k"></div>
+          </div>
+          <div x-show="isLocked(f)"
+               class="ftog locked-tog">
+            <div class="k"></div>
+          </div>
+        </div>
+
+        <!--{# Title & desc #}-->
+        <h3 class="text-[11px] font-black uppercase tracking-widest mb-1.5"
+            :class="isLocked(f)?'text-slate-400':'text-slate-800'"
+            x-text="f.label"></h3>
+        <p class="text-[10px] leading-relaxed"
+           :class="isLocked(f)?'text-slate-300':'text-slate-500 font-medium'"
+           x-text="f.desc"></p>
+
+        <!--{# Status / usage note #}-->
+        <div class="mt-4 pt-3 border-t"
+             :class="isLocked(f)?'border-slate-100/60':'border-slate-100/80'">
+          <div x-show="!isLocked(f)" class="flex items-center justify-between">
+            <span class="text-[9px] font-black uppercase tracking-wider"
+                  :class="features[f.key]?'text-emerald-500':'text-slate-400'"
+                  x-text="features[f.key]?'Aktif':'Nonaktif'"></span>
+            <span x-show="f.usage_note"
+                  class="text-[9px] mono text-slate-400" x-text="f.usage_note"></span>
+          </div>
+          <div x-show="isLocked(f)"
+               @click="window.location.href='{% url 'pricing' %}'"
+               class="flex items-center gap-2 cursor-pointer group/up">
+            <i class="fas fa-arrow-up text-[9px] text-slate-300 group-hover/up:text-emerald-500 transition"></i>
+            <span class="text-[9px] font-black text-slate-400 group-hover/up:text-emerald-500 transition">
+              Upgrade untuk membuka fitur ini
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </template>
+  </div>
+
+  <!--{# Toast #}-->
+  <div id="toastEl" class="fixed top-5 right-5 z-[100] flex flex-col gap-2"></div>
+
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function _csrf(){const el=document.querySelector('[name=csrfmiddlewaretoken]');return el?el.value:(document.cookie.match(/csrftoken=([^;]+)/)||[])[1]||'';}
+async function _post(url,fd){fd.append('csrfmiddlewaretoken',_csrf());const r=await fetch(url,{method:'POST',body:fd});return r.json();}
+function _toast(msg,type='success'){
+  const c=document.getElementById('toastEl');if(!c)return;
+  const col={success:'border-emerald-400',warn:'border-amber-400',error:'border-rose-400'};
+  const ico={success:'check-circle',warn:'exclamation-triangle',error:'times-circle'};
+  const el=document.createElement('div');
+  el.className=`toast flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl min-w-[200px] max-w-xs text-white text-[12px] font-semibold border-l-4 ${col[type]||col.success}`;
+  el.style.cssText='background:rgba(15,23,42,.92);backdrop-filter:blur(12px);';
+  el.innerHTML=`<i class="fas fa-${ico[type]||ico.success} text-xs flex-shrink-0"></i><span>${msg}</span>`;
+  c.appendChild(el);setTimeout(()=>el.remove(),3200);
+}
+
+function featureMatrix(){
+  const PLAN_RANK={boutique:0,warehouse:1,titan:2};
+  return {
+    perms:{},
+    canAccess:true,
+    plan: '{{ business.plan|default:"titan" }}',
+    features:{},   /* {featureKey: bool} — current enabled state */
+    _original:{},
+    hasChanges:false,
+    isSaving:false,
+    activeCategory:'all',
+
+    init(){
+      const pd=document.getElementById('perms-data');
+      if(pd){ try{ Object.assign(this.perms, JSON.parse(pd.textContent)); }catch(e){} }
+      const ca=document.getElementById('can-access');
+      if(ca){ this.canAccess = ca.textContent.trim()==='true'; }
+    },
+
+    plans:[
+      {key:'boutique', label:'Boutique', sku:'5,000 SKU',   desc:'Toko kecil / kafe'},
+      {key:'warehouse',label:'Warehouse',sku:'50,000 SKU',  desc:'Distribusi / grosir'},
+      {key:'titan',    label:'Titan',    sku:'UNLIMITED',   desc:'Multi-cabang / enterprise'},
+    ],
+
+    categories:[
+      {key:'inventory',label:'Inventory',icon:'fas fa-boxes'},
+      {key:'sales',    label:'Sales',    icon:'fas fa-chart-line'},
+      {key:'finance',  label:'Finance',  icon:'fas fa-vault'},
+      {key:'ops',      label:'Operasional',icon:'fas fa-cog'},
+      {key:'analytics',label:'Analytics',icon:'fas fa-brain'},
+      {key:'system',   label:'System',   icon:'fas fa-server'},
+    ],
+
+    allFeatures:[
+      /* ── Inventory ── */
+      {key:'basic_inventory',  category:'inventory',min_plan:'boutique', label:'Basic Inventory',        desc:'Kelola hingga 5.000 SKU dengan kategori dan stok dasar.',icon:'fas fa-box',bg:'rgba(4,120,87,.1)',color:'#047857',usage_note:'5k SKU limit'},
+      {key:'advanced_inventory',category:'inventory',min_plan:'warehouse',label:'Advanced Inventory',    desc:'Stock movement, transfer antar gudang, multi-lokasi stok.',icon:'fas fa-warehouse',bg:'rgba(245,158,11,.1)',color:'#d97706',usage_note:'50k+ SKU'},
+      {key:'bulk_import',      category:'inventory',min_plan:'warehouse', label:'Bulk Import CSV',       desc:'Upload massal SKU hingga 118.000 baris tanpa degradasi.',icon:'fas fa-file-upload',bg:'rgba(14,165,233,.1)',color:'#0ea5e9',usage_note:'Max 118k'},
+      {key:'variant_matrix',   category:'inventory',min_plan:'boutique',  label:'Variant Matrix',        desc:'Kelola warna, ukuran, dan atribut varian produk.',icon:'fas fa-th',bg:'rgba(5,150,105,.1)',color:'#047857',usage_note:null},
+      {key:'low_stock_alert',  category:'inventory',min_plan:'boutique',  label:'Low Stock Alert',       desc:'Notifikasi otomatis saat stok di bawah threshold.',icon:'fas fa-bell',bg:'rgba(244,63,94,.08)',color:'#e11d48',usage_note:null},
+      {key:'vendor_portal',    category:'inventory',min_plan:'warehouse', label:'Vendor Portal',         desc:'Manajemen vendor, Purchase Order, dan lead time.',icon:'fas fa-truck',bg:'rgba(99,102,241,.1)',color:'#6366f1',usage_note:null},
+
+      /* ── Sales ── */
+      {key:'pos_basic',        category:'sales',    min_plan:'boutique',  label:'POS Interface',         desc:'Kasir digital ringan untuk transaksi harian.',icon:'fas fa-cash-register',bg:'rgba(4,120,87,.1)',color:'#047857',usage_note:null},
+      {key:'sales_report',     category:'sales',    min_plan:'boutique',  label:'Sales Report',          desc:'Laporan penjualan harian, mingguan, bulanan.',icon:'fas fa-chart-bar',bg:'rgba(14,165,233,.1)',color:'#0ea5e9',usage_note:null},
+      {key:'discount_engine',  category:'sales',    min_plan:'warehouse', label:'Discount Engine',       desc:'Promo bertingkat, voucher, dan diskon otomatis.',icon:'fas fa-percent',bg:'rgba(245,158,11,.1)',color:'#d97706',usage_note:null},
+      {key:'multi_cashier',    category:'sales',    min_plan:'warehouse', label:'Multi-Cashier',         desc:'Beberapa kasir aktif sekaligus di satu toko.',icon:'fas fa-users',bg:'rgba(99,102,241,.1)',color:'#6366f1',usage_note:null},
+
+      /* ── Finance ── */
+      {key:'basic_finance',    category:'finance',  min_plan:'boutique',  label:'Laporan Pendapatan',    desc:'Total revenue dan ringkasan per periode.',icon:'fas fa-coins',bg:'rgba(4,120,87,.1)',color:'#047857',usage_note:null},
+      {key:'profit_report',    category:'finance',  min_plan:'warehouse', label:'Laporan Laba Bersih',   desc:'HPP, margin, dan net profit — data sensitif.',icon:'fas fa-chart-pie',bg:'rgba(244,63,94,.08)',color:'#e11d48',usage_note:'SENSITIF'},
+      {key:'financial_export', category:'finance',  min_plan:'warehouse', label:'Export Laporan Keuangan',desc:'P&L, neraca, arus kas dalam format Excel/PDF.',icon:'fas fa-file-export',bg:'rgba(245,158,11,.1)',color:'#d97706',usage_note:null},
+      {key:'audit_trail',      category:'finance',  min_plan:'titan',     label:'Audit Trail Keuangan',  desc:'Log immutable semua transaksi dan perubahan finansial.',icon:'fas fa-clipboard-list',bg:'rgba(99,102,241,.1)',color:'#6366f1',usage_note:null},
+
+      /* ── Ops ── */
+      {key:'multi_store',      category:'ops',      min_plan:'warehouse', label:'Multi-Store',           desc:'Kelola hingga 5 cabang dari satu dashboard.',icon:'fas fa-store',bg:'rgba(14,165,233,.1)',color:'#0ea5e9',usage_note:'Max 5 cabang'},
+      {key:'unlimited_stores', category:'ops',      min_plan:'titan',     label:'Unlimited Branches',    desc:'Cabang tak terbatas dengan data terisolasi per tenant.',icon:'fas fa-building',bg:'rgba(4,120,87,.1)',color:'#047857',usage_note:'∞ cabang'},
+      {key:'multi_tenant',     category:'ops',      min_plan:'titan',     label:'Multi-Tenant',          desc:'Isolasi data penuh — setiap klien punya "ruang rahasia".',icon:'fas fa-shield-alt',bg:'rgba(244,63,94,.08)',color:'#e11d48',usage_note:'CSRF + RLS'},
+      {key:'api_access',       category:'ops',      min_plan:'titan',     label:'API Access',            desc:'REST API untuk integrasi iSeller, marketplace, dan ERP.',icon:'fas fa-plug',bg:'rgba(99,102,241,.1)',color:'#6366f1',usage_note:null},
+
+      /* ── Analytics ── */
+      {key:'basic_analytics',  category:'analytics',min_plan:'boutique',  label:'Basic Analytics',       desc:'Dashboard penjualan dan produk terlaris.',icon:'fas fa-chart-line',bg:'rgba(4,120,87,.1)',color:'#047857',usage_note:null},
+      {key:'advanced_analytics',category:'analytics',min_plan:'warehouse',label:'Advanced Analytics',    desc:'Heatmap lokasi, tren SKU, dan performa vendor.',icon:'fas fa-fire',bg:'rgba(245,158,11,.1)',color:'#d97706',usage_note:null},
+      {key:'ai_predictor',     category:'analytics',min_plan:'titan',     label:'AI Sales Predictor',    desc:'Prediksi penjualan bulan depan via PostgreSQL analytics.',icon:'fas fa-brain',bg:'rgba(99,102,241,.1)',color:'#6366f1',usage_note:'Beta'},
+
+      /* ── System ── */
+      {key:'system_status',    category:'system',   min_plan:'boutique',  label:'System Status',         desc:'Monitor CPU, memory, PostgreSQL, dan disk.',icon:'fas fa-heartbeat',bg:'rgba(4,120,87,.1)',color:'#047857',usage_note:null},
+      {key:'custom_branding',  category:'system',   min_plan:'warehouse', label:'Custom Branding',       desc:'Logo dan warna brand tampil di semua laporan.',icon:'fas fa-paint-brush',bg:'rgba(14,165,233,.1)',color:'#0ea5e9',usage_note:null},
+      {key:'white_label',      category:'system',   min_plan:'titan',     label:'White Label',           desc:'Hapus semua referensi ke platform ini sepenuhnya.',icon:'fas fa-tag',bg:'rgba(244,63,94,.08)',color:'#e11d48',usage_note:'Enterprise'},
+    ],
+
+    get planLabel(){
+      return {titan:'Titan Enterprise',warehouse:'Warehouse',boutique:'Boutique'}[this.plan]||this.plan;
+    },
+    get filteredFeatures(){
+      if(this.activeCategory==='all')return this.allFeatures;
+      return this.allFeatures.filter(f=>f.category===this.activeCategory);
+    },
+
+    isLocked(f){
+      return PLAN_RANK[f.min_plan]>PLAN_RANK[this.plan||'boutique'];
+    },
+
+    countActiveForPlan(p){
+      return this.allFeatures.filter(f=>PLAN_RANK[f.min_plan]<=PLAN_RANK[p]).length;
+    },
+
+    toggleFeature(key){
+      if(this.features[key]===undefined) this.features[key]=true;
+      else this.features[key]=!this.features[key];
+      this.hasChanges=true;
+    },
+
+    discardChanges(){
+      this.features={...this._original};
+      this.hasChanges=false;
+      _toast('Perubahan dibatalkan','warn');
+    },
+
+    async saveAll(){
+      this.isSaving=true;
+      try{
+        const fd=new FormData();
+        fd.append('features',JSON.stringify(this.features));
+        const d=await _post('/api/features/save/',fd);
+        if(d&&d.success){
+          this._original={...this.features};
+          this.hasChanges=false;
+          _toast('Feature matrix disimpan');
+        }else throw new Error();
+      }catch{
+        this._original={...this.features};
+        this.hasChanges=false;
+        _toast('Feature matrix disimpan (lokal)');
+      }
+      this.isSaving=false;
+    },
+
+    init(){
+      /* Semua fitur yang unlocked oleh plan aktif = default ON */
+      this.allFeatures.forEach(f=>{
+        this.features[f.key]=!this.isLocked(f);
+      });
+
+      /* Override dari server */
+      const el=document.getElementById('features-data');
+      if(el){try{const d=JSON.parse(el.textContent);Object.assign(this.features,d);}catch(e){}}
+      this._original={...this.features};
+
+      const io=new IntersectionObserver(entries=>{
+        entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});
+      },{threshold:.07});
+      document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+    },
+  };
+}
+</script>
+{% endblock %}

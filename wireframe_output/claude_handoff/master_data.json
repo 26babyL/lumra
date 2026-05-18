@@ -1,0 +1,2196 @@
+{
+  "module_name": "master_data",
+  "template_total": 24,
+  "templates": [
+    {
+      "template_name": "lumra_pages/master_data/bank_accounts.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/bank_accounts.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 0,
+      "structure_stats": {
+        "component_total": 6,
+        "interactive_total": 2,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{{ page_title }}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT [text] Cari...",
+            "text_preview": "Cari..."
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: [icon]",
+            "text_preview": ""
+          },
+          {
+            "type": "search",
+            "label": "SEARCH BAR",
+            "text_preview": ""
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/customer.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/customer.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 0,
+      "structure_stats": {
+        "component_total": 0,
+        "interactive_total": 0,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/location_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/location_list.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 1,
+      "structure_stats": {
+        "component_total": 83,
+        "interactive_total": 18,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / {% trans \"Locations\" %}"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{% trans \"Locations\" %}"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: {% trans \"Add Location\" %}",
+            "text_preview": "{% trans \"Add Location\" %}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "{% trans \"Total\" %} {% trans \"All outlets\" %}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/payment_terms_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/payment_terms_list.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 0,
+      "structure_stats": {
+        "component_total": 6,
+        "interactive_total": 2,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{{ page_title }}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT [text] Cari...",
+            "text_preview": "Cari..."
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: [icon]",
+            "text_preview": ""
+          },
+          {
+            "type": "search",
+            "label": "SEARCH BAR",
+            "text_preview": ""
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/reason_codes.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/reason_codes.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 0,
+      "structure_stats": {
+        "component_total": 6,
+        "interactive_total": 2,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{{ page_title }}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT [text] Cari...",
+            "text_preview": "Cari..."
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: [icon]",
+            "text_preview": ""
+          },
+          {
+            "type": "search",
+            "label": "SEARCH BAR",
+            "text_preview": ""
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/stock_opname.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/stock_opname.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 1,
+      "structure_stats": {
+        "component_total": 59,
+        "interactive_total": 18,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "#} {% block content %} {# ── HEADER ────────────────────────────────────────────…"
+          },
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [stockOpname()]",
+            "text_preview": "{# ── HEADER ───────────────────────────────────────────────…"
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Stock Opname /"
+          },
+          {
+            "type": "ol",
+            "label": "[ ORDERED LIST ]",
+            "text_preview": "Dashboard / Stock Opname /"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Stock Opname"
+          },
+          {
+            "type": "section",
+            "label": "[ SECTION ]",
+            "text_preview": "Pilih Lokasi untuk Opname {% for loc in locations %} '|cut:''|default:loc.name|e…"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H2)",
+            "text_preview": "Pilih Lokasi untuk Opname"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/tags_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/tags_list.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 0,
+      "structure_stats": {
+        "component_total": 6,
+        "interactive_total": 2,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{{ page_title }}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT [text] Cari...",
+            "text_preview": "Cari..."
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: [icon]",
+            "text_preview": ""
+          },
+          {
+            "type": "search",
+            "label": "SEARCH BAR",
+            "text_preview": ""
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/tax_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/tax_list.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 0,
+      "structure_stats": {
+        "component_total": 6,
+        "interactive_total": 2,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{{ page_title }}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT [text] Cari...",
+            "text_preview": "Cari..."
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: [icon]",
+            "text_preview": ""
+          },
+          {
+            "type": "search",
+            "label": "SEARCH BAR",
+            "text_preview": ""
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/vendor_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/vendor_list.html",
+      "routes": [],
+      "forward_batch": "batch_1_static",
+      "batch_reason": "Static page or light context, aman untuk mulai round-trip.",
+      "complexity_score": 1,
+      "structure_stats": {
+        "component_total": 69,
+        "interactive_total": 11,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "#} {% block content %} {{ vendors_json|json_script:\"vendors-data\" }} Dashboard /…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Vendors"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Partner Vendors"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Tambah Vendor",
+            "text_preview": "Tambah Vendor"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/bank_account_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/bank_account_form.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 4,
+        "interactive_total": 1,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{{ form_title }}"
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "{% csrf_token %} {% if form_errors %} {{ form_errors }} {% endif %} {% for field…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Simpan",
+            "text_preview": "Simpan"
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/category_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/category_form.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 21,
+        "interactive_total": 8,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Categories / {% if is_edit %}Edit{% else %}Tambah{% endif %}"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{% if is_edit %}Edit{% else %}Tambah{% endif %} Kategori"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Preview"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "badge",
+            "label": "BADGE / STATUS",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "{% csrf_token %} Nama Kategori * Slug (URL) — otomatis Deskripsi (opsional) Warn…"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/customer_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/customer_form.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 26,
+        "interactive_total": 13,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [customerForm()]",
+            "text_preview": "Dashboard / Pelanggan / {% if form.instance.pk %}Edit{% else…"
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Pelanggan / {% if form.instance.pk %}Edit{% else %}Tambah Baru{% end…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{% if form.instance.pk %}Edit Pelanggan{% else %}Tambah Pelanggan Baru{% endif %}"
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "{% csrf_token %} Identitas Pelanggan Nama Lengkap * {% for err in form.name.erro…"
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "Identitas Pelanggan Nama Lengkap * {% for err in form.name.errors %} {{ err }} {…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "input",
+            "label": "INPUT [text] Nama lengkap pelanggan",
+            "text_preview": "Nama lengkap pelanggan"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/customers.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/customers.html",
+      "routes": [
+        {
+          "route": "customers/",
+          "url_name": "customers",
+          "url_file": "lumra_config/urls/sales.py",
+          "view_name": "customers_view"
+        },
+        {
+          "route": "customers/add/",
+          "url_name": "add_customer",
+          "url_file": "lumra_config/urls/sales.py",
+          "view_name": "add_customer_view"
+        },
+        {
+          "route": "customers/<int:customer_id>/",
+          "url_name": "view_customer",
+          "url_file": "lumra_config/urls/sales.py",
+          "view_name": "view_customer_view"
+        },
+        {
+          "route": "customers/<int:customer_id>/edit/",
+          "url_name": "edit_customer",
+          "url_file": "lumra_config/urls/sales.py",
+          "view_name": "edit_customer_view"
+        },
+        {
+          "route": "customers/<int:customer_id>/delete/",
+          "url_name": "delete_customer",
+          "url_file": "lumra_config/urls/sales.py",
+          "view_name": "delete_customer_view"
+        }
+      ],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 64,
+        "interactive_total": 14,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Total Pelanggan {{ total_customers|default:0 }} Registered"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Member Gold {{ gold_count|default:0 }} ⭐ Gold Tier"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Member VIP {{ vip_count|default:0 }} 👑 VIP Tier"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/payment_terms_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/payment_terms_form.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 4,
+        "interactive_total": 1,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{{ form_title }}"
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "{% csrf_token %} {% if form_errors %} {{ form_errors }} {% endif %} {% for field…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Simpan",
+            "text_preview": "Simpan"
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/stock_opname_session_detail.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/stock_opname_session_detail.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 24,
+        "interactive_total": 6,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "#} {% block content %} {# ── HEADER ────────────────────────────────────────────…"
+          },
+          {
+            "type": "alpine-root",
+            "label": "ALPINE COMPONENT [approvalDetail()]",
+            "text_preview": "{# ── HEADER ───────────────────────────────────────────────…"
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Approvals / {{ approval.location.name }}"
+          },
+          {
+            "type": "ol",
+            "label": "[ ORDERED LIST ]",
+            "text_preview": "Dashboard / Approvals / {{ approval.location.name }}"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Approval Detail — {{ approval.location.name }}"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H2)",
+            "text_preview": "Ringkasan Approval"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/tax_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/tax_form.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 2,
+      "structure_stats": {
+        "component_total": 4,
+        "interactive_total": 1,
+        "issue_total": 0,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{{ form_title }}"
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "{% csrf_token %} {% if form_errors %} {{ form_errors }} {% endif %} {% for field…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Simpan",
+            "text_preview": "Simpan"
+          }
+        ],
+        "issues": []
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/unit_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/unit_form.html",
+      "routes": [],
+      "forward_batch": "batch_2_listing",
+      "batch_reason": "Listing atau dashboard ringan dengan context sederhana.",
+      "complexity_score": 3,
+      "structure_stats": {
+        "component_total": 39,
+        "interactive_total": 6,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Units / {% if is_edit %}Edit{% else %}Tambah{% endif %}"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{% if is_edit %}Edit{% else %}Tambah{% endif %} Satuan"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 1 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "{% csrf_token %} {# §1 — Group Picker #} Kategori Satuan * {# §2 — Name + Symbol…"
+          },
+          {
+            "type": "form",
+            "label": "[ FORM ]",
+            "text_preview": "{% csrf_token %} {# §1 — Group Picker #} Kategori Satuan * {# §2 — Name + Symbol…"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/categories_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/categories_list.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 43,
+        "interactive_total": 9,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "#} {% block content %} {{ categories_json|json_script:\"categories-data\" }} Dashb…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Categories"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Product Categories"
+          },
+          {
+            "type": "button-primary",
+            "label": "BUTTON (Primary)",
+            "text_preview": "Tambah Kategori"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/customer_detail.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/customer_detail.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 5,
+      "structure_stats": {
+        "component_total": 66,
+        "interactive_total": 7,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Pelanggan / {{ customer.name }}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "card",
+            "label": "CARD",
+            "text_preview": "{{ customer.name|slice:\":2\"|upper }} {% if customer.tier == 'vip' %}👑{% elif cus…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/customers_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/customers_list.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 64,
+        "interactive_total": 14,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Total Pelanggan {{ total_customers|default:0 }} Registered"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Member Gold {{ gold_count|default:0 }} ⭐ Gold Tier"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "Member VIP {{ vip_count|default:0 }} 👑 VIP Tier"
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/locations.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/locations.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 83,
+        "interactive_total": 18,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / {% trans \"Locations\" %}"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "{% trans \"Locations\" %}"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: {% trans \"Add Location\" %}",
+            "text_preview": "{% trans \"Add Location\" %}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "{% trans \"Total\" %} {% trans \"All outlets\" %}"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/units_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/units_list.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 70,
+        "interactive_total": 20,
+        "issue_total": 3,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Units"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Units — Satuan Ukur"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: [icon]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: [icon]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "warning",
+            "type": "empty_button",
+            "message": "Tombol tanpa teks/aria-label: <button> id='' class=''"
+          },
+          {
+            "severity": "info",
+            "type": "input_no_label",
+            "message": "Input tanpa label/placeholder: <input> id='' class='w-3.5 h-3.5 accent-emerald-500 rounded cursor-poin'"
+          },
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/vendor_form.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/vendor_form.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 64,
+        "interactive_total": 6,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Kembali",
+            "text_preview": "Kembali"
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Vendors / {{ vendor.name }}"
+          },
+          {
+            "type": "hero",
+            "label": "HERO / BANNER",
+            "text_preview": "{{ vendor.name|slice:\":2\"|upper }} {{ vendor.code|default:\"VND-000\" }} {% if ven…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (column)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    },
+    {
+      "template_name": "lumra_pages/master_data/vendors_list.html",
+      "template_file": "lumra_config/templates/lumra_pages/master_data/vendors_list.html",
+      "routes": [],
+      "forward_batch": "batch_3_forms",
+      "batch_reason": "Form atau halaman detail dengan context/logika menengah.",
+      "complexity_score": 4,
+      "structure_stats": {
+        "component_total": 69,
+        "interactive_total": 11,
+        "issue_total": 1,
+        "scroll_nesting_total": 0
+      },
+      "highlights": {
+        "top_components": [
+          {
+            "type": "metric",
+            "label": "METRIC CARD",
+            "text_preview": "#} {% block content %} {{ vendors_json|json_script:\"vendors-data\" }} Dashboard /…"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          },
+          {
+            "type": "nav",
+            "label": "[ NAVIGATION BAR ]",
+            "text_preview": "Dashboard / Vendors"
+          },
+          {
+            "type": "heading",
+            "label": "HEADING (H1)",
+            "text_preview": "Partner Vendors"
+          },
+          {
+            "type": "button",
+            "label": "BUTTON: Tambah Vendor",
+            "text_preview": "Tambah Vendor"
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [GRID 2 cols]",
+            "text_preview": ""
+          },
+          {
+            "type": "layout",
+            "label": "LAYOUT CONTAINER [FLEX (row)]",
+            "text_preview": ""
+          }
+        ],
+        "issues": [
+          {
+            "severity": "info",
+            "type": "alpine_xcloak",
+            "message": "x-cloak ditemukan — pastikan CSS [x-cloak]{display:none} ada di base template"
+          }
+        ]
+      }
+    }
+  ],
+  "views": [
+    {
+      "view_name": "customer_list",
+      "view_module": "lumra_config.views.customer_views",
+      "view_file": "lumra_config/views/customer_views.py",
+      "line": 131,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def customer_list(request):\n    q = request.GET.get('search', '').strip()\n    tier = request.GET.get('tier')\n    sort_by = request.GET.get('sort_by', 'created_at')\n    order = request.GET.get('order', 'desc')\n\n    qs = Customer.objects.order_by('-created_at')\n\n    if q:\n        qs = qs.filter(\n            Q(name__icontains=q) |\n            Q(email__icontains=q) |\n            Q(phone__icontains=q)\n        )\n\n    if tier:\n        if tier == 'regular':\n            qs = qs.exclude(tier__in=['silver', 'gold', 'platinum', 'vip'])\n        else:\n            qs = qs.filter(tier=tier)\n\n    # sort mapping for a few custom keys\n    if sort_by in ('points', 'lifetime_value', 'name', 'last_visit', 'created_at'):\n        mapping = {\n            'points': 'loyalty_points',\n            'lifetime_value': 'total_spent',\n            'last_visit': 'last_order_date',\n        }\n        field = mapping.get(sort_by, sort_by)\n        if order == 'desc':\n            field = '-' + field\n        qs = qs.order_by(field)\n\n    # summary stats used by the KPI cards\n    total_customers = qs.count()\n    gold_count = qs.filter(tier='gold').count()\n    vip_count = qs.filter(tier='vip').count()\n    total_points = qs.aggregate(Sum('loyalty_points'))['loyalty_points__sum'] or 0\n    birthday_this_month = 0  # model has no birth_date yet\n\n    # handle export (csv only for now)\n    if request.GET.get('export') == 'csv':\n        response = HttpResponse(content_type='text/csv')\n        response['Content-Disposition'] = 'attachment; filename=\"customers.csv\"'\n        writer = csv.writer(response)\n        writer.writerow(['Name', 'Email', 'WhatsApp/Phone', 'Tier', 'Points'])\n        for c in qs:\n            writer.writerow([c.name, c.email, c.phone or '', c.tier, c.loyalty_points])\n        return response\n\n    paginator = Paginator(qs, 25)\n    page_obj = paginator.get_page(request.GET.get('page'))\n    customers = list(page_obj.object_list)\n    for c in customers:\n        _augment_customer(c)\n\n    context = {\n        'customers': customers,\n        'page_obj': page_obj,\n        'query': q,\n        'report_title': 'Customers',\n        'is_empty': False,\n        'tier_choices': _tier_choices(),\n        'total_customers': total_customers,\n        'gold_count': gold_count,\n        'vip_count': vip_count,\n        'total_points': total_points,\n        'birthday_this_month': birthday_this_month,\n    }\n    return render(request, 'lumra_pages/master_data/customers_list.html', context)"
+    },
+    {
+      "view_name": "customer_detail",
+      "view_module": "lumra_config.views.customer_views",
+      "view_file": "lumra_config/views/customer_views.py",
+      "line": 160,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def customer_detail(request, pk):\n    cust = get_object_or_404(Customer, pk=pk)\n    _augment_customer(cust)\n\n    # transactions from OrderItem similar to sales_report\n    transactions = OrderItem.objects.filter(order__customer=cust).select_related(\n        'order', 'variant', 'variant__product'\n    )\n\n    total_earned_points = sum(getattr(tx, 'points_earned', 0) or 0 for tx in transactions)\n\n    # no persistent log table yet; return empty list\n    point_logs = []\n\n    context = {\n        'customer': cust,\n        'transactions': transactions,\n        'total_earned_points': total_earned_points,\n        'point_logs': point_logs,\n        'report_title': 'Customer Detail',\n        'is_empty': False,\n        'tier_choices': _tier_choices(),\n    }\n    return render(request, 'lumra_pages/master_data/customer_detail.html', context)"
+    },
+    {
+      "view_name": "customer_create",
+      "view_module": "lumra_config.views.customer_views",
+      "view_file": "lumra_config/views/customer_views.py",
+      "line": 178,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [
+        "form",
+        "tier_choices"
+      ],
+      "context_expression": "{'form': form, 'tier_choices': _tier_choices()}",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def customer_create(request):\n    if request.method == 'POST':\n        form = CustomerForm(request.POST)\n        if form.is_valid():\n            c = form.save(commit=False)\n            c.phone = form.cleaned_data.get('whatsapp', '')\n            c.loyalty_points = form.cleaned_data.get('initial_points') or 0\n            c.save()\n            messages.success(request, f\"Customer '{c.name}' dibuat.\")\n            return redirect('customer_detail', c.pk)\n    else:\n        form = CustomerForm()\n    return render(request, 'lumra_pages/master_data/customer_form.html', {\n        'form': form,\n        'tier_choices': _tier_choices(),\n    })"
+    },
+    {
+      "view_name": "customer_update",
+      "view_module": "lumra_config.views.customer_views",
+      "view_file": "lumra_config/views/customer_views.py",
+      "line": 201,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [
+        "form",
+        "tier_choices"
+      ],
+      "context_expression": "{'form': form, 'tier_choices': _tier_choices()}",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def customer_update(request, pk):\n    c = get_object_or_404(Customer, pk=pk)\n    if request.method == 'POST':\n        form = CustomerForm(request.POST, instance=c)\n        if form.is_valid():\n            c = form.save(commit=False)\n            c.phone = form.cleaned_data.get('whatsapp', '')\n            c.save()\n            messages.success(request, f\"Customer '{c.name}' diperbarui.\")\n            return redirect('customer_detail', c.pk)\n    else:\n        initial = {'whatsapp': c.phone}\n        form = CustomerForm(instance=c, initial=initial)\n    # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n    # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n    # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n    return render(request, 'lumra_pages/master_data/customer_form.html', {\n        'form': form,\n        'tier_choices': _tier_choices(),\n    })"
+    },
+    {
+      "view_name": "locations_view",
+      "view_module": "lumra_config.views.inventory_views",
+      "view_file": "lumra_config/views/inventory_views.py",
+      "line": 933,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "create_empty_context('Locations Management', 'Data lokasi tidak ditemukan. Silahkan tambah lokasi terlebih dahulu.')",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def locations_view(request):\n    \"\"\"\n    Location list with JSON payload for Alpine.js front-end.\n\n    Uses json_script-safe serialisation (consistent with recipe_list pattern).\n    Fields not present in the model (city, phone, etc.) are NOT fabricated\n    here — the front-end should handle missing keys gracefully instead.\n    \"\"\"\n\n    locations_qs = Location.objects.all().order_by(\"name\")\n\n    # Check if locations is empty\n    if not locations_qs.exists():\n        return render(\n            request,\n            \"lumra_pages/master_data/locations.html\",\n            create_empty_context(\"Locations Management\", \"Data lokasi tidak ditemukan. Silahkan tambah lokasi terlebih dahulu.\")\n        )\n\n    # Serialise only fields that actually exist on the model\n    locations_data = [\n        {\n            \"id\":            loc.id,\n            \"name\":          loc.name,\n            \"address\":       loc.address,\n            \"location_type\": loc.location_type,\n            \"created_at\":    localtime(loc.created_at).strftime(\"%Y-%m-%d\"),\n        }\n        for loc in locations_qs\n    ]\n\n    context = {\n        \"locations\":      locations_qs,          # for server-side rendering fallback\n        \"locations_json\": json.dumps(locations_data),  # for Alpine.js\n        \"report_title\":   \"Locations Management\",\n        \"is_empty\": False,\n    }\n\n    return render(request, \"lumra_pages/master_data/locations.html\", context)"
+    },
+    {
+      "view_name": "locations_view",
+      "view_module": "lumra_config.views.inventory_views",
+      "view_file": "lumra_config/views/inventory_views.py",
+      "line": 958,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def locations_view(request):\n    \"\"\"\n    Location list with JSON payload for Alpine.js front-end.\n\n    Uses json_script-safe serialisation (consistent with recipe_list pattern).\n    Fields not present in the model (city, phone, etc.) are NOT fabricated\n    here — the front-end should handle missing keys gracefully instead.\n    \"\"\"\n\n    locations_qs = Location.objects.all().order_by(\"name\")\n\n    # Check if locations is empty\n    if not locations_qs.exists():\n        return render(\n            request,\n            \"lumra_pages/master_data/locations.html\",\n            create_empty_context(\"Locations Management\", \"Data lokasi tidak ditemukan. Silahkan tambah lokasi terlebih dahulu.\")\n        )\n\n    # Serialise only fields that actually exist on the model\n    locations_data = [\n        {\n            \"id\":            loc.id,\n            \"name\":          loc.name,\n            \"address\":       loc.address,\n            \"location_type\": loc.location_type,\n            \"created_at\":    localtime(loc.created_at).strftime(\"%Y-%m-%d\"),\n        }\n        for loc in locations_qs\n    ]\n\n    context = {\n        \"locations\":      locations_qs,          # for server-side rendering fallback\n        \"locations_json\": json.dumps(locations_data),  # for Alpine.js\n        \"report_title\":   \"Locations Management\",\n        \"is_empty\": False,\n    }\n\n    return render(request, \"lumra_pages/master_data/locations.html\", context)"
+    },
+    {
+      "view_name": "bank_accounts",
+      "view_module": "lumra_config.views.master_data_extended_views",
+      "view_file": "lumra_config/views/master_data_extended_views.py",
+      "line": 20,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def bank_accounts(request):\n    \"\"\"List all bank accounts.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/master_data/bank_accounts.html', context)"
+    },
+    {
+      "view_name": "bank_account_form",
+      "view_module": "lumra_config.views.master_data_extended_views",
+      "view_file": "lumra_config/views/master_data_extended_views.py",
+      "line": 27,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def bank_account_form(request, pk=None):\n    \"\"\"Create/Edit bank account.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/master_data/bank_account_form.html', context)"
+    },
+    {
+      "view_name": "payment_terms_list",
+      "view_module": "lumra_config.views.master_data_extended_views",
+      "view_file": "lumra_config/views/master_data_extended_views.py",
+      "line": 36,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def payment_terms_list(request):\n    \"\"\"List all payment terms.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/master_data/payment_terms_list.html', context)"
+    },
+    {
+      "view_name": "payment_terms_form",
+      "view_module": "lumra_config.views.master_data_extended_views",
+      "view_file": "lumra_config/views/master_data_extended_views.py",
+      "line": 43,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def payment_terms_form(request, pk=None):\n    \"\"\"Create/Edit payment terms.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/master_data/payment_terms_form.html', context)"
+    },
+    {
+      "view_name": "tax_list",
+      "view_module": "lumra_config.views.master_data_extended_views",
+      "view_file": "lumra_config/views/master_data_extended_views.py",
+      "line": 52,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def tax_list(request):\n    \"\"\"List all tax rates.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/master_data/tax_list.html', context)"
+    },
+    {
+      "view_name": "tax_form",
+      "view_module": "lumra_config.views.master_data_extended_views",
+      "view_file": "lumra_config/views/master_data_extended_views.py",
+      "line": 59,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def tax_form(request, pk=None):\n    \"\"\"Create/Edit tax rate.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/master_data/tax_form.html', context)"
+    },
+    {
+      "view_name": "reason_codes",
+      "view_module": "lumra_config.views.master_data_extended_views",
+      "view_file": "lumra_config/views/master_data_extended_views.py",
+      "line": 68,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def reason_codes(request):\n    \"\"\"List all reason codes.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/master_data/reason_codes.html', context)"
+    },
+    {
+      "view_name": "tags_list",
+      "view_module": "lumra_config.views.master_data_extended_views",
+      "view_file": "lumra_config/views/master_data_extended_views.py",
+      "line": 77,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def tags_list(request):\n    \"\"\"List all tags.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/master_data/tags_list.html', context)"
+    },
+    {
+      "view_name": "locations",
+      "view_module": "lumra_config.views.master_data_extended_views",
+      "view_file": "lumra_config/views/master_data_extended_views.py",
+      "line": 86,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def locations(request):\n    \"\"\"List all warehouse locations.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/master_data/locations.html', context)"
+    },
+    {
+      "view_name": "location_list",
+      "view_module": "lumra_config.views.master_data_extended_views",
+      "view_file": "lumra_config/views/master_data_extended_views.py",
+      "line": 93,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def location_list(request):\n    \"\"\"Alternative endpoint for locations.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/master_data/location_list.html', context)"
+    },
+    {
+      "view_name": "customers",
+      "view_module": "lumra_config.views.master_data_extended_views",
+      "view_file": "lumra_config/views/master_data_extended_views.py",
+      "line": 102,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def customers(request):\n    \"\"\"List all customers.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/master_data/customers.html', context)"
+    },
+    {
+      "view_name": "customers_list",
+      "view_module": "lumra_config.views.master_data_extended_views",
+      "view_file": "lumra_config/views/master_data_extended_views.py",
+      "line": 109,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def customers_list(request):\n    \"\"\"Alternative endpoint for customers list.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/master_data/customers_list.html', context)"
+    },
+    {
+      "view_name": "customer",
+      "view_module": "lumra_config.views.master_data_extended_views",
+      "view_file": "lumra_config/views/master_data_extended_views.py",
+      "line": 116,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def customer(request, pk=None):\n    \"\"\"Alternative endpoint for customer.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/master_data/customer.html', context)"
+    },
+    {
+      "view_name": "customer_detail",
+      "view_module": "lumra_config.views.master_data_extended_views",
+      "view_file": "lumra_config/views/master_data_extended_views.py",
+      "line": 123,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def customer_detail(request, pk):\n    \"\"\"View customer detail.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/master_data/customer_detail.html', context)"
+    },
+    {
+      "view_name": "customer_form",
+      "view_module": "lumra_config.views.master_data_extended_views",
+      "view_file": "lumra_config/views/master_data_extended_views.py",
+      "line": 130,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def customer_form(request, pk=None):\n    \"\"\"Create/Edit customer.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/master_data/customer_form.html', context)"
+    },
+    {
+      "view_name": "stock_opname",
+      "view_module": "lumra_config.views.master_data_extended_views",
+      "view_file": "lumra_config/views/master_data_extended_views.py",
+      "line": 139,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def stock_opname(request):\n    \"\"\"Stock opname management.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/master_data/stock_opname.html', context)"
+    },
+    {
+      "view_name": "stock_opname_session_detail",
+      "view_module": "lumra_config.views.master_data_extended_views",
+      "view_file": "lumra_config/views/master_data_extended_views.py",
+      "line": 146,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def stock_opname_session_detail(request, pk):\n    \"\"\"View stock opname session detail.\"\"\"\n    context = {}\n    return render(request, 'lumra_pages/master_data/stock_opname_session_detail.html', context)"
+    },
+    {
+      "view_name": "categories_list",
+      "view_module": "lumra_config.views.masterdata_views",
+      "view_file": "lumra_config/views/masterdata_views.py",
+      "line": 44,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "create_empty_context('Categories', 'Data kategori tidak ditemukan. Silahkan tambah kategori terlebih dahulu.')",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def categories_list(request):\n    q = request.GET.get(\"q\", \"\").strip()\n    qs = Category.objects.order_by(\"name\")\n\n    if q:\n        qs = qs.filter(name__icontains=q)\n\n    # Check if categories is empty\n    if not qs.exists():\n        return render(\n            request,\n            \"lumra_pages/master_data/categories_list.html\",\n            create_empty_context(\"Categories\", \"Data kategori tidak ditemukan. Silahkan tambah kategori terlebih dahulu.\")\n        )\n\n    paginator = Paginator(qs, 25)\n    page_obj  = paginator.get_page(request.GET.get(\"page\"))\n\n    context = {\n        \"categories\":  page_obj.object_list,\n        \"page_obj\":    page_obj,\n        \"query\":       q,\n        \"report_title\": \"Categories\",\n        \"is_empty\": False,\n    }\n    return render(request, \"lumra_pages/master_data/categories_list.html\", context)"
+    },
+    {
+      "view_name": "categories_list",
+      "view_module": "lumra_config.views.masterdata_views",
+      "view_file": "lumra_config/views/masterdata_views.py",
+      "line": 60,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def categories_list(request):\n    q = request.GET.get(\"q\", \"\").strip()\n    qs = Category.objects.order_by(\"name\")\n\n    if q:\n        qs = qs.filter(name__icontains=q)\n\n    # Check if categories is empty\n    if not qs.exists():\n        return render(\n            request,\n            \"lumra_pages/master_data/categories_list.html\",\n            create_empty_context(\"Categories\", \"Data kategori tidak ditemukan. Silahkan tambah kategori terlebih dahulu.\")\n        )\n\n    paginator = Paginator(qs, 25)\n    page_obj  = paginator.get_page(request.GET.get(\"page\"))\n\n    context = {\n        \"categories\":  page_obj.object_list,\n        \"page_obj\":    page_obj,\n        \"query\":       q,\n        \"report_title\": \"Categories\",\n        \"is_empty\": False,\n    }\n    return render(request, \"lumra_pages/master_data/categories_list.html\", context)"
+    },
+    {
+      "view_name": "category_create",
+      "view_module": "lumra_config.views.masterdata_views",
+      "view_file": "lumra_config/views/masterdata_views.py",
+      "line": 74,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [
+        "form",
+        "is_edit",
+        "report_title"
+      ],
+      "context_expression": "{'form': form, 'is_edit': False, 'report_title': 'Add Category'}",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def category_create(request):\n    if request.method == \"POST\":\n        form = CategoryForm(request.POST)\n        if form.is_valid():\n            model_instance = form.save()\n            messages.success(request, f\"Category '{model_instance.name}' created successfully.\")\n            return redirect(\"categories_list\")\n    else:\n        form = CategoryForm()\n\n    return render(\n        request,\n        \"lumra_pages/master_data/category_form.html\",\n        {\"form\": form, \"is_edit\": False, \"report_title\": \"Add Category\"},\n    )"
+    },
+    {
+      "view_name": "category_update",
+      "view_module": "lumra_config.views.masterdata_views",
+      "view_file": "lumra_config/views/masterdata_views.py",
+      "line": 94,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [
+        "form",
+        "is_edit",
+        "report_title"
+      ],
+      "context_expression": "{'form': form, 'is_edit': True, 'report_title': 'Edit Category'}",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def category_update(request, pk):\n    model_instance = get_object_or_404(Category, pk=pk)\n\n    if request.method == \"POST\":\n        form = CategoryForm(request.POST, instance=model_instance)\n        if form.is_valid():\n            model_instance = form.save()\n            messages.success(request, f\"Category '{model_instance.name}' updated successfully.\")\n            return redirect(\"categories_list\")\n    else:\n        form = CategoryForm(instance=model_instance)\n\n    return render(\n        request,\n        \"lumra_pages/master_data/category_form.html\",\n        {\"form\": form, \"is_edit\": True, \"report_title\": \"Edit Category\"},\n    )"
+    },
+    {
+      "view_name": "units_list",
+      "view_module": "lumra_config.views.masterdata_views",
+      "view_file": "lumra_config/views/masterdata_views.py",
+      "line": 152,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "create_empty_context('Units', 'Data satuan tidak ditemukan. Silahkan tambah satuan terlebih dahulu.')",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def units_list(request):\n    q = request.GET.get(\"q\", \"\").strip()\n    qs = Unit.objects.order_by(\"name\")\n\n    if q:\n        # FIX: was Q(short_name__icontains=q) — field renamed to 'symbol' in refactored model\n        qs = qs.filter(\n            Q(name__icontains=q) |\n            Q(symbol__icontains=q)\n        )\n\n    # Check if units is empty\n    if not qs.exists():\n        return render(\n            request,\n            \"lumra_pages/master_data/units_list.html\",\n            create_empty_context(\"Units\", \"Data satuan tidak ditemukan. Silahkan tambah satuan terlebih dahulu.\")\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        )\n # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n\n    paginator = Paginator(qs, 25)\n    page_obj  = paginator.get_page(request.GET.get(\"page\"))\n\n    context = {\n        \"units\":        page_obj.object_list,\n        \"page_obj\":     page_obj,\n        \"query\":        q,\n        \"report_title\": \"Units\",\n        \"is_empty\": False,\n    }\n    return render(request, \"lumra_pages/master_data/units_list.html\", context)"
+    },
+    {
+      "view_name": "units_list",
+      "view_module": "lumra_config.views.masterdata_views",
+      "view_file": "lumra_config/views/masterdata_views.py",
+      "line": 173,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def units_list(request):\n    q = request.GET.get(\"q\", \"\").strip()\n    qs = Unit.objects.order_by(\"name\")\n\n    if q:\n        # FIX: was Q(short_name__icontains=q) — field renamed to 'symbol' in refactored model\n        qs = qs.filter(\n            Q(name__icontains=q) |\n            Q(symbol__icontains=q)\n        )\n\n    # Check if units is empty\n    if not qs.exists():\n        return render(\n            request,\n            \"lumra_pages/master_data/units_list.html\",\n            create_empty_context(\"Units\", \"Data satuan tidak ditemukan. Silahkan tambah satuan terlebih dahulu.\")\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        )\n # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n\n    paginator = Paginator(qs, 25)\n    page_obj  = paginator.get_page(request.GET.get(\"page\"))\n\n    context = {\n        \"units\":        page_obj.object_list,\n        \"page_obj\":     page_obj,\n        \"query\":        q,\n        \"report_title\": \"Units\",\n        \"is_empty\": False,\n    }\n    return render(request, \"lumra_pages/master_data/units_list.html\", context)"
+    },
+    {
+      "view_name": "unit_create",
+      "view_module": "lumra_config.views.masterdata_views",
+      "view_file": "lumra_config/views/masterdata_views.py",
+      "line": 187,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [
+        "form",
+        "is_edit",
+        "report_title"
+      ],
+      "context_expression": "{'form': form, 'is_edit': False, 'report_title': 'Add Unit'}",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def unit_create(request):\n    if request.method == \"POST\":\n        form = UnitForm(request.POST)\n        if form.is_valid():\n            model_instance = form.save()\n            messages.success(request, f\"Unit '{model_instance.name}' created successfully.\")\n            return redirect(\"units_list\")\n    else:\n        form = UnitForm()\n\n    return render(\n        request,\n        \"lumra_pages/master_data/unit_form.html\",\n        {\"form\": form, \"is_edit\": False, \"report_title\": \"Add Unit\"},\n    )"
+    },
+    {
+      "view_name": "unit_update",
+      "view_module": "lumra_config.views.masterdata_views",
+      "view_file": "lumra_config/views/masterdata_views.py",
+      "line": 207,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [
+        "form",
+        "is_edit",
+        "report_title"
+      ],
+      "context_expression": "{'form': form, 'is_edit': True, 'report_title': 'Edit Unit'}",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def unit_update(request, pk):\n    model_instance = get_object_or_404(Unit, pk=pk)\n\n    if request.method == \"POST\":\n        form = UnitForm(request.POST, instance=model_instance)\n        if form.is_valid():\n            model_instance = form.save()\n            messages.success(request, f\"Unit '{model_instance.name}' updated successfully.\")\n            return redirect(\"units_list\")\n    else:\n        form = UnitForm(instance=model_instance)\n\n    return render(\n        request,\n        \"lumra_pages/master_data/unit_form.html\",\n        {\"form\": form, \"is_edit\": True, \"report_title\": \"Edit Unit\"},\n    )"
+    },
+    {
+      "view_name": "vendors_list",
+      "view_module": "lumra_config.views.masterdata_views",
+      "view_file": "lumra_config/views/masterdata_views.py",
+      "line": 270,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "create_empty_context('Vendors', 'Data vendor tidak ditemukan. Silahkan tambah vendor terlebih dahulu.')",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def vendors_list(request):\n    q = request.GET.get(\"q\", \"\").strip()\n    qs = Vendor.objects.order_by(\"name\")\n\n    if q:\n        # FIX: was Q(contact_name__icontains=q) — field is 'contact_person' in model\n        qs = qs.filter(\n            Q(name__icontains=q) |\n            Q(contact_person__icontains=q)\n        )\n\n    # Check if vendors is empty\n    # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n    # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n    if not qs.exists():\n        return render(\n            request,\n            \"lumra_pages/master_data/vendors_list.html\",\n            create_empty_context(\"Vendors\", \"Data vendor tidak ditemukan. Silahkan tambah vendor terlebih dahulu.\")\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        )\n # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n\n    paginator = Paginator(qs, 25)\n    page_obj  = paginator.get_page(request.GET.get(\"page\"))\n\n    context = {\n        \"vendors\":      page_obj.object_list,\n        \"page_obj\":     page_obj,\n        \"query\":        q,\n        \"report_title\": \"Vendors\",\n        \"is_empty\": False,\n    }\n    return render(request, \"lumra_pages/master_data/vendors_list.html\", context)"
+    },
+    {
+      "view_name": "vendors_list",
+      "view_module": "lumra_config.views.masterdata_views",
+      "view_file": "lumra_config/views/masterdata_views.py",
+      "line": 292,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": true,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def vendors_list(request):\n    q = request.GET.get(\"q\", \"\").strip()\n    qs = Vendor.objects.order_by(\"name\")\n\n    if q:\n        # FIX: was Q(contact_name__icontains=q) — field is 'contact_person' in model\n        qs = qs.filter(\n            Q(name__icontains=q) |\n            Q(contact_person__icontains=q)\n        )\n\n    # Check if vendors is empty\n    # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n    # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n    if not qs.exists():\n        return render(\n            request,\n            \"lumra_pages/master_data/vendors_list.html\",\n            create_empty_context(\"Vendors\", \"Data vendor tidak ditemukan. Silahkan tambah vendor terlebih dahulu.\")\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n        # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n        )\n # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n # TODO[C2-DRY]: Blok duplikat — extract ke function terpisah\n # TODO[C2-DRY]: Blok duplikat — extract ke function atau template partial\n\n    paginator = Paginator(qs, 25)\n    page_obj  = paginator.get_page(request.GET.get(\"page\"))\n\n    context = {\n        \"vendors\":      page_obj.object_list,\n        \"page_obj\":     page_obj,\n        \"query\":        q,\n        \"report_title\": \"Vendors\",\n        \"is_empty\": False,\n    }\n    return render(request, \"lumra_pages/master_data/vendors_list.html\", context)"
+    },
+    {
+      "view_name": "vendor_create",
+      "view_module": "lumra_config.views.masterdata_views",
+      "view_file": "lumra_config/views/masterdata_views.py",
+      "line": 306,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [
+        "form",
+        "is_edit",
+        "report_title"
+      ],
+      "context_expression": "{'form': form, 'is_edit': False, 'report_title': 'Add Vendor'}",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def vendor_create(request):\n    if request.method == \"POST\":\n        form = VendorForm(request.POST)\n        if form.is_valid():\n            obj = form.save()\n            messages.success(request, f\"Vendor '{obj.name}' created successfully.\")\n            return redirect(\"vendors_list\")\n    else:\n        form = VendorForm()\n\n    return render(\n        request,\n        \"lumra_pages/master_data/vendor_form.html\",\n        {\"form\": form, \"is_edit\": False, \"report_title\": \"Add Vendor\"},\n    )"
+    },
+    {
+      "view_name": "vendor_update",
+      "view_module": "lumra_config.views.masterdata_views",
+      "view_file": "lumra_config/views/masterdata_views.py",
+      "line": 326,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [
+        "form",
+        "is_edit",
+        "report_title"
+      ],
+      "context_expression": "{'form': form, 'is_edit': True, 'report_title': 'Edit Vendor'}",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def vendor_update(request, pk):\n    model_instance = get_object_or_404(Vendor, pk=pk)\n\n    if request.method == \"POST\":\n        form = VendorForm(request.POST, instance=model_instance)\n        if form.is_valid():\n            obj = form.save()\n            messages.success(request, f\"Vendor '{obj.name}' updated successfully.\")\n            return redirect(\"vendors_list\")\n    else:\n        form = VendorForm(instance=model_instance)\n\n    return render(\n        request,\n        \"lumra_pages/master_data/vendor_form.html\",\n        {\"form\": form, \"is_edit\": True, \"report_title\": \"Edit Vendor\"},\n    )"
+    },
+    {
+      "view_name": "customers_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 821,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def customers_view(request):\n    context = {\"customers\": []}\n    return render(request, \"lumra_pages/master_data/customers.html\", context)"
+    },
+    {
+      "view_name": "add_customer_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 827,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def add_customer_view(request):\n    context = {\"action\": \"add\"}\n    return render(request, \"lumra_pages/master_data/customers.html\", context)"
+    },
+    {
+      "view_name": "view_customer_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 833,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def view_customer_view(request, customer_id):\n    context = {\"customer_id\": customer_id}\n    return render(request, \"lumra_pages/master_data/customers.html\", context)"
+    },
+    {
+      "view_name": "edit_customer_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 839,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [],
+      "context_expression": "context",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": false
+      },
+      "source_excerpt": "def edit_customer_view(request, customer_id):\n    context = {\"customer_id\": customer_id, \"action\": \"edit\"}\n    return render(request, \"lumra_pages/master_data/customers.html\", context)"
+    },
+    {
+      "view_name": "delete_customer_view",
+      "view_module": "lumra_config.views.misc_views",
+      "view_file": "lumra_config/views/misc_views.py",
+      "line": 846,
+      "decorators": [
+        "login_required"
+      ],
+      "context_keys": [
+        "customer_id"
+      ],
+      "context_expression": "{'customer_id': customer_id}",
+      "signals": {
+        "uses_get": false,
+        "uses_post": false,
+        "queries_models": false,
+        "uses_json": false,
+        "has_branching": true
+      },
+      "source_excerpt": "def delete_customer_view(request, customer_id):\n    # FIX: stub views untuk destructive actions sebaiknya POST-only\n    if request.method != \"POST\":\n        return render(request, \"lumra_pages/master_data/customers.html\", {\"customer_id\": customer_id})\n    # TODO: implement actual delete logic\n    messages.warning(request, \"Delete customer belum diimplementasi.\")\n    return redirect(\"customers\")"
+    }
+  ]
+}

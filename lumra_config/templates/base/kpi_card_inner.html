@@ -1,0 +1,67 @@
+<!-- KPI Card Inner — Emerald Odyssey Glass Protocol v3.0 -->
+<article {% if card_id %}id="{{ card_id }}"{% endif %}
+         class="kpi-glass relative overflow-hidden p-4 transition-all duration-200"
+         style="
+           background: rgba(255, 255, 255, 0.85);
+           border: 0.5px solid rgba(0, 103, 79, 0.1);
+           border-top-color: rgba(255, 255, 255, 0.3);
+           border-left-color: rgba(255, 255, 255, 0.25);
+           backdrop-filter: blur(12px);
+           border-radius: 14px;
+           box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.06);
+           font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+         "
+         aria-label="{{ title|default:'KPI' }}: {{ value|default:'0' }}">
+
+    {# Gradient accent bar atas #}
+    <div class="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-emerald-400 to-transparent pointer-events-none" aria-hidden="true"></div>
+
+    {# Layout: Title + Value kiri | Icon kanan #}
+    <div class="relative z-10 flex items-start justify-between gap-3">
+        <div class="flex-1 min-w-0">
+            <p class="text-10px font-600 letter-spacing-06em uppercase text-6b8a7a mb-1.5">
+                {{ title|default:"KPI" }}
+            </p>
+            <p class="text-22px font-700 text-0d1f18 leading-none truncate"
+               style="font-variant-numeric: tabular-nums;">
+                {{ value|default:"0" }}
+            </p>
+        </div>
+
+        {# Icon badge — emerald semantik #}
+        {% if icon %}
+        <div class="flex-shrink-0 rounded-8px p-2" style="background: rgba(0, 168, 107, 0.12);">
+            <i class="fas {{ icon|default:'fa-chart-line' }} text-sm" style="color: #00A86B;"></i>
+        </div>
+        {% endif %}
+    </div>
+
+    {# Trend badge #}
+    {% if trend_value %}
+    <div class="relative z-10 mt-3">
+        {% if trend_up == True %}
+            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-rpill text-10px font-600"
+                  style="background: rgba(0, 168, 107, 0.15); color: #00674F;">
+                <i class="fas fa-arrow-up text-8px" aria-hidden="true"></i>
+                {{ trend_value }}
+            </span>
+        {% elif trend_up == False %}
+            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-rpill text-10px font-600"
+                  style="background: rgba(163, 45, 45, 0.1); color: #a32d2d;">
+                <i class="fas fa-arrow-down text-8px" aria-hidden="true"></i>
+                {{ trend_value }}
+            </span>
+        {% else %}
+            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-rpill text-10px font-600"
+                  style="background: rgba(239, 191, 4, 0.15); color: #7a5c00;">
+                <i class="fas fa-minus text-8px" aria-hidden="true"></i>
+                {{ trend_value }}
+            </span>
+        {% endif %}
+        {% if trend_text %}
+            <span class="text-10px text-8fa99a ml-1">{{ trend_text }}</span>
+        {% endif %}
+    </div>
+    {% endif %}
+
+</article>

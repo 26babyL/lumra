@@ -1,0 +1,792 @@
+{% extends 'base/base.html' %}
+{% load custom_filters %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap');
+  [x-cloak]{display:var(--shadow-sm-16)!important;}
+
+  :root {
+    --em-500:var(--color-emerald-600); --em-600:var(--color-emerald-700);
+    --glass-bg:var(--color-white-a076);
+    --glass-border:var(--color-white-a09);
+    --glass-shadow:0 2px 16px var(--color-black-a006),0 0 0 0.5px var(--color-black-a003);
+    --blur:var(--backdrop-blur-20px-saturate-160);
+  }
+
+  @keyframes orb-drift{from{transform:translate(0,0) scale(1);}to{transform:translate(22px,30px) scale(1.07);}}
+
+  .bar-divider{width:1px;height:24px;background:var(--color-slate-300-a45);flex-shrink:0;}
+
+  .date-pill{
+    display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:99px;
+    background:var(--color-emerald-600-a08);border:1px solid var(--color-emerald-600-a2);
+    font-size:12px;font-weight:600;color:var(--color-emerald-700);cursor:pointer;white-space:nowrap;
+    transition:background .15s;
+  }
+
+  .date-pill:hover,.date-pill.active{background:var(--color-emerald-600-a14);border-color:var(--color-emerald-600-a4);}
+
+  @keyframes sectionPulse{0%{box-shadow:0 0 0 0 var(--color-emerald-600-a4);}70%{box-shadow:0 0 0 12px var(--color-emerald-600-a0);}100%{box-shadow:0 0 0 0 var(--color-emerald-600-a0);}}
+
+  .highlight-pulse{animation:sectionPulse .8s ease 3;}
+
+  .expect-card{
+    background:linear-gradient(135deg,var(--color-emerald-600-a08),var(--color-emerald-800-a04));
+    border:1px solid var(--color-emerald-600-a2);
+    border-radius:14px;padding:16px;
+  }
+
+  .placeholder-badge{
+    display:inline-flex;align-items:center;gap:5px;
+    padding:3px 10px;border-radius:99px;
+    font-size:10px;font-weight:700;
+    background:var(--color-slate-400-a1);color:var(--color-slate-400);
+    border:1px dashed var(--color-slate-400-a4);
+  }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="orb orb-1" aria-hidden="true"></div>
+<div class="orb orb-2" aria-hidden="true"></div>
+<div class="orb orb-3" aria-hidden="true"></div>
+
+<div class="w-full flex-1 space-y-5 relative z-10"
+     x-data="finApp()"
+     x-init="init()"
+     x-cloak>
+
+  <!-- ══ HEADER ══ -->
+  <div class="reveal flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-emerald-600 mb-1">
+        <a href="{% url 'dashboard' %}" class="hover:text-emerald-800 transition-colors">Dashboard</a>
+        <span class="text-slate-300">/</span>
+        <span class="text-slate-500 font-medium">Financial Reports</span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800" style="font-family:'Syne',sans-serif;">Financial Reports</h1>
+      <div class="flex items-center gap-2 mt-1">
+        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+        <span class="text-xs text-slate-400 font-mono">{{ date_start }} → {{ date_end }}</span>
+        {% if period_days %}
+        <span class="text-xs text-slate-300">· {{ period_days }} hari</span>
+        {% endif %}
+      </div>
+    </div>
+    <button onclick="window.print()"
+            class="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 backdrop-blur text-slate-600 text-xs font-semibold hover:border-emerald-300 hover:text-emerald-700 transition-all flex-shrink-0" style="background:var(--color-surface)">
+      <i class="fas fa-print text-[10px]"></i>Print
+    </button>
+  </div>
+
+  <!-- ══ DATE FILTER ══ -->
+  <form method="get" id="finForm">
+    <div class="reveal action-bar">
+      <i class="fas fa-calendar-alt text-slate-300 text-[11px] flex-shrink-0"></i>
+
+      <div class="relative flex-shrink-0">
+        <button type="button" @click="toggleFp()" class="date-pill active">
+          <span>{{ date_start }} → {{ date_end }}</span>
+          <i class="fas fa-chevron-down text-[9px] opacity-50"></i>
+        </button>
+        <input type="text" id="fpAnchor" style="position:absolute;top:100%;left:0;width:0;height:0;opacity:0;pointer-events:none;">
+        <input type="hidden" name="date_start" id="date_start" value="{{ date_start }}">
+        <input type="hidden" name="date_end"   id="date_end"   value="{{ date_end }}">
+      </div>
+
+      <div class="bar-divider hidden sm:block"></div>
+
+      <!-- Quick presets -->
+      <div class="flex gap-1.5 flex-wrap">
+        {% for label, days in presets %}
+        <button type="button" @click="applyPreset({{ days }})"
+                class="text-[11px] font-semibold px-3 py-1.5 rounded-lg border transition-all text-slate-500 border-slate-200 hover:border-emerald-300 hover:text-emerald-700" style="background:var(--color-surface)">
+          {{ label }}
+        </button>
+        {% endfor %}
+      </div>
+
+      <button type="submit" class="btn-apply ml-auto flex-shrink-0">
+        <i class="fas fa-arrow-right text-[10px] mr-1.5"></i>Terapkan
+      </button>
+    </div>
+  </form>
+
+  <!-- ══ KPI BAND ══ -->
+  <div class="reveal grid grid-cols-2 xl:grid-cols-4 gap-3">
+
+    <!-- Revenue -->
+    <div class="kpi-card em">
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="kpi-label">Revenue</p>
+          <p class="kpi-val">{{ revenue|rupiah }}</p>
+          {% if rev_change is not None %}
+          <span class="delta {% if rev_change >= 0 %}up{% else %}down{% endif %}">
+            <i class="fas fa-arrow-{% if rev_change >= 0 %}up{% else %}down{% endif %} text-[8px]"></i>
+            {{ rev_change|floatformat:1 }}% vs periode lalu
+          </span>
+          {% else %}
+          <span class="delta flat"><i class="fas fa-minus text-[8px]"></i>Tidak ada data periode lalu</span>
+          {% endif %}
+        </div>
+        <div class="kpi-icon bg-emerald-50 text-emerald-600"><i class="fas fa-coins"></i></div>
+      </div>
+    </div>
+
+    <!-- Gross Profit -->
+    <div class="kpi-card blue">
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="kpi-label">Gross Profit</p>
+          <p class="kpi-val">{{ gross_profit|rupiah }}</p>
+          {% if profit_change is not None %}
+          <span class="delta {% if profit_change >= 0 %}up{% else %}down{% endif %}">
+            <i class="fas fa-arrow-{% if profit_change >= 0 %}up{% else %}down{% endif %} text-[8px]"></i>
+            {{ profit_change|floatformat:1 }}% vs periode lalu
+          </span>
+          {% else %}
+          <span class="delta flat"><i class="fas fa-minus text-[8px]"></i>—</span>
+          {% endif %}
+        </div>
+        <div class="kpi-icon bg-blue-50 text-blue-500"><i class="fas fa-chart-line"></i></div>
+      </div>
+    </div>
+
+    <!-- Gross Margin -->
+    <div class="kpi-card vio">
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="kpi-label">Gross Margin</p>
+          <p class="kpi-val">{{ gross_margin }}%</p>
+          {% if margin_change is not None %}
+          <span class="delta {% if margin_change >= 0 %}up{% else %}down{% endif %}">
+            <i class="fas fa-arrow-{% if margin_change >= 0 %}up{% else %}down{% endif %} text-[8px]"></i>
+            {{ margin_change|floatformat:1 }}pp vs periode lalu
+          </span>
+          {% else %}
+          <span class="delta flat"><i class="fas fa-minus text-[8px]"></i>—</span>
+          {% endif %}
+        </div>
+        <div class="kpi-icon bg-violet-50 text-violet-500"><i class="fas fa-percent"></i></div>
+      </div>
+    </div>
+
+    <!-- vs Target -->
+    <div class="kpi-card amber">
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="kpi-label">vs Target</p>
+          {% if target_pct is not None %}
+          <p class="kpi-val {% if target_pct >= 100 %}text-emerald-600{% elif target_pct >= 70 %}text-amber-600{% else %}text-rose-600{% endif %}">
+            {{ target_pct }}%
+          </p>
+          <p class="kpi-sub">dari {{ total_target|rupiah }}</p>
+          {% else %}
+          <p class="kpi-val text-slate-300">—</p>
+          <p class="kpi-sub">Belum ada target</p>
+          {% endif %}
+        </div>
+        <div class="kpi-icon bg-amber-50 text-amber-500"><i class="fas fa-bullseye"></i></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ SECTION TABS ══ -->
+  <div class="reveal flex gap-1 backdrop-blur-sm border border-white/80 rounded-xl p-1 w-fit" style="background:var(--color-surface)">
+    <button class="nav-tab" :class="tab==='pl'?'active':''"      @click="scrollTo('pl')">
+      <i class="fas fa-file-invoice-dollar text-[10px] mr-1.5"></i>P&L
+    </button>
+    <button class="nav-tab" :class="tab==='target'?'active':''"  @click="scrollTo('target')">
+      <i class="fas fa-bullseye text-[10px] mr-1.5"></i>Target
+    </button>
+    <button class="nav-tab" :class="tab==='trend'?'active':''"   @click="scrollTo('trend')">
+      <i class="fas fa-chart-area text-[10px] mr-1.5"></i>Trend
+    </button>
+    <button class="nav-tab" :class="tab==='expect'?'active':''"  @click="scrollTo('expect')">
+      <i class="fas fa-telescope text-[10px] mr-1.5"></i>Proyeksi
+    </button>
+  </div>
+
+
+  <!-- ══════════════════════════
+     SECTION 1 — P&L SUMMARY
+  ══════════════════════════ -->
+  <div id="section-pl" class="reveal space-y-3">
+    <div class="flex items-center gap-2">
+      <div class="w-1.5 h-5 bg-emerald-500 rounded-full"></div>
+      <p class="section-label">📋 Profit & Loss Summary</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+      <!-- P&L Table -->
+      <div class="glass-card p-5">
+        <p class="text-sm font-bold text-slate-700 mb-4">Ringkasan Finansial</p>
+
+        <div class="metric-row">
+          <span class="metric-name">Revenue (Gross)</span>
+          <span class="metric-val text-emerald-700">{{ revenue|rupiah }}</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-name flex items-center gap-2">
+            HPP / COGS
+            <span class="text-[9px] text-slate-300 font-normal">(harga beli × qty)</span>
+          </span>
+          <span class="metric-val text-rose-500">− {{ hpp|rupiah }}</span>
+        </div>
+        <div class="metric-row bg-emerald-50/40 rounded-xl px-3 -mx-3">
+          <span class="metric-name font-bold text-slate-800">Gross Profit</span>
+          <span class="metric-val text-emerald-700 text-base">{{ gross_profit|rupiah }}</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-name">Gross Margin</span>
+          <span class="metric-val {% if gross_margin >= 30 %}text-emerald-600{% elif gross_margin >= 15 %}text-amber-600{% else %}text-rose-500{% endif %}">
+            {{ gross_margin }}%
+          </span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-name flex items-center gap-2">
+            Diskon Terpakai
+            <span class="placeholder-badge"><i class="fas fa-clock text-[8px]"></i>segera hadir</span>
+          </span>
+          <span class="metric-val text-slate-300">—</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-name flex items-center gap-2">
+            Biaya Operasional
+            <span class="placeholder-badge"><i class="fas fa-clock text-[8px]"></i>segera hadir</span>
+          </span>
+          <span class="metric-val text-slate-300">—</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-name font-bold text-slate-700">Total Transaksi</span>
+          <span class="metric-val">{{ order_count }} orders</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-name">Rata-rata per Order</span>
+          <span class="metric-val">{{ avg_order_value|rupiah }}</span>
+        </div>
+      </div>
+
+      <!-- Vs periode lalu -->
+      <div class="glass-card p-5">
+        <p class="text-sm font-bold text-slate-700 mb-4">Perbandingan Periode Lalu</p>
+
+        <div class="space-y-4">
+
+          <!-- Revenue bar -->
+          <div>
+            <div class="flex justify-between text-[11px] font-semibold mb-1">
+              <span class="text-slate-500">Periode ini</span>
+              <span class="text-emerald-600 font-bold">{{ revenue|rupiah }}</span>
+            </div>
+            <div class="progress-track mb-1">
+              <div class="progress-fill bg-emerald-500" id="barRevNow" style="width:0%"></div>
+            </div>
+            <div class="flex justify-between text-[11px] font-semibold mb-1 mt-2">
+              <span class="text-slate-400">Periode lalu</span>
+              <span class="text-slate-400">{{ rev_prev|rupiah }}</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="barRevPrev" style="width:0%;background:var(--color-surface)"></div>
+            </div>
+          </div>
+
+          <div class="border-t border-slate-100 pt-4">
+            <p class="text-[10px] text-slate-400 uppercase tracking-wider mb-3 font-bold">Gross Profit</p>
+            <div class="flex justify-between text-[11px] font-semibold mb-1">
+              <span class="text-slate-500">Periode ini</span>
+              <span class="text-blue-600 font-bold">{{ gross_profit|rupiah }}</span>
+            </div>
+            <div class="progress-track mb-1">
+              <div class="progress-fill bg-blue-500" id="barProfNow" style="width:0%"></div>
+            </div>
+            <div class="flex justify-between text-[11px] font-semibold mb-1 mt-2">
+              <span class="text-slate-400">Periode lalu</span>
+              <span class="text-slate-400">{{ profit_prev|rupiah }}</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="barProfPrev" style="width:0%;background:var(--color-surface)"></div>
+            </div>
+          </div>
+
+          <!-- Direction indicator -->
+          <div class="border-t border-slate-100 pt-4 grid grid-cols-2 gap-3 text-center">
+            <div class="rounded-xl p-3" style="background:var(--color-bg)">
+              <p class="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Revenue</p>
+              {% if rev_change is not None %}
+              <p class="text-lg font-black {% if rev_change >= 0 %}text-emerald-600{% else %}text-rose-500{% endif %}">
+                {% if rev_change >= 0 %}↑{% else %}↓{% endif %} {{ rev_change|floatformat:1 }}%
+              </p>
+              {% else %}
+              <p class="text-lg font-black text-slate-300">—</p>
+              {% endif %}
+            </div>
+            <div class="rounded-xl p-3" style="background:var(--color-bg)">
+              <p class="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Profit</p>
+              {% if profit_change is not None %}
+              <p class="text-lg font-black {% if profit_change >= 0 %}text-emerald-600{% else %}text-rose-500{% endif %}">
+                {% if profit_change >= 0 %}↑{% else %}↓{% endif %} {{ profit_change|floatformat:1 }}%
+              </p>
+              {% else %}
+              <p class="text-lg font-black text-slate-300">—</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════
+     SECTION 2 — TARGET
+  ══════════════════════════ -->
+  <div id="section-target" class="reveal space-y-3">
+    <div class="flex items-center gap-2">
+      <div class="w-1.5 h-5 bg-amber-400 rounded-full"></div>
+      <p class="section-label">🎯 Target vs Realisasi</p>
+    </div>
+
+    {% if target_bars %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      {% for item in target_bars %}
+      <div class="glass-card p-5">
+        <div class="flex items-start justify-between mb-3">
+          <p class="text-sm font-bold text-slate-700">{{ item.label }}</p>
+          <span class="status-pill {{ item.status }}">
+            {% if item.status == 'achieved' %}<i class="fas fa-check text-[8px]"></i> Achieved
+            {% elif item.status == 'on_track' %}<i class="fas fa-clock text-[8px]"></i> On Track
+            {% elif item.status == 'behind' %}<i class="fas fa-exclamation text-[8px]"></i> Behind
+            {% else %}No Target{% endif %}
+          </span>
+        </div>
+
+        {% if item.pct is not None %}
+        <div class="progress-track mb-2">
+          <div class="progress-fill {% if item.status == 'achieved' %}bg-emerald-500{% elif item.status == 'on_track' %}bg-amber-400{% else %}bg-rose-400{% endif %} target-bar"
+               data-width="{{ item.pct|floatformat:0 }}"
+               style="width:0%"></div>
+        </div>
+        <p class="text-[11px] text-slate-400 mb-3">
+          <span class="font-bold {% if item.status == 'achieved' %}text-emerald-600{% elif item.status == 'on_track' %}text-amber-600{% else %}text-rose-500{% endif %}">
+            {{ item.pct }}%
+          </span>
+          dari target
+        </p>
+        {% else %}
+        <p class="text-xs text-slate-400 mb-3 italic">Belum ada target untuk bulan ini</p>
+        {% endif %}
+
+        <div class="flex justify-between text-xs">
+          <div>
+            <p class="text-slate-400 text-[10px] uppercase tracking-wider mb-0.5">Realisasi</p>
+            <p class="font-bold text-slate-800">Rp {{ item.realisasi|floatformat:0 }}</p>
+          </div>
+          {% if item.target %}
+          <div class="text-right">
+            <p class="text-slate-400 text-[10px] uppercase tracking-wider mb-0.5">Target</p>
+            <p class="font-bold text-slate-500">Rp {{ item.target|floatformat:0 }}</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Total summary -->
+    {% if total_target %}
+    <div class="glass-card p-5">
+      <div class="flex items-center justify-between mb-3 flex-wrap gap-3">
+        <p class="text-sm font-bold text-slate-700">Total Periode</p>
+        <div class="flex items-center gap-4 text-xs">
+          <div class="text-center">
+            <p class="text-slate-400 text-[10px] mb-0.5">Realisasi</p>
+            <p class="font-bold text-emerald-600">{{ revenue|rupiah }}</p>
+          </div>
+          <div class="w-px h-8" style="background:var(--color-surface)"></div>
+          <div class="text-center">
+            <p class="text-slate-400 text-[10px] mb-0.5">Target</p>
+            <p class="font-bold text-slate-500">{{ total_target|rupiah }}</p>
+          </div>
+          {% if target_pct is not None %}
+          <div class="w-px h-8" style="background:var(--color-surface)"></div>
+          <div class="text-center">
+            <p class="text-slate-400 text-[10px] mb-0.5">Pencapaian</p>
+            <p class="text-2xl font-black {% if target_pct >= 100 %}text-emerald-600{% elif target_pct >= 70 %}text-amber-600{% else %}text-rose-500{% endif %}">
+              {{ target_pct }}%
+            </p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill target-bar
+          {% if target_pct >= 100 %}bg-emerald-500{% elif target_pct >= 70 %}bg-amber-400{% else %}bg-rose-400{% endif %}"
+             data-width="{% if target_pct %}{{ target_pct|floatformat:0 }}{% else %}0{% endif %}"
+             style="width:0%"></div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="glass-card p-12 text-center">
+      <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 border border-slate-100" style="background:var(--color-bg)">
+        <i class="fas fa-bullseye text-slate-200 text-2xl"></i>
+      </div>
+      <p class="text-slate-500 font-semibold">Belum ada data target untuk periode ini</p>
+      <p class="text-slate-400 text-sm mt-1">Set target di halaman <a href="{% url 'sales_performance' %}" class="text-emerald-600 underline">Sales Performance</a></p>
+    </div>
+    {% endif %}
+  </div>
+
+
+  <!-- ══════════════════════════
+     SECTION 3 — TREND
+  ══════════════════════════ -->
+  <div id="section-trend" class="reveal space-y-3">
+    <div class="flex items-center gap-2">
+      <div class="w-1.5 h-5 bg-blue-500 rounded-full"></div>
+      <p class="section-label">📈 Trend Revenue vs HPP</p>
+    </div>
+
+    <div class="glass-card p-5">
+      <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <p class="text-sm font-bold text-slate-700">Revenue & HPP per Bulan</p>
+        <div class="flex gap-2 text-[11px]">
+          <span class="flex items-center gap-1.5 text-emerald-600 font-semibold">
+            <span class="w-3 h-1.5 bg-emerald-500 rounded-full inline-block"></span>Revenue
+          </span>
+          <span class="flex items-center gap-1.5 text-rose-500 font-semibold">
+            <span class="w-3 h-1.5 bg-rose-400 rounded-full inline-block"></span>HPP
+          </span>
+          <span class="flex items-center gap-1.5 text-blue-500 font-semibold">
+            <span class="w-3 h-1.5 bg-blue-500 rounded-full inline-block"></span>Profit
+          </span>
+        </div>
+      </div>
+
+      {% if trend_labels_json != '[]' %}
+      <div style="height:260px;position:relative;">
+        <canvas id="trendChart"></canvas>
+      </div>
+      {% else %}
+      <div class="text-center py-12 text-slate-400 text-sm">
+        <i class="fas fa-chart-area text-slate-200 text-3xl mb-3 block"></i>
+        Tidak ada data trend untuk periode ini
+      </div>
+      {% endif %}
+
+      <!-- Mini stats -->
+      <div class="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-slate-100/60">
+        <div class="text-center">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Total Revenue</p>
+          <p class="text-xs font-bold text-emerald-700">{{ revenue|rupiah }}</p>
+        </div>
+        <div class="text-center border-x border-slate-100">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Total HPP</p>
+          <p class="text-xs font-bold text-rose-500">{{ hpp|rupiah }}</p>
+        </div>
+        <div class="text-center">
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Gross Profit</p>
+          <p class="text-xs font-bold text-blue-600">{{ gross_profit|rupiah }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════
+     SECTION 4 — PROYEKSI
+  ══════════════════════════ -->
+  <div id="section-expect" class="reveal space-y-3">
+    <div class="flex items-center gap-2">
+      <div class="w-1.5 h-5 bg-violet-500 rounded-full"></div>
+      <p class="section-label">🔭 Proyeksi & Ekspektasi</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+      <!-- Ekspektasi berdasarkan rata-rata harian -->
+      <div class="expect-card">
+        <p class="text-sm font-bold text-slate-700 mb-4">Berdasarkan Performa Saat Ini</p>
+
+        <div class="space-y-4">
+          <div class="metric-row">
+            <span class="metric-name">Rata-rata Revenue / Hari</span>
+            <span class="metric-val text-emerald-700">{{ avg_daily|rupiah }}</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-name">Proyeksi 30 Hari</span>
+            <span class="metric-val text-blue-600">{{ expected_monthly|rupiah }}</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-name">Gross Margin rata-rata</span>
+            <span class="metric-val {% if gross_margin >= 30 %}text-emerald-600{% elif gross_margin >= 15 %}text-amber-600{% else %}text-rose-500{% endif %}">
+              {{ gross_margin }}%
+            </span>
+          </div>
+          {% if target_pct is not None %}
+          <div class="metric-row">
+            <span class="metric-name">Pencapaian Target</span>
+            <span class="metric-val {% if target_pct >= 100 %}text-emerald-600{% elif target_pct >= 70 %}text-amber-600{% else %}text-rose-500{% endif %}">
+              {{ target_pct }}%
+            </span>
+          </div>
+          {% endif %}
+          <div class="metric-row">
+            <span class="metric-name flex items-center gap-2">
+              Proyeksi Profit 30 Hari
+            </span>
+            <span class="metric-val text-violet-600">
+              Rp {{ expected_monthly|mul:gross_margin|div:100|floatformat:0 }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Insight card -->
+      <div class="glass-card p-5">
+        <p class="text-sm font-bold text-slate-700 mb-4">Insight Finansial</p>
+        <div class="space-y-3">
+
+          <!-- Margin health -->
+          <div class="flex items-start gap-3 p-3 rounded-xl {% if gross_margin >= 30 %}bg-emerald-50 border border-emerald-100{% elif gross_margin >= 15 %}bg-amber-50 border border-amber-100{% else %}bg-rose-50 border border-rose-100{% endif %}">
+            <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0
+              {% if gross_margin >= 30 %}bg-emerald-100 text-emerald-600{% elif gross_margin >= 15 %}bg-amber-100 text-amber-600{% else %}bg-rose-100 text-rose-500{% endif %}">
+              <i class="fas fa-{% if gross_margin >= 30 %}check{% elif gross_margin >= 15 %}exclamation{% else %}times{% endif %} text-[10px]"></i>
+            </div>
+            <div>
+              <p class="text-xs font-bold {% if gross_margin >= 30 %}text-emerald-700{% elif gross_margin >= 15 %}text-amber-700{% else %}text-rose-600{% endif %}">
+                Gross Margin {{ gross_margin }}%
+                {% if gross_margin >= 30 %}— Sehat{% elif gross_margin >= 15 %}— Perlu perhatian{% else %}— Kritis{% endif %}
+              </p>
+              <p class="text-[11px] text-slate-500 mt-0.5">
+                {% if gross_margin >= 30 %}Margin di atas 30% menunjukkan pricing yang kuat.
+                {% elif gross_margin >= 15 %}Margin 15–30% masih acceptable, tapi ada ruang optimasi.
+                {% else %}Margin di bawah 15% — perlu review harga jual atau tekan HPP.{% endif %}
+              </p>
+            </div>
+          </div>
+
+          <!-- Trend direction -->
+          {% if rev_change is not None %}
+          <div class="flex items-start gap-3 p-3 rounded-xl {% if rev_change >= 0 %}bg-blue-50 border border-blue-100{% else %}bg-rose-50 border border-rose-100{% endif %}">
+            <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0
+              {% if rev_change >= 0 %}bg-blue-100 text-blue-600{% else %}bg-rose-100 text-rose-500{% endif %}">
+              <i class="fas fa-arrow-{% if rev_change >= 0 %}up{% else %}down{% endif %} text-[10px]"></i>
+            </div>
+            <div>
+              <p class="text-xs font-bold {% if rev_change >= 0 %}text-blue-700{% else %}text-rose-600{% endif %}">
+                Revenue {{ rev_change|floatformat:1 }}% vs periode lalu
+              </p>
+              <p class="text-[11px] text-slate-500 mt-0.5">
+                {% if rev_change >= 10 %}Pertumbuhan kuat — momentum bagus untuk scale.
+                {% elif rev_change >= 0 %}Pertumbuhan stabil — pertahankan konsistensi.
+                {% else %}Revenue turun — perlu analisis lebih lanjut di Sales History.{% endif %}
+              </p>
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- Diskon placeholder -->
+          <div class="flex items-start gap-3 p-3 rounded-xl border border-dashed border-slate-200" style="background:var(--color-bg)">
+            <div class="w-7 h-7 rounded-lg text-slate-400 flex items-center justify-center flex-shrink-0" style="background:var(--color-bg)">
+              <i class="fas fa-tag text-[10px]"></i>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-slate-500">Analisis Diskon</p>
+              <p class="text-[11px] text-slate-400 mt-0.5">Belum tersedia — fitur diskon belum ada di model Order. Segera hadir setelah field discount ditambahkan.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- end wrapper -->
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+const TREND_LABELS  = {{ trend_labels_json|safe }};
+const TREND_REVENUE = {{ trend_revenue_json|safe }};
+const TREND_HPP     = {{ trend_hpp_json|safe }};
+const TREND_PROFIT  = {{ trend_profit_json|safe }};
+
+const REV_NOW  = {{ revenue|floatformat:0|default:0 }};
+const REV_PREV = {{ rev_prev|floatformat:0|default:0 }};
+const PRF_NOW  = {{ gross_profit|floatformat:0|default:0 }};
+const PRF_PREV = {{ profit_prev|floatformat:0|default:0 }};
+
+function finApp() {
+  return {
+    tab: 'pl',
+    _fp: null,
+    _trendChart: null,
+
+    init() {
+      // Scroll reveal
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i * 70);
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.06 });
+      document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+      // Charts + progress bars after DOM ready
+      this.$nextTick(() => {
+        this.renderTrend();
+        this.animateProgressBars();
+        this.animateCompareBars();
+      });
+    },
+
+    scrollTo(section) {
+      this.tab = section;
+      const el = document.getElementById('section-' + section);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        el.classList.add('highlight-pulse');
+        setTimeout(() => el.classList.remove('highlight-pulse'), 2800);
+      }
+    },
+
+    toggleFp() {
+      if (!this._fp) {
+        this._fp = flatpickr('#fpAnchor', {
+          mode: 'range', dateFormat: 'Y-m-d',
+          defaultDate: [
+            document.getElementById('date_start').value,
+            document.getElementById('date_end').value,
+          ].filter(Boolean),
+          onClose([s, e]) {
+            const fmt = d => d ? d.toISOString().slice(0, 10) : '';
+            document.getElementById('date_start').value = fmt(s);
+            document.getElementById('date_end').value   = fmt(e);
+          },
+        });
+      }
+      this._fp.open();
+    },
+
+    applyPreset(days) {
+      const fmt   = d => d.toISOString().slice(0, 10);
+      const today = new Date();
+      if (days === 0) {
+        // Bulan ini
+        const first = new Date(today.getFullYear(), today.getMonth(), 1);
+        document.getElementById('date_start').value = fmt(first);
+        document.getElementById('date_end').value   = fmt(today);
+      } else if (days === -1) {
+        // Tahun ini
+        const first = new Date(today.getFullYear(), 0, 1);
+        document.getElementById('date_start').value = fmt(first);
+        document.getElementById('date_end').value   = fmt(today);
+      } else {
+        const start = new Date(today);
+        start.setDate(today.getDate() - (days - 1));
+        document.getElementById('date_start').value = fmt(start);
+        document.getElementById('date_end').value   = fmt(today);
+      }
+      document.getElementById('finForm').submit();
+    },
+
+    renderTrend() {
+      const ctx = document.getElementById('trendChart');
+      if (!ctx || !TREND_LABELS.length) return;
+      if (this._trendChart) this._trendChart.destroy();
+
+      this._trendChart = new Chart(ctx, {
+        data: {
+          labels: TREND_LABELS,
+          datasets: [
+            {
+              type: 'bar', label: 'Revenue',
+              data: TREND_REVENUE,
+              backgroundColor: 'rgba(5,150,105,0.15)',
+              borderColor: 'rgba(5,150,105,0.5)',
+              borderWidth: 1, borderRadius: 4, yAxisID: 'y',
+            },
+            {
+              type: 'bar', label: 'HPP',
+              data: TREND_HPP,
+              backgroundColor: 'rgba(244,63,94,0.12)',
+              borderColor: 'rgba(244,63,94,0.35)',
+              borderWidth: 1, borderRadius: 4, yAxisID: 'y',
+            },
+            {
+              type: 'line', label: 'Gross Profit',
+              data: TREND_PROFIT,
+              borderColor: '#3b82f6', borderWidth: 2,
+              pointRadius: 3, pointBackgroundColor: '#3b82f6',
+              tension: 0.4, fill: false, yAxisID: 'y',
+            },
+          ],
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => ctx.dataset.label + ': Rp ' + ctx.raw.toLocaleString('id-ID'),
+              }
+            }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#94a3b8' } },
+            y: {
+              grid: { color: 'rgba(241,245,249,1)', lineWidth: 1 },
+              ticks: {
+                font: { size: 10 }, color: '#94a3b8',
+                callback: v => 'Rp ' + (v / 1000000).toFixed(1) + 'jt',
+              }
+            }
+          }
+        }
+      });
+    },
+
+    animateProgressBars() {
+      // Target progress bars
+      setTimeout(() => {
+        document.querySelectorAll('.target-bar').forEach(el => {
+          const w = Math.min(parseFloat(el.dataset.width || 0), 100);
+          el.style.width = w + '%';
+        });
+      }, 400);
+    },
+
+    animateCompareBars() {
+      setTimeout(() => {
+        const maxRev  = Math.max(REV_NOW, REV_PREV) || 1;
+        const maxProf = Math.max(PRF_NOW, PRF_PREV) || 1;
+        const set = (id, val, max) => {
+          const el = document.getElementById(id);
+          if (el) el.style.width = Math.min(val / max * 100, 100) + '%';
+        };
+        set('barRevNow',  REV_NOW,  maxRev);
+        set('barRevPrev', REV_PREV, maxRev);
+        set('barProfNow',  PRF_NOW,  maxProf);
+        set('barProfPrev', PRF_PREV, maxProf);
+      }, 500);
+    },
+  };
+}
+</script>
+{% endblock %}

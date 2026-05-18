@@ -1,0 +1,191 @@
+{% extends 'base/base_hybrid.html' %}
+
+{% block title %}Detail Jurnal — LUMRA{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-4xl mx-auto relative z-10 space-y-6" x-data="journalDetailApp()" x-init="init()" x-cloak>
+  <div class="card bg-base-100 shadow-lg border border-base-300">
+    <div class="card-body p-6">
+      <!-- Header -->
+      <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-6">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-3 mb-2">
+            <h1 class="text-2xl font-bold text-base-content" x-text="je.number"></h1>
+            <div class="badge" :class="je.status === 'draft' ? 'badge-warning' : 'badge-success'" x-text="je.status"></div>
+          </div>
+          <p class="text-sm text-base-content/60">Tanggal: <span class="font-bold text-base-content/80" x-text="je.date"></span></p>
+        </div>
+        <div class="flex gap-2">
+          <a href="{% url 'journal_entry_list' %}" class="btn btn-ghost">
+            <i class="fas fa-times text-xl"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="mb-8">
+        <h2 class="text-lg font-bold text-base-content mb-2">Deskripsi</h2>
+        <p class="text-base-content/80 text-lg" x-text="je.description"></p>
+      </div>
+
+      <!-- Journal Lines -->
+      <div class="overflow-x-auto">
+        <table class="table table-compact w-full">
+          <thead>
+            <tr class="bg-base-200">
+              <th class="py-3 pl-2 text-left">Akun</th>
+              <th class="py-3 text-right">Debit</th>
+              <th class="py-3 text-right">Kredit</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-base-100">
+            <template x-for="line in je.lines" :key="line.id">
+              <tr class="hover:bg-base-200">
+                <td class="py-3 pl-2">
+                  <div class="font-bold text-base-content/80" x-text="line.account_name"></div>
+                  <div class="text-xs text-base-content/60 font-mono" x-text="line.account_code"></div>
+                </td>
+                <td class="py-3 text-right font-mono text-base-content/80">
+                  <span x-show="line.debit" x-text="formatCurrency(line.debit)"></span>
+                  <span x-show="!line.debit" class="text-base-content/40">-</span>
+                </td>
+                <td class="py-3 text-right font-mono text-base-content/80">
+                  <span x-show="line.credit" x-text="formatCurrency(line.credit)"></span>
+                  <span x-show="!line.credit" class="text-base-content/40">-</span>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Summary -->
+      <div class="mt-6 p-4 bg-base-200 rounded-lg">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="text-center">
+            <p class="text-sm text-base-content/60 font-semibold uppercase">Total Debit</p>
+            <p class="text-xl font-bold text-base-content font-mono" x-text="formatCurrency(totalDebit)"></p>
+          </div>
+          <div class="text-center">
+            <p class="text-sm text-base-content/60 font-semibold uppercase">Total Kredit</p>
+            <p class="text-xl font-bold text-base-content font-mono" x-text="formatCurrency(totalCredit)"></p>
+          </div>
+          <div class="text-center">
+            <p class="text-sm text-base-content/60 font-semibold uppercase">Status</p>
+            <div class="badge" :class="isBalanced ? 'badge-success' : 'badge-error'" x-text="isBalanced ? 'Seimbang' : 'Tidak Seimbang'"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex gap-4">
+        <button class="btn btn-primary" @click="printJournal()">
+          <i class="fas fa-print mr-2"></i>
+          Cetak
+        </button>
+        <button class="btn btn-ghost" @click="exportJournal()">
+          <i class="fas fa-download mr-2"></i>
+          Export
+        </button>
+        <a href="{% url 'journal_entry_list' %}" class="btn btn-ghost">
+          <i class="fas fa-list mr-2"></i>
+          Daftar Jurnal
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function journalDetailApp() {
+  return {
+    je: {
+      number: '',
+      status: '',
+      date: '',
+      description: '',
+      lines: []
+    },
+    totalDebit: 0,
+    totalCredit: 0,
+    isBalanced: true,
+    
+    init() {
+      this.loadJournalDetail();
+    },
+    
+    loadJournalDetail() {
+      // Mock data - replace with actual API call
+      this.je = {
+        number: 'JE-001',
+        status: 'posted',
+        date: '2024-01-15',
+        description: 'Pembelian barang dagang untuk bulan Januari',
+        lines: [
+          {
+            id: 1,
+            account_name: 'Persediaan Barang Dagang',
+            account_code: '1-101',
+            debit: 5000000,
+            credit: null
+          },
+          {
+            id: 2,
+            account_name: 'Kas',
+            account_code: '1-100',
+            debit: null,
+            credit: 5000000
+          },
+          {
+            id: 3,
+            account_name: 'PPN Masukan',
+            account_code: '2-101',
+            debit: 500000,
+            credit: null
+          },
+          {
+            id: 4,
+            account_name: 'Utang Usaha',
+            account_code: '2-201',
+            debit: null,
+            credit: 500000
+          }
+        ]
+      };
+      
+      this.calculateTotals();
+    },
+    
+    calculateTotals() {
+      this.totalDebit = this.je.lines.reduce((sum, line) => sum + (line.debit || 0), 0);
+      this.totalCredit = this.je.lines.reduce((sum, line) => sum + (line.credit || 0), 0);
+      this.isBalanced = this.totalDebit === this.totalCredit;
+    },
+    
+    formatCurrency(amount) {
+      if (!amount) return '-';
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0
+      }).format(amount);
+    },
+    
+    printJournal() {
+      window.print();
+    },
+    
+    exportJournal() {
+      console.log('Export journal:', this.je);
+      // Implement export functionality
+    }
+  }
+}
+</script>
+{% endblock %}

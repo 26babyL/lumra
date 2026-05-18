@@ -1,0 +1,58 @@
+{# base/kpi_card.html
+   KPI Card widget — menggantikan kpi-glass inline di 38+ template.
+
+   Usage:
+     {% include "base/kpi_card.html" with
+         title="Total Penjualan"
+         value=total_sales|currency
+         icon="chart-bar"
+         variant="glass"
+         change_pct="+12%"
+         change_dir="up"
+     %}
+
+   Parameters:
+     title       (str)  — Label kartu, wajib
+     value       (any)  — Nilai utama yang ditampilkan, wajib
+     icon        (str)  — Nama icon (Heroicons / Tabler), opsional
+     variant     (str)  — "glass" (default) | "white" | "minimal"
+     change_pct  (str)  — Perubahan, misal "+12%" atau "-3%", opsional
+     change_dir  (str)  — "up" | "down" | "neutral", opsional
+     subtitle    (str)  — Teks kecil di bawah value, opsional
+     href        (str)  — Jika diisi, card jadi link, opsional
+#}
+
+{% with variant=variant|default:"glass" %}
+<div class="kpi-glass{% if variant == 'white' %} kpi-glass--white{% elif variant == 'minimal' %} kpi-glass--minimal{% endif %} reveal">
+  {% if href %}
+  <a href="{{ href }}" class="kpi-link">
+  {% endif %}
+
+  <div class="kpi-top">
+    {% if icon %}
+    <div class="kpi-icon">
+      {# Gunakan icon system project — sesuaikan dengan Heroicons/Tabler yang dipakai #}
+      <span data-icon="{{ icon }}" aria-hidden="true"></span>
+    </div>
+    {% endif %}
+
+    {% if change_pct %}
+    <span class="kpi-badge kpi-badge--{{ change_dir|default:'neutral' }}">
+      {{ change_pct }}
+    </span>
+    {% endif %}
+  </div>
+
+  <div class="kpi-body">
+    <div class="kpi-value">{{ value }}</div>
+    <div class="kpi-label">{{ title }}</div>
+    {% if subtitle %}
+    <div class="kpi-subtitle">{{ subtitle }}</div>
+    {% endif %}
+  </div>
+
+  {% if href %}
+  </a>
+  {% endif %}
+</div>
+{% endwith %}

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Print Receipt</title>
+    <!-- Menggunakan font monospace untuk presisi -->
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset Body */
+        body { background: #e2e8f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Courier New', monospace; }
+        
+        /* Paper Simulation (58mm width approx) */
+        .receipt {
+            background: white;
+            width: 80mm; /* Lebar thermal standar ~80mm */
+            max-width: 100%;
+            padding: 2mm;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-size: 12px;
+            color: #000;
+        }
+
+        /* Layout Utilities */
+        .flex { display: flex; justify-content: space-between; align-items: center; }
+        .flex-between { display: flex; justify-content: space-between; width: 100%; }
+        .w-full { width: 100%; }
+        .text-center { text-align: center; }
+        .font-bold { font-weight: 700; }
+        .text-lg { font-size: 14px; }
+        .border-b { border-bottom: 1px dashed #cbd5e1; margin: 5px 0; border-top: 1px dashed #cbd5e1; padding-bottom: 5px; }
+        .no-border { border: none !important; }
+        
+        /* Table */
+        .table-row { display: flex; justify-content: space-between; width: 100%; margin-bottom: 5px; }
+        .col-name { flex: 2; }
+        .col-qty { flex: 1; text-align: center; justify-content: center; }
+        .col-price { flex:1; text-align: right; justify-content: flex-end; }
+        
+        /* Hide Screen Elements */
+        .no-print { display: none; }
+        
+        @media print {
+            body { background: white; padding: 0; display: block; }
+            .receipt { width: 100%; box-shadow: none; padding: 0; margin: 0; border: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt">
+        
+        <!-- Header Store -->
+        <div class="flex flex-col items-center mb-4">
+            <h1 class="text-lg font-bold" style="text-transform: uppercase;">CoffeeShop</h1>
+            <p class="text-xs text-slate-400">Jl. Rasuna Said No. 123</p>
+        </div>
+
+        <!-- Info Transaksi -->
+        <div class="flex-between text-xs mb-2 border-b no-border pt-2">
+            <span>No. Order: <span class="font-bold">{{ order_number }}</span></span>
+            <span>{{ date }}</span>
+        </div>
+        <div class="flex justify-between text-xs mb-4">
+            <span>Kasir: <span class="font-bold">{{ cashier_name }}</span></span>
+            <span>Guest: <span class="font-bold">{{ customer_name }}</span></span>
+        </div>
+
+        <!-- Table Items -->
+        <div class="w-full">
+            <!-- Header Table -->
+            <div class="flex justify-between text-xs font-bold border-b border-double border-slate-200 py-1">
+                <div class="col-name">ITEM</div>
+                <div class="col-qty">QTY</div>
+                <div class="col-price">HARGA</div>
+            </div>
+            
+            <!-- Rows -->
+            {% for item in items %}
+            <div class="table-row py-1">
+                <div class="col-name">{{ item.name }}</div>
+                <div class="col-qty">x{{ item.qty }}</div>
+                <div class="col-price">{{ item.total_price }}</div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Total -->
+        <div class="flex justify-between text-lg font-bold border-t border-slate-200 pt-2 mt-2">
+            <span>TOTAL</span>
+            <span>{{ grand_total }}</span>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-xs text-slate-400 mt-6">
+            <p>Terima kas atau QRIS. Terima kas kembalian pas.</p>
+            <p class="font-bold text-slate-600">Terima kas kembalian pas.</p>
+        </div>
+
+    </div>
+</body>
+</html>

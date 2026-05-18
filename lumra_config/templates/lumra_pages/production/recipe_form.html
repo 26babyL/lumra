@@ -1,0 +1,378 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}{% if is_edit %}Edit{% else %}Buat{% endif %} Recipe - Lumra ERP{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-card { background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.95); border-radius: 20px; box-shadow: 0 18px 40px rgba(15,23,42,0.08); }
+</style>
+{% endblock %}
+
+{% block content %}
+{{ variants_data|json_script:"recipe-variants-data" }}
+{{ formset.management_form }}
+
+<div class="max-w-5xl mx-auto space-y-6 relative z-10" x-data="recipeFormApp()" x-init="init()" x-cloak>
+  <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+        <a href="{% url 'recipe_list' %}" class="hover:text-slate-800">Recipe</a>
+        <span>/</span>
+        <span class="text-slate-800 font-medium">{% if is_edit %}Edit{% else %}Form Baru{% endif %}</span>
+      </nav>
+      <h1 class="text-3xl font-bold text-slate-800">{% if is_edit %}Edit Recipe{% else %}Buat Recipe Baru{% endif %}</h1>
+      <p class="text-sm text-slate-500 mt-1">Isi data teknis recipe, yield, dan langkah kerja produksi secara lengkap.</p>
+    </div>
+    <a href="{% url 'recipe_list' %}" class="text-sm font-semibold text-slate-500 hover:text-slate-800">Kembali ke daftar</a>
+  </div>
+
+  <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+    <div class="xl:col-span-2 glass-card p-6">
+      <form @submit.prevent="submitForm()" class="space-y-6">
+        {% csrf_token %}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="md:col-span-2">
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Nama Recipe <span class="text-rose-500">*</span></label>
+            <input type="text" x-model.trim="formData.name" @blur="validateField('name')" class="w-full rounded-xl border px-4 py-3 text-sm outline-none focus:border-slate-400" :class="errors.name ? 'border-rose-300 bg-rose-50' : 'border-slate-200 bg-white'" placeholder="Contoh: Iced Americano">
+            <p x-show="errors.name" x-text="errors.name" class="mt-1 text-xs text-rose-600"></p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Kategori <span class="text-rose-500">*</span></label>
+            <select aria-label="Pilih opsi" x-model="formData.category" @change="validateField('category')" class="w-full rounded-xl border px-4 py-3 text-sm outline-none focus:border-slate-400" :class="errors.category ? 'border-rose-300 bg-rose-50' : 'border-slate-200 bg-white'">
+              <option value="">Pilih kategori</option>
+              {% for category in categories %}
+              <option value="{{ category.id }}">{{ category.name }}</option>
+              {% endfor %}
+            </select>
+            <p x-show="errors.category" x-text="errors.category" class="mt-1 text-xs text-rose-600"></p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Waktu Persiapan (menit)</label>
+            <input type="number" min="0" x-model.number="formData.preparation_time" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-slate-400" placeholder="5">
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Yield Quantity</label>
+            <input type="number" min="0" step="0.01" x-model.number="formData.yield_quantity" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-slate-400" placeholder="1">
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Yield Unit</label>
+            <select aria-label="Pilih opsi" x-model="formData.yield_unit" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-slate-400">
+              <option value="">Pilih satuan</option>
+              {% for unit in units %}
+              <option value="{{ unit.id }}">{{ unit.symbol }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Deskripsi</label>
+            <textarea x-model="formData.description" rows="3" class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-slate-400" placeholder="Ringkasan singkat fungsi atau karakter recipe"></textarea>
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Instruksi Pembuatan <span class="text-rose-500">*</span></label>
+            <textarea x-model="formData.instructions" @blur="validateField('instructions')" rows="8" class="w-full rounded-xl border px-4 py-3 text-sm outline-none focus:border-slate-400" :class="errors.instructions ? 'border-rose-300 bg-rose-50' : 'border-slate-200 bg-white'" placeholder="Tuliskan langkah pembuatan secara berurutan..."></textarea>
+            <p x-show="errors.instructions" x-text="errors.instructions" class="mt-1 text-xs text-rose-600"></p>
+          </div>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
+          <div class="flex items-center justify-between gap-3 mb-4">
+            <div>
+              <h2 class="text-lg font-bold text-slate-800">Komposisi Bahan</h2>
+              <p class="text-xs text-slate-500 mt-1">Pilih variant bahan yang terdaftar supaya biaya recipe bisa dihitung stabil.</p>
+            </div>
+            <button type="button" @click="addIngredient()" class="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50">+ Tambah Bahan</button>
+          </div>
+
+          <div class="space-y-3">
+            <template x-for="(ingredient, index) in ingredients" :key="ingredient._key">
+              <div x-show="!ingredient._deleted" class="rounded-xl border border-white bg-white p-4 shadow-sm">
+                <div class="grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_120px_140px_56px] gap-3">
+                  <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">Variant Bahan</label>
+                    <select aria-label="Pilih opsi" x-model="ingredient.variant" @change="syncIngredientMeta(index); validateIngredient(index)" class="w-full rounded-xl border px-4 py-3 text-sm outline-none focus:border-slate-400" :class="ingredientErrors[index]?.variant ? 'border-rose-300 bg-rose-50' : 'border-slate-200 bg-white'">
+                      <option value="">Pilih bahan...</option>
+                      <template x-for="variant in variants" :key="variant.id">
+                        <option :value="String(variant.id)" x-text="variant.sku + ' - ' + variant.name"></option>
+                      </template>
+                    </select>
+                    <p x-show="ingredient.variant_label" class="mt-1 text-xs text-slate-500" x-text="ingredient.variant_label"></p>
+                    <p x-show="ingredientErrors[index]?.variant" x-text="ingredientErrors[index]?.variant" class="mt-1 text-xs text-rose-600"></p>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">Qty</label>
+                    <input aria-label="Qty" type="number" min="0.01" step="0.01" x-model.number="ingredient.quantity" @blur="validateIngredient(index)" class="w-full rounded-xl border px-4 py-3 text-sm outline-none focus:border-slate-400" :class="ingredientErrors[index]?.quantity ? 'border-rose-300 bg-rose-50' : 'border-slate-200 bg-white'">
+                    <p x-show="ingredientErrors[index]?.quantity" x-text="ingredientErrors[index]?.quantity" class="mt-1 text-xs text-rose-600"></p>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">Satuan</label>
+                    <select aria-label="Pilih opsi" x-model="ingredient.unit" @change="validateIngredient(index)" class="w-full rounded-xl border px-4 py-3 text-sm outline-none focus:border-slate-400" :class="ingredientErrors[index]?.unit ? 'border-rose-300 bg-rose-50' : 'border-slate-200 bg-white'">
+                      <option value="">Pilih unit</option>
+                      {% for unit in units %}
+                      <option value="{{ unit.id }}">{{ unit.symbol }}</option>
+                      {% endfor %}
+                    </select>
+                    <p x-show="ingredientErrors[index]?.unit" x-text="ingredientErrors[index]?.unit" class="mt-1 text-xs text-rose-600"></p>
+                  </div>
+                  <div class="flex items-end">
+                    <button type="button" @click="removeIngredient(index)" :disabled="ingredients.length === 1" class="w-full rounded-xl border border-slate-200 px-3 py-3 text-sm font-semibold text-rose-600 disabled:cursor-not-allowed disabled:opacity-40 hover:bg-rose-50">Hapus</button>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+          <p x-show="errors.ingredients" x-text="errors.ingredients" class="mt-3 text-sm text-rose-600"></p>
+        </div>
+
+        <div class="flex flex-wrap gap-3 pt-2">
+          <button aria-label="Kirim" type="submit" :disabled="isSubmitting" class="rounded-xl bg-slate-800 px-5 py-3 text-sm font-semibold text-white shadow hover:bg-slate-700 disabled:opacity-50">
+            <span x-text="isSubmitting ? 'Menyimpan...' : '{% if is_edit %}Simpan Perubahan{% else %}Simpan Recipe{% endif %}'"></span>
+          </button>
+          <a href="{% url 'recipe_list' %}" class="rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50">Batal</a>
+        </div>
+      </form>
+    </div>
+
+    <div class="space-y-4">
+      <div class="glass-card p-5">
+        <p class="text-xs uppercase tracking-wide text-slate-400">Estimasi Bahan</p>
+        <p class="text-2xl font-bold text-slate-800 mt-1" x-text="ingredients.length"></p>
+        <p class="text-sm text-slate-500 mt-2">Baris bahan aktif di recipe saat ini.</p>
+      </div>
+      <div class="glass-card p-5">
+        <p class="text-xs uppercase tracking-wide text-slate-400">Estimasi Cost Total</p>
+        <p class="text-2xl font-bold text-slate-800 mt-1" x-text="formatCurrency(estimatedTotalCost)"></p>
+        <p class="text-sm text-slate-500 mt-2">Menggunakan snapshot `price_buy` variant yang tersedia di form.</p>
+      </div>
+      <div class="glass-card p-5">
+        <p class="text-xs uppercase tracking-wide text-slate-400">Cost / Yield</p>
+        <p class="text-2xl font-bold text-slate-800 mt-1" x-text="formatCurrency(costPerUnit)"></p>
+        <p class="text-sm text-slate-500 mt-2" x-text="'Per ' + (yieldUnitLabel || 'unit')"></p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const EXISTING_RECIPE_INGREDIENTS = [
+  {% for fs_form in formset %}
+  {% if fs_form.instance.pk %}
+  {
+    _key: {{ forloop.counter }},
+    id: {{ fs_form.instance.pk|default:"null" }},
+    variant: "{{ fs_form.instance.variant_id|default:''|escapejs }}",
+    quantity: {{ fs_form.instance.quantity|default:"0" }},
+    unit: "{{ fs_form.instance.unit_id|default:''|escapejs }}",
+    variant_label: "{{ fs_form.instance.variant.sku|default:''|escapejs }}{% if fs_form.instance.variant_id %} - {{ fs_form.instance.variant.product.name|default:fs_form.instance.variant.sku|escapejs }}{% endif %}",
+  },
+  {% endif %}
+  {% endfor %}
+];
+
+function recipeFormApp() {
+  return {
+    isSubmitting: false,
+    variants: [],
+    formData: {
+      name: '{{ form.name.value|default:""|escapejs }}',
+      category: '{{ form.category.value|default:""|escapejs }}',
+      description: '{{ form.description.value|default:""|escapejs }}',
+      instructions: '{{ form.instructions.value|default:""|escapejs }}',
+      yield_quantity: '{{ form.yield_quantity.value|default:"1"|escapejs }}',
+      yield_unit: '{{ form.yield_unit.value|default:""|escapejs }}',
+      preparation_time: '{{ form.preparation_time.value|default:"5"|escapejs }}',
+    },
+    ingredients: [],
+    errors: {},
+    ingredientErrors: {},
+    keySeed: 1000,
+
+    init() {
+      const variantsEl = document.getElementById('recipe-variants-data');
+      if (variantsEl?.textContent) {
+        try {
+          this.variants = JSON.parse(variantsEl.textContent) || [];
+        } catch (error) {
+          this.variants = [];
+        }
+      }
+      this.ingredients = EXISTING_RECIPE_INGREDIENTS.length
+        ? EXISTING_RECIPE_INGREDIENTS.map((item) => ({ ...item, quantity: Number(item.quantity || 0) }))
+        : [this.emptyIngredient()];
+      this.ingredients.forEach((_, index) => this.syncIngredientMeta(index));
+    },
+
+    get estimatedTotalCost() {
+      return this.ingredients.reduce((sum, ingredient) => {
+        const variant = this.findVariant(ingredient.variant);
+        return sum + (Number(ingredient.quantity || 0) * Number(variant?.price_buy || 0));
+      }, 0);
+    },
+
+    get costPerUnit() {
+      const yieldQty = Number(this.formData.yield_quantity || 0);
+      if (!yieldQty) return this.estimatedTotalCost;
+      return this.estimatedTotalCost / yieldQty;
+    },
+
+    get yieldUnitLabel() {
+      const select = document.querySelector('select[x-model="formData.yield_unit"]');
+      if (!select) return '';
+      const selected = Array.from(select.options).find((option) => option.value === String(this.formData.yield_unit || ''));
+      return selected ? selected.text : '';
+    },
+
+    emptyIngredient() {
+      this.keySeed += 1;
+      return { _key: this.keySeed, id: null, variant: '', quantity: 1, unit: '', variant_label: '' };
+    },
+
+    addIngredient() {
+      this.ingredients.push(this.emptyIngredient());
+    },
+
+    removeIngredient(index) {
+      if (this.ingredients.length === 1) return;
+      if (this.ingredients[index]?.id) {
+        this.ingredients[index]._deleted = true;
+      } else {
+        this.ingredients.splice(index, 1);
+      }
+      const nextErrors = {};
+      Object.entries(this.ingredientErrors).forEach(([key, value]) => {
+        const numericKey = Number(key);
+        if (numericKey < index) nextErrors[numericKey] = value;
+        if (numericKey > index) nextErrors[numericKey - 1] = value;
+      });
+      this.ingredientErrors = nextErrors;
+    },
+
+    findVariant(id) {
+      return this.variants.find((variant) => String(variant.id) === String(id || '')) || null;
+    },
+
+    syncIngredientMeta(index) {
+      const ingredient = this.ingredients[index];
+      const variant = this.findVariant(ingredient.variant);
+      ingredient.variant_label = variant ? `${variant.sku} - ${variant.name}` : '';
+    },
+
+    validateField(field) {
+      delete this.errors[field];
+      if (field === 'name' && !this.formData.name) {
+        this.errors.name = 'Nama recipe wajib diisi.';
+      }
+      if (field === 'category' && !this.formData.category) {
+        this.errors.category = 'Kategori wajib dipilih.';
+      }
+      if (field === 'instructions' && !String(this.formData.instructions || '').trim()) {
+        this.errors.instructions = 'Instruksi pembuatan wajib diisi.';
+      }
+      return !this.errors[field];
+    },
+
+    validateIngredient(index) {
+      const ingredient = this.ingredients[index];
+      const errs = {};
+      if (!ingredient.variant) errs.variant = 'Bahan wajib dipilih dari variant.';
+      if (!(Number(ingredient.quantity || 0) > 0)) errs.quantity = 'Qty harus lebih dari 0.';
+      if (!ingredient.unit) errs.unit = 'Satuan wajib dipilih.';
+      this.ingredientErrors = { ...this.ingredientErrors, [index]: errs };
+      return Object.keys(errs).length === 0;
+    },
+
+    validateAll() {
+      this.errors = {};
+      let valid = true;
+      ['name', 'category', 'instructions'].forEach((field) => {
+        if (!this.validateField(field)) valid = false;
+      });
+      const hasCompleteIngredient = this.ingredients.some((ingredient) => ingredient.variant && Number(ingredient.quantity || 0) > 0 && ingredient.unit);
+      const visibleIngredients = this.ingredients.filter((ingredient) => !ingredient._deleted);
+      const hasCompleteVisibleIngredient = visibleIngredients.some((ingredient) => ingredient.variant && Number(ingredient.quantity || 0) > 0 && ingredient.unit);
+      if (!hasCompleteVisibleIngredient) {
+        this.errors.ingredients = 'Tambahkan minimal satu bahan yang lengkap.';
+        valid = false;
+      }
+      this.ingredients.forEach((_, index) => {
+        if (!this.ingredients[index]?._deleted && !this.validateIngredient(index)) valid = false;
+      });
+      return valid;
+    },
+
+    async submitForm() {
+      if (!this.validateAll()) return;
+      this.isSubmitting = true;
+      const formData = new FormData();
+      formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]')?.value || '');
+      formData.append('_ajax', '1');
+      formData.append('name', this.formData.name);
+      formData.append('category', this.formData.category);
+      formData.append('description', this.formData.description);
+      formData.append('instructions', this.formData.instructions);
+      formData.append('yield_quantity', this.formData.yield_quantity || '1');
+      formData.append('yield_unit', this.formData.yield_unit || '');
+      formData.append('preparation_time', this.formData.preparation_time || '0');
+
+      formData.append('ingredients-TOTAL_FORMS', String(this.ingredients.length));
+      formData.append('ingredients-INITIAL_FORMS', String(EXISTING_RECIPE_INGREDIENTS.filter((item) => item.id).length));
+      formData.append('ingredients-MIN_NUM_FORMS', '0');
+      formData.append('ingredients-MAX_NUM_FORMS', '1000');
+
+      this.ingredients.forEach((ingredient, index) => {
+        formData.append(`ingredients-${index}-id`, ingredient.id || '');
+        formData.append(`ingredients-${index}-variant`, ingredient.variant || '');
+        formData.append(`ingredients-${index}-quantity`, ingredient.quantity || '');
+        formData.append(`ingredients-${index}-unit`, ingredient.unit || '');
+        formData.append(`ingredients-${index}-DELETE`, ingredient._deleted ? 'on' : '');
+      });
+
+      try {
+        const response = await fetch(window.location.href, {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: formData,
+        });
+        const data = await response.json();
+        if (!response.ok || !data.success) {
+          if (data.errors) {
+            Object.entries(data.errors).forEach(([field, messages]) => {
+              const message = Array.isArray(messages) ? messages[0] : messages;
+              if (field.startsWith('ingredient_')) {
+                const parts = field.split('_');
+                const index = Number(parts[1]);
+                const subField = parts.slice(2).join('_');
+                this.ingredientErrors = {
+                  ...this.ingredientErrors,
+                  [index]: { ...(this.ingredientErrors[index] || {}), [subField]: message },
+                };
+              } else {
+                this.errors[field] = message;
+              }
+            });
+          }
+          throw new Error(data.message || 'Gagal menyimpan recipe.');
+        }
+        window.location.href = `{% url 'recipe_detail' 0 %}`.replace('/0/', `/${data.recipe_id}/`);
+      } catch (error) {
+        alert(error.message || 'Gagal menyimpan recipe.');
+      } finally {
+        this.isSubmitting = false;
+      }
+    },
+
+    formatCurrency(value) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(Number(value || 0));
+    },
+  };
+}
+</script>
+{% endblock %}

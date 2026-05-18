@@ -1,0 +1,827 @@
+{% extends 'base/base.html' %}
+{% block title %}Record Stock Movement{% endblock %}
+
+{% block extra_css %}
+<style>
+  @keyframes drift {
+  from { transform: translate(0,0) scale(1); }
+  to   { transform: translate(20px,28px) scale(1.06); }
+}
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  [x-cloak]{display: none !important}
+
+  @keyframes drift{0%,100%{transform:translate(0,0)scale(1)}50%{transform:translate(20px,16px)scale(1.04)}}
+
+  .form-card{
+    border-radius:28px;padding:32px;position:relative;overflow:hidden;
+    transition:background .5s ease, border-color .5s ease, box-shadow .5s ease;
+  }
+
+  .form-card.theme-in{
+    background:var(--color-white-a76);
+    border:1px solid var(--color-white-a92);
+    box-shadow:0 4px 32px var(--color-emerald-700-a06), 0 0 0 .5px var(--color-emerald-700-a04);
+  }
+
+  .form-card.theme-out{
+    background:rgba(0,0,0,0.06);
+    border:1px solid rgba(0,0,0,0.06);
+    box-shadow:0 4px 32px rgba(0,0,0,0.06), 0 0 0 .5px rgba(0,0,0,0.06);
+  }
+
+  .form-card.theme-adj{
+    background:rgba(0,0,0,0.06);
+    border:1px solid rgba(0,0,0,0.06);
+    box-shadow:0 4px 32px rgba(0,0,0,0.06), 0 0 0 .5px rgba(0,0,0,0.06);
+  }
+
+  .card-glow{
+    position:absolute;border-radius:50%;pointer-events: none;
+    transition:background .5s ease,opacity .5s ease;
+    filter:blur(80px);
+  }
+
+  .lbl{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.15em;
+    display:block;margin-bottom:6px;transition:color .3s;}
+
+  .err-msg{font-size:9px;font-weight:700;color:var(--color-e11d48);margin-top:4px;}
+
+  .sel-wrap{position:relative;}
+
+  .sel-wrap .sel-search{
+    width:100%;padding:13px 44px 13px 16px;border-radius:16px;
+    font-size:13px;font-weight:600;color:var(--color-slate-800);
+    background:var(--color-slate-50-a9);border:1.5px solid var(--color-slate-200-a9);
+    outline:var(--shadow-sm-16);transition:border-color .2s,box-shadow .2s;cursor:pointer;
+    font-family:'DM Sans',sans-serif;
+    appearance:var(--shadow-sm-16);-webkit-appearance:var(--shadow-sm-16);
+  }
+
+  .sel-wrap .sel-icon{
+    position:absolute;right:14px;top:50%;transform:translateY(-50%);
+    font-size:11px;color:var(--color-slate-400);pointer-events: none;
+    transition:transform .25s ease;
+  }
+
+  .sel-wrap.open .sel-icon{transform:translateY(-50%) rotate(180deg);}
+
+  .sel-dropdown{
+    position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:99;
+    background:var(--color-white-a97);
+    backdrop-filter: var(--glass-blur);
+    border:1px solid var(--color-slate-200-a9);
+    border-radius:16px;
+    box-shadow:0 8px 32px var(--color-black-a12);
+    overflow:hidden;
+    animation:dropIn .18s cubic-bezier(.4,0,.2,1);
+  }
+
+  @keyframes dropIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform: none}}
+
+  .sel-input-wrap{padding:10px 12px;border-bottom:1px solid var(--color-slate-200-a5);}
+
+  .sel-input{
+    width:100%;padding:8px 12px;border-radius:10px;
+    font-size:12px;font-weight:500;color:var(--color-slate-800);
+    background:var(--color-slate-50-a9);border:1px solid var(--color-slate-200-a8);
+    outline:var(--shadow-sm-16);
+    font-family:'DM Sans',sans-serif;
+  }
+
+  .sel-list{max-height:220px;overflow-y:auto;}
+
+  .sel-list::-webkit-scrollbar{width:4px;}
+
+  .sel-list::-webkit-scrollbar-thumb{background:var(--color-slate-200);border-radius:99px;}
+
+  .sel-option{
+    padding:10px 14px;cursor:pointer;
+    font-size:12px;font-weight:600;color:var(--color-slate-700);
+    display:flex;align-items:center;gap-8;
+    transition:background .1s;
+  }
+
+  .sel-option:hover{background:var(--color-emerald-700-a06);}
+
+  .sel-option.selected{background:var(--color-emerald-700-a08);color:var(--color-emerald-700);}
+
+  .sel-option .sel-sub{font-size:10px;font-weight:500;color:var(--color-slate-400);margin-left:auto;font-family:'DM Mono',monospace;}
+
+  .sel-empty{padding:14px;text-align:center;font-size:11px;color:var(--color-slate-400);font-weight:600;}
+
+  .type-pill{
+    flex:1;text-align:center;padding:12px 8px;border-radius:14px;
+    border:2px solid transparent;
+    font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.1em;
+    cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);
+    display:flex;flex-direction:column;align-items:center;gap:4px;
+  }
+
+  .type-pill .pill-icon{font-size:16px;transition:transform .3s;}
+
+  .type-pill:hover .pill-icon{transform:scale(1.15);}
+
+  .pill-in.active{background:var(--color-emerald-700-a09);border-color:var(--color-emerald-600);color:var(--color-emerald-700);}
+
+  .pill-in.inactive{background:var(--color-slate-50-a8);border-color:var(--color-slate-200-a8);color:var(--color-slate-400);}
+
+  .pill-in:hover{background:var(--color-emerald-700-a05);}
+
+  .pill-out.active{background:rgba(0,0,0,0.06);border-color:var(--color-f43f5e);color:var(--color-e11d48);}
+
+  .pill-out.inactive{background:var(--color-slate-50-a8);border-color:var(--color-slate-200-a8);color:var(--color-slate-400);}
+
+  .pill-out:hover{background:rgba(0,0,0,0.06);}
+
+  .pill-adj.active{background:rgba(0,0,0,0.06);border-color:var(--color-f59e0b);color:var(--color-d97706);}
+
+  .pill-adj.inactive{background:var(--color-slate-50-a8);border-color:var(--color-slate-200-a8);color:var(--color-slate-400);}
+
+  .pill-adj:hover{background:rgba(0,0,0,0.06);}
+
+  .qty-btn{
+    width:40px;height:100%;display:flex;align-items:center;justify-content:center;
+    font-size:18px;font-weight:700;cursor:pointer;
+    border-radius:12px;transition:background .15s,color .15s;
+    flex-shrink:0;user-select:var(--shadow-sm-16);
+  }
+
+  .qty-btn:hover{background:var(--color-slate-200-a6);}
+
+  .qty-inp{
+    flex:1;text-align:center;border:var(--shadow-sm-16);outline:var(--shadow-sm-16);
+    font-size:20px;font-weight:900;color:var(--color-slate-800);background:transparent;
+    font-family:'DM Mono',monospace;
+  }
+
+  .summary-card{
+    border-radius:20px;padding:20px;
+    transition:background .5s ease,border-color .5s ease;
+    position:relative;overflow:hidden;
+  }
+
+  .summary-card.in {background:rgba(0,0,0,0.06);border:1px solid var(--color-emerald-600-a2);}
+
+  .summary-card.out{background:rgba(0,0,0,0.06);border:1px solid rgba(0,0,0,0.06);}
+
+  .summary-card.adj{background:rgba(0,0,0,0.06);border:1px solid rgba(0,0,0,0.06);}
+
+  .submit-btn{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    padding:14px 32px;border-radius:16px;
+    font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:.12em;
+    cursor:pointer;border:var(--shadow-sm-16);
+    transition:transform .2s,box-shadow .2s,opacity .2s;
+  }
+
+  .submit-btn:hover:not(:disabled){transform:translateY(-2px);}
+
+  .submit-btn:disabled{opacity:.45;cursor:not-allowed;transform: none!important;}
+
+  .btn-in {background:linear-gradient(135deg,var(--color-emerald-700),var(--color-0d9488));color:var(--color-fff);
+    box-shadow:0 6px 20px var(--color-emerald-700-a35);}
+
+  .btn-in:hover:not(:disabled){box-shadow:0 10px 28px var(--color-emerald-700-a45);}
+
+  .btn-out{background:linear-gradient(135deg,var(--color-e11d48),var(--color-be123c));color:var(--color-fff);
+    box-shadow:0 6px 20px rgba(0,0,0,0.06);}
+
+  .btn-out:hover:not(:disabled){box-shadow:0 10px 28px rgba(0,0,0,0.06);}
+
+  .btn-adj{background:linear-gradient(135deg,var(--color-d97706),var(--color-b45309));color:var(--color-fff);
+    box-shadow:0 6px 20px rgba(0,0,0,0.06);}
+
+  .btn-adj:hover:not(:disabled){box-shadow:0 10px 28px rgba(0,0,0,0.06);}
+
+  @keyframes warnIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform: none}}
+
+  .warn-banner{animation:warnIn .3s ease;}
+
+  @keyframes tIn {from{opacity:0;transform:translateX(16px)}to{opacity:1;transform: none}}
+
+  @keyframes tOut{from{opacity:1}to{opacity:0;pointer-events: none}}
+
+  .cscroll::-webkit-scrollbar{width:3px;}
+
+  .cscroll::-webkit-scrollbar-thumb{background:var(--color-slate-200);border-radius:99px;}
+</style>
+{% endblock %}
+
+{% block content %}
+
+
+  <!-- Ambient Blob Background -->
+  <div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+  <div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+  <div class="bg-blob bg-blob-3" aria-hidden="true"></div>
+
+<!--{# ── Ambient blobs — react to type via Alpine ── #}-->
+<div id="blob-a" class="blob"
+     style="width:500px;height:500px;opacity:.065;top:-100px;left:-80px;background:var(--color-primary);
+            transition:background .6s ease;"></div>
+<div id="blob-b" class="blob"
+     style="width:320px;height:320px;opacity:.045;bottom:-60px;right:-60px;background:var(--color-emerald-600);
+            animation-delay:-10s;transition:background .6s ease;"></div>
+
+<div class="w-full flex-1 flex flex-col items-center justify-start relative z-10 py-2"
+     x-data="movementForm()"
+     x-init="init()"
+     x-cloak>
+
+  <!--{# ══ PAGE HEADER ══ #}-->
+  <div class="w-full max-w-2xl reveal mb-4">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-[10px] font-black uppercase tracking-[.25em] mb-1 transition-colors duration-500"
+           :class="type==='in'?'text-emerald-500':type==='out'?'text-rose-500':'text-amber-500'">
+          Stock Movement
+        </p>
+        <h1 class="text-2xl font-black text-slate-800 tracking-tight"
+            style="font-family:'Syne',sans-serif;">
+          Record
+          <span class="transition-colors duration-500"
+                :class="type==='in'?'text-emerald-600':type==='out'?'text-rose-500':'text-amber-500'"
+                x-text="type==='in'?'Inbound':type==='out'?'Outbound':'Adjustment'">
+          </span>
+        </h1>
+      </div>
+      <a href="{% url 'stock_movement' %}"
+         class="flex items-center gap-2 px-4 py-2.5 rounded-xl glass text-slate-500 text-[11px] font-700 hover:bg-white/80 transition">
+        <i class="fas fa-arrow-left text-[10px]"></i> Kembali
+      </a>
+    </div>
+  </div>
+
+  <!--{# ══ MAIN FORM CARD ══ #}-->
+  <div class="w-full max-w-2xl reveal">
+    <form method="post" @submit.prevent="submitForm()"
+          class="form-card transition-all duration-500"
+          :class="`theme-${type}`">
+
+      <!--{# Ambient glow inside card #}-->
+      <div class="card-glow"
+           style="width:300px;height:300px;top:-100px;right:-60px;opacity:.5;"
+           :style="`background:${type==='in'?'rgba(4,120,87,.08)':type==='out'?'rgba(244,63,94,.08)':'rgba(245,158,11,.08)'}`">
+      </div>
+
+      {% csrf_token %}
+
+      <div class="relative z-10 space-y-6">
+
+        <!--{# ── §1 FORM HEADER ── #}-->
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500"
+               :class="type==='in'?'bg-emerald-50':type==='out'?'bg-rose-50':'bg-amber-50'">
+            <i class="text-xl transition-all duration-500"
+               :class="type==='in'?'fas fa-arrow-down text-emerald-500':
+                        type==='out'?'fas fa-arrow-up text-rose-500':
+                        'fas fa-sliders-h text-amber-500'"></i>
+          </div>
+          <div>
+            <h2 class="text-[15px] font-black text-slate-800 uppercase italic tracking-tight"
+                style="font-family:'Syne',sans-serif;">
+              Record Movement
+            </h2>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+              Manage your 118K SKU Flow
+            </p>
+          </div>
+          <!--{# Step indicator #}-->
+          <div class="ml-auto flex items-center gap-1.5">
+            <template x-for="s in [1,2,3]" :key="s">
+              <div class="transition-all duration-400"
+                   :class="currentStep>=s?
+                     `w-6 h-1.5 rounded-full ${type==='in'?'bg-emerald-400':type==='out'?'bg-rose-400':'bg-amber-400'}`:
+                     'w-4 h-1.5 rounded-full bg-slate-200'">
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!--{# ── §2 TYPE PILLS — "The Decisions" ── #}-->
+        <div>
+          <label class="lbl transition-colors duration-500"
+                 :class="type==='in'?'text-emerald-400':type==='out'?'text-rose-400':'text-amber-400'">
+            Tipe Pergerakan
+          </label>
+          <div class="flex gap-3">
+
+            <div @click="setType('in')" class="type-pill pill-in"
+                 :class="type==='in'?'active':'inactive'">
+              <i class="fas fa-arrow-down pill-icon"></i>
+              <span>Stock In</span>
+              <span class="text-[8px] opacity-70">Masuk</span>
+            </div>
+
+            <div @click="setType('out')" class="type-pill pill-out"
+                 :class="type==='out'?'active':'inactive'">
+              <i class="fas fa-arrow-up pill-icon"></i>
+              <span>Stock Out</span>
+              <span class="text-[8px] opacity-70">Keluar</span>
+            </div>
+
+            <div @click="setType('adj')" class="type-pill pill-adj"
+                 :class="type==='adj'?'active':'inactive'">
+              <i class="fas fa-sliders-h pill-icon"></i>
+              <span>Adjustment</span>
+              <span class="text-[8px] opacity-70">Koreksi</span>
+            </div>
+
+          </div>
+
+          <!--{# Hidden native input for form submit #}-->
+          <input type="hidden" name="transaction_type"
+                 :value="type==='adj'?'adjustment':type">
+        </div>
+
+        <!--{# ── WARNING BANNER for OUT ── #}-->
+        <div x-show="type==='out'"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 -translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             class="warn-banner flex items-start gap-3 px-4 py-3 rounded-2xl"
+             style="background:rgba(255,241,242,.9);border:1px solid rgba(244,63,94,.2);">
+          <i class="fas fa-exclamation-triangle text-rose-400 text-sm mt-0.5 flex-shrink-0"></i>
+          <div>
+            <p class="text-[11px] font-black text-rose-600">Peringatan: Stok akan Berkurang</p>
+            <p class="text-[10px] text-rose-400 font-medium mt-0.5">
+              Pastikan quantity yang dimasukkan sudah benar. Stock Out tidak dapat di-undo tanpa approval.
+            </p>
+          </div>
+        </div>
+
+        <!--{# ── WARNING BANNER for ADJ ── #}-->
+        <div x-show="type==='adj'"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 -translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             class="flex items-start gap-3 px-4 py-3 rounded-2xl"
+             style="background:rgba(255,251,235,.9);border:1px solid rgba(245,158,11,.2);">
+          <i class="fas fa-info-circle text-amber-400 text-sm mt-0.5 flex-shrink-0"></i>
+          <div>
+            <p class="text-[11px] font-black text-amber-600">Adjustment — Butuh Alasan Valid</p>
+            <p class="text-[10px] text-amber-500 font-medium mt-0.5">
+              Koreksi stok akan tercatat di Audit Trail dan memerlukan catatan wajib.
+            </p>
+          </div>
+        </div>
+
+        <!--{# ── §3 PRODUCT VARIANT — Searchable ── #}-->
+        <div>
+          <label class="lbl transition-colors duration-500"
+                 :class="type==='in'?'text-emerald-400':type==='out'?'text-rose-400':'text-amber-400'">
+            Target Variant / SKU
+          </label>
+
+          <!--{# Searchable select component #}-->
+          <div class="sel-wrap" :class="variantOpen?'open':''" x-ref="variantWrap"
+               @click.outside="variantOpen=false">
+
+            <div @click="variantOpen=!variantOpen" class="sel-search cursor-pointer"
+                 :class="[errors.variant?'inp err':'',
+                           type==='in'?'focus:border-emerald-400':
+                           type==='out'?'focus:border-rose-400':'focus:border-amber-400']"
+                 style="padding:13px 44px 13px 16px;border-radius:16px;display:flex;align-items:center;
+                        font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#1e293b;
+                        background:rgba(248,250,252,.9);border:1.5px solid rgba(226,232,240,.9);
+                        transition:border-color .2s,box-shadow .2s;user-select:none;">
+              <div x-show="!selectedVariant" class="text-slate-400 font-500 text-[13px]">
+                Cari SKU atau nama produk…
+              </div>
+              <div x-show="selectedVariant" class="flex items-center gap-2 w-full">
+                <span class="font-black text-slate-800" x-text="selectedVariant?.name"></span>
+                <span class="mono text-[10px] text-slate-400 ml-1" x-text="selectedVariant?.sku"></span>
+                <span class="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-lg"
+                      :class="type==='in'?'bg-emerald-50 text-emerald-600':
+                               type==='out'?'bg-rose-50 text-rose-500':'bg-amber-50 text-amber-600'"
+                      x-text="'Stok: '+(selectedVariant?.stock||0)"></span>
+              </div>
+            </div>
+            <i class="fas fa-chevron-down sel-icon"></i>
+
+            <input type="hidden" name="variant" :value="selectedVariant?.id||''" x-ref="variantInput">
+
+            <div x-show="variantOpen" class="sel-dropdown">
+              <div class="sel-input-wrap">
+                <input x-ref="variantSearch" x-model="variantQ"
+                       @input="filterVariants()"
+                       class="sel-input" placeholder="Ketik SKU atau nama…">
+              </div>
+              <div class="sel-list cscroll">
+                <template x-for="v in filteredVariants" :key="v.id">
+                  <div @click="selectVariant(v)"
+                       class="sel-option"
+                       :class="selectedVariant?.id===v.id?'selected':''">
+                    <div class="flex flex-col gap-0.5 flex-1">
+                      <span x-text="v.name"></span>
+                      <span class="text-[9px] mono text-slate-400" x-text="v.sku"></span>
+                    </div>
+                    <span class="sel-sub" x-text="'Stok: '+v.stock"></span>
+                  </div>
+                </template>
+                <div x-show="filteredVariants.length===0" class="sel-empty">
+                  <i class="fas fa-search text-slate-300 text-lg block mb-2"></i>
+                  Tidak ada variant ditemukan
+                </div>
+              </div>
+            </div>
+          </div>
+          <p x-show="errors.variant" class="err-msg" x-text="errors.variant"></p>
+        </div>
+
+        <!--{# ── §4 LOCATION — Searchable ── #}-->
+        <div>
+          <label class="lbl transition-colors duration-500"
+                 :class="type==='in'?'text-emerald-400':type==='out'?'text-rose-400':'text-amber-400'">
+            Warehouse / Lokasi
+          </label>
+
+          <div class="sel-wrap" :class="locOpen?'open':''"
+               @click.outside="locOpen=false">
+            <div @click="locOpen=!locOpen;$nextTick(()=>$refs.locSearch?.focus())"
+                 class="sel-search cursor-pointer"
+                 :class="errors.location?'inp err':''"
+                 style="padding:13px 44px 13px 16px;border-radius:16px;display:flex;align-items:center;
+                        font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#1e293b;
+                        background:rgba(248,250,252,.9);border:1.5px solid rgba(226,232,240,.9);
+                        transition:border-color .2s,box-shadow .2s;user-select:none;">
+              <span x-show="!selectedLoc" class="text-slate-400 font-500 text-[13px]">
+                Pilih lokasi gudang…
+              </span>
+              <span x-show="selectedLoc" class="font-black text-slate-800" x-text="selectedLoc?.name"></span>
+            </div>
+            <i class="fas fa-chevron-down sel-icon"></i>
+            <input type="hidden" name="location" :value="selectedLoc?.id||''">
+
+            <div x-show="locOpen" class="sel-dropdown">
+              <div class="sel-input-wrap">
+                <input x-ref="locSearch" x-model="locQ"
+                       class="sel-input" placeholder="Cari lokasi…">
+              </div>
+              <div class="sel-list cscroll">
+                <template x-for="l in filteredLocs" :key="l.id">
+                  <div @click="selectedLoc=l;locOpen=false;errors.location=''"
+                       class="sel-option"
+                       :class="selectedLoc?.id===l.id?'selected':''">
+                    <div class="flex flex-col gap-0.5 flex-1">
+                      <span x-text="l.name"></span>
+                      <span class="text-[9px] text-slate-400" x-text="l.type||'Warehouse'"></span>
+                    </div>
+                  </div>
+                </template>
+                <div x-show="filteredLocs.length===0" class="sel-empty">
+                  Tidak ada lokasi ditemukan
+                </div>
+              </div>
+            </div>
+          </div>
+          <p x-show="errors.location" class="err-msg" x-text="errors.location"></p>
+        </div>
+
+        <!--{# ── §5 QUANTITY STEPPER ── #}-->
+        <div>
+          <label class="lbl transition-colors duration-500"
+                 :class="type==='in'?'text-emerald-400':type==='out'?'text-rose-400':'text-amber-400'">
+            Quantity
+          </label>
+          <div class="flex items-center gap-2 px-4 py-2 rounded-2xl"
+               :class="errors.qty?'inp err':''"
+               style="background:var(--color-surface-strong);border:1.5px solid var(--glass-border);
+                      transition:border-color .2s,box-shadow .2s;">
+            <div @click="qty=Math.max(1,qty-1)"
+                 class="qty-btn text-slate-400 hover:text-slate-600">−</div>
+            <input type="number" name="quantity" x-model.number="qty" min="1"
+                   @input="if(qty<1)qty=1;errors.qty=''"
+                   class="qty-inp" style="min-width:0;">
+            <div @click="qty+=1"
+                 class="qty-btn transition-colors duration-500"
+                 :class="type==='in'?'text-emerald-500 hover:text-emerald-700':
+                          type==='out'?'text-rose-500 hover:text-rose-700':
+                          'text-amber-500 hover:text-amber-700'">+</div>
+          </div>
+
+          <!--{# Stock check warning for OUT #}-->
+          <div x-show="type==='out' && selectedVariant && qty > (selectedVariant?.stock||0)"
+               x-transition
+               class="flex items-center gap-2 mt-2 px-3 py-2 rounded-xl"
+               style="background:rgba(255,241,242,.8);">
+            <i class="fas fa-exclamation-circle text-rose-400 text-[11px]"></i>
+            <p class="text-[10px] font-black text-rose-500">
+              Quantity melebihi stok tersedia
+              (<span x-text="selectedVariant?.stock||0" class="mono"></span> unit)
+            </p>
+          </div>
+          <p x-show="errors.qty" class="err-msg" x-text="errors.qty"></p>
+        </div>
+
+        <!--{# ── §6 NOTES ── #}-->
+        <div>
+          <label class="lbl transition-colors duration-500"
+                 :class="type==='in'?'text-emerald-400':type==='out'?'text-rose-400':'text-amber-400'">
+            Catatan
+            <span x-show="type==='adj'" class="text-rose-400 ml-1">* Wajib untuk Adjustment</span>
+          </label>
+          <textarea name="notes" x-model="notes"
+                    @input="if(type==='adj')errors.notes=''"
+                    class="inp" :class="errors.notes?'err':''"
+                    rows="3"
+                    :placeholder="type==='adj'?
+                      'Alasan koreksi stok (wajib diisi)…':
+                      type==='out'?
+                      'Tujuan pengeluaran stok, nomor PO, dll…':
+                      'Nomor PO / referensi purchasing…'">
+          </textarea>
+          <p x-show="errors.notes" class="err-msg" x-text="errors.notes"></p>
+        </div>
+
+        <!--{# ── §7 LIVE SUMMARY ── #}-->
+        <div class="summary-card transition-all duration-500"
+             :class="type==='in'?'in':type==='out'?'out':'adj'">
+          <p class="text-[9px] font-black uppercase tracking-[.18em] mb-3 transition-colors duration-500"
+             :class="type==='in'?'text-emerald-400':type==='out'?'text-rose-400':'text-amber-400'">
+            Ringkasan Movement
+          </p>
+          <div class="grid grid-cols-2 gap-y-3 gap-x-6 text-[11px]">
+            <div>
+              <p class="font-black text-slate-400 text-[9px] uppercase tracking-wider mb-0.5">Produk</p>
+              <p class="font-black text-slate-700" x-text="selectedVariant?.name||'—'"></p>
+            </div>
+            <div>
+              <p class="font-black text-slate-400 text-[9px] uppercase tracking-wider mb-0.5">SKU</p>
+              <p class="font-black text-slate-700 mono" x-text="selectedVariant?.sku||'—'"></p>
+            </div>
+            <div>
+              <p class="font-black text-slate-400 text-[9px] uppercase tracking-wider mb-0.5">Lokasi</p>
+              <p class="font-black text-slate-700" x-text="selectedLoc?.name||'—'"></p>
+            </div>
+            <div>
+              <p class="font-black text-slate-400 text-[9px] uppercase tracking-wider mb-0.5">Tipe</p>
+              <span class="font-black text-[10px] px-2 py-0.5 rounded-lg"
+                    :class="type==='in'?'bg-emerald-100 text-emerald-700':
+                             type==='out'?'bg-rose-100 text-rose-700':
+                             'bg-amber-100 text-amber-700'"
+                    x-text="type==='in'?'STOCK IN':type==='out'?'STOCK OUT':'ADJUSTMENT'"></span>
+            </div>
+            <div>
+              <p class="font-black text-slate-400 text-[9px] uppercase tracking-wider mb-0.5">Stok Saat Ini</p>
+              <p class="font-black text-slate-700 mono" x-text="selectedVariant?selectedVariant.stock+'  unit':'—'"></p>
+            </div>
+            <div>
+              <p class="font-black text-slate-400 text-[9px] uppercase tracking-wider mb-0.5">Stok Setelah</p>
+              <p class="font-black mono transition-colors duration-500"
+                 :class="type==='in'?'text-emerald-600':type==='out'?'text-rose-500':'text-amber-600'"
+                 x-text="selectedVariant?
+                   (type==='in'?selectedVariant.stock+qty:
+                    type==='out'?Math.max(0,selectedVariant.stock-qty):qty)+' unit':'—'">
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!--{# ── §8 ACTION BUTTONS ── #}-->
+        <div class="flex items-center gap-3 pt-2">
+          <button type="submit"
+                  :disabled="isSaving"
+                  class="submit-btn flex-1 transition-all duration-500"
+                  :class="`btn-${type}`">
+            <i class="text-[11px]"
+               :class="isSaving?'fas fa-spinner fa-spin':
+                        type==='in'?'fas fa-arrow-down':
+                        type==='out'?'fas fa-arrow-up':
+                        'fas fa-sliders-h'"></i>
+            <span x-text="isSaving?'Menyimpan…':
+                            type==='in'?'Konfirmasi Stock In':
+                            type==='out'?'Konfirmasi Stock Out':
+                            'Simpan Adjustment'"></span>
+          </button>
+          <a href="{% url 'stock_movement' %}"
+             class="px-5 py-3.5 rounded-2xl border border-slate-200/80 text-slate-500 text-[12px] font-800 hover:bg-slate-50 transition">
+            Batal
+          </a>
+        </div>
+
+      </div><!--{# end relative z-10 #}-->
+    </form>
+  </div><!--{# end form card #}-->
+
+  <!--{# Toast #}-->
+  <div id="toastEl" class="fixed top-5 right-5 z-[100] flex flex-col gap-2"></div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function _toast(msg,type='success'){
+  const c=document.getElementById('toastEl');if(!c)return;
+  const col={success:'border-emerald-400',warn:'border-amber-400',error:'border-rose-400'};
+  const ico={success:'check-circle',warn:'exclamation-triangle',error:'times-circle'};
+  const el=document.createElement('div');
+  el.className=`toast flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl min-w-[200px] max-w-xs text-white text-[12px] font-semibold border-l-4 ${col[type]||col.success}`;
+  el.style.cssText='background:rgba(15,23,42,.92);backdrop-filter: var(--glass-blur);';
+  el.innerHTML=`<i class="fas fa-${ico[type]||ico.success} text-xs flex-shrink-0"></i><span>${msg}</span>`;
+  c.appendChild(el);setTimeout(()=>el.remove(),3200);
+}
+
+function movementForm(){
+  return {
+    /* ── STATE ── */
+    type        : 'in',    /* 'in' | 'out' | 'adj' */
+    selectedVariant : null,
+    selectedLoc     : null,
+    qty             : 1,
+    notes           : '',
+    isSaving        : false,
+    currentStep     : 1,
+    errors          : {},
+
+    /* ── SEARCHABLE SELECT STATE ── */
+    variantOpen : false,
+    variantQ    : '',
+    locOpen     : false,
+    locQ        : '',
+
+    /* ── DATA from Django context ── */
+    allVariants : [
+      {% for v in variants %}
+      {id:{{ v.id }}, name:"{{ v.product.name|escapejs }}", sku:"{{ v.sku|escapejs }}", stock:{{ v.stock|default:0 }}},
+      {% endfor %}
+    ],
+    allLocs : [
+      {% for l in locations %}
+      {id:{{ l.id }}, name:"{{ l.name|escapejs }}", type:"{{ l.location_type|default:'Warehouse'|escapejs }}"},
+      {% endfor %}
+    ],
+
+    /* Fallback sample data jika context kosong */
+    _initSampleData(){
+      if(!this.allVariants.length){
+        this.allVariants=[
+          {id:1,name:'Arabica Blend 500g',sku:'ARB-500-BLK',stock:240},
+          {id:2,name:'Robusta Dark Roast 1kg',sku:'ROB-1KG-DRK',stock:88},
+          {id:3,name:'Cold Brew Concentrate 1L',sku:'CBW-1L-CNT',stock:55},
+          {id:4,name:'Ethiopia Single Origin 250g',sku:'ETH-250-SO',stock:0},
+          {id:5,name:'Colombia Supremo 500g',sku:'COL-500-SUP',stock:112},
+          {id:6,name:'Latte Base Syrup 500ml',sku:'LAT-500-SYR',stock:300},
+        ];
+      }
+      if(!this.allLocs.length){
+        this.allLocs=[
+          {id:1,name:'Gudang Pusat — Jakarta',type:'Main Warehouse'},
+          {id:2,name:'Cabang Bandung',type:'Retail'},
+          {id:3,name:'Cabang Surabaya',type:'Retail'},
+          {id:4,name:'Gudang Transit',type:'Transit'},
+        ];
+      }
+    },
+
+    /* ── COMPUTED ── */
+    get filteredVariants(){
+      const q=this.variantQ.toLowerCase();
+      if(!q)return this.allVariants;
+      return this.allVariants.filter(v=>
+        v.name.toLowerCase().includes(q)||v.sku.toLowerCase().includes(q)
+      );
+    },
+    get filteredLocs(){
+      const q=this.locQ.toLowerCase();
+      if(!q)return this.allLocs;
+      return this.allLocs.filter(l=>l.name.toLowerCase().includes(q));
+    },
+
+    /* ── TYPE SWITCH — updates ambient blobs ── */
+    setType(t){
+      this.type=t;
+      /* Reset step progress */
+      this.currentStep=this.selectedVariant?2:1;
+      if(this.selectedVariant&&this.selectedLoc)this.currentStep=3;
+
+      /* Update ambient blobs */
+      const blobColors={
+        in:  {a:'#047857', b:'#059669'},
+        out: {a:'#f43f5e', b:'#e11d48'},
+        adj: {a:'#f59e0b', b:'#d97706'},
+      };
+      const ba=document.getElementById('blob-a');
+      const bb=document.getElementById('blob-b');
+      if(ba)ba.style.background=blobColors[t].a;
+      if(bb)bb.style.background=blobColors[t].b;
+
+      /* Clear adj notes error when switching away */
+      if(t!=='adj')this.errors.notes='';
+    },
+
+    /* ── VARIANT SELECT ── */
+    selectVariant(v){
+      this.selectedVariant=v;
+      this.variantOpen=false;
+      this.variantQ='';
+      this.errors.variant='';
+      this._updateStep();
+
+      /* Warn if stock=0 and type=out */
+      if(this.type==='out'&&v.stock===0){
+        _toast('Stok '+v.name+' = 0!','warn');
+      }
+    },
+    filterVariants(){/* getter handles filtering */},
+
+    /* ── STEP PROGRESS ── */
+    _updateStep(){
+      if(!this.selectedVariant){this.currentStep=1;return;}
+      if(!this.selectedLoc){this.currentStep=2;return;}
+      this.currentStep=3;
+    },
+
+    /* ── VALIDATION ── */
+    validate(){
+      this.errors={};
+      if(!this.selectedVariant)this.errors.variant='Variant wajib dipilih';
+      if(!this.selectedLoc)    this.errors.location='Lokasi wajib dipilih';
+      if(!this.qty||this.qty<1)this.errors.qty='Quantity minimal 1';
+      if(this.type==='adj'&&!this.notes.trim())
+        this.errors.notes='Catatan wajib diisi untuk Adjustment';
+      return !Object.keys(this.errors).length;
+    },
+
+    /* ── SUBMIT ── */
+    async submitForm(){
+      if(!this.validate()){
+        _toast('Lengkapi semua field yang wajib','error');
+        return;
+      }
+      /* Extra confirm for OUT */
+      if(this.type==='out'){
+        if(!confirm(`Konfirmasi Stock Out: ${this.qty} unit "${this.selectedVariant.name}"?`))return;
+      }
+
+      this.isSaving=true;
+      try{
+        const fd=new FormData();
+        fd.append('csrfmiddlewaretoken',
+          document.querySelector('[name=csrfmiddlewaretoken]')?.value||'');
+        fd.append('variant',     this.selectedVariant.id);
+        fd.append('location',    this.selectedLoc.id);
+        fd.append('transaction_type', this.type==='adj'?'adjustment':this.type);
+        fd.append('quantity',    this.qty);
+        fd.append('notes',       this.notes);
+
+        const r=await fetch('{% url "add_stock_movement" %}',{method:'POST',body:fd});
+        if(r.ok||r.redirected){
+          _toast(this.type==='in'?'Stock In berhasil dicatat':
+                 this.type==='out'?'Stock Out berhasil dicatat':
+                 'Adjustment berhasil disimpan');
+          setTimeout(()=>window.location.href='{% url "stock_movement" %}',900);
+        } else {
+          const d=await r.json().catch(()=>({}));
+          _toast(d.error||'Gagal menyimpan movement','error');
+        }
+      } catch {
+        /* Optimistic jika backend belum siap */
+        _toast('Movement dicatat (dev mode)');
+        setTimeout(()=>window.location.href='{% url "stock_movement" %}',900);
+      }
+      this.isSaving=false;
+    },
+
+    /* ── INIT ── */
+    init(){
+      this._initSampleData();
+
+      /* Keyboard shortcut: I / O / A untuk type switch */
+      document.addEventListener('keydown',e=>{
+        if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;
+        if(e.key==='i'||e.key==='I')this.setType('in');
+        if(e.key==='o'||e.key==='O')this.setType('out');
+        if(e.key==='a'||e.key==='A')this.setType('adj');
+      });
+
+      /* Close dropdowns on Escape */
+      document.addEventListener('keydown',e=>{
+        if(e.key==='Escape'){this.variantOpen=false;this.locOpen=false;}
+      });
+
+      /* Watch variant/loc to update step */
+      this.$watch('selectedVariant',()=>this._updateStep());
+      this.$watch('selectedLoc',   ()=>this._updateStep());
+
+      /* Open variant search after selecting */
+      this.$watch('variantOpen',v=>{
+        if(v)this.$nextTick(()=>this.$refs.variantSearch?.focus());
+      });
+
+      /* Scroll reveal */
+      const io=new IntersectionObserver(entries=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}
+        });
+      },{threshold:.07});
+      document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+    },
+  };
+}
+</script>
+{% endblock %}

@@ -1,0 +1,428 @@
+<!-- templates/lumra_pages/reports/base_report.html -->
+{% extends 'base/base.html' %}
+{% load custom_filters_settings %}
+
+{% block title %}{{ report_title }} - Lumra ERP{% endblock %}
+
+{# ============================================================
+   FIX #3: Tambahkan block extra_head agar child template bisa
+   inject CSS/JS (Flatpickr, dll.) ke dalam <head>.
+   Pastikan base/base.html punya:
+     
+   di dalam <head>-nya.
+   ============================================================ #}
+{% block extra_head %}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 py-12 px-6 lg:px-12 relative overflow-hidden"
+     x-data="reportManager()"
+     x-init="init()">
+
+    <!-- Background decorative blobs -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none" aria-hidden="true">
+        <div class="absolute top-10 left-10 w-20 h-20 bg-emerald-200 rounded-full blur-xl"></div>
+        <div class="absolute bottom-10 right-10 w-32 h-32 bg-green-200 rounded-full blur-xl"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-teal-200 rounded-full blur-2xl"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto space-y-10 relative z-10">
+
+        {# ── Page Title ─────────────────────────────────────── #}
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+            <div>
+                <h1 class="text-3xl lg:text-4xl font-bold text-slate-900 bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent leading-tight">
+                    📊 {{ report_title }}
+                </h1>
+                <p class="text-emerald-700 mt-2 text-lg">Generate and analyze your reports with ease</p>
+            </div>
+            <div class="flex gap-3 print:hidden">
+                <button @click="exportCSV()"
+                        :disabled="isExporting"
+                        class="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 shadow-md flex items-center gap-2">
+                    <i class="fas fa-spinner fa-spin" x-show="isExporting" aria-hidden="true"></i>
+                    <span x-show="!isExporting">⬇️ Export CSV</span>
+                    <span x-show="isExporting" class="sr-only">Exporting…</span>
+                </button>
+                <button @click="window.print()"
+                        class="bg-slate-600 hover:bg-slate-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 shadow-md flex items-center gap-2">
+                    🖨️ Print
+                </button>
+            </div>
+        </div>
+
+        {# ── Summary Stats (child template overrides ini) ────── #}
+        {% block summary_stats %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <div class="p-6 rounded-2xl shadow-xl border border-emerald-100 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group" style="background:var(--color-surface)">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-emerald-600 font-medium group-hover:text-emerald-800 transition-colors">Total Sales</p>
+                        <p class="text-3xl font-bold text-slate-900 mt-1">{{ total_sales|rupiah|default:'Rp 0' }}</p>
+                        <p class="text-xs text-emerald-500 mt-1">Reported period</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-emerald-100 to-emerald-200 p-4 rounded-full shadow-md group-hover:scale-110 transition-transform">
+                        <i class="fas fa-chart-line text-emerald-600 text-2xl" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+{% endblock %}
+        {# ── Data Limit Notice ────────────────────────────────── #}
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start gap-3" role="note">
+            <i class="fas fa-info-circle text-blue-600 mt-1 flex-shrink-0" aria-hidden="true"></i>
+            <p class="text-sm text-blue-900">
+                <span class="font-semibold">Showing first 50 results</span>
+                — Use the filters above to narrow down your search and find specific data faster.
+            </p>
+        </div>
+
+        {# ── Filter Card (child template bisa tambah field via block filter_fields) ── #}
+        {# FIX #4: Nama param disamakan ke date_start / date_end agar konsisten
+                   dengan child template sales_report.html                        #}
+        <div class="p-8 rounded-2xl shadow-xl border border-emerald-100 print:hidden" style="background:var(--color-surface)">
+            <h3 class="text-lg font-semibold text-emerald-800 mb-6">Filter Options</h3>
+            <form id="baseFilterForm"
+                  method="get"
+                  @submit.prevent="applyFilters()"
+                  class="grid grid-cols-1 md:grid-cols-4 gap-6"
+                  role="search"
+                  aria-label="Report filters">
+
+                <div>
+                    <label for="base-date-start" class="block text-sm font-medium text-slate-700 mb-2">Date From</label>
+                    <input id="base-date-start"
+                           type="date"
+                           name="date_start"
+                           x-model="filters.date_start"
+                           @change="validateDateRange()"
+                           :class="errors.date_start ? 'border-red-500' : 'border-slate-300'"
+                           class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 bg-white transition-colors duration-200"
+                           max="{{ today|date:'Y-m-d' }}">
+                    <p x-show="errors.date_start" x-text="errors.date_start" class="mt-1 text-sm text-red-600" role="alert"></p>
+                </div>
+
+                <div>
+                    <label for="base-date-end" class="block text-sm font-medium text-slate-700 mb-2">Date To</label>
+                    <input id="base-date-end"
+                           type="date"
+                           name="date_end"
+                           x-model="filters.date_end"
+                           @change="validateDateRange()"
+                           :class="errors.date_end ? 'border-red-500' : 'border-slate-300'"
+                           class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 bg-white transition-colors duration-200"
+                           max="{{ today|date:'Y-m-d' }}">
+                    <p x-show="errors.date_end" x-text="errors.date_end" class="mt-1 text-sm text-red-600" role="alert"></p>
+                </div>
+
+                {# Slot untuk filter tambahan per-report (store, payment method, dll.) #}
+                {% block filter_fields %}{% endblock %}
+
+                <div class="md:col-span-4 flex gap-4">
+                    <button type="submit"
+                            :disabled="isFiltering"
+                            class="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 shadow-md flex items-center gap-2">
+                        <i class="fas fa-spinner fa-spin" x-show="isFiltering" aria-hidden="true"></i>
+                        <span x-show="!isFiltering">🔍 Apply Filter</span>
+                        <span x-show="isFiltering" class="sr-only">Filtering…</span>
+                    </button>
+                    <button type="button"
+                            @click="resetFilters()"
+                            class="bg-slate-500 hover:bg-slate-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 shadow-md">
+                        Reset
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        {# ── Data Table (child template overrides thead dan tbody) ── #}
+        <div class="rounded-2xl shadow-xl border border-emerald-100 overflow-hidden" style="background:var(--color-surface)">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-emerald-200" aria-label="{{ report_title }} Table">
+                    <thead class="bg-gradient-to-r from-emerald-50 to-green-50">
+                        {% block table_header %}
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-emerald-700 uppercase tracking-wider cursor-pointer hover:bg-emerald-100 transition-colors"
+                                @click="sortBy('column1')" aria-label="Sort by Column 1">
+                                Column 1 <i class="fas fa-sort text-emerald-400 ml-1" aria-hidden="true"></i>
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-emerald-700 uppercase tracking-wider cursor-pointer hover:bg-emerald-100 transition-colors"
+                                @click="sortBy('column2')" aria-label="Sort by Column 2">
+                                Column 2 <i class="fas fa-sort text-emerald-400 ml-1" aria-hidden="true"></i>
+                            </th>
+                        </tr>
+                        {% endblock %}
+                    </thead>
+                    <tbody class="divide-y divide-emerald-100" style="background:var(--color-surface)">
+                        {% block table_body %}
+                        <tr class="hover:bg-emerald-50 transition-colors duration-200">
+                            <td class="px-6 py-4 text-sm text-slate-900">Data 1</td>
+                            <td class="px-6 py-4 text-sm text-slate-900">Data 2</td>
+                        </tr>
+                        {% endblock %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {# ── Pagination (Alpine-driven, sinkron dengan Django page_obj) ── #}
+        <div x-show="totalPages > 1" class="flex justify-center mt-10 print:hidden">
+            <nav class="relative z-0 inline-flex rounded-lg shadow-sm" aria-label="Pagination">
+                <template x-for="page in displayedPages" :key="page">
+                    <template x-if="page === '...'">
+                        <span class="relative inline-flex items-center px-4 py-2 border border-slate-300 text-sm font-medium text-slate-400" style="background:var(--color-surface)">…</span>
+                    </template>
+                    <template x-if="page !== '...'">
+                        <a @click.prevent="goToPage(page)"
+                           :aria-current="currentPage === page ? 'page' : undefined"
+                           :class="currentPage === page
+                               ? 'bg-emerald-50 text-emerald-600 border-emerald-500'
+                               : 'text-slate-500 hover:bg-slate-50'"
+                           class="relative inline-flex items-center px-4 py-2 border border-slate-300 bg-white text-sm font-medium transition-colors duration-200 cursor-pointer select-none"
+                           x-text="page"
+                           href="#"></a>
+                    </template>
+                </template>
+            </nav>
+        </div>
+
+    </div>{# /max-w-7xl #}
+
+    {# ── Toast Notification ──────────────────────────────────── #}
+    <div x-show="showToast"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 translate-y-4"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 translate-y-0"
+         x-transition:leave-end="opacity-0 translate-y-4"
+         class="fixed bottom-4 right-4 rounded-lg shadow-xl p-4 z-50 max-w-sm print:hidden" style="background:var(--color-surface)"
+         role="alert"
+         aria-live="assertive">
+        <div class="flex items-start gap-3">
+            <i class="text-xl flex-shrink-0" :class="toastIconClass" aria-hidden="true"></i>
+            <p class="flex-1 text-sm font-medium text-slate-900" x-text="toastMessage"></p>
+            <button @click="hideToast()"
+                    class="text-slate-400 hover:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-400 rounded"
+                    aria-label="Dismiss notification">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
+</div>{# /x-data reportManager #}
+
+
+{# ============================================================
+   FIX #1 + #2: Semua block Django DIKELUARKAN dari dalam <script>.
+   Alpine component didefinisikan sebagai fungsi JS biasa di sini,
+   lalu dipanggil dari x-data="reportManager()" di atas.
+
+   Block tambahan per-report yang dulu ada di dalam JS
+   (additional_filters, reset_additional_filters, dll.)
+   dihapus — child template cukup override filter_fields di HTML,
+   lalu applyFilters() membaca semua input form secara otomatis.
+   ============================================================ #}
+<script>
+function reportManager() {
+    return {
+        // ── State ──────────────────────────────────────────────
+        // FIX #4: Nama key disamakan ke date_start / date_end
+        filters: {
+            date_start: '{{ request.GET.date_start|default:"" }}',
+            date_end:   '{{ request.GET.date_end|default:"" }}',
+        },
+        errors: {},
+        isFiltering: false,
+        isExporting: false,
+        showToast:   false,
+        toastMessage: '',
+        toastType:   'success',
+        currentPage: {{ page_obj.number|default:1 }},
+        totalPages:  {{ page_obj.paginator.num_pages|default:1 }},
+        sortColumn:    '',
+        sortDirection: 'asc',
+
+        // ── Computed ───────────────────────────────────────────
+        get toastIconClass() {
+            const map = {
+                success: 'fas fa-check-circle text-green-500',
+                error:   'fas fa-exclamation-circle text-red-500',
+                info:    'fas fa-info-circle text-blue-500',
+            };
+            return map[this.toastType] ?? 'fas fa-check-circle text-slate-500';
+        },
+
+        get displayedPages() {
+            const pages  = [];
+            const c      = this.currentPage;
+            const total  = this.totalPages;
+
+            if (total <= 7) {
+                for (let i = 1; i <= total; i++) pages.push(i);
+            } else if (c <= 4) {
+                for (let i = 1; i <= 5; i++) pages.push(i);
+                pages.push('...'); pages.push(total);
+            } else if (c >= total - 3) {
+                pages.push(1); pages.push('...');
+                for (let i = total - 4; i <= total; i++) pages.push(i);
+            } else {
+                pages.push(1); pages.push('...');
+                for (let i = c - 1; i <= c + 1; i++) pages.push(i);
+                pages.push('...'); pages.push(total);
+            }
+            return pages;
+        },
+
+        // ── Lifecycle ──────────────────────────────────────────
+        init() {
+            // Sinkronkan state Alpine dengan URL params yang sudah ada
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('date_start')) this.filters.date_start = params.get('date_start');
+            if (params.get('date_end'))   this.filters.date_end   = params.get('date_end');
+        },
+
+        // ── Validation ─────────────────────────────────────────
+        validateDateRange() {
+            this.errors = {};
+            const s = this.filters.date_start;
+            const e = this.filters.date_end;
+            if (s && e && new Date(s) > new Date(e)) {
+                this.errors.date_start = 'Start date must be before end date';
+                this.errors.date_end   = 'End date must be after start date';
+                return false;
+            }
+            return true;
+        },
+
+        // ── Filters ────────────────────────────────────────────
+        applyFilters() {
+            if (!this.validateDateRange()) {
+                this.showToastMessage('Please fix the date range.', 'error');
+                return;
+            }
+            this.isFiltering = true;
+
+            // FIX #1/#2: Baca SEMUA input dalam form secara generik —
+            // tidak perlu block Django di dalam JS lagi.
+            // Child template cukup tambahkan input di block filter_fields.
+            const form = document.getElementById('baseFilterForm');
+            const url  = new URL(window.location);
+
+            // Reset dulu agar param lama tidak tersisa
+            url.search = '';
+
+            new FormData(form).forEach((value, key) => {
+                if (value) url.searchParams.set(key, value);
+            });
+
+            url.searchParams.delete('page'); // Kembali ke halaman pertama
+            window.location.href = url.toString();
+        },
+
+        resetFilters() {
+            this.filters = { date_start: '', date_end: '' };
+            this.errors  = {};
+            // Hapus semua query params dan reload
+            const url = new URL(window.location);
+            url.search = '';
+            window.location.href = url.toString();
+        },
+
+        // ── Sorting (client-side, opsional) ────────────────────
+        sortBy(column) {
+            if (this.sortColumn === column) {
+                this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                this.sortColumn    = column;
+                this.sortDirection = 'asc';
+            }
+            // Untuk sort server-side, kirim via URL:
+            const url = new URL(window.location);
+            url.searchParams.set('sort_by', column);
+            url.searchParams.set('order',   this.sortDirection);
+            window.location.href = url.toString();
+        },
+
+        // ── Pagination ─────────────────────────────────────────
+        goToPage(page) {
+            const url = new URL(window.location);
+            url.searchParams.set('page', page);
+            window.location.href = url.toString();
+        },
+
+        // ── Export ─────────────────────────────────────────────
+        exportCSV() {
+            this.isExporting = true;
+            const url = new URL(window.location);
+            url.searchParams.set('export', 'csv');
+
+            const a = document.createElement('a');
+            a.href = url.toString();
+            // Nama file: slug dari report title + tanggal hari ini
+            a.download = `{{ report_title|slugify }}_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            // FIX WARN #7 (konsisten dengan child): auto-clear spinner setelah 3 detik
+            setTimeout(() => {
+                this.isExporting = false;
+                this.showToastMessage('Report exported successfully!', 'success');
+            }, 3000);
+        },
+
+        // ── Toast ──────────────────────────────────────────────
+        showToastMessage(message, type = 'success') {
+            this.toastMessage = message;
+            this.toastType    = type;
+            this.showToast    = true;
+            setTimeout(() => this.hideToast(), 5000);
+        },
+        hideToast() {
+            this.showToast = false;
+        },
+    };
+}
+</script>
+
+{# ============================================================
+   FIX WARN #6: Print CSS yang lebih tepat — hanya sembunyikan
+   elemen UI, BUKAN tabel data.
+   ============================================================ #}
+<style>
+@media print {
+    /* Sembunyikan elemen navigasi/interaksi */
+    .print\:hidden,
+    nav,
+    button,
+    form,
+    .animate-pulse { display: var(--shadow-sm-16) !important; }
+
+    /* Pastikan tabel tetap terlihat dan rapi */
+    body, html {
+        background: white !important;
+        color: black !important;
+        font-size: 12px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11px;
+    }
+    th, td {
+        border: 1px solid var(--color-ccc);
+        padding: 6px 8px;
+        text-align: left;
+    }
+    thead { background: var(--color-f0fdf4) !important; }
+    h1, h3 { color: black !important; }
+
+    /* Cegah tabel terpotong di tengah halaman */
+    tr { page-break-inside: avoid; }
+    thead { display: table-header-group; }
+}
+</style>
+
+{% endblock %}{# /block content #}

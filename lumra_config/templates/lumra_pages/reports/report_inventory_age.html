@@ -1,0 +1,145 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}Analisis Umur Stok — CoffeeShop{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+  .glass-card { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.95); border-radius: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+  
+  .age-bar { height: 8px; border-radius: 99px; overflow: hidden; background: #f1f5f9; width: 100px; }
+  .age-fill { height: 100%; border-radius: 99px; transition: width 0.5s ease; }
+  
+  .val-30 { background: #10b981; } /* Fast moving (Good) */
+  .val-60 { background: #3b82f6; } /* Medium */
+  .val-90 { background: #f59e0b; } /* Slow */
+  .val-120{ background: #ef4444; } /* Dead stock (Bad) */
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w-full flex-1 space-y-6 relative z-10" x-data="invAgeApp()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <div class="flex items-end justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">Inventory Aging Report</h1>
+      <p class="text-sm text-slate-400 mt-0.5">Analisis perputaran stok untuk identifikasi dead stock.</p>
+    </div>
+    <div class="flex gap-2">
+      <button class="bg-white text-slate-600 border border-slate-200 px-4 py-2 rounded-xl text-sm font-bold shadow hover:bg-slate-50">
+        <i class="fas fa-filter mr-2"></i> Filter Lokasi
+      </button>
+      <button class="bg-slate-800 text-white px-4 py-2 rounded-xl text-sm font-bold shadow hover:bg-slate-700">
+        <i class="fas fa-download mr-2"></i> Export Excel
+      </button>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="glass-card p-5 border-l-4 border-emerald-500">
+      <p class="text-xs font-bold text-slate-400 uppercase">Fast Moving</p>
+      <p class="text-2xl font-black mt-1" x-text="stats.fast"></p>
+      <div class="text-xs text-slate-500 mt-1">0 - 30 Hari</div>
+    </div>
+    <div class="glass-card p-5 border-l-4 border-blue-500">
+      <p class="text-xs font-bold text-slate-400 uppercase">Slow Moving</p>
+      <p class="text-2xl font-black mt-1" x-text="stats.slow"></p>
+      <div class="text-xs text-slate-500 mt-1">31 - 90 Hari</div>
+    </div>
+    <div class="glass-card p-5 border-l-4 border-amber-500">
+      <p class="text-xs font-bold text-slate-400 uppercase">Non-Moving</p>
+      <p class="text-2xl font-black mt-1" x-text="stats.dead"></p>
+      <div class="text-xs text-slate-500 mt-1">> 90 Hari</div>
+    </div>
+    <div class="glass-card p-5 border-l-4 border-slate-300">
+      <p class="text-xs font-bold text-slate-400 uppercase">Total Value at Risk</p>
+      <p class="text-xl font-black mt-1" x-text="formatCurrency(stats.valueAtRisk)"></p>
+      <div class="text-xs text-slate-500 mt-1">Nilai modal terikat</div>
+    </div>
+  </div>
+
+  <!-- List -->
+  <div class="glass-card overflow-hidden">
+    <table class="w-full text-sm text-left">
+      <thead class="bg-slate-50 text-slate-500 uppercase text-xs font-semibold border-b border-slate-200">
+        <tr>
+          <th class="p-4">Produk</th>
+          <th class="p-4 text-right">Total Stok</th>
+          <th class="p-4 text-center">Distribusi Umur (Hari)</th>
+          <th class="p-4 text-right">Nilai Aset</th>
+          <th class="p-4 text-center">Aksi</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        <template x-for="item in inventory" :key="item.id">
+          <tr class="hover:bg-slate-50 transition">
+            <td class="p-4">
+              <div class="font-bold text-slate-800" x-text="item.name"></div>
+              <div class="text-xs text-slate-500" x-text="item.sku"></div>
+            </td>
+            <td class="p-4 text-right font-mono" x-text="item.total_qty"></td>
+            <td class="p-4">
+              <div class="flex items-center gap-1">
+                <div class="text-right text-xs w-12" x-text="item.aged_30 + '%'"></div>
+                <div class="age-bar"><div class="age-fill val-30" :style="`width:${item.aged_30}%`"></div></div>
+                
+                <div class="text-right text-xs w-12" x-text="item.aged_60 + '%'"></div>
+                <div class="age-bar"><div class="age-fill val-60" :style="`width:${item.aged_60}%`"></div></div>
+                
+                <div class="text-right text-xs w-12" x-text="item.aged_90 + '%'"></div>
+                <div class="age-bar"><div class="age-fill val-90" :style="`width:${item.aged_90}%`"></div></div>
+
+                <div class="text-right text-xs w-12" x-text="item.aged_120 + '%'"></div>
+                <div class="age-bar"><div class="age-fill val-120" :style="`width:${item.aged_120}%`"></div></div>
+              </div>
+            </td>
+            <td class="p-4 text-right font-bold text-slate-700" x-text="formatCurrency(item.value)"></td>
+            <td class="p-4 text-center">
+              <button x-show="item.aged_120 > 20" @click="writeOff(item)" class="text-xs font-bold text-rose-600 hover:text-rose-800 bg-rose-50 px-3 py-1 rounded-lg">Write Off</button>
+              <button x-show="item.aged_120 <= 20 && item.aged_90 > 10" class="text-xs font-bold text-amber-600 hover:text-amber-800 bg-amber-50 px-3 py-1 rounded-lg">Promo Diskon</button>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function invAgeApp() {
+  return {
+    inventory: [
+      { id: 1, name: 'Kopi Arabika Premium (Sak 1kg)', sku: 'CF-001', total_qty: 50, aged_30: 80, aged_60: 100, aged_90: 100, aged_120: 100, value: 1500000 }, // All Dead Stock
+      { id: 2, name: 'Sirup Vanilla 1L', sku: 'SY-001', total_qty: 12, aged_30: 10, aged_60: 80, aged_90: 100, aged_120: 100, value: 600000 },
+      { id: 3, name: 'Gula Pasir 25kg', sku: 'SG-002', total_qty: 100, aged_30: 20, aged_60: 30, aged_90: 50, aged_120: 100, value: 750000 },
+    ],
+    
+    get stats() {
+      const deadVal = this.inventory.filter(i => i.aged_120 > 0).reduce((s, i) => s + i.value, 0);
+      return {
+        fast: this.inventory.filter(i => i.aged_30 > 0).length,
+        slow: this.inventory.filter(i => i.aged_30 === 0 && i.aged_60 > 0).length,
+        dead: this.inventory.filter(i => i.aged_120 > 0).length,
+        valueAtRisk: deadVal
+      };
+    },
+
+    formatCurrency(num) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+    },
+
+    writeOff(item) {
+      if(confirm(`Hapus stok ${item.name} dari pembukuan?`)) {
+        alert('Stok berhasil dihapus (Write-Off).');
+      }
+    },
+
+    init(){}
+  }
+}
+</script>
+{% endblock %}

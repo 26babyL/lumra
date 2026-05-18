@@ -1,0 +1,381 @@
+/* ============================================================
+   LUMRA DASHBOARD — lumra_dashboard.css
+   Emerald Odyssey Blueprint v1.2
+   ============================================================
+   Load order:
+     1. lumra_tokens.css
+     2. lumra_base.css
+     3. lumra_components.css
+     4. lumra_sidebar.css
+     5. lumra_navbar.css
+     6. lumra_bg_blob.css
+     7. lumra_dashboard.css    ← ini
+   ============================================================ */
+
+
+/* ══════════════════════════════════════════════════════════════
+   §1. SCROLL REVEAL
+   ══════════════════════════════════════════════════════════════ */
+.reveal {
+  opacity          : 0;
+  transform        : translateY(18px);
+  transition       : opacity 0.45s ease, transform 0.45s ease;
+  transition-delay : 0s;
+}
+
+.reveal.visible {
+  opacity  : 1;
+  transform: translateY(0);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §2. KPI CARDS
+   ══════════════════════════════════════════════════════════════ */
+.kpi-card {
+  position     : relative;
+  overflow     : hidden;
+  border-radius: var(--radius-xl, 16px);
+  padding      : 20px;
+  display      : flex;
+  flex-direction: column;
+  gap          : 12px;
+  transition   : transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kpi-card:hover {
+  transform : translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* Emerald — Today's Sales */
+.kpi-card.today-sales {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  box-shadow : 0 8px 24px rgba(5, 150, 105, 0.28);
+}
+
+/* Blue — Transactions */
+.kpi-card.transactions {
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+  box-shadow : 0 8px 24px rgba(37, 99, 235, 0.28);
+}
+
+/* Violet — Best Seller */
+.kpi-card.best-seller {
+  background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+  box-shadow : 0 8px 24px rgba(124, 58, 237, 0.28);
+}
+
+/* Rose/Amber — Low Stock */
+.kpi-card.low-stock {
+  background: linear-gradient(135deg, #E11D48 0%, #BE123C 100%);
+  box-shadow : 0 8px 24px rgba(225, 29, 72, 0.28);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §3. CHART CONTAINER
+   ══════════════════════════════════════════════════════════════ */
+.chart-container {
+  background             : var(--glass-bg, rgba(255, 255, 255, 0.80));
+  backdrop-filter        : var(--glass-blur, blur(16px)) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur, blur(16px)) saturate(180%);
+  border                 : 1px solid var(--glass-border, rgba(255, 255, 255, 0.25));
+  border-radius          : var(--radius-xl, 16px);
+  box-shadow             :
+    0 4px 20px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.60);
+}
+
+[data-theme="dark"] .chart-container {
+  background  : var(--glass-bg-dark, rgba(10, 18, 36, 0.80));
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow  :
+    0 4px 20px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §4. SIDE CONTAINER (activity panel kanan)
+   ══════════════════════════════════════════════════════════════ */
+.side-container {
+  background             : var(--glass-bg, rgba(255, 255, 255, 0.80));
+  backdrop-filter        : var(--glass-blur, blur(16px)) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur, blur(16px)) saturate(180%);
+  border                 : 1px solid var(--glass-border, rgba(255, 255, 255, 0.25));
+  border-radius          : var(--radius-xl, 16px);
+  box-shadow             :
+    0 4px 20px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.60);
+}
+
+[data-theme="dark"] .side-container {
+  background  : var(--glass-bg-dark, rgba(10, 18, 36, 0.80));
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow  :
+    0 4px 20px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §5. PERFORMANCE STRIP
+   ══════════════════════════════════════════════════════════════ */
+.perf-strip {
+  background   : linear-gradient(135deg, #0F172A 0%, #1E293B 60%, #0F172A 100%);
+  border-radius: var(--radius-xl, 16px);
+  border       : 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow   : 0 4px 20px rgba(0, 0, 0, 0.20);
+  position     : relative;
+  overflow     : hidden;
+}
+
+.perf-strip::before {
+  content   : '';
+  position  : absolute;
+  left      : 0;
+  right     : 0;
+  top       : 0;
+  height    : 1px;
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.40), transparent);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §6. METRIC STRIP — financial overview
+   ══════════════════════════════════════════════════════════════ */
+.metric-strip {
+  background             : var(--glass-bg, rgba(255, 255, 255, 0.70));
+  backdrop-filter        : var(--glass-blur, blur(16px)) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur, blur(16px)) saturate(180%);
+  border                 : 1px solid var(--glass-border, rgba(255, 255, 255, 0.25));
+  border-radius          : var(--radius-xl, 16px);
+  box-shadow             :
+    0 2px 12px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.60);
+}
+
+[data-theme="dark"] .metric-strip {
+  background  : var(--glass-bg-dark, rgba(10, 18, 36, 0.70));
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.metric-icon {
+  width          : 32px;
+  height         : 32px;
+  border-radius  : var(--radius-md, 8px);
+  background     : var(--color-primary-a10, rgba(16, 185, 129, 0.10));
+  border         : 1px solid var(--color-primary-a15, rgba(16, 185, 129, 0.15));
+  display        : flex;
+  align-items    : center;
+  justify-content: center;
+  font-size      : 12px;
+  color          : var(--color-primary, #10B981);
+  flex-shrink    : 0;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §7. QUICK STATS BAR — footer strip
+   ══════════════════════════════════════════════════════════════ */
+.quick-stats-bar {
+  background   : var(--glass-bg, rgba(248, 250, 252, 0.60));
+  border       : 1px solid var(--glass-border, rgba(255, 255, 255, 0.25));
+  border-radius: var(--radius-lg, 12px);
+}
+
+[data-theme="dark"] .quick-stats-bar {
+  background  : rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §8. HEADER CONTROLS — Store Switcher
+   ══════════════════════════════════════════════════════════════ */
+.store-switcher {
+  display      : inline-flex;
+  align-items  : center;
+  gap          : 8px;
+  padding      : 8px 14px;
+  background   : var(--glass-bg, rgba(255, 255, 255, 0.80));
+  border       : 1px solid var(--glass-border, rgba(255, 255, 255, 0.25));
+  border-radius: var(--radius-xl, 16px);
+  box-shadow   :
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.60);
+  cursor       : pointer;
+  transition   : background 0.15s, box-shadow 0.15s;
+  backdrop-filter        : var(--glass-blur, blur(16px));
+  -webkit-backdrop-filter: var(--glass-blur, blur(16px));
+}
+
+.store-switcher:hover {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.80);
+}
+
+[data-theme="dark"] .store-switcher {
+  background  : rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.10);
+  box-shadow  :
+    0 2px 8px rgba(0, 0, 0, 0.20),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.store-dropdown {
+  position               : absolute;
+  top                    : calc(100% + 8px);
+  left                   : 0;
+  width                  : 260px;
+  background             : var(--glass-bg, rgba(255, 255, 255, 0.95));
+  backdrop-filter        : var(--glass-blur, blur(16px)) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur, blur(16px)) saturate(180%);
+  border                 : 1px solid var(--glass-border, rgba(255, 255, 255, 0.25));
+  border-radius          : var(--radius-xl, 16px);
+  box-shadow             :
+    0 12px 40px rgba(0, 0, 0, 0.12),
+    0 2px 8px  rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.60);
+  padding                : 12px;
+  z-index                : 50;
+  overflow               : hidden;
+}
+
+[data-theme="dark"] .store-dropdown {
+  background  : rgba(10, 18, 36, 0.96);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow  :
+    0 12px 40px rgba(0, 0, 0, 0.40),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §9. HEADER CONTROLS — Date Period Selector
+   ══════════════════════════════════════════════════════════════ */
+.date-period-selector {
+  display      : inline-flex;
+  align-items  : center;
+  gap          : 7px;
+  padding      : 8px 14px;
+  background   : var(--glass-bg, rgba(255, 255, 255, 0.80));
+  border       : 1px solid var(--glass-border, rgba(255, 255, 255, 0.25));
+  border-radius: var(--radius-xl, 16px);
+  box-shadow   :
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.60);
+  cursor       : pointer;
+  transition   : background 0.15s, box-shadow 0.15s;
+  backdrop-filter        : var(--glass-blur, blur(16px));
+  -webkit-backdrop-filter: var(--glass-blur, blur(16px));
+}
+
+.date-period-selector:hover {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.80);
+}
+
+[data-theme="dark"] .date-period-selector {
+  background  : rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.10);
+}
+
+.date-dropdown {
+  position               : absolute;
+  top                    : calc(100% + 8px);
+  left                   : 0;
+  width                  : 220px;
+  background             : var(--glass-bg, rgba(255, 255, 255, 0.95));
+  backdrop-filter        : var(--glass-blur, blur(16px)) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur, blur(16px)) saturate(180%);
+  border                 : 1px solid var(--glass-border, rgba(255, 255, 255, 0.25));
+  border-radius          : var(--radius-xl, 16px);
+  box-shadow             :
+    0 12px 40px rgba(0, 0, 0, 0.12),
+    0 2px 8px  rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.60);
+  z-index                : 50;
+  overflow               : hidden;
+}
+
+[data-theme="dark"] .date-dropdown {
+  background  : rgba(10, 18, 36, 0.96);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow  :
+    0 12px 40px rgba(0, 0, 0, 0.40),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* Apply Range button di dalam date-dropdown */
+.date-dropdown .btn-apply {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.30);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §10. LIVE INDICATOR
+   ══════════════════════════════════════════════════════════════ */
+.live-indicator {
+  display      : inline-flex;
+  align-items  : center;
+  gap          : 6px;
+  padding      : 6px 12px;
+  background   : var(--glass-bg, rgba(255, 255, 255, 0.80));
+  border       : 1px solid rgba(16, 185, 129, 0.20);
+  border-radius: var(--radius-pill, 9999px);
+  font-size    : 10px;
+  font-weight  : 700;
+  color        : #059669;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  backdrop-filter        : var(--glass-blur, blur(16px));
+  -webkit-backdrop-filter: var(--glass-blur, blur(16px));
+  box-shadow   : 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] .live-indicator {
+  background  : rgba(16, 185, 129, 0.06);
+  border-color: rgba(16, 185, 129, 0.18);
+  color       : #34D399;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §11. TOAST NOTIFICATION
+   ══════════════════════════════════════════════════════════════ */
+.toast {
+  background             : var(--glass-bg-dark, rgba(15, 23, 42, 0.92));
+  backdrop-filter        : var(--glass-blur, blur(16px)) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur, blur(16px)) saturate(180%);
+  border                 : 1px solid rgba(255, 255, 255, 0.08);
+  border-radius          : var(--radius-lg, 12px);
+  box-shadow             : 0 8px 24px rgba(0, 0, 0, 0.25);
+  animation              : toastIn 0.25s ease;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(16px) scale(0.96); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   §12. CUSTOM SCROLLBAR
+   ══════════════════════════════════════════════════════════════ */
+.custom-scrollbar::-webkit-scrollbar       { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background   : rgba(203, 213, 225, 0.60);
+  border-radius: 9999px;
+}
+
+[data-theme="dark"] .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.10);
+}

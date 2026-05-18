@@ -1,0 +1,166 @@
+{% extends 'base/base_hybrid.html' %}
+{% block title %}System Status - Lumra ERP{% endblock %}
+
+{% block extra_css %}
+<style>
+  .status-panel {
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 20px;
+    box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+  }
+  .metric-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #0f172a;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+{{ metrics_json|default:'{}'|json_script:"metrics-init" }}
+{{ components_json|default:'[]'|json_script:"components-init" }}
+{{ logs_json|default:'[]'|json_script:"logs-init" }}
+{{ alerts_json|default:'[]'|json_script:"alerts-init" }}
+
+<div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+
+<div class="w-full flex-1 relative z-10 space-y-6" x-data="systemStatusLite()" x-init="init()">
+  <div class="flex items-end justify-between gap-4 flex-wrap">
+    <div>
+      <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-600">Infrastructure</p>
+      <h1 class="text-3xl font-bold text-slate-900 mt-1">System Status</h1>
+      <p class="text-sm text-slate-500 mt-2">Ringkasan kesehatan sistem yang aman ditampilkan walau data realtime belum aktif.</p>
+    </div>
+    <div class="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white">
+      Update terakhir: <span x-text="metrics.last_sync || '-'"></span>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <div class="status-panel p-5">
+      <p class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">CPU Usage</p>
+      <p class="metric-value mt-2"><span x-text="metrics.cpu_pct ?? 0"></span>%</p>
+    </div>
+    <div class="status-panel p-5">
+      <p class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">Memory Usage</p>
+      <p class="metric-value mt-2"><span x-text="metrics.mem_pct ?? 0"></span>%</p>
+    </div>
+    <div class="status-panel p-5">
+      <p class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">Disk Usage</p>
+      <p class="metric-value mt-2"><span x-text="metrics.disk_pct ?? 0"></span>%</p>
+    </div>
+    <div class="status-panel p-5">
+      <p class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">Database</p>
+      <p class="metric-value mt-2 text-emerald-600" x-text="metrics.db_status || 'ok'"></p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-5 xl:grid-cols-2">
+    <div class="status-panel p-5">
+      <div class="flex items-center justify-between gap-3">
+        <h2 class="text-lg font-semibold text-slate-800">Components</h2>
+        <span class="text-sm text-slate-500"><span x-text="components.length"></span> item</span>
+      </div>
+      <div class="mt-4 space-y-3">
+        <template x-for="component in components" :key="component.name || component.id">
+          <div class="rounded-2xl border border-slate-100 p-4">
+            <div class="flex items-center justify-between gap-3">
+              <div>
+                <p class="font-semibold text-slate-800" x-text="component.name || '-'"></p>
+                <p class="text-sm text-slate-500" x-text="component.version || '-'"></p>
+              </div>
+              <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700" x-text="component.status || 'Unknown'"></span>
+            </div>
+          </div>
+        </template>
+        <div x-show="components.length === 0" class="rounded-2xl border border-dashed border-slate-200 p-6 text-center text-slate-400">
+          Belum ada data komponen.
+        </div>
+      </div>
+    </div>
+
+    <div class="status-panel p-5">
+      <div class="flex items-center justify-between gap-3">
+        <h2 class="text-lg font-semibold text-slate-800">Alerts</h2>
+        <span class="text-sm text-slate-500"><span x-text="alerts.length"></span> item</span>
+      </div>
+      <div class="mt-4 space-y-3">
+        <template x-for="alert in alerts" :key="alert.id || alert.message">
+          <div class="rounded-2xl border border-slate-100 p-4">
+            <div class="flex items-center justify-between gap-3">
+              <p class="font-semibold text-slate-800" x-text="alert.message || '-'"></p>
+              <span class="rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700" x-text="alert.severity || 'Info'"></span>
+            </div>
+            <p class="mt-2 text-sm text-slate-500" x-text="alert.timestamp || '-'"></p>
+          </div>
+        </template>
+        <div x-show="alerts.length === 0" class="rounded-2xl border border-dashed border-slate-200 p-6 text-center text-slate-400">
+          Tidak ada alert aktif.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-panel p-5">
+    <div class="flex items-center justify-between gap-3">
+      <h2 class="text-lg font-semibold text-slate-800">Recent Logs</h2>
+      <span class="text-sm text-slate-500"><span x-text="logs.length"></span> item</span>
+    </div>
+    <div class="mt-4 overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead>
+          <tr class="border-b border-slate-200 text-left text-xs uppercase tracking-[0.14em] text-slate-400">
+            <th class="px-3 py-3">Waktu</th>
+            <th class="px-3 py-3">Level</th>
+            <th class="px-3 py-3">Pesan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="log in logs" :key="log.id || log.timestamp + log.message">
+            <tr class="border-b border-slate-100">
+              <td class="px-3 py-4 text-slate-600" x-text="log.timestamp || '-'"></td>
+              <td class="px-3 py-4">
+                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700" x-text="log.level || 'info'"></span>
+              </td>
+              <td class="px-3 py-4 text-slate-700" x-text="log.message || '-'"></td>
+            </tr>
+          </template>
+          <tr x-show="logs.length === 0">
+            <td colspan="3" class="px-3 py-10 text-center text-slate-400">Belum ada log yang tersedia.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function systemStatusLite() {
+  return {
+    metrics: {},
+    components: [],
+    logs: [],
+    alerts: [],
+    init() {
+      this.metrics = this.readJson('metrics-init', {});
+      this.components = this.readJson('components-init', []);
+      this.logs = this.readJson('logs-init', []);
+      this.alerts = this.readJson('alerts-init', []);
+    },
+    readJson(id, fallback) {
+      const el = document.getElementById(id);
+      if (!el) return fallback;
+      try {
+        return JSON.parse(el.textContent);
+      } catch (error) {
+        return fallback;
+      }
+    },
+  };
+}
+</script>
+{% endblock %}

@@ -1,0 +1,7467 @@
+{
+  "generated_at": "2026-04-16T15:11:16.756532",
+  "template_root": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages",
+  "summary": {
+    "total_files": 192,
+    "clean_files": 21,
+    "total_errors": 45,
+    "total_warnings": 59,
+    "total_info": 266
+  },
+  "files": [
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\marketing\\campaign.html",
+      "section": "📣 Marketing",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 494,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            168
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            99,
+            101,
+            137,
+            138,
+            139
+          ],
+          "detail": "Total: 30 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            16,
+            34,
+            46,
+            48,
+            54
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\marketing\\campaign_list.html",
+      "section": "📣 Marketing",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 494,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            168
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            99,
+            101,
+            137,
+            138,
+            139
+          ],
+          "detail": "Total: 30 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            16,
+            34,
+            46,
+            48,
+            54
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\customers.html",
+      "section": "🗂️ Master Data",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 571,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            236
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            118,
+            182,
+            183,
+            189,
+            217
+          ],
+          "detail": "Total: 36 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            12,
+            14,
+            20,
+            22,
+            28
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\customers_list.html",
+      "section": "🗂️ Master Data",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 571,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            236
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            118,
+            182,
+            183,
+            189,
+            217
+          ],
+          "detail": "Total: 36 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            12,
+            14,
+            20,
+            22,
+            28
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\production\\production_scheduling.html",
+      "section": "🏭 Production",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 354,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            159
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            125,
+            140
+          ],
+          "detail": "Total: 2 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            12,
+            28,
+            30,
+            44,
+            46
+          ],
+          "detail": ""
+        },
+        {
+          "check": "raw_alert_js",
+          "severity": "warning",
+          "desc": "Memakai alert() bawaan browser (sebaiknya pakai toast/modal)",
+          "lines": [
+            330
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\purchasing_report.html",
+      "section": "📊 Reports",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 915,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "table_header",
+          "table_body",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            316
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            295,
+            300,
+            305,
+            320,
+            365
+          ],
+          "detail": "Total: 11 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            17,
+            22,
+            32,
+            36,
+            60
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\report_inventory_log.html",
+      "section": "📊 Reports",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 915,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "table_header",
+          "table_body",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            316
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            200,
+            259,
+            260,
+            262,
+            268
+          ],
+          "detail": "Total: 52 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            17,
+            22,
+            32,
+            36,
+            60
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\report_inventory_low.html",
+      "section": "📊 Reports",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 915,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "table_header",
+          "table_body",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            316
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            200,
+            259,
+            260,
+            262,
+            268
+          ],
+          "detail": "Total: 52 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            17,
+            22,
+            32,
+            36,
+            60
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\report_inventory_stock.html",
+      "section": "📊 Reports",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 915,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "table_header",
+          "table_body",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            316
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            200,
+            259,
+            260,
+            262,
+            268
+          ],
+          "detail": "Total: 52 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            17,
+            22,
+            32,
+            36,
+            60
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\report_profit_loss_detail.html",
+      "section": "📊 Reports",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 915,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "table_header",
+          "table_body",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            316
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            200,
+            259,
+            260,
+            262,
+            268
+          ],
+          "detail": "Total: 52 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            17,
+            22,
+            32,
+            36,
+            60
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\report_sales_by_outlet.html",
+      "section": "📊 Reports",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 915,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "table_header",
+          "table_body",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            316
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            200,
+            259,
+            260,
+            262,
+            268
+          ],
+          "detail": "Total: 52 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            17,
+            22,
+            32,
+            36,
+            60
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\report_sales_by_payment.html",
+      "section": "📊 Reports",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 915,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "table_header",
+          "table_body",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            316
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            200,
+            259,
+            260,
+            262,
+            268
+          ],
+          "detail": "Total: 52 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            17,
+            22,
+            32,
+            36,
+            60
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\report_sales_by_product.html",
+      "section": "📊 Reports",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 915,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "table_header",
+          "table_body",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            316
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            200,
+            259,
+            260,
+            262,
+            268
+          ],
+          "detail": "Total: 52 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            17,
+            22,
+            32,
+            36,
+            60
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\report_sales_summary.html",
+      "section": "📊 Reports",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 915,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "table_header",
+          "table_body",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            316
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            200,
+            259,
+            260,
+            262,
+            268
+          ],
+          "detail": "Total: 52 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            17,
+            22,
+            32,
+            36,
+            60
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\requisition_report.html",
+      "section": "📊 Reports",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 915,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "table_header",
+          "table_body",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            316
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            200,
+            259,
+            260,
+            262,
+            268
+          ],
+          "detail": "Total: 52 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            17,
+            22,
+            32,
+            36,
+            60
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\sales_history.html",
+      "section": "📊 Reports",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 951,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "table_header",
+          "table_body",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            342
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            226,
+            285,
+            286,
+            288,
+            294
+          ],
+          "detail": "Total: 52 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            17,
+            22,
+            32,
+            36,
+            60
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\sales_history_product.html",
+      "section": "📊 Reports",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 915,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "table_header",
+          "table_body",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            316
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            200,
+            259,
+            260,
+            262,
+            268
+          ],
+          "detail": "Total: 52 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            17,
+            22,
+            32,
+            36,
+            60
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\sales_report.html",
+      "section": "📊 Reports",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 951,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "table_header",
+          "table_body",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            342
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            226,
+            285,
+            286,
+            288,
+            294
+          ],
+          "detail": "Total: 52 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            17,
+            22,
+            32,
+            36,
+            60
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\transaction_summary.html",
+      "section": "📊 Reports",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 915,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "table_header",
+          "table_body",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            316
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            200,
+            259,
+            260,
+            262,
+            268
+          ],
+          "detail": "Total: 52 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            17,
+            22,
+            32,
+            36,
+            60
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\transfer_report.html",
+      "section": "📊 Reports",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 915,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "table_header",
+          "table_body",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            316
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            200,
+            259,
+            260,
+            262,
+            268
+          ],
+          "detail": "Total: 52 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            17,
+            22,
+            32,
+            36,
+            60
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales_insight\\financial_reports.html",
+      "section": "📈 Sales Insight",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 881,
+        "extends": "base/base.html",
+        "blocks": [
+          "extra_head",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            127
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            101,
+            102,
+            108,
+            117,
+            137
+          ],
+          "detail": "Total: 47 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            64
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales_insight\\market_insights.html",
+      "section": "📈 Sales Insight",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 830,
+        "extends": "base/base.html",
+        "blocks": [
+          "extra_head",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            103
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            89,
+            90,
+            96,
+            111,
+            119
+          ],
+          "detail": "Total: 26 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            42,
+            44,
+            54,
+            60,
+            62
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales_insight\\sales_intelligence.html",
+      "section": "📈 Sales Insight",
+      "score": 17,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 1107,
+        "extends": "base/base.html",
+        "blocks": [
+          "extra_head",
+          "content",
+          "summary_stats",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            467
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            325,
+            326,
+            336,
+            350,
+            367
+          ],
+          "detail": "Total: 45 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            32,
+            34,
+            72,
+            93,
+            106
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\batch_form.html",
+      "section": "📦 Inventory",
+      "score": 16,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 193,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            23
+          ],
+          "detail": ""
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            8,
+            10
+          ],
+          "detail": ""
+        },
+        {
+          "check": "raw_alert_js",
+          "severity": "warning",
+          "desc": "Memakai alert() bawaan browser (sebaiknya pakai toast/modal)",
+          "lines": [
+            154,
+            188
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\warehouse_zone_form.html",
+      "section": "📦 Inventory",
+      "score": 16,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 159,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            24
+          ],
+          "detail": ""
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            8,
+            10,
+            11
+          ],
+          "detail": ""
+        },
+        {
+          "check": "raw_alert_js",
+          "severity": "warning",
+          "desc": "Memakai alert() bawaan browser (sebaiknya pakai toast/modal)",
+          "lines": [
+            119,
+            154
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\email_settings.html",
+      "section": "⚙️ Settings",
+      "score": 16,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 134,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            33
+          ],
+          "detail": ""
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            9,
+            12,
+            13
+          ],
+          "detail": ""
+        },
+        {
+          "check": "raw_alert_js",
+          "severity": "warning",
+          "desc": "Memakai alert() bawaan browser (sebaiknya pakai toast/modal)",
+          "lines": [
+            117
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\accounting\\general_ledger.html",
+      "section": "💰 Accounting",
+      "score": 12,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 107,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            17
+          ],
+          "detail": ""
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            8,
+            11
+          ],
+          "detail": ""
+        },
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\etc\\error_session_expired.html",
+      "section": "⚠️ Error Pages",
+      "score": 12,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 85,
+        "extends": null,
+        "blocks": [],
+        "btn_classes": [
+          "btn-primary"
+        ]
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            73
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            79,
+            80
+          ],
+          "detail": "Total: 2 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            10,
+            31,
+            38,
+            40,
+            41
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\stock_movement.html",
+      "section": "📦 Inventory",
+      "score": 12,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 1047,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": [
+          "btn-primary"
+        ]
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            313
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            240,
+            241,
+            244,
+            245,
+            283
+          ],
+          "detail": "Total: 29 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            72,
+            93,
+            111,
+            114,
+            120
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\stock_planning.html",
+      "section": "📦 Inventory",
+      "score": 12,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 920,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            303
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            235,
+            262,
+            268,
+            275,
+            404
+          ],
+          "detail": "Total: 21 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            89,
+            97,
+            147,
+            157,
+            181
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\stock_purchasing.html",
+      "section": "📦 Inventory",
+      "score": 12,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 920,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            303
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            235,
+            275,
+            464,
+            474,
+            480
+          ],
+          "detail": "Total: 15 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            89,
+            97,
+            147,
+            157,
+            181
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\marketing\\voucher_form.html",
+      "section": "📣 Marketing",
+      "score": 12,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 744,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "form_title",
+          "extra_css",
+          "content",
+          "dashboard_scripts",
+          "scripts"
+        ],
+        "btn_classes": [
+          "btn-primary"
+        ]
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            218
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            197,
+            248,
+            538
+          ],
+          "detail": "Total: 3 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            42,
+            44,
+            45,
+            52,
+            73
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\categories_list.html",
+      "section": "🗂️ Master Data",
+      "score": 12,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 678,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": [
+          "btn-primary"
+        ]
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            228
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            162,
+            163,
+            168,
+            185,
+            275
+          ],
+          "detail": "Total: 16 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            26,
+            39,
+            45,
+            109,
+            116
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\location_list.html",
+      "section": "🗂️ Master Data",
+      "score": 12,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 798,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "head",
+          "extra_css",
+          "content",
+          "dashboard_scripts",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            371
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            121,
+            122,
+            159,
+            161,
+            243
+          ],
+          "detail": "Total: 22 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            50,
+            89,
+            504,
+            754,
+            755
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\locations.html",
+      "section": "🗂️ Master Data",
+      "score": 12,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 798,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "head",
+          "extra_css",
+          "content",
+          "dashboard_scripts",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            371
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            121,
+            122,
+            159,
+            161,
+            243
+          ],
+          "detail": "Total: 22 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            50,
+            89,
+            504,
+            754,
+            755
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\vendor_list.html",
+      "section": "🗂️ Master Data",
+      "score": 12,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 828,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            303
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            336,
+            426,
+            554,
+            626,
+            637
+          ],
+          "detail": "Total: 7 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            93,
+            119,
+            123,
+            127,
+            131
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\vendors_list.html",
+      "section": "🗂️ Master Data",
+      "score": 12,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 828,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            303
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            336,
+            426,
+            554,
+            626,
+            637
+          ],
+          "detail": "Total: 7 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            93,
+            119,
+            123,
+            127,
+            131
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\messages\\compose.html",
+      "section": "💬 Messages",
+      "score": 12,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 425,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "dashboard_scripts",
+          "scripts"
+        ],
+        "btn_classes": [
+          "btn-primary"
+        ]
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            147
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            126,
+            271
+          ],
+          "detail": "Total: 2 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            42,
+            44,
+            63,
+            65,
+            79
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\messages\\message_detail.html",
+      "section": "💬 Messages",
+      "score": 12,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 480,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "dashboard_scripts",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            272
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            179,
+            264,
+            292
+          ],
+          "detail": "Total: 3 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            47,
+            60,
+            108,
+            123,
+            133
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\search.html",
+      "section": "⚙️ Settings",
+      "score": 12,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 295,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            37
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            23,
+            26,
+            36,
+            38,
+            39
+          ],
+          "detail": "Total: 33 baris"
+        },
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\etc\\error_404.html",
+      "section": "⚠️ Error Pages",
+      "score": 11,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 30,
+        "extends": null,
+        "blocks": [],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            18
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            10,
+            11,
+            13,
+            19,
+            20
+          ],
+          "detail": "Total: 6 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\marketing\\discount.html",
+      "section": "📣 Marketing",
+      "score": 11,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 209,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            90
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            24,
+            27,
+            30,
+            38,
+            41
+          ],
+          "detail": "Total: 33 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\marketing\\loyalty_members.html",
+      "section": "📣 Marketing",
+      "score": 11,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 204,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            90
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            24,
+            27,
+            30,
+            38,
+            41
+          ],
+          "detail": "Total: 34 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\base_report.html",
+      "section": "📊 Reports",
+      "score": 11,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 434,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_head",
+          "content",
+          "summary_stats",
+          "filter_fields",
+          "table_header",
+          "table_body"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            92
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            39,
+            42,
+            47,
+            63,
+            66
+          ],
+          "detail": "Total: 21 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales_insight\\trends_analysis.html",
+      "section": "📈 Sales Insight",
+      "score": 11,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 314,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_csrf",
+          "severity": "error",
+          "desc": "Ada <form> tapi tidak ada {% csrf_token %}",
+          "lines": [
+            31
+          ],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            23,
+            26,
+            30,
+            32,
+            38
+          ],
+          "detail": "Total: 33 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\backup_restore.html",
+      "section": "⚙️ Settings",
+      "score": 11,
+      "status": "🔶 MODERATE",
+      "meta": {
+        "lines": 131,
+        "extends": "base/base.html",
+        "blocks": [
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            10,
+            12
+          ],
+          "detail": ""
+        },
+        {
+          "check": "raw_alert_js",
+          "severity": "warning",
+          "desc": "Memakai alert() bawaan browser (sebaiknya pakai toast/modal)",
+          "lines": [
+            108,
+            116,
+            122
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\user_list.html",
+      "section": "⚙️ Settings",
+      "score": 10,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 1,
+        "extends": "lumra_pages/settings/users.html",
+        "blocks": [],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "missing_block_content",
+          "severity": "warning",
+          "desc": "Extends 'lumra_pages/settings/users.html' tapi tidak ada block content/main. Blocks ada: ['(none)']",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\marketing\\add_campaign.html",
+      "section": "📣 Marketing",
+      "score": 8,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 706,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            139,
+            140,
+            141,
+            151,
+            159
+          ],
+          "detail": "Total: 25 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            11,
+            25,
+            45,
+            72,
+            81
+          ],
+          "detail": ""
+        },
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\customer_form.html",
+      "section": "🗂️ Master Data",
+      "score": 8,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 404,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            163,
+            164,
+            166,
+            191,
+            209
+          ],
+          "detail": "Total: 11 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            25,
+            35,
+            49,
+            53,
+            57
+          ],
+          "detail": ""
+        },
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\print\\print_quotation.html",
+      "section": "🖨️ Print",
+      "score": 8,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 136,
+        "extends": null,
+        "blocks": [],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            53,
+            86,
+            87,
+            88,
+            90
+          ],
+          "detail": "Total: 5 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            8,
+            17,
+            22,
+            23,
+            24
+          ],
+          "detail": ""
+        },
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "inconsistent_table_class",
+          "severity": "warning",
+          "desc": "Tabel tanpa class standar (table, table-striped, dll)",
+          "lines": [],
+          "detail": "1 tabel tanpa class"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\customer_detail.html",
+      "section": "🗂️ Master Data",
+      "score": 7,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 490,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            110,
+            111,
+            113,
+            143,
+            156
+          ],
+          "detail": "Total: 23 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            28,
+            32,
+            40,
+            48,
+            50
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\print\\print_delivery_note.html",
+      "section": "🖨️ Print",
+      "score": 7,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 68,
+        "extends": "lumra_pages/print/print_base.html",
+        "blocks": [
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            5,
+            7,
+            18,
+            54,
+            57
+          ],
+          "detail": "Total: 7 baris"
+        },
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\print\\print_invoice.html",
+      "section": "🖨️ Print",
+      "score": 7,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 153,
+        "extends": null,
+        "blocks": [],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            9,
+            18,
+            37,
+            38,
+            39
+          ],
+          "detail": ""
+        },
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "inconsistent_table_class",
+          "severity": "warning",
+          "desc": "Tabel tanpa class standar (table, table-striped, dll)",
+          "lines": [],
+          "detail": "1 tabel tanpa class"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\print\\print_packing_slip.html",
+      "section": "🖨️ Print",
+      "score": 7,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 43,
+        "extends": "lumra_pages/print/print_base.html",
+        "blocks": [
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            4,
+            6
+          ],
+          "detail": "Total: 2 baris"
+        },
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\report_inventory_age.html",
+      "section": "📊 Reports",
+      "score": 7,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 145,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            85,
+            88,
+            91,
+            94
+          ],
+          "detail": "Total: 4 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            9,
+            12,
+            13,
+            14,
+            15
+          ],
+          "detail": ""
+        },
+        {
+          "check": "raw_alert_js",
+          "severity": "warning",
+          "desc": "Memakai alert() bawaan browser (sebaiknya pakai toast/modal)",
+          "lines": [
+            137
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales_insight\\pos.html",
+      "section": "📈 Sales Insight",
+      "score": 7,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 1010,
+        "extends": "base/base.html",
+        "blocks": [
+          "extra_head",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            168
+          ],
+          "detail": "Total: 1 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            32,
+            33,
+            34,
+            56,
+            58
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales_insight\\sales_performance.html",
+      "section": "📈 Sales Insight",
+      "score": 7,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 802,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            61,
+            92,
+            145,
+            146,
+            152
+          ],
+          "detail": "Total: 30 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            22,
+            30,
+            44
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\user_roles_permissions.html",
+      "section": "⚙️ Settings",
+      "score": 7,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 686,
+        "extends": "base/base.html",
+        "blocks": [
+          "extra_head",
+          "summary_stats",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            112,
+            151,
+            152,
+            153,
+            193
+          ],
+          "detail": "Total: 18 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            16,
+            18,
+            22,
+            56,
+            59
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\accounting\\chart_of_accounts_form.html",
+      "section": "💰 Accounting",
+      "score": 6,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 96,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            8
+          ],
+          "detail": ""
+        },
+        {
+          "check": "raw_alert_js",
+          "severity": "warning",
+          "desc": "Memakai alert() bawaan browser (sebaiknya pakai toast/modal)",
+          "lines": [
+            90
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\accounting\\payment_voucher_form.html",
+      "section": "💰 Accounting",
+      "score": 6,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 215,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            9,
+            12,
+            14
+          ],
+          "detail": ""
+        },
+        {
+          "check": "raw_alert_js",
+          "severity": "warning",
+          "desc": "Memakai alert() bawaan browser (sebaiknya pakai toast/modal)",
+          "lines": [
+            197,
+            202,
+            207
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\auth\\register.html",
+      "section": "🔐 Auth",
+      "score": 6,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 43,
+        "extends": null,
+        "blocks": [],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            17
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\requisition_form.html",
+      "section": "📦 Inventory",
+      "score": 6,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 198,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            8,
+            10
+          ],
+          "detail": ""
+        },
+        {
+          "check": "raw_alert_js",
+          "severity": "warning",
+          "desc": "Memakai alert() bawaan browser (sebaiknya pakai toast/modal)",
+          "lines": [
+            145,
+            159,
+            193
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\print\\print_production_order.html",
+      "section": "🖨️ Print",
+      "score": 6,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 58,
+        "extends": "lumra_pages/print/print_base.html",
+        "blocks": [
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            5,
+            7
+          ],
+          "detail": "Total: 2 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\print\\print_purchase_order.html",
+      "section": "🖨️ Print",
+      "score": 6,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 67,
+        "extends": "lumra_pages/print/print_base.html",
+        "blocks": [
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        },
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            5,
+            7,
+            8,
+            12,
+            65
+          ],
+          "detail": "Total: 5 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\production\\bom_form.html",
+      "section": "🏭 Production",
+      "score": 6,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 275,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            8,
+            11
+          ],
+          "detail": ""
+        },
+        {
+          "check": "raw_alert_js",
+          "severity": "warning",
+          "desc": "Memakai alert() bawaan browser (sebaiknya pakai toast/modal)",
+          "lines": [
+            214,
+            222,
+            237
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\production\\finished_goods_receipt.html",
+      "section": "🏭 Production",
+      "score": 6,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 146,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            9,
+            12
+          ],
+          "detail": ""
+        },
+        {
+          "check": "raw_alert_js",
+          "severity": "warning",
+          "desc": "Memakai alert() bawaan browser (sebaiknya pakai toast/modal)",
+          "lines": [
+            135,
+            138,
+            140
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\production\\production_order_form.html",
+      "section": "🏭 Production",
+      "score": 6,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 206,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            8,
+            10
+          ],
+          "detail": ""
+        },
+        {
+          "check": "raw_alert_js",
+          "severity": "warning",
+          "desc": "Memakai alert() bawaan browser (sebaiknya pakai toast/modal)",
+          "lines": [
+            165,
+            201
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\production\\production_waste.html",
+      "section": "🏭 Production",
+      "score": 6,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 151,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            10
+          ],
+          "detail": ""
+        },
+        {
+          "check": "raw_alert_js",
+          "severity": "warning",
+          "desc": "Memakai alert() bawaan browser (sebaiknya pakai toast/modal)",
+          "lines": [
+            145
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\api_keys.html",
+      "section": "⚙️ Settings",
+      "score": 6,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 126,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            9,
+            10,
+            13,
+            14
+          ],
+          "detail": ""
+        },
+        {
+          "check": "raw_alert_js",
+          "severity": "warning",
+          "desc": "Memakai alert() bawaan browser (sebaiknya pakai toast/modal)",
+          "lines": [
+            100
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\notification_settings.html",
+      "section": "⚙️ Settings",
+      "score": 6,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 152,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            10,
+            14,
+            16
+          ],
+          "detail": ""
+        },
+        {
+          "check": "raw_alert_js",
+          "severity": "warning",
+          "desc": "Memakai alert() bawaan browser (sebaiknya pakai toast/modal)",
+          "lines": [
+            145
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\numbering_settings.html",
+      "section": "⚙️ Settings",
+      "score": 6,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 158,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            9
+          ],
+          "detail": ""
+        },
+        {
+          "check": "raw_alert_js",
+          "severity": "warning",
+          "desc": "Memakai alert() bawaan browser (sebaiknya pakai toast/modal)",
+          "lines": [
+            151
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\role_form.html",
+      "section": "⚙️ Settings",
+      "score": 6,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 161,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            8,
+            10,
+            16,
+            18
+          ],
+          "detail": ""
+        },
+        {
+          "check": "raw_alert_js",
+          "severity": "warning",
+          "desc": "Memakai alert() bawaan browser (sebaiknya pakai toast/modal)",
+          "lines": [
+            154,
+            155
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\roles.html",
+      "section": "⚙️ Settings",
+      "score": 6,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 101,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            13,
+            14
+          ],
+          "detail": ""
+        },
+        {
+          "check": "raw_alert_js",
+          "severity": "warning",
+          "desc": "Memakai alert() bawaan browser (sebaiknya pakai toast/modal)",
+          "lines": [
+            93
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\accounting\\journal_entry_form.html",
+      "section": "💰 Accounting",
+      "score": 5,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 173,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "raw_alert_js",
+          "severity": "warning",
+          "desc": "Memakai alert() bawaan browser (sebaiknya pakai toast/modal)",
+          "lines": [
+            155,
+            160,
+            165
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\auth\\two_factor.html",
+      "section": "🔐 Auth",
+      "score": 5,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 60,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "raw_alert_js",
+          "severity": "warning",
+          "desc": "Memakai alert() bawaan browser (sebaiknya pakai toast/modal)",
+          "lines": [
+            56
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\customer.html",
+      "section": "🗂️ Master Data",
+      "score": 5,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 18,
+        "extends": null,
+        "blocks": [],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "missing_page_title",
+          "severity": "warning",
+          "desc": "Tidak ada {% block title %} atau <title>",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\product_list.html",
+      "section": "📦 Inventory",
+      "score": 3,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 1472,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "extra_scripts"
+        ],
+        "btn_classes": [
+          "btn-primary"
+        ]
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            244,
+            246,
+            272,
+            274,
+            275
+          ],
+          "detail": "Total: 28 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            26,
+            61,
+            66,
+            105,
+            124
+          ],
+          "detail": ""
+        },
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\products.html",
+      "section": "📦 Inventory",
+      "score": 3,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 1472,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "extra_scripts"
+        ],
+        "btn_classes": [
+          "btn-primary"
+        ]
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            244,
+            246,
+            272,
+            274,
+            275
+          ],
+          "detail": "Total: 28 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            26,
+            61,
+            66,
+            105,
+            124
+          ],
+          "detail": ""
+        },
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\print\\print_receipt.html",
+      "section": "🖨️ Print",
+      "score": 3,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 100,
+        "extends": null,
+        "blocks": [],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            53
+          ],
+          "detail": "Total: 1 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            10,
+            20
+          ],
+          "detail": ""
+        },
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\accounting\\accounts_payable.html",
+      "section": "💰 Accounting",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 147,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            79
+          ],
+          "detail": "Total: 1 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            10,
+            12,
+            16,
+            17
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\accounting\\accounts_receivable.html",
+      "section": "💰 Accounting",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 180,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            85,
+            95
+          ],
+          "detail": "Total: 2 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            10,
+            12,
+            16,
+            17
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\accounting\\balance_sheet.html",
+      "section": "💰 Accounting",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 189,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            57
+          ],
+          "detail": "Total: 1 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            10,
+            11,
+            16,
+            17
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\auth\\login.html",
+      "section": "🔐 Auth",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 186,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            49,
+            52,
+            53,
+            54,
+            57
+          ],
+          "detail": "Total: 20 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            17
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\etc\\error_maintenance.html",
+      "section": "⚠️ Error Pages",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 74,
+        "extends": null,
+        "blocks": [],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            64,
+            65,
+            66
+          ],
+          "detail": "Total: 3 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            10,
+            16,
+            29,
+            34,
+            35
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\add_stock_movement.html",
+      "section": "📦 Inventory",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 827,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "extra_scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            239,
+            246,
+            266,
+            267,
+            277
+          ],
+          "detail": "Total: 21 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            56,
+            65,
+            88,
+            98,
+            102
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\expiry_tracking.html",
+      "section": "📦 Inventory",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 144,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            43,
+            44,
+            45
+          ],
+          "detail": "Total: 3 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            10,
+            11
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\product_details.html",
+      "section": "📦 Inventory",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 376,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "dashboard_scripts",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            62,
+            64,
+            66,
+            67,
+            72
+          ],
+          "detail": "Total: 47 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            26
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\requisition_list.html",
+      "section": "📦 Inventory",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 158,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            56,
+            60,
+            64
+          ],
+          "detail": "Total: 3 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            12,
+            13,
+            14,
+            17,
+            23
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\stock_movement_form.html",
+      "section": "📦 Inventory",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 827,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "extra_scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            239,
+            246,
+            266,
+            267,
+            277
+          ],
+          "detail": "Total: 21 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            56,
+            65,
+            88,
+            98,
+            102
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\stock_overview.html",
+      "section": "📦 Inventory",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 823,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "dashboard_scripts",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            69,
+            71,
+            72,
+            75,
+            78
+          ],
+          "detail": "Total: 92 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            26
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\supplier_evaluation.html",
+      "section": "📦 Inventory",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 171,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            80,
+            87,
+            94
+          ],
+          "detail": "Total: 3 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            10,
+            13,
+            14,
+            17,
+            18
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\marketing\\promotion_calendar.html",
+      "section": "📣 Marketing",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 698,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "dashboard_scripts",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            141,
+            160,
+            253,
+            257,
+            261
+          ],
+          "detail": "Total: 8 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            21,
+            39,
+            53,
+            62,
+            74
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\marketing\\voucher_list.html",
+      "section": "📣 Marketing",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 506,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "dashboard_scripts",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            123,
+            138,
+            148,
+            198,
+            222
+          ],
+          "detail": "Total: 9 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            26,
+            29,
+            37,
+            65,
+            77
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\category_form.html",
+      "section": "🗂️ Master Data",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 393,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": [
+          "btn-primary"
+        ]
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            90,
+            91,
+            93,
+            99,
+            182
+          ],
+          "detail": "Total: 7 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            22,
+            31,
+            42,
+            54,
+            62
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\unit_form.html",
+      "section": "🗂️ Master Data",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 601,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "dashboard_scripts",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            134,
+            135,
+            137,
+            145,
+            152
+          ],
+          "detail": "Total: 13 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            18,
+            22,
+            32,
+            48,
+            50
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\units_list.html",
+      "section": "🗂️ Master Data",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 833,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "dashboard_scripts",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            163,
+            164,
+            169,
+            177,
+            187
+          ],
+          "detail": "Total: 18 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            35,
+            40,
+            52,
+            95,
+            108
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\vendor_form.html",
+      "section": "🗂️ Master Data",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 785,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            238,
+            258,
+            297,
+            302,
+            333
+          ],
+          "detail": "Total: 13 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            94,
+            100,
+            112,
+            168,
+            180
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\messages\\inbox.html",
+      "section": "💬 Messages",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 425,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "dashboard_scripts",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            119,
+            129,
+            139,
+            180,
+            205
+          ],
+          "detail": "Total: 8 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            31,
+            32,
+            49,
+            50,
+            51
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\messages\\notification.html",
+      "section": "💬 Messages",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 658,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "dashboard_scripts",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            145,
+            146,
+            158,
+            178,
+            192
+          ],
+          "detail": "Total: 24 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            35,
+            40,
+            52,
+            94
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\production\\bom_detail.html",
+      "section": "🏭 Production",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 195,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            48
+          ],
+          "detail": "Total: 1 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            6,
+            9,
+            10,
+            159,
+            160
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\production\\production_costing.html",
+      "section": "🏭 Production",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 164,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            86,
+            91
+          ],
+          "detail": "Total: 2 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            9,
+            13,
+            14
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\production\\production_order_detail.html",
+      "section": "🏭 Production",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 186,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            52
+          ],
+          "detail": "Total: 1 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            10,
+            11,
+            12,
+            16,
+            19
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\production\\production_order_list.html",
+      "section": "🏭 Production",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 153,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            100
+          ],
+          "detail": "Total: 1 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            11,
+            12,
+            13,
+            14,
+            16
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\production\\recipe_detail.html",
+      "section": "🏭 Production",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 441,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            50,
+            53,
+            57,
+            64,
+            72
+          ],
+          "detail": "Total: 14 baris"
+        },
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\production\\recipe_form.html",
+      "section": "🏭 Production",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 473,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            51,
+            52,
+            53,
+            54,
+            55
+          ],
+          "detail": "Total: 16 baris"
+        },
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\production\\recipe_list.html",
+      "section": "🏭 Production",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 441,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            50,
+            53,
+            57,
+            64,
+            72
+          ],
+          "detail": "Total: 14 baris"
+        },
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\report_customer_lifetime.html",
+      "section": "📊 Reports",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 121,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            87
+          ],
+          "detail": "Total: 1 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            10,
+            11,
+            12
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\report_production.html",
+      "section": "📊 Reports",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 142,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            47,
+            65
+          ],
+          "detail": "Total: 2 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            17
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\report_staff_performance.html",
+      "section": "📊 Reports",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 116,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            59,
+            73
+          ],
+          "detail": "Total: 2 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            9,
+            10,
+            11,
+            13
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\invoice_and_billing\\invoice_list.html",
+      "section": "🛒 Sales",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 292,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            110,
+            117,
+            124
+          ],
+          "detail": "Total: 3 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            29,
+            33,
+            34,
+            43,
+            44
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\invoice_and_billing\\payment_list.html",
+      "section": "🛒 Sales",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 274,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            113,
+            120,
+            127
+          ],
+          "detail": "Total: 3 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            28,
+            32,
+            33,
+            42,
+            43
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\retur_and_refund\\retur_list.html",
+      "section": "🛒 Sales",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 260,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            112,
+            119,
+            126
+          ],
+          "detail": "Total: 3 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            29,
+            33,
+            34,
+            43,
+            44
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\salesorder_and_quotation\\quotation_list.html",
+      "section": "🛒 Sales",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 243,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            112,
+            119,
+            126
+          ],
+          "detail": "Total: 3 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            28,
+            32,
+            33,
+            42,
+            43
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\salesorder_and_quotation\\sales_order_list.html",
+      "section": "🛒 Sales",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 236,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            112,
+            119,
+            126
+          ],
+          "detail": "Total: 3 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            28,
+            32,
+            33,
+            42,
+            43
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales_insight\\dashboard.html",
+      "section": "📈 Sales Insight",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 1111,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "dashboard_scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            633
+          ],
+          "detail": "Total: 1 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            17,
+            18,
+            34,
+            41,
+            61
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\about.html",
+      "section": "⚙️ Settings",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 1048,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "extra_scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            324,
+            325,
+            326,
+            328,
+            336
+          ],
+          "detail": "Total: 254 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            261,
+            375,
+            376,
+            377,
+            391
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\business_feature_matrix.html",
+      "section": "⚙️ Settings",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 848,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "extra_scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            264,
+            265,
+            281,
+            282,
+            284
+          ],
+          "detail": "Total: 48 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            153,
+            194,
+            246,
+            405
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\business_form_general.html",
+      "section": "⚙️ Settings",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 795,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "extra_scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            122,
+            123,
+            161,
+            215,
+            220
+          ],
+          "detail": "Total: 32 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            19,
+            54,
+            71,
+            83,
+            107
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\business_profile.html",
+      "section": "⚙️ Settings",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 938,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "extra_scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            246,
+            247,
+            259,
+            260,
+            262
+          ],
+          "detail": "Total: 116 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            56,
+            95,
+            174,
+            207,
+            274
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\business_settings.html",
+      "section": "⚙️ Settings",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 722,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "extra_scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            143,
+            144,
+            166,
+            167,
+            171
+          ],
+          "detail": "Total: 33 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            38,
+            42,
+            46,
+            50,
+            69
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\profile.html",
+      "section": "⚙️ Settings",
+      "score": 2,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 866,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "extra_scripts"
+        ],
+        "btn_classes": [
+          "btn-primary"
+        ]
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            142,
+            144,
+            175,
+            180,
+            190
+          ],
+          "detail": "Total: 29 baris"
+        },
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            40,
+            46,
+            60,
+            69,
+            78
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\accounting\\cash_flow.html",
+      "section": "💰 Accounting",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 161,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            10,
+            11,
+            13,
+            14,
+            15
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\accounting\\chart_of_accounts.html",
+      "section": "💰 Accounting",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 125,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            10,
+            11,
+            12,
+            13,
+            14
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\accounting\\journal_entry_detail.html",
+      "section": "💰 Accounting",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 109,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            8,
+            9
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\accounting\\journal_entry_list.html",
+      "section": "💰 Accounting",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 96,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            10,
+            11
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\accounting\\profit_loss_statement.html",
+      "section": "💰 Accounting",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 173,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            19,
+            30,
+            35,
+            41
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\accounting\\trial_balance.html",
+      "section": "💰 Accounting",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 151,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            10,
+            11,
+            12,
+            16,
+            17
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\auth\\forgot_password.html",
+      "section": "🔐 Auth",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 58,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\etc\\error_403.html",
+      "section": "⚠️ Error Pages",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 22,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            12,
+            17
+          ],
+          "detail": "Total: 2 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\etc\\error_500.html",
+      "section": "⚠️ Error Pages",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 29,
+        "extends": null,
+        "blocks": [],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            10,
+            11,
+            18
+          ],
+          "detail": "Total: 3 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\adjustment_reasons.html",
+      "section": "📦 Inventory",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 172,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            11,
+            12,
+            16,
+            17,
+            21
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\batch_detail.html",
+      "section": "📦 Inventory",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 165,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            7
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\batch_list.html",
+      "section": "📦 Inventory",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 160,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            9,
+            11,
+            17,
+            18,
+            19
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\requisition_detail.html",
+      "section": "📦 Inventory",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 168,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            7,
+            8,
+            9,
+            11,
+            12
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\stock_opname_approval_detail.html",
+      "section": "📦 Inventory",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 564,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            72,
+            74,
+            76,
+            77,
+            84
+          ],
+          "detail": "Total: 24 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\stock_opname_approvals.html",
+      "section": "📦 Inventory",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 518,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            58,
+            60,
+            61,
+            65,
+            69
+          ],
+          "detail": "Total: 19 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\stock_opname_form.html",
+      "section": "📦 Inventory",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 483,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            58,
+            60,
+            62,
+            63,
+            70
+          ],
+          "detail": "Total: 20 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\stock_opname_locations.html",
+      "section": "📦 Inventory",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 450,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            49,
+            51,
+            52,
+            56,
+            59
+          ],
+          "detail": "Total: 20 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\supplier_price_confirm_delete.html",
+      "section": "📦 Inventory",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 593,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            97,
+            140,
+            161,
+            167,
+            183
+          ],
+          "detail": "Total: 15 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\supplier_price_form.html",
+      "section": "📦 Inventory",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 384,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            72,
+            358
+          ],
+          "detail": "Total: 2 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\supplier_price_list.html",
+      "section": "📦 Inventory",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 593,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            97,
+            140,
+            161,
+            167,
+            183
+          ],
+          "detail": "Total: 15 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\inventory\\warehouse_zones.html",
+      "section": "📦 Inventory",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 156,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            8,
+            10,
+            16
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\marketing\\customer_segment_form.html",
+      "section": "📣 Marketing",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 50,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\bank_account_form.html",
+      "section": "🗂️ Master Data",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 50,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\payment_terms_form.html",
+      "section": "🗂️ Master Data",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 50,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\stock_opname.html",
+      "section": "🗂️ Master Data",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 694,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            53,
+            54,
+            55,
+            56,
+            57
+          ],
+          "detail": "Total: 37 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\stock_opname_session_detail.html",
+      "section": "🗂️ Master Data",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 401,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            53,
+            54,
+            55,
+            56,
+            57
+          ],
+          "detail": "Total: 22 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\tax_form.html",
+      "section": "🗂️ Master Data",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 50,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\messages\\broadcast.html",
+      "section": "💬 Messages",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 50,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\onboarding\\step_business.html",
+      "section": "🚀 Onboarding",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 50,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\onboarding\\step_category.html",
+      "section": "🚀 Onboarding",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 50,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\onboarding\\step_location.html",
+      "section": "🚀 Onboarding",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 50,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\print\\print_base.html",
+      "section": "🖨️ Print",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 80,
+        "extends": null,
+        "blocks": [
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            18,
+            44,
+            45,
+            46,
+            60
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\print\\print_payment_receipt.html",
+      "section": "🖨️ Print",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 108,
+        "extends": null,
+        "blocks": [],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            8,
+            17,
+            32,
+            33,
+            34
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\print\\print_sales_order.html",
+      "section": "🖨️ Print",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 24,
+        "extends": null,
+        "blocks": [],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            11,
+            19,
+            23
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\production\\bom_list.html",
+      "section": "🏭 Production",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 147,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            11,
+            12,
+            13,
+            16,
+            17
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\production\\material_consumption.html",
+      "section": "🏭 Production",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 112,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            9
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\activity_log.html",
+      "section": "📊 Reports",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 261,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            23,
+            26,
+            30,
+            34,
+            35
+          ],
+          "detail": "Total: 29 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\report_activity_log.html",
+      "section": "📊 Reports",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 261,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            23,
+            26,
+            30,
+            34,
+            35
+          ],
+          "detail": "Total: 29 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\report_expiry.html",
+      "section": "📊 Reports",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 116,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            9,
+            10,
+            11
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\reporting.html",
+      "section": "📊 Reports",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 740,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            35,
+            36,
+            37,
+            38,
+            41
+          ],
+          "detail": "Total: 38 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\invoice_and_billing\\invoice_form.html",
+      "section": "🛒 Sales",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 50,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\invoice_and_billing\\payment_form.html",
+      "section": "🛒 Sales",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 50,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\retur_and_refund\\retur_form.html",
+      "section": "🛒 Sales",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 50,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\salesorder_and_quotation\\quotation_form.html",
+      "section": "🛒 Sales",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 50,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\salesorder_and_quotation\\sales_order_form.html",
+      "section": "🛒 Sales",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 50,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "no_empty_state",
+          "severity": "info",
+          "desc": "Ada {% for %} tapi tidak ada empty state / pesan 'data kosong'",
+          "lines": [],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\contact.html",
+      "section": "⚙️ Settings",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 200,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "inline_style",
+          "severity": "info",
+          "desc": "Ada style=\"...\" inline (sebaiknya pakai class)",
+          "lines": [
+            23,
+            26,
+            32,
+            38,
+            42
+          ],
+          "detail": "Total: 31 baris"
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\permission_matrix.html",
+      "section": "⚙️ Settings",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 150,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            11,
+            12,
+            15,
+            17,
+            18
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\settings.html",
+      "section": "⚙️ Settings",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 131,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            17
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\system_status.html",
+      "section": "⚙️ Settings",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 166,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            15
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\settings\\users.html",
+      "section": "⚙️ Settings",
+      "score": 1,
+      "status": "⚠️  MINOR",
+      "meta": {
+        "lines": 142,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "extra_css",
+          "content",
+          "scripts"
+        ],
+        "btn_classes": []
+      },
+      "issues": [
+        {
+          "check": "hardcoded_color",
+          "severity": "info",
+          "desc": "Warna hardcoded (#hex / rgb) di dalam style/class",
+          "lines": [
+            21,
+            22
+          ],
+          "detail": ""
+        }
+      ]
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\auth\\lock_screen.html",
+      "section": "🔐 Auth",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 52,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\auth\\reset_password.html",
+      "section": "🔐 Auth",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 54,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\auth\\session_expired.html",
+      "section": "🔐 Auth",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 33,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\auth\\verify_email.html",
+      "section": "🔐 Auth",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 37,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\marketing\\customer_segment_list.html",
+      "section": "📣 Marketing",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 46,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\marketing\\voucher_claim_log.html",
+      "section": "📣 Marketing",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 46,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\bank_accounts.html",
+      "section": "🗂️ Master Data",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 46,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\payment_terms_list.html",
+      "section": "🗂️ Master Data",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 46,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\reason_codes.html",
+      "section": "🗂️ Master Data",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 46,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\tags_list.html",
+      "section": "🗂️ Master Data",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 46,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\master_data\\tax_list.html",
+      "section": "🗂️ Master Data",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 46,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\messages\\message_templates.html",
+      "section": "💬 Messages",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 46,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\onboarding\\step_complete.html",
+      "section": "🚀 Onboarding",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 25,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\onboarding\\welcome.html",
+      "section": "🚀 Onboarding",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 25,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\print\\print_credit_note.html",
+      "section": "🖨️ Print",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 25,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\print\\print_stock_opname.html",
+      "section": "🖨️ Print",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 25,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\reports\\sales_report_after.html",
+      "section": "📊 Reports",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 94,
+        "extends": "lumra_pages/reports/base_report.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\invoice_and_billing\\invoice_detail.html",
+      "section": "🛒 Sales",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 42,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\retur_and_refund\\retur_detail.html",
+      "section": "🛒 Sales",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 42,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\salesorder_and_quotation\\quotation_detail.html",
+      "section": "🛒 Sales",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 42,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    },
+    {
+      "path": "D:\\APPS\\Project\\lumra\\lumra_config\\templates\\lumra_pages\\sales\\salesorder_and_quotation\\sales_order_detail.html",
+      "section": "🛒 Sales",
+      "score": 0,
+      "status": "✅ CLEAN",
+      "meta": {
+        "lines": 42,
+        "extends": "base/base.html",
+        "blocks": [
+          "title",
+          "content"
+        ],
+        "btn_classes": []
+      },
+      "issues": []
+    }
+  ]
+}

@@ -1,0 +1,651 @@
+{% load static %}
+
+<!--{# ═══════════════════════════════════════════════════════════════════
+   SIDEBAR RIGHT — "The Activity Pulse"
+   Filosofi : Live feed operasional · Status visual 0.5 detik
+   Stack    : Django Tailwind + Alpine.js
+   Feed     : Baru (Emerald) · Dalam Perjalanan (Amber) · Kritis (Rose)
+   ═══════════════════════════════════════════════════════════════════ #}-->
+
+<style>
+  /* ── Pulse dot animation ── */
+  
+
+  @keyframes pulse-ring {
+    0%   { transform: scale(1);   opacity: .8; }
+    60%  { transform: scale(1.9); opacity: 0; }
+    100% { transform: scale(1.9); opacity: 0; }
+  }
+
+  .pulse-ring::before {
+    content      : '';
+    position     : absolute;
+    inset        : -3px;
+    border-radius: 50%;
+    animation    : pulse-ring 2s ease-out infinite;
+  }
+
+  .pulse-ring-emerald::before { border: 1.5px solid #059669; }
+
+  .pulse-ring-amber::before   { border: 1.5px solid #f59e0b; }
+
+  .pulse-ring-rose::before    { border: 1.5px solid #f43f5e; }
+
+  .activity-item {
+    display    : flex;
+    align-items: flex-start;
+    gap        : 10px;
+    padding    : 10px 0;
+    position   : relative;
+    transition : background .12s;
+  }
+
+  .activity-item + .activity-item {
+    border-top: 1px solid rgba(226,232,240,0.45);
+  }
+
+  .activity-item:not(:last-child) .activity-dot-wrap::after {
+    content      : '';
+    position     : absolute;
+    left         : 50%;
+    top          : 20px;
+    bottom       : -10px;
+    width        : 1px;
+    background   : linear-gradient(to bottom, rgba(226,232,240,0.6), transparent);
+    transform    : translateX(-50%);
+  }
+
+  .activity-dot-wrap {
+    position    : relative;
+    width       : 22px;
+    flex-shrink : 0;
+    display     : flex;
+    justify-content: center;
+    padding-top : 2px;
+  }
+
+  .activity-dot {
+    width        : 8px;
+    height       : 8px;
+    border-radius: 50%;
+    position     : relative;
+    flex-shrink  : 0;
+  }
+
+  .chip-slate   { background: rgba(148,163,184,0.12); color: #64748b; }
+
+  .feed-scroll::-webkit-scrollbar { width: 3px; }
+
+  .feed-scroll::-webkit-scrollbar-track { background: transparent; }
+
+  .feed-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 3px; }
+
+  @keyframes slideIn {
+    from { opacity:0; transform: translateY(-8px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  .activity-new { animation: slideIn .3s ease; }
+
+  .empty-pulse {
+    animation: emptyBreathe 3s ease-in-out infinite;
+  }
+
+  @keyframes emptyBreathe {
+    0%, 100% { opacity: .4; transform: scale(1); }
+    50%       { opacity: .7; transform: scale(1.04); }
+  }
+
+  .feed-tab {
+    padding      : 4px 10px;
+    border-radius: 8px;
+    font-size    : 11px;
+    font-weight  : 600;
+    color        : #94a3b8;
+    cursor       : pointer;
+    transition   : background .12s, color .12s;
+    border       : none;
+    background   : transparent;
+    white-space  : nowrap;
+  }
+
+  .feed-tab:hover { background: rgba(5,150,105,0.06); color: #022C22; }
+
+  .feed-tab.active {
+    background : rgba(5,150,105,0.10);
+    color      : #047857;
+  }
+</style>
+
+<aside
+  class="flex flex-col h-full"
+  x-data="activityPulse()"
+  x-init="init()"
+  x-cloak>
+
+  <!--{# ── HEADER ── #}-->
+  <div class="flex-shrink-0 px-4 pt-4 pb-3 border-b border-slate-100/70">
+
+    <div class="flex items-center justify-between mb-3">
+      <div class="flex items-center gap-2">
+        <div class="relative w-2 h-2">
+          <span class="absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-60"></span>
+          <span class="relative block w-2 h-2 rounded-full bg-emerald-500"></span>
+        </div>
+        <h2 class="text-[13px] font-bold text-slate-800">Activity Pulse</h2>
+      </div>
+
+      <div class="flex items-center gap-1.5">
+        <!--{# Unread badge #}-->
+        <span
+          x-show="unreadCount > 0"
+          x-transition
+          class="text-[10px] font-bold bg-rose-500 text-white rounded-full px-1.5 py-0.5 leading-none"
+          x-text="unreadCount > 99 ? '99+' : unreadCount">
+        </span>
+        <!--{# Refresh #}-->
+        <button
+          @click="refresh()"
+          :class="isRefreshing ? 'animate-spin' : ''"
+          class="p-1.5 rounded-lg text-slate-300 hover:text-emerald-600 hover:bg-emerald-50 transition-all"
+          title="Refresh aktivitas">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+        </button>
+        <!--{# Mark all read #}-->
+        <button
+          x-show="unreadCount > 0"
+          @click="markAllRead()"
+          class="p-1.5 rounded-lg text-slate-300 hover:text-emerald-600 hover:bg-emerald-50 transition-all"
+          title="Tandai semua terbaca">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!--{# Filter tabs #}-->
+    <div class="flex gap-1 overflow-x-auto pb-0.5" style="-ms-overflow-style:none; scrollbar-width:none;">
+      <button @click="setFilter('all')"      class="feed-tab" :class="filter==='all'      ? 'active' : ''">Semua</button>
+      <button @click="setFilter('new')"      class="feed-tab" :class="filter==='new'      ? 'active' : ''">
+        Baru
+        <span x-show="counts.new > 0" class="inline-block bg-emerald-500 text-white text-[9px] font-bold rounded-full px-1 ml-0.5" x-text="counts.new"></span>
+      </button>
+      <button @click="setFilter('transit')"  class="feed-tab" :class="filter==='transit'  ? 'active' : ''">
+        Perjalanan
+        <span x-show="counts.transit > 0" class="inline-block bg-amber-500 text-white text-[9px] font-bold rounded-full px-1 ml-0.5" x-text="counts.transit"></span>
+      </button>
+      <button @click="setFilter('critical')" class="feed-tab" :class="filter==='critical' ? 'active' : ''">
+        Kritis
+        <span x-show="counts.critical > 0" class="inline-block bg-rose-500 text-white text-[9px] font-bold rounded-full px-1 ml-0.5" x-text="counts.critical"></span>
+      </button>
+    </div>
+  </div>
+
+  <!--{# ── FEED LIST ── #}-->
+  <div class="feed-scroll flex-1 overflow-y-auto px-4 py-2">
+
+    <!--{# Loading skeleton #}-->
+    <template x-if="isLoading">
+      <div class="space-y-3 pt-2">
+        <template x-for="i in [1,2,3,4,5]" :key="i">
+          <div class="flex items-start gap-3 py-2">
+            <div class="w-5 h-5 rounded-full bg-slate-100 animate-pulse flex-shrink-0 mt-0.5"></div>
+            <div class="flex-1 space-y-1.5">
+              <div class="h-2.5 bg-slate-100 rounded animate-pulse" :style="`width:${55 + i * 7}%`"></div>
+              <div class="h-2 bg-slate-100 rounded animate-pulse" :style="`width:${30 + i * 5}%`"></div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </template>
+
+    <!--{# Empty state #}-->
+    <template x-if="!isLoading && filteredActivities.length === 0">
+      <div class="flex flex-col items-center justify-center py-12 text-center">
+        <div class="empty-pulse w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center mb-3">
+          <svg class="w-6 h-6 text-slate-200" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+          </svg>
+        </div>
+        <p class="text-xs font-semibold text-slate-400">Tidak ada aktivitas</p>
+        <p class="text-[11px] text-slate-300 mt-0.5" x-text="filter !== 'all' ? 'Coba filter lain' : 'Semua tenang hari ini'"></p>
+      </div>
+    </template>
+
+    <!--{# Activity items #}-->
+    <template x-if="!isLoading && filteredActivities.length > 0">
+      <div>
+        <template x-for="(activity, idx) in filteredActivities" :key="activity.id">
+          <div
+            class="activity-item"
+            :class="activity._isNew ? 'activity-new' : ''"
+            @click="openActivity(activity)"
+            style="cursor:pointer">
+
+            <!--{# Dot + timeline line #}-->
+            <div class="activity-dot-wrap">
+              <div
+                class="activity-dot pulse-ring"
+                :class="{
+                  'bg-emerald-500 pulse-ring-emerald': activity.status === 'new',
+                  'bg-amber-400 pulse-ring-amber'    : activity.status === 'transit',
+                  'bg-rose-500 pulse-ring-rose'      : activity.status === 'critical',
+                  'bg-slate-300'                     : activity.status === 'done',
+                }">
+              </div>
+            </div>
+
+            <!--{# Content #}-->
+            <div class="flex-1 min-w-0">
+              <div class="flex items-start justify-between gap-2">
+                <p
+                  class="text-xs leading-snug"
+                  :class="activity.read ? 'text-slate-500 font-normal' : 'text-slate-800 font-semibold'"
+                  x-text="activity.title">
+                </p>
+                <span
+                  class="status-chip flex-shrink-0"
+                  :class="{
+                    'chip-emerald': activity.status === 'new',
+                    'chip-amber'  : activity.status === 'transit',
+                    'chip-rose'   : activity.status === 'critical',
+                    'chip-slate'  : activity.status === 'done',
+                  }"
+                  x-text="statusLabel(activity.status)">
+                </span>
+              </div>
+
+              <p class="text-[11px] text-slate-400 mt-0.5 truncate" x-text="activity.subtitle"></p>
+
+              <div class="flex items-center gap-2 mt-1.5">
+                <span class="text-[10px] text-slate-300" x-text="activity.time"></span>
+                <span x-show="activity.location" class="text-[10px] text-slate-300">·</span>
+                <span x-show="activity.location"
+                      class="text-[10px] text-emerald-500 font-medium truncate"
+                      x-text="activity.location">
+                </span>
+                <!--{# Quick approve button for new items needing approval #}-->
+                <button
+                  x-show="activity.status === 'new'"
+                  @click.stop="openApproval(activity)"
+                  class="ml-auto flex-shrink-0 text-[10px] font-bold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-full transition-all border border-emerald-100"
+                  title="Quick approve">
+                  Approve →
+                </button>
+                <!--{# Unread indicator for non-new #}-->
+                <span
+                  x-show="!activity.read && activity.status !== 'new'"
+                  class="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0">
+                </span>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!--{# Load more #}-->
+        <button
+          x-show="hasMore && !isLoadingMore"
+          @click="loadMore()"
+          class="w-full mt-2 py-2.5 text-xs font-semibold text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition-all">
+          Muat lebih banyak
+        </button>
+        <div x-show="isLoadingMore" class="flex justify-center py-3">
+          <svg class="w-4 h-4 animate-spin text-emerald-400" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+          </svg>
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <!--{# ── FOOTER: Lihat semua notifikasi ── #}-->
+  <div class="flex-shrink-0 border-t border-slate-100/70 px-4 py-3">
+    <a href="{% url 'notification' %}"
+       class="flex items-center justify-between w-full text-xs font-semibold text-emerald-600 hover:text-emerald-800 transition-colors group">
+      <span>Lihat semua notifikasi</span>
+      <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5"
+           fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </div>
+
+</aside>
+
+<!--{# ── ALPINE COMPONENT ── #}-->
+<script>
+function activityPulse() {
+  return {
+
+    /* ── State ── */
+    filter         : 'all',
+    activities     : [],
+    isLoading      : true,
+    isRefreshing   : false,
+    isLoadingMore  : false,
+    hasMore        : false,
+    page           : 1,
+    _pollTimer     : null,
+    _lastId        : 0,
+
+    /* ── Computed ── */
+    get filteredActivities() {
+      if (this.filter === 'all')      return this.activities;
+      if (this.filter === 'new')      return this.activities.filter(a => a.status === 'new');
+      if (this.filter === 'transit')  return this.activities.filter(a => a.status === 'transit');
+      if (this.filter === 'critical') return this.activities.filter(a => a.status === 'critical');
+      return this.activities;
+    },
+
+    get unreadCount() {
+      return this.activities.filter(a => !a.read).length;
+    },
+
+    get counts() {
+      return {
+        new     : this.activities.filter(a => a.status === 'new'      && !a.read).length,
+        transit : this.activities.filter(a => a.status === 'transit'  && !a.read).length,
+        critical: this.activities.filter(a => a.status === 'critical' && !a.read).length,
+      };
+    },
+
+    /* ── Init ── */
+    init() {
+      this._loadActivities();
+
+      /* Long-polling setiap 30 detik untuk item baru */
+      this._pollTimer = setInterval(() => this._pollNew(), 30_000);
+
+      /* Bersihkan timer saat komponen unmount */
+      this.$el.addEventListener('destroy', () => {
+        clearInterval(this._pollTimer);
+      });
+    },
+
+    /* ── Load initial activities ── */
+    async _loadActivities() {
+      this.isLoading = true;
+      try {
+        /* ── MOCK DATA — ganti fetch() saat endpoint siap ── */
+        await new Promise(r => setTimeout(r, 400)); /* simulasi latency */
+
+        this.activities = this._mockActivities();
+        this.hasMore    = this.activities.length >= 10;
+        if (this.activities.length) {
+          this._lastId = Math.max(...this.activities.map(a => a.id));
+        }
+      } catch (err) {
+        console.error('activityPulse load error:', err);
+      } finally {
+        this.isLoading = false;
+      }
+
+      /*
+       * ── REAL FETCH — uncomment saat endpoint siap ──
+       *
+       * try {
+       *   const res = await fetch('/api/activity-feed/?page=1&limit=15', {
+       *     headers: { 'X-Requested-With': 'XMLHttpRequest' }
+       *   });
+       *   if (!res.ok) throw new Error(res.status);
+       *   const data = await res.json();
+       *   this.activities = data.results;
+       *   this.hasMore    = !!data.next;
+       *   if (data.results.length) {
+       *     this._lastId = Math.max(...data.results.map(a => a.id));
+       *   }
+       * } catch (err) {
+       *   console.error('activityPulse load error:', err);
+       * } finally {
+       *   this.isLoading = false;
+       * }
+       */
+    },
+
+    /* ── Poll for new activities (long-polling) ── */
+    async _pollNew() {
+      try {
+        /* MOCK: 30% chance munculnya item baru */
+        if (Math.random() < 0.3) {
+          const newItem = this._mockNewItem();
+          newItem._isNew = true;
+          this.activities.unshift(newItem);
+          /* Hapus flag animasi setelah selesai */
+          setTimeout(() => { newItem._isNew = false; }, 400);
+          /* Batasi list maksimal 50 item di DOM */
+          if (this.activities.length > 50) this.activities.pop();
+        }
+      } catch (err) {
+        console.error('activityPulse poll error:', err);
+      }
+
+      /*
+       * ── REAL POLL ──
+       *
+       * const res = await fetch(`/api/activity-feed/new/?since_id=${this._lastId}`, {
+       *   headers: { 'X-Requested-With': 'XMLHttpRequest' }
+       * });
+       * if (!res.ok) return;
+       * const data = await res.json();
+       * if (data.results?.length) {
+       *   const newItems = data.results.map(a => ({ ...a, _isNew: true }));
+       *   this.activities = [...newItems, ...this.activities].slice(0, 50);
+       *   this._lastId = Math.max(...this.activities.map(a => a.id));
+       *   setTimeout(() => newItems.forEach(a => { a._isNew = false; }), 400);
+       * }
+       */
+    },
+
+    /* ── Load more (pagination) ── */
+    async loadMore() {
+      if (this.isLoadingMore) return;
+      this.isLoadingMore = true;
+      this.page++;
+      try {
+        await new Promise(r => setTimeout(r, 300));
+        const more = this._mockActivities(this.page);
+        this.activities.push(...more);
+        this.hasMore = more.length >= 10;
+      } finally {
+        this.isLoadingMore = false;
+      }
+    },
+
+    /* ── Refresh manual ── */
+    async refresh() {
+      if (this.isRefreshing) return;
+      this.isRefreshing = true;
+      this.page = 1;
+      await this._loadActivities();
+      this.isRefreshing = false;
+    },
+
+    /* ── Helpers ── */
+    setFilter(f) { this.filter = f; },
+
+    markRead(activity) {
+      activity.read = true;
+    },
+
+    openActivity(activity) {
+      this.markRead(activity);
+      /* Buka slide-over drawer — dashboard tetap terlihat */
+      window.dispatchEvent(new CustomEvent('open-drawer', { detail: { ...activity } }));
+    },
+
+    openApproval(activity) {
+      this.markRead(activity);
+      /* Buka quick-action modal langsung dari feed */
+      window.dispatchEvent(new CustomEvent('open-approval', { detail: { ...activity } }));
+    },
+
+    markAllRead() {
+      this.activities.forEach(a => { a.read = true; });
+    },
+
+    statusLabel(status) {
+      const map = {
+        new     : 'Baru',
+        transit : 'Perjalanan',
+        critical: 'Kritis',
+        done    : 'Selesai',
+      };
+      return map[status] ?? status;
+    },
+
+    /* ── MOCK DATA GENERATOR ── */
+    _mockActivities(page = 1) {
+      const now = Date.now();
+      const min = 60_000;
+      const hr  = 3_600_000;
+
+      const base = [
+        {
+          id      : 1001,
+          status  : 'new',
+          title   : 'PO #4892 — Kopi Gayo Arabica 200 Kg',
+          subtitle: 'Dari Supplier Gunung Mas · Verifikasi diperlukan',
+          time    : this._relTime(now - 3 * min),
+          location: 'Gudang Jakarta Pusat',
+          read    : false,
+          _isNew  : false,
+        },
+        {
+          id      : 1002,
+          status  : 'critical',
+          title   : 'Stok Kritis — Kopi Mandheling',
+          subtitle: 'Tersisa 8 Kg dari threshold 20 Kg',
+          time    : this._relTime(now - 11 * min),
+          location: 'Gudang Bandung',
+          read    : false,
+          _isNew  : false,
+        },
+        {
+          id      : 1003,
+          status  : 'transit',
+          title   : 'Transfer #221 — Gayo Natural Process',
+          subtitle: '50 Kg sedang dalam perjalanan',
+          time    : this._relTime(now - 27 * min),
+          location: 'Aceh → Medan',
+          read    : false,
+          _isNew  : false,
+        },
+        {
+          id      : 1004,
+          status  : 'new',
+          title   : 'Pesanan POS #1.209 diterima',
+          subtitle: 'Rp 4.200.000 · 6 item · Meja 3',
+          time    : this._relTime(now - 34 * min),
+          location: 'Outlet Sudirman',
+          read    : true,
+          _isNew  : false,
+        },
+        {
+          id      : 1005,
+          status  : 'critical',
+          title   : 'Stok Habis — Gayo Natural Process',
+          subtitle: '0 Kg tersisa · Restock segera',
+          time    : this._relTime(now - 52 * min),
+          location: 'Gudang Semarang',
+          read    : false,
+          _isNew  : false,
+        },
+        {
+          id      : 1006,
+          status  : 'transit',
+          title   : 'Pengiriman #109 berangkat',
+          subtitle: 'Kopi Toraja 120 Kg → Surabaya',
+          time    : this._relTime(now - 1.2 * hr),
+          location: 'Makassar → Surabaya',
+          read    : true,
+          _isNew  : false,
+        },
+        {
+          id      : 1007,
+          status  : 'done',
+          title   : 'PO #4881 selesai diterima',
+          subtitle: 'Kopi Flores 300 Kg · Semua item cocok',
+          time    : this._relTime(now - 2.5 * hr),
+          location: 'Gudang Jakarta Pusat',
+          read    : true,
+          _isNew  : false,
+        },
+        {
+          id      : 1008,
+          status  : 'new',
+          title   : 'Stok Opname dimulai',
+          subtitle: 'Jadwal bulanan — 113.000 SKU',
+          time    : this._relTime(now - 3 * hr),
+          location: 'Semua Gudang',
+          read    : true,
+          _isNew  : false,
+        },
+        {
+          id      : 1009,
+          status  : 'critical',
+          title   : 'Stok Kritis — Kemasan 250g',
+          subtitle: 'Tersisa 45 unit dari threshold 200',
+          time    : this._relTime(now - 4.1 * hr),
+          location: 'Gudang Medan',
+          read    : false,
+          _isNew  : false,
+        },
+        {
+          id      : 1010,
+          status  : 'transit',
+          title   : 'Transfer #218 tiba di tujuan',
+          subtitle: 'Robusta Lampung 80 Kg · Konfirmasi penerimaan',
+          time    : this._relTime(now - 5 * hr),
+          location: 'Gudang Bandung',
+          read    : true,
+          _isNew  : false,
+        },
+      ];
+
+      if (page === 1) return base;
+
+      /* Page 2+ — generate additional items */
+      return base.map(a => ({
+        ...a,
+        id  : a.id + (page - 1) * 100,
+        time: this._relTime(now - (5 + page) * hr),
+        read: true,
+      }));
+    },
+
+    _mockNewItem() {
+      const templates = [
+        { status:'new',      title:'Pesanan POS baru masuk',               subtitle:'Rp 890.000 · 2 item',          location:'Outlet Kemang' },
+        { status:'critical', title:'Stok Kritis — Kopi Toraja Premium',    subtitle:'Tersisa 3 Kg',                 location:'Gudang Surabaya' },
+        { status:'transit',  title:'Transfer berangkat dari gudang utama', subtitle:'25 Kg sedang dalam perjalanan', location:'Jakarta → Bandung' },
+        { status:'new',      title:'Supplier mengkonfirmasi PO #4893',     subtitle:'Pengiriman estimasi 2 hari',   location:'Vendor Aceh' },
+      ];
+      const t = templates[Math.floor(Math.random() * templates.length)];
+      return {
+        ...t,
+        id    : Date.now(),
+        time  : 'Baru saja',
+        read  : false,
+        _isNew: false,
+      };
+    },
+
+    _relTime(ts) {
+      const diff = Date.now() - ts;
+      const sec  = Math.floor(diff / 1000);
+      const min  = Math.floor(sec  / 60);
+      const hr   = Math.floor(min  / 60);
+      if (min < 1)  return 'Baru saja';
+      if (min < 60) return `${min} menit lalu`;
+      if (hr  < 24) return `${hr} jam lalu`;
+      return `${Math.floor(hr / 24)} hari lalu`;
+    },
+  };
+}
+</script>

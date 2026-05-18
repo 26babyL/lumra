@@ -1,0 +1,72 @@
+{
+  "filename": "empty_state.html",
+  "title": "empty_state",
+  "components": [
+    {
+      "type": "layout",
+      "tag": "div",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "depth": 1,
+      "path": "root/body/div",
+      "classes": "flex flex-col items-center justify-center py-12 px-6",
+      "text_preview": "",
+      "has_scroll": false,
+      "grid_info": "FLEX (column)",
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "heading",
+      "tag": "h3",
+      "label": "HEADING (H3)",
+      "depth": 3,
+      "path": "root/body/div/div/h3",
+      "classes": "text-xl font-bold text-slate-300 mb-2",
+      "text_preview": "{{ title|default:\"Tidak ada data\" }}",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 0,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 1,
+      "path": "root/body/div",
+      "type": "layout",
+      "label": "LAYOUT CONTAINER [FLEX (column)]",
+      "text_preview": ""
+    },
+    {
+      "depth": 3,
+      "path": "root/body/div/div/h3",
+      "type": "heading",
+      "label": "HEADING (H3)",
+      "text_preview": "{{ title|default:\"Tidak ada data\" }}"
+    }
+  ],
+  "issues": [],
+  "stats": {
+    "total_components": 2,
+    "by_type": {
+      "layout": 1,
+      "heading": 1
+    },
+    "interactive": 0,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 0,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 0
+    }
+  }
+}

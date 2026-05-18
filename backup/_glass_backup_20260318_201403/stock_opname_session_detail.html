@@ -1,0 +1,392 @@
+
+<style>
+/* Glass Minimal — lumra_glass_fix.py fase 5 (konservatif) */
+.modal-overlay {
+  background: var(--glass-dark-bg, var(--color-slate-900-a040));
+  backdrop-filter: var(--glass-dark-blur);
+  -webkit-backdrop-filter: var(--glass-dark-blur);
+}
+.panel-glass {
+  background: var(--glass-bg, var(--color-white-a072));
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid var(--glass-border, var(--color-white-a020));
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow, 0 2px 12px var(--color-black-a06));
+}
+
+</style>
+{% extends 'base/base.html' %}
+{% block title %}Approval Detail — {{ approval.location.name }} — CoffeeShop{% endblock %}
+
+{#
+   Data status approval via json_script — menggantikan Jinja2 syntax
+   dan interpolasi Django langsung ke JS.
+   Di view, tambahkan:
+     context['approval_init'] = json.dumps({
+         'id': approval.id,
+         'status': approval.status,
+         'is_pending': approval.status == 'pending',
+         'location_name': approval.location.name,
+     })
+#}
+{{ approval_init|json_script:"approval-init-data" }}
+
+{% block content %}
+<div class="py-6 px-3 sm:px-4 lg:px-6"
+     x-data="approvalDetail()"
+     x-init="init()">
+<div class="max-w-7xl mx-auto space-y-6">
+
+    {# ── HEADER ──────────────────────────────────────────────── #}
+    <div>
+        <nav aria-label="Breadcrumb" class="mb-1">
+            <ol class="flex items-center gap-2 text-sm text-emerald-600">
+                <li><a href="{% url 'dashboard' %}" class="hover:text-emerald-800 transition-colors">Dashboard</a></li>
+                <li aria-hidden="true"><span class="text-emerald-300">/</span></li>
+                <li><a href="{% url 'stock_opname_approvals' %}" class="hover:text-emerald-800 transition-colors">Approvals</a></li>
+                <li aria-hidden="true"><span class="text-emerald-300">/</span></li>
+                <li class="text-emerald-800 font-medium truncate max-w-xs" aria-current="page">
+                    {{ approval.location.name }}
+                </li>
+            </ol>
+        </nav>
+        <h1 class="text-2xl md:text-3xl font-bold text-slate-900">
+            Approval Detail —
+            <span class="text-emerald-600">{{ approval.location.name }}</span>
+        </h1>
+        <p class="text-sm text-slate-500 mt-0.5">Tinjau data opname dan ambil tindakan</p>
+    </div>
+
+    {# ── SUMMARY CARD ────────────────────────────────────────── #}
+    <div class="p-5 rounded-2xl shadow-sm border border-slate-100" style="background:var(--color-surface)">
+        <h2 class="text-sm font-semibold text-slate-700 mb-4">Ringkasan Approval</h2>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-slate-50 p-3 rounded-xl">
+                <p class="text-xs text-slate-500 mb-0.5">Lokasi</p>
+                <p class="text-sm font-semibold text-slate-900">{{ approval.location.name }}</p>
+            </div>
+            <div class="bg-slate-50 p-3 rounded-xl">
+                <p class="text-xs text-slate-500 mb-0.5">Disubmit Oleh</p>
+                <p class="text-sm font-semibold text-slate-900">
+                    {{ approval.created_by.get_full_name|default:approval.created_by.username }}
+                </p>
+            </div>
+            <div class="bg-slate-50 p-3 rounded-xl">
+                <p class="text-xs text-slate-500 mb-0.5">Tanggal Submit</p>
+                <p class="text-sm font-semibold text-slate-900">
+                    {{ approval.created_at|date:"d M Y, H:i" }}
+                </p>
+            </div>
+            <div class="bg-slate-50 p-3 rounded-xl">
+                <p class="text-xs text-slate-500 mb-0.5">Status</p>
+                {#
+                   Status badge dirender Django secara SSR (nilai statis).
+                   Saat status berubah di client setelah approve/reject,
+                   halaman di-redirect — badge tidak perlu diupdate secara reaktif.
+                   Ini konsisten dan tidak ada inconsistency antara SSR dan client state.
+                #}
+                <span class="inline-flex px-2.5 py-1 text-xs font-semibold rounded-full
+                    {% if approval.status == 'pending' %}bg-amber-100 text-amber-700
+                    {% elif approval.status == 'approved' %}bg-green-100 text-green-700
+                    {% else %}bg-red-100 text-red-700{% endif %}">
+                    {{ approval.status|capfirst }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    {# ── DATA TABLE ──────────────────────────────────────────── #}
+    <section class="rounded-2xl shadow-sm border border-slate-100 overflow-hidden" style="background:var(--color-surface)"
+             aria-labelledby="opname-data-heading">
+
+        <div class="px-5 py-4 border-b border-slate-100">
+            <h2 id="opname-data-heading" class="text-sm font-semibold text-slate-700">Data Opname</h2>
+            <p class="text-xs text-slate-400 mt-0.5">Jumlah terhitung dan catatan untuk setiap produk</p>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-100" role="table">
+                <thead>
+                    <tr class="bg-slate-50">
+                        <th scope="col" class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">SKU</th>
+                        <th scope="col" class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Produk</th>
+                        <th scope="col" class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Stok Sistem</th>
+                        <th scope="col" class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Hasil Hitung</th>
+                        <th scope="col" class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Selisih</th>
+                        <th scope="col" class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Catatan</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50" style="background:var(--color-surface)">
+                    {% for item in opname_data %}
+                    <tr class="hover:bg-slate-50 transition-colors duration-150">
+                        <td class="px-5 py-4">
+                            <code class="bg-emerald-50 px-2 py-1 rounded text-xs font-mono text-emerald-700">
+                                {{ item.variant.sku }}
+                            </code>
+                        </td>
+                        <td class="px-5 py-4 text-sm font-medium text-slate-900">
+                            {{ item.variant.product.name }}
+                        </td>
+                        <td class="px-5 py-4 text-sm text-slate-600">
+                            {{ item.current_stock|default:0 }}
+                        </td>
+                        <td class="px-5 py-4 text-sm text-slate-900 font-medium">
+                            {{ item.counted_qty|default:0 }}
+                        </td>
+                        <td class="px-5 py-4 text-sm font-semibold
+                            {# Perbedaan stok dirender server — tidak perlu Alpine getDifferenceClass() #}
+                            {% if item.difference > 0 %}text-green-600
+                            {% elif item.difference < 0 %}text-red-600
+                            {% else %}text-gray-500{% endif %}">
+                            {% if item.difference > 0 %}+{% endif %}{{ item.difference|default:0 }}
+                        </td>
+                        <td class="px-5 py-4 text-sm text-slate-500">
+                            {{ item.notes|default:"—" }}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="px-5 py-10 text-center text-slate-400 text-sm">
+                            <i class="fas fa-inbox text-2xl mb-2 block opacity-40" aria-hidden="true"></i>
+                            Tidak ada data opname.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    {# ── ACTION AREA ─────────────────────────────────────────── #}
+
+    {# Jika masih pending — tampilkan tombol approve/reject #}
+    <div x-show="isPending"
+         class="p-5 rounded-2xl shadow-sm border border-slate-100" style="background:var(--color-surface)">
+        <h2 class="text-sm font-semibold text-slate-700 mb-4">Ambil Tindakan</h2>
+        <div class="flex flex-wrap gap-3">
+            <button @click="openConfirm('approve')"
+                    :disabled="isProcessing"
+                    class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold py-2 px-5 rounded-xl transition-colors shadow-sm">
+                <i x-show="isProcessing && pendingAction === 'approve'" class="fas fa-circle-notch fa-spin text-xs" aria-hidden="true"></i>
+                <i x-show="!(isProcessing && pendingAction === 'approve')" class="fas fa-check text-xs" aria-hidden="true"></i>
+                Setujui & Update Stok
+            </button>
+            <button @click="openConfirm('reject')"
+                    :disabled="isProcessing"
+                    class="inline-flex items-center gap-2 bg-red-500 hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold py-2 px-5 rounded-xl transition-colors shadow-sm">
+                <i x-show="isProcessing && pendingAction === 'reject'" class="fas fa-circle-notch fa-spin text-xs" aria-hidden="true"></i>
+                <i x-show="!(isProcessing && pendingAction === 'reject')" class="fas fa-times text-xs" aria-hidden="true"></i>
+                Tolak
+            </button>
+            <a href="{% url 'stock_opname_approvals' %}"
+               class="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-medium py-2 px-4 rounded-xl transition-colors">
+                <i class="fas fa-arrow-left text-xs" aria-hidden="true"></i> Kembali
+            </a>
+        </div>
+    </div>
+
+    {# Jika sudah diproses #}
+    <div x-show="!isPending"
+         class="p-5 rounded-2xl shadow-sm border border-slate-100" style="background:var(--color-surface)">
+        <p class="text-sm text-slate-600">
+            Approval ini sudah
+            <strong class="text-slate-900" x-text="approvalStatus === 'approved' ? 'disetujui' : 'ditolak'"></strong>.
+        </p>
+        <a href="{% url 'stock_opname_approvals' %}"
+           class="inline-flex items-center gap-2 mt-3 bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-medium py-2 px-4 rounded-xl transition-colors">
+            <i class="fas fa-arrow-left text-xs" aria-hidden="true"></i> Kembali ke Daftar Approval
+        </a>
+    </div>
+
+</div>
+</div>
+
+{# ================================================================
+   MODALS
+================================================================= #}
+
+{# ── Confirmation Modal ────────────────────────────────────────── #}
+<div x-show="activeModal === 'confirm'"
+     x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+     class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+     @keydown.escape.window="closeModal()" @click.self="closeModal()"
+     role="dialog" aria-modal="true" aria-labelledby="modal-confirm-title" x-cloak>
+
+    <div class="rounded-2xl shadow-2xl w-full max-w-sm" style="background:var(--color-surface)"
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 scale-95"
+         x-transition:enter-end="opacity-100 scale-100">
+
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+            <h2 id="modal-confirm-title" class="text-lg font-bold text-slate-900"
+                x-text="pendingAction === 'approve' ? 'Setujui Opname' : 'Tolak Opname'">
+            </h2>
+            <button @click="closeModal()" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg transition-colors" aria-label="Tutup">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <div class="p-6">
+            <p class="text-sm text-slate-600">
+                <span x-text="pendingAction === 'approve'
+                    ? 'Setujui opname ini? Stok akan diperbarui secara otomatis.'
+                    : 'Tolak opname ini? Tindakan ini tidak dapat dibatalkan.'">
+                </span>
+            </p>
+
+            <div class="flex justify-end gap-2 mt-5">
+                <button @click="closeModal()" :disabled="isProcessing"
+                        class="px-4 py-2 text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 rounded-xl transition-colors">
+                    Batal
+                </button>
+                <button @click="executeAction()" :disabled="isProcessing"
+                        class="inline-flex items-center gap-2 px-4 py-2 text-sm text-white disabled:opacity-50 rounded-xl transition-colors"
+                        :class="pendingAction === 'approve'
+                            ? 'bg-green-500 hover:bg-green-600'
+                            : 'bg-red-500 hover:bg-red-600'">
+                    <i x-show="isProcessing" class="fas fa-circle-notch fa-spin text-xs" aria-hidden="true"></i>
+                    <span x-text="isProcessing ? 'Memproses...' : (pendingAction === 'approve' ? 'Ya, Setujui' : 'Ya, Tolak')"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Toast container #}
+<div id="toast-container"
+     class="fixed bottom-4 right-4 z-50 space-y-2 pointer-events-none"
+     aria-live="polite"></div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+function approvalDetail() {
+    return {
+        // ── State ──────────────────────────────────────────────
+        approvalId: null,
+        approvalStatus: '',
+        isPending: false,
+
+        activeModal: null,
+        previousFocus: null,
+        isProcessing: false,
+
+        // 'approve' | 'reject' | null
+        pendingAction: null,
+
+        // ── Init ───────────────────────────────────────────────
+        init() {
+            // Ambil dari json_script — bukan Jinja2 syntax atau interpolasi Django ke JS
+            const initData = JSON.parse(
+                document.getElementById('approval-init-data')?.textContent || 'null'
+            );
+            if (initData) {
+                this.approvalId     = initData.id;
+                this.approvalStatus = initData.status;
+                this.isPending      = initData.is_pending;
+            }
+        },
+
+        // ── Confirm Modal ──────────────────────────────────────
+        openConfirm(action) {
+            this.pendingAction = action;
+            this.openModal('confirm');
+        },
+
+        // ── Execute Approve / Reject ───────────────────────────
+        executeAction() {
+            if (!this.pendingAction || !this.approvalId) return;
+            this.isProcessing = true;
+
+            const url = this.pendingAction === 'approve'
+                ? `/api/opname/${encodeURIComponent(this.approvalId)}/approve/`
+                : `/api/opname/${encodeURIComponent(this.approvalId)}/reject/`;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': this.getCsrfToken(),
+                    'X-Requested-With': 'XMLHttpRequest',
+                }
+            })
+                .then(res => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
+                .then(data => {
+                    if (data.success) {
+                        const action = this.pendingAction;
+                        this.showToast(
+                            action === 'approve' ? 'Opname berhasil disetujui!' : 'Opname berhasil ditolak.',
+                            action === 'approve' ? 'success' : 'info'
+                        );
+                        // Update state lokal — konsisten antara server state dan Alpine state
+                        this.approvalStatus = action === 'approve' ? 'approved' : 'rejected';
+                        this.isPending = false;
+                        this.closeModal();
+                        // Redirect setelah toast tampil
+                        setTimeout(() => {
+                            window.location.href = '{% url "stock_opname_approvals" %}';
+                        }, 1200);
+                    } else {
+                        this.showToast(data.error || 'Gagal memproses', 'error');
+                    }
+                })
+                .catch(() => this.showToast('Terjadi kesalahan. Coba lagi.', 'error'))
+                .finally(() => { this.isProcessing = false; });
+        },
+
+        // ── Modal ──────────────────────────────────────────────
+        openModal(name) {
+            this.previousFocus = document.activeElement;
+            this.activeModal = name;
+            this.$nextTick(() => {
+                const modal = document.querySelector('[role="dialog"]:not([style*="display: none"])');
+                const first = modal?.querySelector('button, input, select, [tabindex]:not([tabindex="-1"])');
+                if (first) first.focus();
+            });
+        },
+
+        closeModal() {
+            this.activeModal   = null;
+            this.isProcessing  = false;
+            if (this.previousFocus) this.previousFocus.focus();
+        },
+
+        // ── CSRF ───────────────────────────────────────────────
+        getCsrfToken() {
+            return document.querySelector('[name=csrfmiddlewaretoken]')?.value ?? '';
+        },
+
+        // ── Toast ──────────────────────────────────────────────
+        showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const colors = { success: 'bg-green-500', error: 'bg-red-500', warning: 'bg-amber-500', info: 'bg-blue-500' };
+            const toast = document.createElement('div');
+            toast.className = [colors[type] ?? colors.info, 'text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 pointer-events-auto translate-x-full transition-transform duration-300 text-sm'].join(' ');
+            toast.setAttribute('role', 'status');
+            const msg = document.createElement('span');
+            msg.className = 'flex-1';
+            msg.textContent = message;
+            const btn = document.createElement('button');
+            btn.setAttribute('aria-label', 'Tutup');
+            btn.className = 'text-white/80 hover:text-white flex-shrink-0';
+            btn.innerHTML = '<i class="fas fa-times text-xs" aria-hidden="true"></i>';
+            btn.addEventListener('click', dismiss);
+            toast.appendChild(msg);
+            toast.appendChild(btn);
+            container.appendChild(toast);
+            requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.remove('translate-x-full')));
+            const timer = setTimeout(dismiss, 5000);
+            function dismiss() {
+                clearTimeout(timer);
+                toast.classList.add('translate-x-full');
+                toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+            }
+        }
+    };
+}
+</script>
+{% endblock %}

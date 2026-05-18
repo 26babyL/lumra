@@ -1,0 +1,18 @@
+<!-- base/sidebar_item.html -->
+<div class="mb-0.5">
+    <a href="{% url url %}" x-ref="{{ ref|default:'' }}"
+       :aria-current="isActive('/{{ url }}/') ? 'page' : null"
+       class="group relative w-full flex items-center gap-3 px-3 py-3 rounded-2xl text-sm font-medium transition-all duration-200 hover:bg-emerald-50 hover:text-emerald-900"
+       :class="{
+           'justify-center': !isSidebarOpen,
+           'bg-emerald-100 text-emerald-800': isActive('/{{ url }}/')
+       }">
+        <i class="fas {{ icon }} w-6 text-center flex-shrink-0 transition-transform group-hover:scale-110 group-hover:text-emerald-600"
+           :class="isActive('/{{ url }}/') ? 'text-emerald-600' : 'text-gray-400'"></i>
+        <span x-show="isSidebarOpen" x-transition class="flex-1 truncate">{{ label }}</span>
+        <span x-cloak x-show="!isSidebarOpen"
+              class="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 ml-3 whitespace-nowrap rounded-lg bg-gray-900 text-white px-3 py-1.5 text-xs shadow-xl opacity-0 group-hover:opacity-100 transition-opacity z-50">
+            {{ label }}
+        </span>
+    </a>
+</div>

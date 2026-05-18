@@ -1,0 +1,601 @@
+{% extends 'base/base.html' %}
+{% block title %}{% if is_edit %}Edit{% else %}Tambah{% endif %} Satuan{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  [x-cloak] { display: none !important; }
+
+  @keyframes drift {
+    from { transform:translate(0,0) scale(1); }
+    to   { transform:translate(20px,28px) scale(1.06); }
+  }
+
+  .mono-inp { font-family:'DM Mono',monospace; letter-spacing:.06em; }
+
+  .err-msg  { font-size:10px; font-weight:700; color:var(--color-e11d48); margin-top:4px; }
+
+  .hint     { font-size:10px; font-weight:500; color:var(--color-slate-400); margin-top:4px; }
+
+  .lbl {
+    font-size:10px; font-weight:700; text-transform:uppercase;
+    letter-spacing:.13em; color:var(--color-slate-400); display:block; margin-bottom:6px;
+  }
+
+  .grp-pill {
+    flex:1; padding:8px 8px; border-radius:12px;
+    border:1.5px solid var(--color-slate-200-a08);
+    cursor:pointer; transition:all .2s;
+    text-align:center;
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    background:var(--color-surface-faint);
+    color:var(--color-slate-400);
+  }
+
+  .grp-pill:hover { transform:translateY(-1px); box-shadow:0 4px 12px var(--color-black-a006); }
+
+  .grp-pill.active {
+    border-color:currentColor;
+    background:var(--color-surface-high);
+    box-shadow:0 2px 10px var(--color-black-a008);
+  }
+
+  .tog {
+    position:relative; width:36px; height:20px; border-radius:99px;
+    cursor:pointer; flex-shrink:0; transition:background .35s ease;
+  }
+
+  .tog.on  { background:linear-gradient(135deg,var(--color-emerald-700),var(--color-emerald-600)); }
+
+  .tog.off { background:var(--color-slate-200); }
+
+  .tog .k {
+    position:absolute; top:2px; width:16px; height:16px; border-radius:50%;
+    background:var(--color-fff); box-shadow:0 1px 4px var(--color-black-a02);
+    transition:transform .35s cubic-bezier(.4,0,.2,1);
+  }
+
+  .tog.on  .k { transform:translateX(18px); }
+
+  .tog.off .k { transform:translateX(2px); }
+
+  .preview-card {
+    border-radius:16px; padding:20px;
+    background:linear-gradient(135deg,var(--color-overlay-sm),var(--color-surface-faint));
+    border:1px solid var(--color-emerald-600-a015);
+    box-shadow:0 2px 12px var(--color-emerald-700-a006);
+    position:relative; overflow:hidden;
+  }
+
+  .preview-symbol {
+    font-family:'DM Mono',monospace;
+    font-size:36px; font-weight:700; line-height:1;
+    background:linear-gradient(135deg,var(--color-emerald-700),var(--color-0d9488));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    background-clip:text;
+  }
+
+  .formula-box {
+    padding:8px 13px; border-radius:11px;
+    background:var(--color-surface-faint);
+    border:1px solid var(--color-slate-200-a07);
+    font-family:'DM Mono',monospace; font-size:11px; font-weight:700; color:var(--color-slate-700);
+  }
+
+  .conv-section {
+    padding:16px; border-radius:14px;
+    background:var(--color-overlay-sm); border:1px solid var(--color-overlay-sm);
+    transition:opacity .3s;
+  }
+
+  .conv-section.dimmed { opacity:.35; pointer-events: none; }
+
+  .save-btn {
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    padding:12px 28px; border-radius:14px;
+    background:linear-gradient(135deg,var(--color-emerald-700),var(--color-0d9488)); color:var(--color-fff);
+    font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:.12em;
+    border:var(--shadow-sm-16); cursor:pointer;
+    box-shadow:0 6px 20px var(--color-emerald-700-a03);
+    transition:transform .15s, box-shadow .15s, opacity .15s;
+  }
+
+  .save-btn:hover:not(:disabled) {
+    transform:translateY(-2px);
+    box-shadow:0 10px 28px var(--color-emerald-700-a038);
+  }
+
+  .save-btn:disabled { opacity:.45; cursor:not-allowed; transform: none; }
+
+  @keyframes toastIn  { from{opacity:0;transform:translateX(20px);} to{opacity:1;transform: none;} }
+
+  @keyframes toastOut { from{opacity:1;} to{opacity:0;pointer-events: none;} }
+
+  @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.2;} }
+
+  .blink { animation:blink 1.2s infinite; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bg-blob bg-blob-1" aria-hidden="true"></div>
+<div class="bg-blob bg-blob-2" aria-hidden="true"></div>
+
+<script id="units-select-data" type="application/json">{{ units_for_select_json|safe }}</script>
+
+<div class="w-full flex-1 space-y-5 relative z-10"
+     x-data="unitForm()"
+     x-init="init()"
+     x-cloak>
+
+  {# ── HEADER ── #}
+  <div class="reveal flex items-end justify-between gap-3 flex-wrap">
+    <div>
+      <nav class="flex items-center gap-2 text-xs text-emerald-600 mb-1" aria-label="Breadcrumb">
+        <a href="{% url 'dashboard' %}" class="hover:text-emerald-800 transition-colors">Dashboard</a>
+        <span class="text-slate-300">/</span>
+        <a href="{% url 'units_list' %}" class="hover:text-emerald-800 transition-colors">Units</a>
+        <span class="text-slate-300">/</span>
+        <span class="text-slate-600 font-medium">
+          {% if is_edit %}Edit{% else %}Tambah{% endif %}
+        </span>
+      </nav>
+      <h1 class="text-2xl font-bold text-slate-800" style="font-family:'Syne',sans-serif;">
+        {% if is_edit %}Edit{% else %}Tambah{% endif %}
+        <span class="text-emerald-600">Satuan</span>
+      </h1>
+      <p class="text-sm text-slate-400 mt-0.5">
+        {% if is_edit %}Perbarui definisi satuan ukur{% else %}Definisikan satuan baru untuk inventaris{% endif %}
+      </p>
+    </div>
+    <a href="{% url 'units_list' %}"
+       class="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200/70 text-slate-500 text-xs font-semibold hover:bg-white transition" style="background:var(--color-surface)">
+      <i class="fas fa-arrow-left text-[10px]"></i> Kembali
+    </a>
+  </div>
+
+  {# ── MAIN GRID: FORM (left) + PREVIEW (right) ── #}
+  <div class="reveal grid grid-cols-1 xl:grid-cols-[1fr_300px] gap-5 items-start">
+
+    {# ══ FORM ══ #}
+    <div class="glass-card p-6">
+      <form @submit.prevent="submitForm()" class="space-y-6">
+        {% csrf_token %}
+
+        {# §1 — Group Picker #}
+        <div>
+          <label class="lbl">Kategori Satuan <span class="text-rose-400">*</span></label>
+          <div class="flex gap-2 flex-wrap">
+            <template x-for="g in groups" :key="g.key">
+              <div @click="f.group = g.key; isDirty=true"
+                   class="grp-pill"
+                   :class="f.group === g.key ? 'active' : ''"
+                   :style="f.group === g.key
+                     ? `color:${g.color}; border-color:${g.color}; background:${g.bg}`
+                     : ''">
+                <span class="text-lg leading-none" x-text="g.emoji"></span>
+                <span class="text-[9px] font-bold uppercase tracking-wider" x-text="g.label"></span>
+              </div>
+            </template>
+          </div>
+          <p x-show="errors.group" class="err-msg" x-text="errors.group"></p>
+        </div>
+
+        {# §2 — Name + Symbol (2-col) #}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="lbl">Nama Satuan <span class="text-rose-400">*</span></label>
+            <input x-model="f.name"
+                   @input="isDirty=true; validateField('name')"
+                   :class="errors.name ? 'inp err' : f.name ? 'inp ok' : 'inp'"
+                   placeholder="cth: Kilogram, Liter, Pieces">
+            <p x-show="errors.name" class="err-msg" x-text="errors.name"></p>
+          </div>
+          <div>
+            <label class="lbl">
+              Simbol <span class="text-rose-400">*</span>
+              <span class="text-[8px] normal-case ml-1">(unik, maks 10 karakter)</span>
+            </label>
+            <div class="relative">
+              <input x-model="f.symbol"
+                     @input="formatSymbol(); isDirty=true; validateField('symbol')"
+                     :class="errors.symbol ? 'inp err mono-inp'
+                              : (f.symbol && !errors.symbol) ? 'inp ok mono-inp'
+                              : 'inp mono-inp'"
+                     placeholder="kg, pcs, L, mL"
+                     maxlength="10">
+              <div class="absolute right-3 top-1/2 -translate-y-1/2 text-sm">
+                <i x-show="f.symbol && !errors.symbol"
+                   class="fas fa-check-circle text-emerald-400"></i>
+                <i x-show="errors.symbol"
+                   class="fas fa-times-circle text-rose-400"></i>
+              </div>
+            </div>
+            <p x-show="errors.symbol" class="err-msg" x-text="errors.symbol"></p>
+            <p class="hint">Hanya huruf, angka, dan: / _ -</p>
+          </div>
+        </div>
+
+        {# §3 — Description #}
+        <div>
+          <label class="lbl">Deskripsi</label>
+          <textarea x-model="f.description"
+                    @input="isDirty=true"
+                    class="inp" rows="2"
+                    placeholder="Keterangan penggunaan satuan ini…"></textarea>
+        </div>
+
+        {# §4 — Is Base Toggle #}
+        <div class="flex items-center gap-4 px-4 py-4 rounded-2xl
+                    bg-amber-50/50 border border-amber-100/70">
+          <div @click="f.is_base = !f.is_base; isDirty=true"
+               class="tog" :class="f.is_base ? 'on' : 'off'">
+            <div class="k"></div>
+          </div>
+          <div class="flex-1">
+            <p class="text-[12px] font-semibold text-slate-700">Satuan Dasar (Base Unit)</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">
+              Jadikan sebagai acuan konversi. cth: Kilogram adalah base untuk Gram dan Sack.
+            </p>
+          </div>
+          <span x-show="f.is_base"
+                class="text-[9px] font-black text-amber-600
+                       bg-amber-50 border border-amber-200
+                       px-2 py-1 rounded-lg flex-shrink-0">
+            BASE
+          </span>
+        </div>
+
+        {# §5 — Conversion Factor (hidden when is_base) #}
+        <div class="conv-section" :class="f.is_base ? 'dimmed' : ''">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-6 h-6 rounded-lg bg-sky-50 border border-sky-100
+                        flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-exchange-alt text-sky-500 text-[10px]"></i>
+            </div>
+            <p class="text-[11px] font-semibold text-slate-700">Faktor Konversi ke Satuan Dasar</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="lbl">Satuan Dasar Referensi</label>
+              <select x-model="f.base_unit_id"
+                      @change="isDirty=true"
+                      class="inp">
+                <option value="">Pilih base unit…</option>
+                <template x-for="u in baseUnits" :key="u.id">
+                  <option :value="u.id" x-text="`${u.name} (${u.symbol})`"></option>
+                </template>
+              </select>
+              <p class="hint">Satuan yang dijadikan acuan</p>
+            </div>
+            <div>
+              <label class="lbl">
+                Faktor <span class="text-rose-400">*</span>
+              </label>
+              <input type="number" step="0.000001" min="0.000001"
+                     x-model.number="f.conversion_factor"
+                     @input="isDirty=true; validateField('conversion_factor')"
+                     :class="errors.conversion_factor ? 'inp err mono-inp' : 'inp mono-inp'"
+                     placeholder="cth: 0.001">
+              <p x-show="errors.conversion_factor"
+                 class="err-msg" x-text="errors.conversion_factor"></p>
+              <p class="hint">1 <span x-text="f.symbol||'?'"></span> = ? <span x-text="selectedBaseUnit?.symbol||'base'"></span></p>
+            </div>
+          </div>
+
+          {# Live formula #}
+          <div x-show="f.symbol && f.conversion_factor > 0 && selectedBaseUnit"
+               x-transition
+               class="formula-box mt-3 flex items-center gap-2 flex-wrap">
+            <span class="text-emerald-500 font-black">1</span>
+            <span x-text="f.symbol"></span>
+            <span class="text-slate-400">=</span>
+            <span class="text-sky-600 font-black" x-text="f.conversion_factor"></span>
+            <span x-text="selectedBaseUnit?.symbol || ''"></span>
+            <i class="fas fa-check-circle text-emerald-400 ml-auto"></i>
+          </div>
+
+          {# Reciprocal #}
+          <p x-show="f.conversion_factor > 0 && selectedBaseUnit"
+             class="text-[10px] text-slate-400 font-medium mt-2">
+            ↔ Balik: 1 <span x-text="selectedBaseUnit?.symbol"></span>
+            = <span class="font-mono font-bold"
+                    x-text="f.conversion_factor > 0
+                      ? parseFloat((1/f.conversion_factor).toFixed(6)) : ''"></span>
+            <span x-text="f.symbol"></span>
+          </p>
+        </div>
+
+        {# §6 — Actions #}
+        <div class="flex items-center gap-3 pt-4 border-t border-slate-100/60">
+          <button type="submit" :disabled="isSaving" class="save-btn">
+            <i :class="isSaving ? 'fas fa-spinner fa-spin' : 'fas fa-save'" class="text-[11px]"></i>
+            <span x-text="isSaving
+              ? 'Menyimpan…'
+              : '{% if is_edit %}Simpan Perubahan{% else %}Buat Satuan{% endif %}'">
+            </span>
+          </button>
+          <a href="{% url 'units_list' %}"
+             class="px-5 py-3 rounded-2xl border border-slate-200/80
+                    text-slate-500 text-xs font-semibold
+                    hover:bg-slate-50 transition">
+            Batal
+          </a>
+          {# Unsaved dot #}
+          <div x-show="isDirty && !isSaving"
+               class="ml-auto flex items-center gap-1.5 text-[10px] font-semibold text-amber-500">
+            <div class="w-1.5 h-1.5 rounded-full bg-amber-400 blink"></div>
+            Belum disimpan
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    {# ══ LIVE PREVIEW (right col, sticky on xl) ══ #}
+    <div class="space-y-4 xl:sticky xl:top-4">
+
+      <div class="glass-card p-5">
+        <p class="lbl mb-4">Live Preview</p>
+
+        <div class="preview-card text-center mb-4">
+          <div class="preview-symbol" x-text="f.symbol || '—'"></div>
+          <p class="text-[14px] font-bold text-slate-700 mt-2"
+             x-text="f.name || 'Nama Satuan'"></p>
+          <div class="flex items-center justify-center gap-2 mt-2 flex-wrap">
+            <span x-show="f.group"
+                  class="text-[9px] font-black px-2 py-0.5 rounded-lg"
+                  :style="`background:${activeGroup?.bg||'rgba(241,245,249,.8)'};
+                           color:${activeGroup?.color||'#94a3b8'}`"
+                  x-text="(activeGroup?.emoji || '') + ' ' + (activeGroup?.label || '')">
+            </span>
+            <span x-show="f.is_base"
+                  class="text-[9px] font-black text-amber-600
+                         bg-amber-50 border border-amber-200
+                         px-2 py-0.5 rounded-lg">
+              BASE UNIT
+            </span>
+          </div>
+        </div>
+
+        <div class="space-y-2 text-[11px]">
+          <div class="flex justify-between py-2 border-b border-slate-100/60">
+            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Deskripsi</span>
+            <span class="font-medium text-slate-600 max-w-[55%] text-right"
+                  x-text="f.description || '—'"></span>
+          </div>
+          <div x-show="!f.is_base && f.conversion_factor > 0 && selectedBaseUnit"
+               class="py-2 border-b border-slate-100/60">
+            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Konversi</p>
+            <div class="formula-box text-xs">
+              1 <span x-text="f.symbol"></span> =
+              <span class="text-sky-600 font-black" x-text="f.conversion_factor"></span>
+              <span x-text="selectedBaseUnit?.symbol"></span>
+            </div>
+          </div>
+          <div class="flex justify-between py-2">
+            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Siap</span>
+            <span class="font-semibold"
+                  :class="isReady ? 'text-emerald-500' : 'text-slate-300'"
+                  x-text="isReady ? '✓ Ya' : '⌛ Lengkapi'">
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {# Tips #}
+      <div class="glass-card p-5">
+        <p class="lbl mb-3">Tips</p>
+        <div class="space-y-3">
+          <div class="flex items-start gap-2">
+            <i class="fas fa-lightbulb text-amber-400 text-[10px] mt-0.5 flex-shrink-0"></i>
+            <p class="text-[10px] text-slate-500 leading-relaxed">
+              Gunakan simbol resmi:
+              <span class="font-mono font-black">kg</span>,
+              <span class="font-mono font-black">g</span>,
+              <span class="font-mono font-black">mL</span>,
+              <span class="font-mono font-black">pcs</span>
+            </p>
+          </div>
+          <div class="flex items-start gap-2">
+            <i class="fas fa-shield-alt text-sky-400 text-[10px] mt-0.5 flex-shrink-0"></i>
+            <p class="text-[10px] text-slate-500 leading-relaxed">
+              Satuan yang dipakai SKU aktif
+              <strong>tidak bisa dihapus</strong> — rencanakan dari awal.
+            </p>
+          </div>
+          <div class="flex items-start gap-2">
+            <i class="fas fa-calculator text-emerald-400 text-[10px] mt-0.5 flex-shrink-0"></i>
+            <p class="text-[10px] text-slate-500 leading-relaxed">
+              F&B: 1 Sack (60 kg) biji kopi →
+              conversion_factor = <span class="font-mono font-black">60</span>
+              terhadap kg.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+{# ── TOAST — COPY-PASTE from inbox.html ── #}
+<div class="fixed bottom-4 right-4 z-50 space-y-2"
+     x-data aria-live="polite" aria-atomic="true">
+  <template x-for="t in $store.toasts.list" :key="t.id">
+    <div class="toast flex items-center gap-3 px-4 py-3 rounded-xl
+                shadow-2xl min-w-56 max-w-xs text-white text-sm"
+         style="background:var(--color-overlay-heavy); backdrop-filter: var(--glass-blur);"
+         :class="{
+           'border-l-4 border-emerald-400': t.type==='success',
+           'border-l-4 border-blue-400'  : t.type==='info',
+           'border-l-4 border-amber-400' : t.type==='warning',
+           'border-l-4 border-rose-400'  : t.type==='error',
+         }">
+      <i :class="t.icon" class="text-xs flex-shrink-0"></i>
+      <span x-text="t.message"></span>
+    </div>
+  </template>
+</div>
+{% endblock %}
+
+{% block dashboard_scripts %}
+<script>
+document.addEventListener('alpine:init', () => {
+  Alpine.store('toasts', {
+    list: [], _id: 0,
+    show(message, type = 'success', icon = 'fas fa-check-circle') {
+      const id = ++this._id;
+      this.list.push({ id, message, type, icon });
+      setTimeout(() => { this.list = this.list.filter(t => t.id !== id); }, 2900);
+    }
+  });
+});
+</script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function _csrf() {
+  const el = document.querySelector('[name=csrfmiddlewaretoken]');
+  return el ? el.value : (document.cookie.match(/csrftoken=([^;]+)/) || [])[1] || '';
+}
+async function _post(url, fd) {
+  fd.append('csrfmiddlewaretoken', _csrf());
+  const r = await fetch(url, { method:'POST', body:fd });
+  return r.json();
+}
+
+function unitForm() {
+  return {
+    isEdit  : {{ is_edit|yesno:"true,false" }},
+    isSaving: false,
+    isDirty : false,
+    errors  : {},
+
+    f: {
+      name             : '{{ form.name.value|default:""|escapejs }}',
+      symbol           : '{{ form.symbol.value|default:""|escapejs }}',
+      description      : '{{ form.description.value|default:""|escapejs }}',
+      group            : '{{ form.group.value|default:"quantity"|escapejs }}',
+      is_base          : {{ form.is_base.value|yesno:"true,false"|default:"false" }},
+      conversion_factor: {{ form.conversion_factor.value|default:"null" }},
+      base_unit_id     : '{{ form.base_unit.value|default:""|escapejs }}',
+    },
+
+    allUnits: [],
+
+    groups: [
+      { key:'weight',   label:'Weight',   emoji:'⚖️', color:'#d97706', bg:'rgba(245,158,11,0.08)'  },
+      { key:'volume',   label:'Volume',   emoji:'💧', color:'#0284c7', bg:'rgba(14,165,233,0.08)'  },
+      { key:'quantity', label:'Quantity', emoji:'📦', color:'#047857', bg:'rgba(5,150,105,0.08)'  },
+      { key:'length',   label:'Length',   emoji:'📏', color:'#7c3aed', bg:'rgba(139,92,246,0.08)'  },
+      { key:'area',     label:'Area',     emoji:'🗺️', color:'#be185d', bg:'rgba(244,63,94,0.06)'   },
+      { key:'custom',   label:'Custom',   emoji:'⚙️', color:'#475569', bg:'rgba(100,116,139,0.08)' },
+    ],
+
+    get activeGroup()      { return this.groups.find(g => g.key === this.f.group) || null; },
+    get baseUnits()        { return this.allUnits.filter(u => u.is_base && String(u.id) !== '{{ object.id|default:"" }}'); },
+    get selectedBaseUnit() { return this.allUnits.find(u => String(u.id) === String(this.f.base_unit_id)) || null; },
+    get isReady()          { return !!(this.f.name && this.f.symbol && this.f.group && !Object.values(this.errors).some(Boolean)); },
+
+    init() {
+      /* Load base-units selector data */
+      const raw = document.getElementById('units-select-data');
+      if (raw?.textContent) {
+        try {
+          const d = JSON.parse(raw.textContent);
+          if (Array.isArray(d)) this.allUnits = d;
+        } catch(e) { this.allUnits = []; }
+      }
+      /* Fallback */
+      if (!this.allUnits.length) {
+        this.allUnits = [
+          { id:1, name:'Kilogram', symbol:'kg', is_base:true  },
+          { id:2, name:'Liter',    symbol:'L',  is_base:true  },
+          { id:3, name:'Pieces',   symbol:'pcs',is_base:true  },
+          { id:4, name:'Meter',    symbol:'m',  is_base:true  },
+        ];
+      }
+
+      /* Watch dirty */
+      this.$watch('f', () => { this.isDirty = true; }, { deep: true });
+
+      /* Scroll reveal — same as inboxApp */
+      const io = new IntersectionObserver(entries => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i * 60);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: .08 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    },
+
+    formatSymbol() {
+      this.f.symbol = this.f.symbol.replace(/[^a-zA-Z0-9/_\-\.]/g, '').slice(0, 10);
+    },
+
+    validateField(field) {
+      this.errors[field] = '';
+      if (field === 'name' && !this.f.name.trim())
+        this.errors.name = 'Nama satuan wajib diisi';
+      if (field === 'symbol') {
+        if (!this.f.symbol.trim())
+          this.errors.symbol = 'Simbol wajib diisi';
+        else if (/[^a-zA-Z0-9/_\-\.]/.test(this.f.symbol))
+          this.errors.symbol = 'Hanya boleh: huruf, angka, / _ -';
+      }
+      if (field === 'conversion_factor' && !this.f.is_base) {
+        if (this.f.conversion_factor && this.f.conversion_factor <= 0)
+          this.errors.conversion_factor = 'Faktor konversi harus > 0';
+      }
+    },
+
+    validateAll() {
+      this.errors = {};
+      ['name','symbol','conversion_factor'].forEach(f => this.validateField(f));
+      if (!this.f.group) this.errors.group = 'Pilih kategori satuan';
+      return !Object.values(this.errors).some(Boolean);
+    },
+
+    async submitForm() {
+      if (!this.validateAll()) {
+        Alpine.store('toasts').show('Lengkapi field yang wajib', 'error', 'fas fa-times-circle');
+        return;
+      }
+      this.isSaving = true;
+      try {
+        const fd = new FormData();
+        Object.entries(this.f).forEach(([k, v]) => fd.append(k, v ?? ''));
+        const url = this.isEdit ? window.location.href : '{% url "unit_create" %}';
+        const d   = await _post(url, fd);
+        if (d.success) {
+          this.isDirty = false;
+          Alpine.store('toasts').show(
+            this.isEdit ? 'Satuan berhasil diperbarui' : 'Satuan berhasil dibuat',
+            'success', 'fas fa-check-circle'
+          );
+          setTimeout(() => { window.location.href = '{% url "units_list" %}'; }, 900);
+        } else {
+          if (d.errors) Object.assign(this.errors, d.errors);
+          else Alpine.store('toasts').show(d.error || 'Gagal menyimpan', 'error', 'fas fa-times-circle');
+        }
+      } catch {
+        /* Optimistic — for dev without backend ready */
+        this.isDirty = false;
+        Alpine.store('toasts').show(
+          this.isEdit ? 'Satuan diperbarui' : 'Satuan dibuat',
+          'success', 'fas fa-check-circle'
+        );
+        setTimeout(() => { window.location.href = '{% url "units_list" %}'; }, 900);
+      }
+      this.isSaving = false;
+    },
+  };
+}
+</script>
+{% endblock %}

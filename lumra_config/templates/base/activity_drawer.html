@@ -1,0 +1,500 @@
+{% load static %}
+
+{# ═══════════════════════════════════════════════════════════════════
+   ACTIVITY DRAWER — "The Slide-Over"
+   Filosofi : Zero context break · Dashboard tetap terlihat di belakang
+   Trigger  : window.dispatchEvent(new CustomEvent('open-drawer', { detail: activity }))
+   Stack    : Alpine.js · CSS custom
+   ═══════════════════════════════════════════════════════════════════ #}
+
+<style>[x-cloak]{display:none!important}
+
+  /* ── Drawer backdrop — Emerald Odyssey Glass Protocol ── */
+  .drawer-backdrop {
+    position  : fixed;
+    inset     : 0;
+    background: rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    z-index   : 40;
+    transition: opacity .25s ease;
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  }
+
+  /* ── Drawer panel ── */
+  .drawer-panel {
+    position  : fixed;
+    top       : 0;
+    right     : 0;
+    bottom    : 0;
+    width     : min(460px, 92vw);
+    z-index   : 41;
+    display   : flex;
+    flex-direction: column;
+
+    background     : rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border-left    : 0.5px solid rgba(0, 103, 79, 0.08);
+    box-shadow     : -4px 0 20px rgba(0,0,0,.08), -1px 0 0 rgba(255,255,255,.3);
+
+    transform : translateX(100%);
+    transition: transform .3s cubic-bezier(.4, 0, .2, 1);
+  }
+  .drawer-panel.open {
+    transform: translateX(0);
+  }
+
+  /* ── Status colors — Odyssey semantik ── */
+  .drawer-status-new      { background: rgba(0, 168, 107, 0.08); color: #00674F; border-color: rgba(0, 168, 107, 0.2); }
+  .drawer-status-transit  { background: rgba(239, 191, 4, 0.08); color: #7a5c00; border-color: rgba(239, 191, 4, 0.2); }
+  .drawer-status-critical { background: rgba(163, 45, 45, 0.08); color: #a32d2d; border-color: rgba(163, 45, 45, 0.2); }
+  .drawer-status-done     { background: rgba(107, 138, 122, 0.08); color: #6b8a7a; border-color: rgba(107, 138, 122, 0.2); }
+
+  .drawer-scroll::-webkit-scrollbar { width: 3px; }
+  .drawer-scroll::-webkit-scrollbar-track { background: transparent; }
+  .drawer-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 3px; }
+
+  .detail-timeline { position: relative; padding-left: 20px; }
+  .detail-timeline::before {
+    content      : '';
+    position     : absolute;
+    left         : 6px;
+    top          : 6px;
+    bottom       : 6px;
+    width        : 1px;
+    background   : linear-gradient(to bottom, rgba(0, 168, 107, 0.2), transparent);
+  }
+  .timeline-dot {
+    position     : absolute;
+    left         : -17px;
+    top          : 3px;
+    width        : 8px;
+    height       : 8px;
+    border-radius: 50%;
+    border       : 1.5px solid #fff;
+    box-shadow   : 0 0 0 2px rgba(0, 168, 107, 0.25);
+  }
+
+  .drawer-btn-approve {
+    flex: 1;
+    padding      : 10px 0;
+    border-radius: 8px;
+    background   : linear-gradient(135deg, #00A86B 0%, #00674F 100%);
+    color        : #fff;
+    font-size    : 12px;
+    font-weight  : 600;
+    letter-spacing: 0.02em;
+    border       : none;
+    cursor       : pointer;
+    transition   : box-shadow .15s, transform .15s;
+    box-shadow   : 0 2px 8px rgba(0, 168, 107, 0.25);
+  }
+  .drawer-btn-approve:hover {
+    box-shadow : 0 4px 16px rgba(0, 168, 107, 0.35);
+    transform  : translateY(-1px);
+  }
+  .drawer-btn-reject {
+    flex: 1;
+    padding      : 12px 0;
+    border-radius: 12px;
+    background   : var(--color-overlay-sm);
+    color        : var(--color-be185d);
+    font-size    : 13px;
+    font-weight  : 700;
+    border       : 1.5px solid var(--color-overlay-sm);
+    cursor       : pointer;
+    transition   : background .15s, border-color .15s;
+  }
+  .drawer-btn-reject:hover {
+    background  : var(--color-overlay-sm);
+    border-color: var(--color-rgba-244-63-94-a04-2);
+  }
+  .drawer-btn-secondary {
+    padding      : 12px 20px;
+    border-radius: 12px;
+    background   : var(--color-slate-400-a010);
+    color        : var(--color-slate-500);
+    font-size    : 13px;
+    font-weight  : 600;
+    border       : 1.5px solid var(--color-slate-400-a02);
+    cursor       : pointer;
+    transition   : background .15s;
+  }
+  .drawer-btn-secondary:hover { background: var(--color-slate-400-a018); }
+
+  /* ── Info row ── */
+  .info-row {
+    display        : flex;
+    justify-content: space-between;
+    align-items    : center;
+    padding        : 8px 0;
+    border-bottom  : 1px solid var(--color-slate-200-a04);
+    font-size      : 13px;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-label { color: var(--color-slate-400); font-weight: 500; }
+  .info-value { color: var(--color-slate-800); font-weight: 600; text-align: right; }
+</style>
+
+{# ── DRAWER COMPONENT — dipasang sekali di base layout / dashboard ── #}
+<div
+  id="activity-drawer"
+  x-data="activityDrawer()"
+  x-init="init()"
+  x-cloak>
+
+  {# Backdrop #}
+  <div
+    class="drawer-backdrop"
+    x-show="isOpen"
+    x-transition:enter="transition duration-200"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+    x-transition:leave="transition duration-200"
+    x-transition:leave-end="opacity-0"
+    @click="close()"
+    aria-hidden="true">
+  </div>
+
+  {# Panel #}
+  <div
+    class="drawer-panel"
+    :class="isOpen ? 'open' : ''"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="drawer-title"
+    @keydown.escape.window="close()">
+
+    {# ── HEADER ── #}
+    <div class="flex-shrink-0 px-6 pt-5 pb-4 border-b border-slate-100/70">
+      <div class="flex items-start justify-between gap-3">
+        <div class="flex-1 min-w-0">
+          {# Status chip #}
+          <div class="flex items-center gap-2 mb-2">
+            <span
+              class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold border"
+              :class="{
+                'drawer-status-new'     : activity?.status === 'new',
+                'drawer-status-transit' : activity?.status === 'transit',
+                'drawer-status-critical': activity?.status === 'critical',
+                'drawer-status-done'    : activity?.status === 'done',
+              }">
+              <span
+                class="w-1.5 h-1.5 rounded-full"
+                :class="{
+                  'bg-emerald-500': activity?.status === 'new',
+                  'bg-amber-400'  : activity?.status === 'transit',
+                  'bg-rose-500'   : activity?.status === 'critical',
+                  'bg-slate-400'  : activity?.status === 'done',
+                }">
+              </span>
+              <span x-text="statusLabel(activity?.status)"></span>
+            </span>
+            <span class="text-[11px] text-slate-400" x-text="activity?.time"></span>
+          </div>
+
+          <h2 id="drawer-title"
+              class="text-[15px] font-bold text-slate-800 leading-snug"
+              x-text="activity?.title">
+          </h2>
+          <p class="text-[12px] text-slate-400 mt-0.5" x-text="activity?.subtitle"></p>
+        </div>
+
+        <button
+          @click="close()"
+          class="flex-shrink-0 p-2 rounded-xl text-slate-300 hover:text-slate-600 hover:bg-slate-100 transition-all"
+          aria-label="Tutup panel">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    {# ── CONTENT (scrollable) ── #}
+    <div class="drawer-scroll flex-1 overflow-y-auto px-6 py-5 space-y-6">
+
+      {# Location chip #}
+      <div x-show="activity?.location" class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0">
+          <svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </div>
+        <span class="text-[12px] font-semibold text-emerald-600" x-text="activity?.location"></span>
+      </div>
+
+      {# Detail info grid #}
+      <div class="bg-slate-50/60 rounded-2xl px-4 py-1">
+        <template x-if="activity?.details && activity.details.length > 0">
+          <div>
+            <template x-for="row in activity.details" :key="row.label">
+              <div class="info-row">
+                <span class="info-label" x-text="row.label"></span>
+                <span class="info-value" x-text="row.value"></span>
+              </div>
+            </template>
+          </div>
+        </template>
+        <template x-if="!activity?.details || activity.details.length === 0">
+          {# Default detail rows for different status types #}
+          <div>
+            <div class="info-row">
+              <span class="info-label">ID Referensi</span>
+              <span class="info-value" x-text="activity?.ref || '—'"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Waktu</span>
+              <span class="info-value" x-text="activity?.time || '—'"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Lokasi</span>
+              <span class="info-value" x-text="activity?.location || '—'"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Status</span>
+              <span class="info-value" x-text="statusLabel(activity?.status)"></span>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      {# Timeline / History #}
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Riwayat Aktivitas</p>
+        <div class="detail-timeline space-y-4">
+          <template x-for="(event, idx) in (activity?.timeline || defaultTimeline)" :key="idx">
+            <div class="relative pl-3">
+              <div
+                class="timeline-dot"
+                :class="{
+                  'bg-emerald-500': idx === 0,
+                  'bg-slate-300'  : idx > 0,
+                }">
+              </div>
+              <p class="text-[12px] font-semibold text-slate-700" x-text="event.label"></p>
+              <p class="text-[11px] text-slate-400 mt-0.5" x-text="event.time"></p>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      {# Notes / Catatan #}
+      <div x-show="activity?.notes">
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Catatan</p>
+        <div class="bg-amber-50/60 border border-amber-100 rounded-xl px-4 py-3">
+          <p class="text-[12px] text-amber-800 leading-relaxed" x-text="activity?.notes"></p>
+        </div>
+      </div>
+
+    </div>
+
+    {# ── ACTION FOOTER ── #}
+    <div class="flex-shrink-0 px-6 py-4 border-t border-slate-100/70">
+
+      {# Approval actions (status = new) #}
+      <template x-if="activity?.status === 'new' && activity?.needsApproval">
+        <div class="space-y-2">
+          <div class="flex gap-2.5">
+            <button
+              class="drawer-btn-reject"
+              @click="handleAction('reject')">
+              ✕ Tolak
+            </button>
+            <button
+              class="drawer-btn-approve"
+              @click="handleAction('approve')">
+              ✓ Approve
+            </button>
+          </div>
+          <button
+            class="drawer-btn-secondary w-full"
+            @click="handleAction('snooze')">
+            Tunda untuk nanti
+          </button>
+        </div>
+      </template>
+
+      {# Transit actions #}
+      <template x-if="activity?.status === 'transit'">
+        <div class="flex gap-2.5">
+          <button class="drawer-btn-secondary" @click="handleAction('track')">
+            Lacak Pengiriman
+          </button>
+          <button class="drawer-btn-approve" @click="handleAction('confirm')">
+            ✓ Konfirmasi Tiba
+          </button>
+        </div>
+      </template>
+
+      {# Critical: restock #}
+      <template x-if="activity?.status === 'critical'">
+        <div class="flex gap-2.5">
+          <button class="drawer-btn-secondary" @click="handleAction('dismiss')">
+            Abaikan
+          </button>
+          <button class="drawer-btn-approve" @click="handleAction('restock')">
+            + Buat PO Restock
+          </button>
+        </div>
+      </template>
+
+      {# Done: just close #}
+      <template x-if="activity?.status === 'done'">
+        <div class="flex gap-2.5">
+          <button class="drawer-btn-secondary w-full" @click="close()">
+            Tutup
+          </button>
+          <a
+            :href="activity?.detailUrl || '{% url \"notification\" %}'"
+            class="drawer-btn-approve text-center no-underline" style="flex:1; display:flex; align-items:center; justify-content:center; text-decoration:none;">
+            Lihat Lengkap →
+          </a>
+        </div>
+      </template>
+
+      {# Fallback jika status tidak ada action spesifik #}
+      <template x-if="!activity?.status || (activity.status !== 'new' && activity.status !== 'transit' && activity.status !== 'critical' && activity.status !== 'done')">
+        <button class="drawer-btn-secondary w-full" @click="close()">Tutup</button>
+      </template>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+function activityDrawer() {
+  return {
+    isOpen  : false,
+    activity: null,
+
+    defaultTimeline: [
+      { label: 'Aktivitas dibuat',  time: 'Baru saja' },
+      { label: 'Menunggu tindakan', time: '—' },
+    ],
+
+    init() {
+      /* Listen event dari Activity Pulse atau komponen lain */
+      window.addEventListener('open-drawer', (e) => {
+        this.activity = this._enrichActivity(e.detail);
+        this.isOpen   = true;
+        /* Trap focus ke panel */
+        this.$nextTick(() => {
+          const panel = document.querySelector('.drawer-panel');
+          panel?.querySelector('button')?.focus();
+        });
+      });
+
+      window.addEventListener('close-drawer', () => this.close());
+    },
+
+    close() {
+      this.isOpen = false;
+      /* Kembalikan fokus ke trigger */
+      setTimeout(() => { this.activity = null; }, 300);
+    },
+
+    statusLabel(s) {
+      return { new:'Baru', transit:'Perjalanan', critical:'Kritis', done:'Selesai' }[s] ?? (s || '—');
+    },
+
+    /* Enrich activity dengan detail & timeline jika belum ada */
+    _enrichActivity(a) {
+      if (!a) return null;
+
+      /* Auto-generate details berdasarkan status jika belum disuplai */
+      if (!a.details) {
+        if (a.status === 'new' && a.title?.includes('PO')) {
+          a.details = [
+            { label: 'Nomor PO',    value: a.ref || 'PO-—' },
+            { label: 'Produk',      value: a.product || '—' },
+            { label: 'Jumlah',      value: a.qty ? `${a.qty} Kg` : '—' },
+            { label: 'Supplier',    value: a.supplier || '—' },
+            { label: 'Total Nilai', value: a.value || '—' },
+            { label: 'Estimasi',    value: a.eta || '2-3 hari kerja' },
+          ];
+          a.needsApproval = true;
+        } else if (a.status === 'transit') {
+          a.details = [
+            { label: 'No. Resi',    value: a.ref || '—' },
+            { label: 'Produk',      value: a.product || '—' },
+            { label: 'Berat',       value: a.qty ? `${a.qty} Kg` : '—' },
+            { label: 'Asal',        value: a.origin || '—' },
+            { label: 'Tujuan',      value: a.destination || a.location || '—' },
+            { label: 'ETA',         value: a.eta || 'Hari ini' },
+          ];
+        } else if (a.status === 'critical') {
+          a.details = [
+            { label: 'SKU',         value: a.sku || '—' },
+            { label: 'Stok Saat Ini', value: a.currentStock || '—' },
+            { label: 'Threshold',   value: a.threshold || '20 Kg' },
+            { label: 'Gudang',      value: a.location || '—' },
+            { label: 'Terakhir PO', value: a.lastPO || '—' },
+          ];
+        }
+      }
+
+      /* Auto-generate timeline jika belum ada */
+      if (!a.timeline) {
+        const now = new Date();
+        const fmt  = (offset) => {
+          const d = new Date(now - offset);
+          return d.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' }) + ', ' +
+                 d.toLocaleDateString('id-ID', { day:'numeric', month:'short' });
+        };
+        a.timeline = [
+          { label: 'Dibuat',          time: a.time || fmt(0) },
+          { label: 'Masuk ke sistem', time: fmt(2 * 60000) },
+        ];
+        if (a.status === 'transit') {
+          a.timeline.unshift({ label: 'Sedang dalam perjalanan', time: fmt(0) });
+          a.timeline.push({ label: 'Berangkat dari gudang', time: fmt(30 * 60000) });
+        }
+        if (a.status === 'critical') {
+          a.timeline.unshift({ label: 'Stok mencapai level kritis', time: fmt(0) });
+        }
+      }
+
+      return a;
+    },
+
+    handleAction(action) {
+      const labels = {
+        approve : 'PO disetujui',
+        reject  : 'PO ditolak',
+        snooze  : 'Ditunda 1 jam',
+        confirm : 'Penerimaan dikonfirmasi',
+        track   : null,   /* redirect */
+        restock : null,   /* redirect */
+        dismiss : 'Diabaikan',
+      };
+
+      if (action === 'track' && this.activity?.trackingUrl) {
+        window.open(this.activity.trackingUrl, '_blank');
+        return;
+      }
+      if (action === 'restock') {
+        window.location.href = "{% url 'purchasing' %}";
+        return;
+      }
+
+      /* Emit ke halaman parent untuk sync state */
+      window.dispatchEvent(new CustomEvent('drawer-action', {
+        detail: { action, activityId: this.activity?.id }
+      }));
+
+      if (labels[action]) {
+        /* Toast notification */
+        window.dispatchEvent(new CustomEvent('show-toast', {
+          detail: { message: labels[action], type: action === 'reject' ? 'warning' : 'success' }
+        }));
+      }
+
+      this.close();
+    },
+  };
+}
+</script>

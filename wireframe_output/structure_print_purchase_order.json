@@ -1,0 +1,78 @@
+{
+  "filename": "print_purchase_order.html",
+  "title": "print_purchase_order",
+  "components": [
+    {
+      "type": "table",
+      "tag": "table",
+      "label": "[ TABLE ]",
+      "depth": 2,
+      "path": "root/body/div/table",
+      "classes": "table-w-full",
+      "text_preview": "PURCHASE ORDER {{ document_number }} Tanggal: {{ document_date|date:\"d M Y\" }} S…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 1,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    },
+    {
+      "type": "table",
+      "tag": "table",
+      "label": "[ TABLE ]",
+      "depth": 1,
+      "path": "root/body/table",
+      "classes": "table-w-full",
+      "text_preview": "Barang Deskripsi Unit Qty Harga Total {% for item in items %} {{ item.name }} {{…",
+      "has_scroll": false,
+      "grid_info": null,
+      "is_interactive": false,
+      "children_count": 2,
+      "has_form_fields": false,
+      "id": "",
+      "x_data": ""
+    }
+  ],
+  "scroll_nestings": [],
+  "layout_tree": [
+    {
+      "depth": 2,
+      "path": "root/body/div/table",
+      "type": "table",
+      "label": "[ TABLE ]",
+      "text_preview": "PURCHASE ORDER {{ document_number }} Tanggal: {{ document_date|date:\"d M Y\" }} S…"
+    },
+    {
+      "depth": 1,
+      "path": "root/body/table",
+      "type": "table",
+      "label": "[ TABLE ]",
+      "text_preview": "Barang Deskripsi Unit Qty Harga Total {% for item in items %} {{ item.name }} {{…"
+    }
+  ],
+  "issues": [
+    {
+      "type": "table_no_header",
+      "severity": "info",
+      "message": "Tabel tanpa <th>/<thead>: <table> id='' class='table-w-full'",
+      "path": ""
+    }
+  ],
+  "stats": {
+    "total_components": 2,
+    "by_type": {
+      "table": 2
+    },
+    "interactive": 0,
+    "with_scroll": 0,
+    "with_form_fields": 0,
+    "scroll_nestings": 0,
+    "issues": 1,
+    "issues_by_severity": {
+      "warning": 0,
+      "info": 1
+    }
+  }
+}

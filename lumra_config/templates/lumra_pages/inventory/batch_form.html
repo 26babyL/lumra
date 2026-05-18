@@ -1,0 +1,223 @@
+{% extends 'base/base_hybrid.html' %}
+
+{% block title %}Form Batch — LUMRA{% endblock %}
+
+{% block extra_css %}
+<style>
+  [x-cloak] { display: none !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-12 px-6 lg:px-12 flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10">
+  <div class="w-full max-w-2xl mx-auto">
+    <div class="card bg-base-100 shadow-2xl border border-primary/20">
+      <div class="card-body p-8">
+        <!-- Header -->
+        <div class="mb-6">
+          <h1 class="text-2xl font-bold text-base-content mb-2">Form Batch</h1>
+          <p class="text-base-content/60 text-sm">Tambah atau edit informasi batch produk.</p>
+        </div>
+
+        <!-- Form -->
+        <form method="post" class="space-y-6" x-data="batchForm()" x-init="init()">
+          {% csrf_token %}
+          
+          <!-- Product Selection -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Produk</span>
+            </label>
+            <select name="product" x-model="form.product" class="select select-bordered select-primary">
+              <option value="">Pilih Produk</option>
+              <template x-for="product in products" :key="product.id">
+                <option :value="product.id" x-text="product.name"></option>
+              </template>
+            </select>
+          </div>
+
+          <!-- Batch Number -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Nomor Batch</span>
+            </label>
+            <input 
+              type="text" 
+              name="batch_number" 
+              x-model="form.batch_number" 
+              placeholder="BATCH-001"
+              class="input input-bordered input-primary"
+              required
+            >
+          </div>
+
+          <!-- Manufacturing Date -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Tanggal Produksi</span>
+            </label>
+            <input 
+              type="date" 
+              name="manufacturing_date" 
+              x-model="form.manufacturing_date" 
+              class="input input-bordered"
+              required
+            >
+          </div>
+
+          <!-- Expiry Date -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Tanggal Kadaluarsa</span>
+            </label>
+            <input 
+              type="date" 
+              name="expiry_date" 
+              x-model="form.expiry_date" 
+              class="input input-bordered"
+              required
+            >
+          </div>
+
+          <!-- Initial Quantity -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Jumlah Awal</span>
+            </label>
+            <input 
+              type="number" 
+              name="initial_quantity" 
+              x-model="form.initial_quantity" 
+              min="1"
+              class="input input-bordered"
+              required
+            >
+          </div>
+
+          <!-- Cost -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Harga per Unit</span>
+            </label>
+            <input 
+              type="number" 
+              name="cost" 
+              x-model="form.cost" 
+              step="0.01"
+              class="input input-bordered"
+            >
+          </div>
+
+          <!-- Supplier -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Supplier</span>
+            </label>
+            <select name="supplier" x-model="form.supplier" class="select select-bordered">
+              <option value="">Pilih Supplier</option>
+              <template x-for="supplier in suppliers" :key="supplier.id">
+                <option :value="supplier.id" x-text="supplier.name"></option>
+              </template>
+            </select>
+          </div>
+
+          <!-- Notes -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Catatan</span>
+            </label>
+            <textarea 
+              name="notes" 
+              x-model="form.notes" 
+              rows="3"
+              placeholder="Catatan batch..."
+              class="textarea textarea-bordered"
+            ></textarea>
+          </div>
+
+          <!-- Status -->
+          <div class="form-control">
+            <label class="label cursor-pointer">
+              <input type="checkbox" name="is_active" x-model="form.is_active" class="checkbox checkbox-primary">
+              <span class="label-text">Aktif</span>
+            </label>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="flex gap-4">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save mr-2"></i>
+              Simpan Batch
+            </button>
+            <button type="button" @click="resetForm()" class="btn btn-ghost">
+              <i class="fas fa-redo mr-2"></i>
+              Reset
+            </button>
+            <a href="{% url 'inventory:batch_list' %}" class="btn btn-ghost">
+              <i class="fas fa-times mr-2"></i>
+              Batal
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function batchForm() {
+  return {
+    form: {
+      product: '',
+      batch_number: '',
+      manufacturing_date: '',
+      expiry_date: '',
+      initial_quantity: 1,
+      cost: 0,
+      supplier: '',
+      notes: '',
+      is_active: true
+    },
+    products: [],
+    suppliers: [],
+    
+    init() {
+      this.loadProducts();
+      this.loadSuppliers();
+    },
+    
+    loadProducts() {
+      // Mock data - replace with actual API call
+      this.products = [
+        { id: 1, name: 'Produk A' },
+        { id: 2, name: 'Produk B' },
+        { id: 3, name: 'Produk C' }
+      ];
+    },
+    
+    loadSuppliers() {
+      // Mock data - replace with actual API call
+      this.suppliers = [
+        { id: 1, name: 'Supplier A' },
+        { id: 2, name: 'Supplier B' },
+        { id: 3, name: 'Supplier C' }
+      ];
+    },
+    
+    resetForm() {
+      this.form = {
+        product: '',
+        batch_number: '',
+        manufacturing_date: '',
+        expiry_date: '',
+        initial_quantity: 1,
+        cost: 0,
+        supplier: '',
+        notes: '',
+        is_active: true
+      };
+    }
+  }
+}
+</script>
+{% endblock %}

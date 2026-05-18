@@ -1,0 +1,66 @@
+{% extends 'base/base_hybrid.html' %}
+
+{% block title %}Verifikasi Email - LUMRA{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-12 px-6 lg:px-12 flex items-center justify-center bg-gradient-to-br from-info/10 to-primary/10">
+  <div class="max-w-md mx-auto text-center">
+    <div class="card bg-base-100 shadow-2xl border border-info/20">
+      <div class="card-body p-8">
+        <!-- Email Verification Icon -->
+        <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-info/10 flex items-center justify-center">
+          <i class="fas fa-envelope text-info text-3xl"></i>
+        </div>
+        
+        <!-- Title -->
+        <h1 class="text-2xl font-bold text-base-content mb-2">Verifikasi Email</h1>
+        <p class="text-base-content/60 text-sm mb-6">Cek inbox Anda untuk link verifikasi</p>
+        
+        <!-- Message -->
+        <p class="text-base-content/60 mb-8">
+          Kami telah mengirimkan link verifikasi ke email Anda. Silakan klik link tersebut untuk mengaktifkan akun.
+        </p>
+        
+        <!-- Info Box -->
+        <div class="alert alert-info mb-8">
+          <div class="flex items-center gap-3">
+            <i class="fas fa-info-circle"></i>
+            <div class="text-left">
+              <p class="font-semibold">Penting:</p>
+              <p>Jangan lupa cek folder Spam jika tidak ditemukan di Inbox</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="space-y-3">
+          <a href="{% url 'auth:login' %}" class="btn btn-primary">
+            <i class="fas fa-arrow-left mr-2"></i> Kembali ke Login
+          </a>
+          <button onclick="location.reload()" class="btn btn-ghost">
+            <i class="fas fa-sync-alt mr-2"></i> Refresh Email
+          </button>
+        </div>
+        
+        <!-- Help Section -->
+        <div class="mt-8 p-4 bg-base-200 rounded-lg">
+          <h3 class="text-sm font-semibold text-base-content mb-3">
+            <i class="fas fa-question-circle mr-2"></i>
+            Butuh Bantuan?
+          </h3>
+          <div class="text-sm text-base-content/60 space-y-2">
+            <p>
+              <i class="fas fa-envelope mr-2"></i>
+              support@lumraerp.com
+            </p>
+            <p>
+              <i class="fas fa-phone mr-2"></i>
+              +62 123 456 789
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
