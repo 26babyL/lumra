@@ -12,6 +12,7 @@ from lumra_config.views import (
     verify_email,
     lock_screen,
     session_expired,
+    register_view,
 )
 
-__all__ = ['login_view', 'logout_view', 'forgot_password', 'reset_password', 'two_factor_setup', 'verify_email', 'lock_screen', 'session_expired']
+__all__ = ['login_view', 'logout_view', 'forgot_password', 'reset_password', 'two_factor_setup', 'verify_email', 'lock_screen', 'session_expired', 'register_view']

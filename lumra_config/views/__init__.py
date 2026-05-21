@@ -21,6 +21,7 @@ from .auth_views import (
     verify_email,
     lock_screen,
     session_expired,
+    register_view,
 )
 
 from .customer_views import (

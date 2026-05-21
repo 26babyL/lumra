@@ -20,7 +20,7 @@
         <p class="text-base-content/60 mb-8">Your session has expired for security reasons. Please log in again to continue.</p>
         
         <!-- Login Form -->
-        <form method="post" action="{% url 'auth:login' %}" class="mb-6">
+        <form method="post" action="{% url 'login' %}" class="mb-6">
           {% csrf_token %}
           
           <!-- Email/Username -->
@@ -68,14 +68,14 @@
         
         <!-- Additional Options -->
         <div class="space-y-3">
-          <a href="{% url 'auth:forgot_password' %}" class="link link-primary text-sm">
+          <a href="{% url 'forgot_password' %}" class="link link-primary text-sm">
             <i class="fas fa-key mr-2"></i>
             Forgot your password?
           </a>
           
           <div class="text-sm text-base-content/60">
             Don't have an account? 
-            <a href="{% url 'auth:register' %}" class="link link-primary font-semibold">
+            <a href="{% url 'register' %}" class="link link-primary font-semibold">
               Sign up here
             </a>
           </div>

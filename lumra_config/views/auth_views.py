@@ -154,3 +154,15 @@ def session_expired(request):
     """
     context = {}
     return render(request, 'lumra_pages/auth/session_expired.html', context)
+
+
+# =====================================================
+# REGISTER VIEW
+# =====================================================
+
+def register_view(request):
+    """
+    Registration page for new users.
+    """
+    context = {}
+    return render(request, 'lumra_pages/auth/register.html', context)
