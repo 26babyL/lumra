@@ -309,6 +309,11 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'lumra_config', 'static'),
 ]
 
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
 # Hapus Whitenoise karena tidak terinstall
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -326,13 +331,13 @@ APP_VERSION = '2.0.0'
 APP_NAME = 'Lumra - Advanced Inventory System'
 
 # ============ DEBUG TOOLBAR ============
-# INTERNAL_IPS = env.list('INTERNAL_IPS', default=['127.0.0.1', 'localhost'])
+INTERNAL_IPS = env.list('INTERNAL_IPS', default=['127.0.0.1', 'localhost'])
 
-# if IS_DEVELOPMENT:
-#     DEBUG_TOOLBAR_CONFIG = {
-#         'SHOW_TOOLBAR_CALLBACK': lambda r: DEBUG,
-#         'SHOW_TEMPLATE_CONTEXT': True,
-#     }
+if IS_DEVELOPMENT:
+    DEBUG_TOOLBAR_CONFIG = {
+        'SHOW_TOOLBAR_CALLBACK': lambda r: DEBUG,
+        'SHOW_TEMPLATE_CONTEXT': True,
+    }
 
 # ============ LOGGING CONFIGURATION ============
 # Formatter JSON dihapus karena 'python-json-logger' tidak terinstall
@@ -444,4 +449,5 @@ DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='noreply@lumra.local')
 
 print(f"✅ Django settings loaded successfully | Environment: {ENVIRONMENT} | Debug: {DEBUG}")
 
-NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
+import shutil as _shutil
+NPM_BIN_PATH = _shutil.which('npm') or '/usr/bin/npm'
