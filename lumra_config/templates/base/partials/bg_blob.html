@@ -1,11 +1,12 @@
-{# base/partials/bg_blob.html — Emerald Odyssey Background Decorations
-   Variants: blob (default), bg-blob (reports), orb (sales_insight)
+{% comment %}
+base/partials/bg_blob.html — Emerald Odyssey Background Decorations
+Variants: blob (default), bg-blob (reports), orb (sales_insight)
 
-   Usage:
-     {% include "base/partials/bg_blob.html" %}
-     {% include "base/partials/bg_blob.html" with variant="bg-blob" count=3 %}
-     {% include "base/partials/bg_blob.html" with variant="orb" count=3 %}
-#}
+Usage:
+  include "base/partials/bg_blob.html"
+  include "base/partials/bg_blob.html" with variant="bg-blob" count=3
+  include "base/partials/bg_blob.html" with variant="orb" count=3
+{% endcomment %}
 
 <style>
   .blob {
