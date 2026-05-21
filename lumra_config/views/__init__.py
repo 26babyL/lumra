@@ -17,6 +17,7 @@ from .auth_views import (
     settings_view,
     forgot_password,
     reset_password,
+    register_view,
     two_factor_setup,
     verify_email,
     lock_screen,

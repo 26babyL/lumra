@@ -291,10 +291,19 @@ class UserProfile(models.Model):
     user     = models.OneToOneField(User, on_delete=models.CASCADE)
     location = models.ForeignKey(Location, null=True, on_delete=models.SET_NULL)
     
-    # 🟢 FIELD EXTENSIONS (16 Apr 2026)
+    # Field Extensions
     role = models.CharField(max_length=100, blank=True, help_text='Role/jabatan pengguna')
+    phone = models.CharField(max_length=20, blank=True, help_text='Nomor telepon')
     default_location_id = models.ForeignKey(Location, null=True, blank=True, on_delete=models.SET_NULL, related_name='users_default_location', help_text='Lokasi default')
     is_active = models.BooleanField(default=True, db_index=True, help_text='Status aktif/nonaktif')
+
+    # Password reset
+    reset_token = models.CharField(max_length=64, null=True, blank=True, db_index=True)
+    reset_token_expires = models.DateTimeField(null=True, blank=True)
+
+    # Email verification
+    email_verified = models.BooleanField(default=False)
+    email_verification_token = models.CharField(max_length=64, null=True, blank=True)
 
     def __str__(self):
         return self.user.username
