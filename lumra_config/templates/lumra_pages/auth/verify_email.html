@@ -1,4 +1,4 @@
-{% extends 'base/base_hybrid.html' %}
+{% extends 'base/base_auth.html' %}
 
 {% block title %}Verifikasi Email - LUMRA{% endblock %}
 
@@ -34,7 +34,7 @@
         
         <!-- Action Buttons -->
         <div class="space-y-3">
-          <a href="{% url 'auth:login' %}" class="btn btn-primary">
+          <a href="{% url 'login' %}" class="btn btn-primary">
             <i class="fas fa-arrow-left mr-2"></i> Kembali ke Login
           </a>
           <button onclick="location.reload()" class="btn btn-ghost">

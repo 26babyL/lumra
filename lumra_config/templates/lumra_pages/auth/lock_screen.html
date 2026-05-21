@@ -1,4 +1,4 @@
-{% extends 'base/base_hybrid.html' %}
+{% extends 'base/base_auth.html' %}
 
 {% block title %}Layar Kunci - LUMRA{% endblock %}
 
@@ -54,7 +54,7 @@
 
         <!-- Logout -->
         <div class="px-8 py-4 border-t border-base-300 text-center">
-          <a href="{% url 'auth:logout' %}" class="link link-primary text-sm">
+          <a href="{% url 'logout' %}" class="link link-primary text-sm">
             <i class="fas fa-sign-out-alt mr-2"></i> Logout
           </a>
         </div>

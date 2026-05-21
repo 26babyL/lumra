@@ -1,4 +1,4 @@
-{% extends 'base/base_hybrid.html' %}
+{% extends 'base/base_auth.html' %}
 
 {% block title %}Sesi Expired - LUMRA{% endblock %}
 
@@ -22,7 +22,7 @@
         
         <!-- Action Buttons -->
         <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-          <a href="{% url 'auth:login' %}" class="btn btn-primary">
+          <a href="{% url 'login' %}" class="btn btn-primary">
             <i class="fas fa-sign-in-alt mr-2"></i> Login Kembali
           </a>
           <a href="/" class="btn btn-ghost">
