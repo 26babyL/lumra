@@ -655,6 +655,13 @@ urlpatterns = [
     # =========================================================================
     path('auth/login/',  lazy_view('lumra_config.auth_app.views.login_view'),  name='login'),
     path('auth/logout/', lazy_view('lumra_config.auth_app.views.logout_view'), name='logout'),
+    path('auth/register/', lazy_view('lumra_config.auth_app.views.register_view'), name='register'),
+    path('auth/forgot-password/', lazy_view('lumra_config.auth_app.views.forgot_password'), name='forgot_password'),
+    path('auth/reset-password/<str:token>/', lazy_view('lumra_config.auth_app.views.reset_password'), name='reset_password'),
+    path('auth/two-factor/', lazy_view('lumra_config.auth_app.views.two_factor_setup'), name='two_factor_setup'),
+    path('auth/verify-email/<str:token>/', lazy_view('lumra_config.auth_app.views.verify_email'), name='verify_email'),
+    path('auth/lock-screen/', lazy_view('lumra_config.auth_app.views.lock_screen'), name='lock_screen'),
+    path('auth/session-expired/', lazy_view('lumra_config.auth_app.views.session_expired'), name='session_expired'),
 
     # =========================================================================
     # INTERNAL API ENDPOINTS
@@ -697,7 +704,9 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
+    import debug_toolbar
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += [
+        path("__debug__/", include(debug_toolbar.urls)),
         path("__reload__/", include("django_browser_reload.urls", namespace="django_browser_reload")),
     ]

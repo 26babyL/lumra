@@ -17,30 +17,44 @@
         <p class="text-base-content/60 text-sm mb-6">Cek inbox Anda untuk link verifikasi</p>
         
         <!-- Message -->
-        <p class="text-base-content/60 mb-8">
-          Kami telah mengirimkan link verifikasi ke email Anda. Silakan klik link tersebut untuk mengaktifkan akun.
-        </p>
-        
-        <!-- Info Box -->
-        <div class="alert alert-info mb-8">
-          <div class="flex items-center gap-3">
-            <i class="fas fa-info-circle"></i>
-            <div class="text-left">
-              <p class="font-semibold">Penting:</p>
-              <p>Jangan lupa cek folder Spam jika tidak ditemukan di Inbox</p>
+        {% if verified %}
+          <div class="alert alert-success mb-8">
+            <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <div>
+              {{ message }}
             </div>
           </div>
-        </div>
-        
-        <!-- Action Buttons -->
-        <div class="space-y-3">
-          <a href="{% url 'auth:login' %}" class="btn btn-primary">
-            <i class="fas fa-arrow-left mr-2"></i> Kembali ke Login
+          <a href="{% url 'login' %}" class="btn btn-primary w-full">
+            <i class="fas fa-sign-in-alt mr-2"></i> Login
           </a>
-          <button onclick="location.reload()" class="btn btn-ghost">
-            <i class="fas fa-sync-alt mr-2"></i> Refresh Email
-          </button>
-        </div>
+        {% else %}
+          <p class="text-base-content/60 mb-8">
+            Kami telah mengirimkan link verifikasi ke email Anda. Silakan klik link tersebut untuk mengaktifkan akun.
+          </p>
+          
+          <!-- Info Box -->
+          <div class="alert alert-info mb-8">
+            <div class="flex items-center gap-3">
+              <i class="fas fa-info-circle"></i>
+              <div class="text-left">
+                <p class="font-semibold">Penting:</p>
+                <p>Jangan lupa cek folder Spam jika tidak ditemukan di Inbox</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="space-y-3">
+            <a href="{% url 'login' %}" class="btn btn-primary">
+              <i class="fas fa-arrow-left mr-2"></i> Kembali ke Login
+            </a>
+            <button onclick="location.reload()" class="btn btn-ghost w-full">
+              <i class="fas fa-sync-alt mr-2"></i> Refresh Email
+            </button>
+          </div>
+        {% endif %}
         
         <!-- Help Section -->
         <div class="mt-8 p-4 bg-base-200 rounded-lg">
