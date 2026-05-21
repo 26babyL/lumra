@@ -1,4 +1,4 @@
-{% extends 'base/base_auth.html' %}
+{% extends 'base/base_hybrid.html' %}
 
 {% block title %}Login - CoffeeShop{% endblock %}
 
@@ -57,15 +57,13 @@
       <form method="post" class="space-y-6">
         {% csrf_token %}
         
-        {% if form.non_field_errors %}
+        {% if error %}
           <div class="alert alert-error">
             <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.932-3L13.932 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.932 3z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.932-3L13.932 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.268 3h13.856z"></path>
             </svg>
             <div>
-              {% for error in form.non_field_errors %}
-                {{ error }}
-              {% endfor %}
+              {{ error }}
             </div>
           </div>
         {% endif %}
@@ -81,19 +79,9 @@
             id="id_username" 
             class="input input-bordered input-primary w-full" 
             placeholder="Masukkan username atau email"
-            value="{{ form.username.value|default:'' }}"
             required
             autocomplete="username"
           >
-          {% if form.username.errors %}
-            <label class="label">
-              <span class="label-text-alt text-error">
-                {% for error in form.username.errors %}
-                  {{ error }}
-                {% endfor %}
-              </span>
-            </label>
-          {% endif %}
         </div>
 
         <!-- Password Field -->
@@ -110,15 +98,6 @@
             required
             autocomplete="current-password"
           >
-          {% if form.password.errors %}
-            <label class="label">
-              <span class="label-text-alt text-error">
-                {% for error in form.password.errors %}
-                  {{ error }}
-                {% endfor %}
-              </span>
-            </label>
-          {% endif %}
         </div>
 
         <!-- Remember Me -->

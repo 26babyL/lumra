@@ -1,4 +1,4 @@
-{% extends 'base/base_auth.html' %}
+{% extends 'base/base_hybrid.html' %}
 
 {% block title %}Two-Factor Authentication - LUMRA{% endblock %}
 
@@ -26,13 +26,9 @@
               <span class="label-text">Scan dengan authenticator app:</span>
             </label>
             <div class="p-4 bg-base-200 rounded-lg text-center">
-              {% if qr_code %}
-              <img src="{{ qr_code }}" alt="QR Code" class="w-32 h-32 mx-auto">
-              {% else %}
               <div class="w-32 h-32 mx-auto bg-base-300 rounded flex items-center justify-center">
                 <i class="fas fa-qrcode text-3xl text-base-content/60"></i>
               </div>
-              {% endif %}
             </div>
           </div>
 
@@ -44,7 +40,7 @@
             <input 
               aria-label="Atau masukkan manual:" 
               type="text" 
-              value="{{ secret_key }}" 
+              value="XXXX-XXXX-XXXX-XXXX" 
               readonly 
               class="input input-bordered input-primary w-full text-xs font-mono cursor-pointer" 
               onclick="copyToClipboard()"
@@ -54,7 +50,7 @@
           <!-- Verification Code -->
           <div class="form-control">
             <label class="label">
-              <span class="label-text">Kode Verifikasi</span>
+              <span class="label-text">Kode Verifikasi (6 digit)</span>
             </label>
             <input 
               type="text" 
@@ -81,7 +77,7 @@
           <div class="text-sm text-base-content/60 space-y-2">
             <p>
               <i class="fas fa-mobile-alt mr-2"></i>
-              Download Google Authenticator atau Authy dari app store
+              Download Google Authenticator atau Authy
             </p>
             <p>
               <i class="fas fa-camera mr-2"></i>
@@ -100,7 +96,7 @@
   <!-- Copy to Clipboard Script -->
   <script>
     function copyToClipboard() {
-      const secretKey = document.querySelector('input[value="{{ secret_key }}"]');
+      const secretKey = document.querySelector('input[value="XXXX-XXXX-XXXX-XXXX"]');
       secretKey.select();
       document.execCommand('copy');
       
