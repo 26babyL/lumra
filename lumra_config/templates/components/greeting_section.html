@@ -1,7 +1,4 @@
-{# ══════════════════════════════════════════════════════════
-   GREETING SECTION — DaisyUI Version
-   Personalized greeting + user context + quick stats
-   ══════════════════════════════════════════════════════════════ #}
+{# GREETING SECTION — DaisyUI Version #}
 
 <style>
   [x-cloak] { display: none !important; }
@@ -19,7 +16,7 @@
         {% endif %}
         
         <div class="greeting-text flex-1 min-w-0">
-          <h2 class="text-lg font-bold text-base-content">{{ greeting_title }}</h2>
+          <h2 class="text-lg font-bold text-base-content">{{ greeting_title|default:"Welcome" }}</h2>
           {% if greeting_subtitle %}
           <p class="text-sm text-base-content/60">{{ greeting_subtitle }}</p>
           {% endif %}
@@ -52,64 +49,22 @@
           </div>
         </div>
         <div>
-          <p class="text-base-content font-bold">{{ user_name|default:"User" }}</p>
-          <p class="text-sm text-base-content/60">{{ user_role|default:"Administrator" }}</p>
+          <h3 class="font-bold text-base-content">{{ user_name|default:"User" }}</h3>
+          <p class="text-sm text-base-content/60">{{ user_role|default:"User" }}</p>
         </div>
       </div>
-      
-      {% if user_stats %}
-      <div class="flex gap-6">
-        {% for stat in user_stats %}
-        <div class="text-center">
-          <p class="text-2xl font-bold text-primary">{{ stat.value }}</p>
-          <p class="text-xs text-base-content/60">{{ stat.label }}</p>
-        </div>
-        {% endfor %}
-      </div>
-      {% endif %}
     </div>
   </div>
 
-  <!-- Quick Stats -->
-  {% if quick_stats %}
-  <div class="px-6 py-4 bg-base-50">
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      {% for stat in quick_stats %}
-      <div class="stat-item">
-        <div class="flex items-center gap-3">
-          {% if stat.icon %}
-          <div class="w-8 h-8 rounded-lg bg-{{ stat.color|default:'primary' }}/10 flex items-center justify-center">
-            <i class="fas {{ stat.icon }} text-{{ stat.color|default:'primary' }} text-sm"></i>
-          </div>
-          {% endif %}
-          <div class="flex-1">
-            <p class="text-xs text-base-content/60 font-medium tracking-widest uppercase">{{ stat.label }}</p>
-            <p class="text-lg font-bold text-base-content">{{ stat.value }}</p>
-            {% if stat.change %}
-            <p class="text-xs text-{{ stat.change_type|default:'neutral' }}">
-              <i class="fas fa-arrow-{{ stat.change_direction|default:'up' }}"></i>
-              {{ stat.change }}
-            </p>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-      {% endfor %}
+  <!-- Stats -->
+  {% if user_stats %}
+  <div class="px-6 py-6 grid grid-cols-2 md:grid-cols-3 gap-4">
+    {% for stat in user_stats %}
+    <div class="text-center">
+      <p class="text-2xl font-bold text-base-content">{{ stat.value }}</p>
+      <p class="text-xs text-base-content/60 uppercase tracking-wide">{{ stat.label }}</p>
     </div>
-  </div>
-  {% endif %}
-
-  <!-- Quick Actions -->
-  {% if quick_actions %}
-  <div class="px-6 py-4 border-t border-base-300">
-    <div class="flex flex-wrap gap-2">
-      {% for action in quick_actions %}
-      <button class="btn btn-{{ action.variant }} btn-sm" onclick="{{ action.onclick }}">
-        {% if action.icon %}<i class="fas {{ action.icon }} mr-2"></i>{% endif %}
-        {{ action.label }}
-      </button>
-      {% endfor %}
-    </div>
+    {% endfor %}
   </div>
   {% endif %}
 </div>

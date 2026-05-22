@@ -1,8 +1,4 @@
-<!-- ============================================================
-     _alert_inner.html
-     Template partial internal — jangan dipakai langsung.
-     Dipanggil oleh alert.html dengan variabel yang sudah dimapping.
-============================================================ -->
+<!-- _alert_inner.html - Internal partial -->
 <div x-data="{ visible: true }"
      x-show="visible"
      x-transition:leave="transition ease-in duration-200"
@@ -35,13 +31,13 @@
 
         </div>
 
-        <!-- Dismiss Button (X di pojok kanan) -->
+        <!-- Dismiss Button -->
         {% if dismissible %}
         <div class="flex-shrink-0">
             <button type="button"
                     @click="visible = false"
                     class="inline-flex rounded-lg p-1.5 {{ btn_color }} focus:outline-none focus:ring-2 focus:ring-offset-1 transition-colors"
-                    aria-label="Tutup pesan">
+                    aria-label="Close message">
                 <i class="fas fa-times text-sm" aria-hidden="true"></i>
             </button>
         </div>

@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Dashboard 2{% endblock %}</title>
+    <title>{% block title %}Dashboard{% endblock %}</title>
 
     {% tailwind_css %}
 
@@ -18,7 +18,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46Zmdt" crossorigin="anonymous" referrerpolicy="no-referrer">
 
     {% block extra_head %}{% endblock %}
     {% block extra_css %}{% endblock %}
@@ -48,8 +48,8 @@
 
 <body class="bg-base-200 text-base-content">
 
-    <!-- Skip link untuk aksesibilitas -->
-    <a href="#main-content" class="sr-only">Lompat ke konten</a>
+    <!-- Skip link for accessibility -->
+    <a href="#main-content" class="sr-only">Jump to content</a>
 
     <div class="flex h-screen" x-data="sidebarApp()" x-init="init()">
 
@@ -80,11 +80,11 @@
             sidebarOpen: true,
             
             init() {
-                // Load sidebar state dari localStorage
+                // Load sidebar state from localStorage
                 const saved = localStorage.getItem('sidebarOpen');
                 this.sidebarOpen = saved !== 'false';
                 
-                // Apply state ke body
+                // Apply state to body
                 this.updateBodyClass();
             },
             

@@ -1,16 +1,4 @@
-{# base/kpi_card.html — DaisyUI Version
-   KPI Card Component converted to DaisyUI
-   Usage:
-   {% include "base/kpi_card.html" with
-       title="Total Penjualan"
-       value=total_sales|currency
-       icon="chart-bar"
-       variant="glass"
-       change_pct="+12%"
-       change_dir="up"
-       href="/dashboard/sales/"
-   %}
-#}
+{# base/kpi_card.html — DaisyUI Version #}
 
 {% with variant=variant|default:"glass" %}
 {% if href %}
@@ -22,7 +10,7 @@
   <div class="card-body p-4">
     <div class="flex justify-between items-start gap-4">
       
-      <!-- Left section: Title, Value, Subtitle -->
+      <!-- Left section: Title, Value -->
       <div class="flex-1 min-w-0">
         <h3 class="text-xs font-bold tracking-widest uppercase text-success mb-2 leading-tight">{{ title }}</h3>
         <div class="text-2xl font-bold text-base-content leading-none mb-2 tabular-nums">{{ value }}</div>
@@ -36,8 +24,7 @@
         <div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold tracking-wide uppercase leading-tight transition-colors
               {% if change_dir == 'up' %}bg-success/15 text-success
               {% elif change_dir == 'down' %}bg-error/15 text-error
-              {% else %}bg-warning/15 text-warning{% endif %}"
-              aria-label="{% if change_dir == 'up' %}增长{% elif change_dir == 'down' %}下降{% else %}稳定{% endif %}">
+              {% else %}bg-warning/15 text-warning{% endif %}">
           <span class="font-extrabold">
             {% if change_dir == 'up' %}↑{% elif change_dir == 'down' %}↓{% else %}→{% endif %}
           </span>
