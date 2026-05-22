@@ -1,7 +1,4 @@
-{# ════════════════════════════════════════════════════════════
-   CONTENT SECTION — DaisyUI Version
-   Organized sections dengan header, toolbar, content
-   ════════════════════════════════════════════════════════════════ #}
+{# CONTENT SECTION — DaisyUI Version #}
 
 <style>
   [x-cloak] { display: none !important; }
@@ -45,74 +42,19 @@
         {% for item in toolbar_items %}
         {% if item.type == 'search' %}
         <div class="form-control">
-          <input 
-            type="text" 
-            placeholder="{{ item.placeholder }}" 
-            class="input input-bordered input-sm w-48 md:w-64"
-            x-model="{{ item.model }}"
-          >
+          <input type="text" placeholder="{{ item.placeholder }}" class="input input-bordered input-sm w-full" />
         </div>
-        {% elif item.type == 'filter' %}
-        <select class="select select-bordered select-sm" x-model="{{ item.model }}">
-          {% for option in item.options %}
-          <option value="{{ option.value }}">{{ option.label }}</option>
-          {% endfor %}
-        </select>
         {% elif item.type == 'button' %}
-        <button class="btn btn-{{ item.variant }} btn-sm" onclick="{{ item.onclick }}">
-          {% if item.icon %}<i class="fas {{ item.icon }} mr-2"></i>{% endif %}
-          {{ item.label }}
-        </button>
-        {% elif item.type == 'toggle' %}
-        <label class="label cursor-pointer">
-          <span class="label-text mr-2">{{ item.label }}</span>
-          <input type="checkbox" class="toggle toggle-sm" x-model="{{ item.model }}">
-        </label>
+        <button class="btn btn-sm btn-primary">{{ item.label }}</button>
         {% endif %}
         {% endfor %}
       </div>
-      
-      {% if toolbar_actions %}
-      <div class="flex gap-2">
-        {% for action in toolbar_actions %}
-        <button class="btn btn-{{ action.variant }} btn-sm" onclick="{{ action.onclick }}">
-          {% if action.icon %}<i class="fas {{ action.icon }}"></i>{% endif %}
-        </button>
-        {% endfor %}
-      </div>
-      {% endif %}
     </div>
   </div>
   {% endif %}
 
   <!-- Content -->
-  <div class="p-6">
-    {% block section_content %}
-    <div class="text-center py-12">
-      <i class="fas fa-inbox text-4xl text-base-content/30 mb-4 block"></i>
-      <p class="text-base-content/60">No content available</p>
-    </div>
-    {% endblock %}
+  <div class="px-6 py-6">
+    {% block section_content %}{% endblock %}
   </div>
-
-  <!-- Footer -->
-  {% if section_footer %}
-  <div class="px-6 py-4 border-t border-base-300 bg-base-50">
-    <div class="flex items-center justify-between">
-      <div class="text-sm text-base-content/60">
-        {{ section_footer.text }}
-      </div>
-      {% if section_footer.actions %}
-      <div class="flex gap-2">
-        {% for action in section_footer.actions %}
-        <button class="btn btn-{{ action.variant }} btn-xs" onclick="{{ action.onclick }}">
-          {% if action.icon %}<i class="fas {{ action.icon }} mr-1"></i>{% endif %}
-          {{ action.label }}
-        </button>
-        {% endfor %}
-      </div>
-      {% endif %}
-    </div>
-  </div>
-  {% endif %}
 </div>

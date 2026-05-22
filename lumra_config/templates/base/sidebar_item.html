@@ -1,26 +1,16 @@
 <style>[x-cloak]{display:none!important}</style>
-<!-- base/sidebar_item.html — Emerald Odyssey Nav Item -->
+<!-- base/sidebar_item.html -->
 <div class="mb-1">
     <a href="{% url url %}" x-ref="{{ ref|default:'' }}"
        :aria-current="isActive('/{{ url }}/') ? 'page' : null"
-       class="group relative w-full flex items-center gap-3 px-3 py-2 rounded-8px text-sm font-500 transition-all duration-150"
-       style="
-         font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-       "
+       class="group relative w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150"
+       style="font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;"
        :class="{
            'justify-center': !isSidebarOpen,
-           'bg-jade-12 text-0d1f18': isActive('/{{ url }}/')
-       }"
-       @mouseenter="hoverColor = '#00674F'"
-       @mouseleave="hoverColor = '#6b8a7a'">
+           'bg-success/20 text-success': isActive('/{{ url }}/')
+       }">
         <i class="fas {{ icon }} w-6 text-center flex-shrink-0 transition-all group-hover:scale-110"
-           :class="isActive('/{{ url }}/') ? 'text-00A86B' : 'text-6b8a7a'"
-           :style="isActive('/{{ url }}/') ? 'color: #00A86B;' : 'color: #6b8a7a;'"></i>
+           :class="isActive('/{{ url }}/') ? 'text-success' : 'text-base-content/60'"></i>
         <span x-show="isSidebarOpen" x-transition class="flex-1 truncate">{{ label }}</span>
-        <span x-cloak x-show="!isSidebarOpen"
-              class="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 ml-2 whitespace-nowrap rounded-8px text-white px-2.5 py-1.5 text-xs shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-50"
-              style="background: #1e293b;">
-            {{ label }}
-        </span>
     </a>
 </div>

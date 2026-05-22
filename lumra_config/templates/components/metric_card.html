@@ -1,7 +1,4 @@
-{# ════════════════════════════════════════════════════════
-   METRIC CARDS — DaisyUI Version
-   Flexible card component untuk KPI, stats, indicators
-   ════════════════════════════════════════════════════════════ #}
+{# METRIC CARDS — DaisyUI Version #}
 
 <style>
   [x-cloak] { display: none !important; }
@@ -40,7 +37,7 @@
       <!-- Change Indicator -->
       {% if card.change %}
       <div class="flex items-center gap-2">
-        <div class="flex items-center gap-1 text-sm font-medium" :class="'text-{{ card.change_type|default:'neutral' }}">
+        <div class="flex items-center gap-1 text-sm font-medium" :class="'text-{{ card.change_type|default:'neutral' }}'">
           <i class="fas fa-arrow-{% if card.change_type == 'down' %}down{% else %}up{% endif %}"></i>
           <span>{{ card.change }}</span>
         </div>
@@ -50,52 +47,7 @@
         {% endif %}
       </div>
       {% endif %}
-
-      <!-- Progress Bar -->
-      {% if card.progress_value %}
-      <div class="mt-4">
-        <div class="flex justify-between text-xs text-base-content/60 mb-1">
-          <span>{{ card.progress_label }}</span>
-          <span>{{ card.progress_value }}%</span>
-        </div>
-        <div class="w-full bg-base-200 rounded-full h-2">
-          <div 
-            class="bg-{{ card.progress_color }} h-2 rounded-full transition-all duration-300" 
-            :style="`width: ${card.progress_value}%`"
-          ></div>
-        </div>
-      </div>
-      {% endif %}
-
-      <!-- Icon -->
-      {% if card.icon %}
-      <div class="absolute top-4 right-4">
-        <div class="w-10 h-10 rounded-lg bg-{{ card.icon_color }}/10 flex items-center justify-center">
-          <i class="fas {{ card.icon }} text-{{ card.icon_color }}"></i>
-        </div>
-      </div>
-      {% endif %}
-
-      <!-- Footer Actions -->
-      {% if card.actions %}
-      <div class="flex gap-2 mt-4">
-        {% for action in card.actions %}
-        <button class="btn btn-{{ action.variant }} btn-xs" onclick="{{ action.onclick }}">
-          {% if action.icon %}<i class="fas {{ action.icon }} mr-1"></i>{% endif %}
-          {{ action.label }}
-        </button>
-        {% endfor %}
-      </div>
-      {% endif %}
     </div>
   </div>
   {% endfor %}
-
-  <!-- Empty State -->
-  {% if not metric_cards %}
-  <div class="col-span-full text-center py-12">
-    <i class="fas fa-inbox text-4xl text-base-content/30 mb-4 block"></i>
-    <p class="text-base-content/60">No metrics available</p>
-  </div>
-  {% endif %}
 </div>
